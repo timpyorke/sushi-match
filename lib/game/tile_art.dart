@@ -10,6 +10,8 @@ import 'package:flutter/services.dart' show rootBundle;
 ///
 /// Until [load] finishes (and in tests that never call it) [ready] is false
 /// and the board falls back to flat colours.
+enum MapTile { straight, corner, cap }
+
 abstract final class TileArt {
   static const _cellsAsset = 'assets/images/tileset02.png';
   static const _beltAsset = 'assets/images/tileset01.png';
@@ -69,6 +71,28 @@ abstract final class TileArt {
   /// Rounded end of a belt; [leftEnd] mirrors it for the left side.
   static void beltCap(Canvas canvas, Rect dst, {required bool leftEnd}) =>
       _draw(canvas, _belt!, _bottomRight, dst, flipX: leftEnd);
+
+  /// One belt-sheet tile for the level map, centred on [centre] in a
+  /// [width]×[height] box. [rot] is applied first, then the optional flips.
+  static void mapTile(
+      Canvas canvas, MapTile kind, Offset centre, double width, double height,
+      {double rot = 0, bool flipX = false, bool flipY = false}) {
+    final src = switch (kind) {
+      MapTile.straight => _topLeft,
+      MapTile.corner => _topRight,
+      MapTile.cap => _bottomRight,
+    };
+    canvas.save();
+    canvas.translate(centre.dx, centre.dy);
+    canvas.rotate(rot);
+    canvas.scale(flipX ? -1 : 1, flipY ? -1 : 1);
+    canvas.drawImageRect(
+        _belt!,
+        src,
+        Rect.fromCenter(center: Offset.zero, width: width, height: height),
+        _paint);
+    canvas.restore();
+  }
 
   /// Direction arrow; [dir] is +1 for right, -1 for left.
   static void arrow(Canvas canvas, Rect dst, int dir) =>

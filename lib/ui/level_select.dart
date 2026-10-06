@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../core/piece.dart';
 import '../game/piece_painter.dart';
+import '../game/tile_art.dart';
 import 'l10n.dart';
 import 'lives_ui.dart';
 import 'ui_art.dart';
@@ -43,13 +44,21 @@ class LevelSelectView extends StatefulWidget {
 
 class _LevelSelectViewState extends State<LevelSelectView> {
   static const _perRow = 3;
-  static const _rowGap = 110.0;
+  static const _rowGap = 112.0;
   static const _uTurn = _rowGap / 2;
-  static const _margin = _uTurn + 28;
+  static const _margin = _uTurn + 32;
   static const _padding = 80.0;
 
   final _scroll = ScrollController();
   bool _positioned = false;
+
+  @override
+  void initState() {
+    super.initState();
+    TileArt.load().then((_) {
+      if (mounted) setState(() {});
+    });
+  }
 
   int get _rows => (widget.levelCount / _perRow).ceil();
 
@@ -150,7 +159,8 @@ class _LevelSelectViewState extends State<LevelSelectView> {
                       child: CustomPaint(
                         painter: _PathPainter([
                           for (var n = 1; n <= widget.levelCount; n++) centre(n)
-                        ]),
+                        ], _rows, _rowGap, _mapHeight - _padding, _uTurn,
+                            _margin),
                       ),
                     ),
                     for (var n = 1; n <= widget.levelCount; n++)
@@ -161,8 +171,7 @@ class _LevelSelectViewState extends State<LevelSelectView> {
                           level: n,
                           locked: n > widget.cleared + 1 || _shopLocked(n),
                           done: n <= widget.cleared,
-                          current:
-                              n == widget.cleared + 1 && !_shopLocked(n),
+                          current: n == widget.cleared + 1 && !_shopLocked(n),
                           onTap: () => _tap(n),
                         ),
                       ),
@@ -179,11 +188,55 @@ class _LevelSelectViewState extends State<LevelSelectView> {
 
 /// Wooden belt that snakes through the level centres.
 class _PathPainter extends CustomPainter {
-  _PathPainter(this.points);
+  _PathPainter(
+      this.points, this.rows, this.rowGap, this.baseY, this.tile, this.margin);
   final List<Offset> points;
+  final int rows;
+  final double rowGap, baseY, tile, margin;
+
+  /// Belt built from tileset01: straights along each row, corner tiles at
+  /// the U-turns and a rounded cap at both ends of the whole belt.
+  void _paintTiles(Canvas canvas, Size size) {
+    final s = tile;
+    final xl = margin - s, xr = size.width - margin + s;
+    final n = math.max(2, ((xr - xl) / s).round());
+    final dx = (xr - xl) / n;
+    for (var r = 0; r < rows; r++) {
+      final y = baseY - r * rowGap;
+      final first = r == 0, last = r == rows - 1;
+      for (var i = 0; i <= n; i++) {
+        final c = Offset(xl + i * dx, y);
+        if (i > 0 && i < n) {
+          TileArt.mapTile(canvas, MapTile.straight, c, dx + 0.6, s);
+        } else if (i == 0) {
+          if (first || (last && r.isOdd)) {
+            TileArt.mapTile(canvas, MapTile.cap, c, s, s, flipX: true);
+          } else if (r.isOdd) {
+            TileArt.mapTile(canvas, MapTile.corner, c, s, s, rot: math.pi);
+          } else {
+            TileArt.mapTile(canvas, MapTile.corner, c, s, s, flipX: true);
+          }
+        } else if (last && r.isEven) {
+          TileArt.mapTile(canvas, MapTile.cap, c, s, s);
+        } else if (r.isEven) {
+          TileArt.mapTile(canvas, MapTile.corner, c, s, s, flipY: true);
+        } else {
+          TileArt.mapTile(canvas, MapTile.corner, c, s, s);
+        }
+      }
+      if (last) continue;
+      final x = r.isEven ? xr : xl;
+      TileArt.mapTile(canvas, MapTile.straight, Offset(x, y - s), s, s + 0.6,
+          rot: math.pi / 2);
+    }
+  }
 
   @override
   void paint(Canvas canvas, Size size) {
+    if (TileArt.ready) {
+      _paintTiles(canvas, size);
+      return;
+    }
     final path = Path()..moveTo(points.first.dx, points.first.dy);
     for (var i = 1; i < points.length; i++) {
       final a = points[i - 1], b = points[i];
@@ -217,7 +270,7 @@ class _PathPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_PathPainter old) => old.points != points;
+  bool shouldRepaint(_PathPainter old) => true;
 }
 
 class _Plate extends StatelessWidget {
