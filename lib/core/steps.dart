@@ -7,11 +7,13 @@ enum GameStatus { playing, won, lost }
 /// never reads core state that has already moved on.
 class PieceSnapshot {
   const PieceSnapshot(this.id, this.kind, this.special,
-      {this.ice = 0, this.ingredient = false});
+      {this.ice = 0, this.ingredient = false, this.burning = false});
   PieceSnapshot.of(Piece p)
-      : this(p.id, p.kind, p.special, ice: p.ice, ingredient: p.ingredient);
+      : this(p.id, p.kind, p.special,
+            ice: p.ice, ingredient: p.ingredient, burning: p.burning);
 
   final int ice;
+  final bool burning;
   final bool ingredient;
   final int id;
   final PieceKind? kind;
@@ -153,6 +155,37 @@ final class MatSpreadStep extends BoardStep {
   const MatSpreadStep(this.pos, this.pieceId);
   final Pos pos;
   final int pieceId;
+}
+
+/// Fire jumping onto the piece [pieceId] at [pos].
+final class IgniteStep extends BoardStep {
+  const IgniteStep(this.pos, this.pieceId);
+  final Pos pos;
+  final int pieceId;
+}
+
+class CatHit {
+  const CatHit(this.catId, this.pos, this.hp);
+  final int catId;
+  final Pos pos;
+
+  /// Hit points left (0 = the cat bolts).
+  final int hp;
+}
+
+/// Cats startled by a clear on or next to them.
+final class CatHitStep extends BoardStep {
+  const CatHitStep(this.hits);
+  final List<CatHit> hits;
+}
+
+/// A cat padding over to [to]; the piece there is eaten by the ClearStep that
+/// follows.
+final class CatMoveStep extends BoardStep {
+  const CatMoveStep(this.catId, this.from, this.to);
+  final int catId;
+  final Pos from;
+  final Pos to;
 }
 
 /// A conveyor row sliding one cell; the end piece wraps to the far side.

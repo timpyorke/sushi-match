@@ -8,19 +8,18 @@
   "layout": [
     ".........",
     ".........",
-    "..MMMMM..",
-    "..MMMMM..",
-    "..MMMMM..",
-    "..MMMMM..",
-    "..MMMMM..",
+    "..C......",
+    ".........",
+    ".........",
+    ".........",
+    "......C..",
     ".........",
     "........."
   ],
   "legend": {
     ".": "cell",
     "X": "void",
-    "N": "nori:1",
-    "M": "nori:2"
+    "C": "cat:3"
   },
   "pieces": [
     "salmon",
@@ -30,10 +29,10 @@
     "ebi",
     "kappa"
   ],
-  "moves": 26,
+  "moves": 28,
   "goals": [
     {
-      "type": "clear_nori"
+      "type": "shoo_cats"
     },
     {
       "type": "collect",
@@ -46,16 +45,6 @@
       "count": 39
     }
   ],
-  "stars": [7400, 9700, 12700],
-  "conveyors": [
-    {
-      "row": 2,
-      "dir": "left"
-    },
-    {
-      "row": 6,
-      "dir": "right"
-    }
-  ],
+  "stars": [7600, 9600, 12200],
   "seed": 303240
 }

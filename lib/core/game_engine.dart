@@ -12,6 +12,15 @@ import 'steps.dart';
 
 export 'steps.dart' show GameStatus;
 
+/// A cat on the board. It sits over a cell (pieces fall through underneath)
+/// and prowls one step per turn unless it was startled.
+class Cat {
+  Cat(this.id, this.pos, this.hp);
+  final int id;
+  Pos pos;
+  int hp;
+}
+
 class GoalProgress {
   const GoalProgress(this.goal, this.current);
   final LevelGoal goal;
@@ -34,6 +43,11 @@ class GameEngine {
         _mats = level.mats.isEmpty
             ? List.filled(level.rows * level.cols, false)
             : List.of(level.mats),
+        _scared = {},
+        _cats = [
+          for (var i = 0; i < level.cats.length; i++)
+            Cat(i, Pos(level.cats[i].row, level.cats[i].col), level.cats[i].hp),
+        ],
         _ingredientTotal = level.goals
             .where((g) => g.type == GoalType.deliver)
             .fold(0, (n, g) => n + g.count),
@@ -43,6 +57,11 @@ class GameEngine {
         iceAt: (p) =>
             level.ice.isEmpty ? 0 : level.ice[p.row * level.cols + p.col]);
     _placeIngredients();
+    for (var i = 0; i < level.fire.length; i++) {
+      if (level.fire[i]) {
+        board[Pos(i ~/ level.cols, i % level.cols)]!.burning = true;
+      }
+    }
   }
 
   GameEngine._fork(GameEngine o, int seed)
@@ -52,6 +71,8 @@ class GameEngine {
         _nori = List.of(o._nori),
         _bags = List.of(o._bags),
         _mats = List.of(o._mats),
+        _cats = [for (final c in o._cats) Cat(c.id, c.pos, c.hp)],
+        _scared = Set.of(o._scared),
         _ingredientTotal = o._ingredientTotal,
         _delivered = o._delivered,
         _spawned = o._spawned,
@@ -88,6 +109,14 @@ class GameEngine {
   /// Set when a clear breaks a mat; a turn without one lets the mats spread.
   bool _matBroken = false;
 
+  final List<Cat> _cats;
+
+  /// Cats startled this turn; they stay put instead of prowling.
+  final Set<int> _scared;
+
+  /// Set when a clear puts out a burning piece; otherwise fire spreads.
+  bool _fireOut = false;
+
   final int _ingredientTotal;
   int _delivered = 0;
   int _spawned = 0;
@@ -115,6 +144,8 @@ class GameEngine {
               GoalType.breakBag => g.count - _bagCount,
               GoalType.deliver => _delivered,
               GoalType.clearMats => g.count - _matCount,
+              GoalType.putOut => g.count - _burningCount,
+              GoalType.shooCats => g.count - _cats.length,
             },
           ),
       ];
@@ -127,6 +158,14 @@ class GameEngine {
         for (final p in board.positions)
           if (board[p]?.frozen ?? false) p,
       ].length;
+
+  int get _burningCount => [
+        for (final p in board.positions)
+          if (board[p]?.burning ?? false) p,
+      ].length;
+
+  /// Cats still prowling; the view reads this once at the start.
+  List<Cat> get cats => List.unmodifiable(_cats);
 
   int get _matCount => _mats.where((m) => m).length;
 
@@ -287,11 +326,17 @@ class GameEngine {
       _credit = false;
       shifted.addAll(_cascade(MatchFinder.find(board), startAt: 1));
       _credit = true;
+      if (!goals.every((g) => g.done)) shifted.addAll(_prowlCats());
+      if (!_fireOut && !goals.every((g) => g.done)) {
+        shifted.addAll(_spreadFire());
+      }
       if (!_matBroken && !goals.every((g) => g.done)) {
         shifted.addAll(_spreadMats());
       }
     }
     _matBroken = false;
+    _fireOut = false;
+    _scared.clear();
     if (spendMove) movesLeft--;
     final won = goals.every((g) => g.done);
     if (won) {
@@ -420,9 +465,29 @@ class GameEngine {
       }
     }
 
+    final startled = <CatHit>[];
+    for (final cat in _cats) {
+      final near = cleared.contains(cat.pos) ||
+          [
+            for (final d in const [
+              Pos(0, 1),
+              Pos(0, -1),
+              Pos(1, 0),
+              Pos(-1, 0)
+            ])
+              cat.pos + d,
+          ].any(cleared.contains);
+      if (!near) continue;
+      cat.hp--;
+      _scared.add(cat.id);
+      startled.add(CatHit(cat.id, cat.pos, cat.hp));
+    }
+    _cats.removeWhere((c) => c.hp <= 0);
+
     final removed = <ClearedPiece>[];
     for (final p in cleared) {
       final piece = board[p]!;
+      if (piece.burning) _fireOut = true;
       final k = piece.kind;
       if (k != null && _credit) _collected[k] = (_collected[k] ?? 0) + 1;
       removed.add(ClearedPiece(piece.id, p));
@@ -452,6 +517,8 @@ class GameEngine {
       if (_nori[i] > 0) noriLeft[p] = --_nori[i];
     }
     if (noriLeft.isNotEmpty) steps.add(NoriStep(noriLeft));
+
+    if (startled.isNotEmpty) steps.add(CatHitStep(startled));
 
     if (cracks.isNotEmpty) {
       final hits = <BagHit>[];
@@ -758,6 +825,69 @@ class GameEngine {
     if (MoveFinder.findMove(board) == null) BoardFactory.shuffle(board, rng);
   }
 
+  /// Fire jumps from a burning piece to one neighbour. Called on turns where
+  /// no burning piece was cleared.
+  List<BoardStep> _spreadFire() {
+    final pool = <Pos>{};
+    for (final p in board.positions) {
+      if (!(board[p]?.burning ?? false)) continue;
+      for (final d in const [Pos(0, 1), Pos(0, -1), Pos(1, 0), Pos(-1, 0)]) {
+        final q = p + d;
+        final piece = board[q];
+        if (piece != null &&
+            !piece.burning &&
+            !piece.frozen &&
+            !piece.ingredient) {
+          pool.add(q);
+        }
+      }
+    }
+    if (pool.isEmpty) return const [];
+    final cells = pool.toList();
+    final at = cells[rng.nextInt(cells.length)];
+    board[at]!.burning = true;
+    return [IgniteStep(at, board[at]!.id)];
+  }
+
+  /// Every cat that was not startled this turn steps onto a neighbouring
+  /// piece and eats it (no score, no goal progress).
+  List<BoardStep> _prowlCats() {
+    final steps = <BoardStep>[];
+    final wanted = {
+      for (final g in goals)
+        if (g.goal.type == GoalType.collect && !g.done) g.goal.piece,
+    };
+    for (final cat in List.of(_cats)) {
+      if (_scared.contains(cat.id)) continue;
+      final options = [
+        for (final d in const [Pos(0, 1), Pos(0, -1), Pos(1, 0), Pos(-1, 0)])
+          if (board[cat.pos + d] case final piece?
+              when !piece.isSpecial &&
+                  !piece.frozen &&
+                  !piece.ingredient &&
+                  !board.isLocked(cat.pos + d))
+            cat.pos + d,
+      ];
+      if (options.isEmpty) continue;
+      // Cats go for the fish the customer ordered.
+      final fancy = [
+        for (final p in options)
+          if (wanted.contains(board[p]!.kind)) p,
+      ];
+      final pool = fancy.isNotEmpty && rng.nextDouble() < 0.7 ? fancy : options;
+      final to = pool[rng.nextInt(pool.length)];
+      final eaten = board[to]!;
+      steps.add(CatMoveStep(cat.id, cat.pos, to));
+      cat.pos = to;
+      board[to] = null;
+      steps
+        ..add(ClearStep([ClearedPiece(eaten.id, to)], const [], 0, 1))
+        ..addAll(_gravityAndRefill())
+        ..addAll(_cascade(MatchFinder.find(board), startAt: 1));
+    }
+    return steps;
+  }
+
   /// A mat grows onto one open cell beside an existing mat, swallowing the
   /// piece there. Called on turns where no mat was destroyed.
   List<BoardStep> _spreadMats() {
@@ -771,7 +901,8 @@ class GameEngine {
         if (piece != null &&
             !piece.ingredient &&
             !piece.frozen &&
-            !board.isLocked(q)) {
+            !board.isLocked(q) &&
+            !_cats.any((c) => c.pos == q)) {
           pool.add(q);
         }
       }

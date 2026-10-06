@@ -6,21 +6,20 @@
     "rows": 9
   },
   "layout": [
-    "XXXMMMXXX",
+    "XXX...XXX",
     "XX.....XX",
-    "X.......X",
-    "M.......M",
-    "M.......M",
-    "M.......M",
-    "X.......X",
+    "X.F...F.X",
+    ".........",
+    ".........",
+    ".........",
+    "X.F...F.X",
     "XX.....XX",
-    "XXXMMMXXX"
+    "XXX...XXX"
   ],
   "legend": {
     ".": "cell",
     "X": "void",
-    "N": "nori:1",
-    "M": "nori:2"
+    "F": "fire"
   },
   "pieces": [
     "salmon",
@@ -30,18 +29,18 @@
     "ebi",
     "kappa"
   ],
-  "moves": 44,
+  "moves": 39,
   "goals": [
     {
-      "type": "clear_nori"
+      "type": "put_out"
     },
     {
       "type": "collect",
       "piece": "tamago",
-      "count": 24
+      "count": 39
     }
   ],
-  "stars": [7800, 12300, 14900],
+  "stars": [7500, 11400, 14200],
   "conveyors": [
     {
       "row": 3,

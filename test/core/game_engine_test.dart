@@ -17,6 +17,7 @@ void main() {
   iceTests();
   bagTests();
   deliverAndMatTests();
+  fireAndCatTests();
   void expectStableBoard(GameEngine e) {
     final ids = <int>{};
     for (final p in e.board.positions) {
@@ -620,6 +621,145 @@ void deliverAndMatTests() {
           if (piece != null) expect(ids.add(piece.id), isTrue);
         }
         expect(mf.MatchFinder.find(e.board), isEmpty);
+      }
+    });
+  });
+}
+
+LevelConfig _fireLevel() => LevelConfig.fromJson({
+      'id': 1,
+      'board': {'cols': 7, 'rows': 7},
+      'layout': [
+        '.......',
+        '.......',
+        '.......',
+        '...F...',
+        '.......',
+        '.......',
+        '.......',
+      ],
+      'legend': {'.': 'cell', 'F': 'fire'},
+      'pieces': ['salmon', 'maguro', 'tamago', 'ikura', 'kappa'],
+      'moves': 99,
+      'goals': [
+        {'type': 'put_out'},
+      ],
+      'seed': 5,
+    });
+
+LevelConfig _catLevel({int lives = 2}) => LevelConfig.fromJson({
+      'id': 1,
+      'board': {'cols': 7, 'rows': 7},
+      'layout': [
+        '.......',
+        '.......',
+        '.......',
+        '...C...',
+        '.......',
+        '.......',
+        '.......',
+      ],
+      'legend': {'.': 'cell', 'C': 'cat:$lives'},
+      'pieces': ['salmon', 'maguro', 'tamago', 'ikura', 'kappa'],
+      'moves': 99,
+      'goals': [
+        {'type': 'shoo_cats'},
+      ],
+      'seed': 5,
+    });
+
+void fireAndCatTests() {
+  int burning(GameEngine e) =>
+      e.board.positions.where((p) => e.board[p]!.burning).length;
+
+  group('grill fire', () {
+    test('parses: the piece starts burning and the goal counts fires', () {
+      final e = GameEngine(_fireLevel());
+      expect(e.board[const Pos(3, 3)]!.burning, isTrue);
+      expect(burning(e), 1);
+      expect(e.goals.single.goal.type, GoalType.putOut);
+      expect(e.goals.single.done, isFalse);
+    });
+
+    test('clearing the burning piece puts the fire out and wins', () {
+      final e = GameEngine(_fireLevel());
+      e.useChopsticks(const Pos(3, 3));
+      expect(burning(e), 0);
+      expect(e.goals.single.done, isTrue);
+    });
+
+    test('a move that puts nothing out lets the fire spread', () {
+      final e = GameEngine(_fireLevel());
+      final far = MoveFinder.allMoves(e.board).firstWhere((m) =>
+          (m.$1.row - 3).abs() + (m.$1.col - 3).abs() > 3 &&
+          (m.$2.row - 3).abs() + (m.$2.col - 3).abs() > 3);
+      final steps = e.trySwap(far.$1, far.$2);
+      if (burning(e) == 0) return; // a cascade happened to douse it
+      expect(steps.whereType<IgniteStep>(), hasLength(1));
+      expect(burning(e), greaterThanOrEqualTo(2));
+    });
+
+    test('random play keeps the board consistent while fire spreads', () {
+      final e = GameEngine(_fireLevel());
+      final rng = Random(4);
+      for (var i = 0; i < 40 && e.status == GameStatus.playing; i++) {
+        final moves = MoveFinder.allMoves(e.board);
+        final m = moves[rng.nextInt(moves.length)];
+        e.trySwap(m.$1, m.$2);
+        for (final p in e.board.positions) {
+          expect(e.board[p], isNotNull);
+        }
+      }
+    });
+  });
+
+  group('thieving cat', () {
+    test('parses: one cat with its lives', () {
+      final e = GameEngine(_catLevel());
+      expect(e.cats.single.hp, 2);
+      expect(e.cats.single.pos, const Pos(3, 3));
+      expect(e.goals.single.goal.type, GoalType.shooCats);
+      expect(e.goals.single.goal.count, 1);
+    });
+
+    test('clears beside the cat startle it until it runs off', () {
+      final e = GameEngine(_catLevel());
+      final steps = e.useChopsticks(const Pos(3, 2));
+      expect(steps.whereType<CatHitStep>().first.hits.single.hp, 1);
+      expect(e.goals.single.done, isFalse);
+      e.useChopsticks(const Pos(3, 4));
+      expect(e.cats, isEmpty);
+      expect(e.goals.single.done, isTrue);
+    });
+
+    test('an unstartled cat steps over and eats a piece, for no credit', () {
+      final e = GameEngine(_catLevel(lives: 3));
+      final far = MoveFinder.allMoves(e.board).firstWhere((m) =>
+          (m.$1.row - 3).abs() + (m.$1.col - 3).abs() > 3 &&
+          (m.$2.row - 3).abs() + (m.$2.col - 3).abs() > 3);
+      final steps = e.trySwap(far.$1, far.$2);
+      if (steps.whereType<CatHitStep>().isNotEmpty) return; // startled
+      final move = steps.whereType<CatMoveStep>().single;
+      expect(move.from, const Pos(3, 3));
+      expect(move.from.isAdjacentTo(move.to), isTrue);
+      expect(e.cats.single.pos, move.to);
+      for (final p in e.board.positions) {
+        expect(e.board[p], isNotNull);
+      }
+    });
+
+    test('the board stays consistent while the cat prowls', () {
+      final e = GameEngine(_catLevel(lives: 3));
+      final rng = Random(6);
+      for (var i = 0; i < 40 && e.status == GameStatus.playing; i++) {
+        final moves = MoveFinder.allMoves(e.board);
+        if (moves.isEmpty) break;
+        final m = moves[rng.nextInt(moves.length)];
+        e.trySwap(m.$1, m.$2);
+        final ids = <int>{};
+        for (final p in e.board.positions) {
+          expect(ids.add(e.board[p]!.id), isTrue);
+        }
       }
     });
   });

@@ -6,19 +6,20 @@
     "rows": 9
   },
   "layout": [
+    "X.......X",
+    ".........",
+    "..F......",
     ".........",
     ".........",
     ".........",
-    "...XXX...",
-    "...XXX...",
-    "...XXX...",
+    "....F....",
     ".........",
-    ".........",
-    "........."
+    "X.......X"
   ],
   "legend": {
     ".": "cell",
-    "X": "void"
+    "X": "void",
+    "F": "fire"
   },
   "pieces": [
     "salmon",
@@ -31,22 +32,19 @@
   "moves": 34,
   "goals": [
     {
+      "type": "put_out"
+    },
+    {
       "type": "collect",
       "piece": "tamago",
-      "count": 31
+      "count": 33
     },
     {
       "type": "collect",
       "piece": "ikura",
-      "count": 31
+      "count": 33
     }
   ],
-  "stars": [5100, 8100, 11000],
-  "conveyors": [
-    {
-      "row": 1,
-      "dir": "right"
-    }
-  ],
+  "stars": [8300, 12100, 15300],
   "seed": 293132
 }

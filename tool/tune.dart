@@ -28,6 +28,8 @@ LevelConfig _variant(LevelConfig l, int moves, double factor) => LevelConfig(
       ice: l.ice,
       bags: l.bags,
       mats: l.mats,
+      fire: l.fire,
+      cats: l.cats,
       pieces: l.pieces,
       moves: moves,
       goals: [for (final g in l.goals) _scaled(g, factor)],

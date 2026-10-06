@@ -34,6 +34,8 @@ abstract final class L10n {
       'bag': 'Rice bags',
       'deliver': 'Deliver',
       'mat': 'Mats',
+      'fire': 'Fires',
+      'cat': 'Cats',
       'salmon': 'Salmon',
       'maguro': 'Maguro',
       'tamago': 'Tamago',
@@ -67,6 +69,8 @@ abstract final class L10n {
       'itemBag': 'every rice bag broken',
       'itemDeliver': '{n} rice balls delivered to the kitchen',
       'itemMat': 'every bamboo mat cleared',
+      'itemFire': 'every grill fire put out',
+      'itemCat': 'every thieving cat shooed away',
       'and': 'and',
       'cust0': 'Granny Sakura',
       'cust1': 'Mr. Tanaka',
@@ -112,6 +116,12 @@ abstract final class L10n {
       'tipMatTitle': 'Bamboo mats',
       'tipMatBody': 'A mat blocks its cell and grows onto a neighbour every '
           'move where you did not clear one. Match next to a mat to remove it.',
+      'tipFireTitle': 'Hot grill',
+      'tipFireBody': 'Burning sushi sets a neighbour alight every move you '
+          'do not put one out. Match a burning piece to extinguish it.',
+      'tipCatTitle': 'Fish thief!',
+      'tipCatBody': 'The cat eats a piece beside it every move. Clear sushi '
+          'on or next to the cat to scare it; scare it enough and it runs off.',
     },
     'th': {
       'pickPlate': 'เลือกจานเลย',
@@ -134,6 +144,8 @@ abstract final class L10n {
       'bag': 'กระสอบข้าว',
       'deliver': 'ส่งของ',
       'mat': 'เสื่อไผ่',
+      'fire': 'ไฟ',
+      'cat': 'แมว',
       'salmon': 'แซลมอน',
       'maguro': 'มากุโระ',
       'tamago': 'ทามาโกะ',
@@ -167,6 +179,8 @@ abstract final class L10n {
       'itemBag': 'แกะกระสอบข้าวให้หมด',
       'itemDeliver': 'ส่งข้าวปั้น {n} ลูกเข้าครัว',
       'itemMat': 'เก็บเสื่อไผ่ให้หมด',
+      'itemFire': 'ดับไฟเตาย่างให้หมด',
+      'itemCat': 'ไล่แมวขโมยปลาให้หมด',
       'and': 'กับ',
       'cust0': 'คุณยายซากุระ',
       'cust1': 'คุณทานากะ',
@@ -214,6 +228,14 @@ abstract final class L10n {
       'tipMatBody':
           'เสื่อตันทั้งช่องและลามไปช่องข้าง ๆ ทุกครั้งที่ไม่ได้เก็บเสื่อ '
               'จับคู่ชิ้นที่อยู่ติดกับเสื่อเพื่อเก็บเสื่อ',
+      'tipFireTitle': 'เตาร้อน',
+      'tipFireBody':
+          'ซูชิที่ติดไฟจะลามไปชิ้นข้าง ๆ ทุกครั้งที่ไม่ได้ดับไฟสักชิ้น '
+              'จับคู่ชิ้นที่ติดไฟเพื่อดับ',
+      'tipCatTitle': 'แมวขโมยปลา!',
+      'tipCatBody':
+          'แมวจะกินชิ้นข้าง ๆ ทุกครั้งที่เดิน เคลียร์ชิ้นที่ตัวแมวหรือติดกับแมว '
+              'เพื่อไล่ ไล่ครบก็วิ่งหนีไป',
     },
   };
 }

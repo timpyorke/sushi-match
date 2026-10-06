@@ -9,16 +9,17 @@
     ".........",
     ".........",
     "X.......X",
-    "XX.....XX",
+    "XX..F..XX",
     "XXX...XXX",
-    "XX.....XX",
+    "XX..F..XX",
     "X.......X",
     ".........",
     "........."
   ],
   "legend": {
     ".": "cell",
-    "X": "void"
+    "X": "void",
+    "F": "fire"
   },
   "pieces": [
     "salmon",
@@ -31,16 +32,14 @@
   "moves": 33,
   "goals": [
     {
-      "type": "collect",
-      "piece": "salmon",
-      "count": 31
+      "type": "put_out"
     },
     {
       "type": "collect",
-      "piece": "ebi",
-      "count": 31
+      "piece": "salmon",
+      "count": 26
     }
   ],
-  "stars": [5100, 8500, 10400],
+  "stars": [5200, 8700, 12300],
   "seed": 272916
 }

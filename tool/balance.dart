@@ -26,6 +26,8 @@ LevelConfig _withoutBelts(LevelConfig l) => LevelConfig(
       ice: l.ice,
       bags: l.bags,
       mats: l.mats,
+      fire: l.fire,
+      cats: l.cats,
       pieces: l.pieces,
       moves: l.moves,
       goals: l.goals,

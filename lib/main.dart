@@ -74,6 +74,8 @@ const int kLevelCount = 50;
     if (level.goals.any((g) => g.type == GoalType.deliver))
       ('deliver', '🍙', 'tipDeliver'),
     if (level.mats.any((m) => m)) ('mat', '🎋', 'tipMat'),
+    if (level.fire.any((f) => f)) ('fire', '🔥', 'tipFire'),
+    if (level.cats.isNotEmpty) ('cat', '🐱', 'tipCat'),
     if ([
       for (var i = 0; i < level.bags.length; i++)
         if (level.bags[i] > 0 && !level.mats[i]) i,

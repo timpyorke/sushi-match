@@ -27,6 +27,8 @@ Move greedy(GameEngine e, Random r) {
   final hasBag = e.level.goals
       .any((g) => g.type == GoalType.breakBag || g.type == GoalType.clearMats);
   final hasDeliver = e.level.goals.any((g) => g.type == GoalType.deliver);
+  final hasFire = e.level.goals.any((g) => g.type == GoalType.putOut);
+  final hasCat = e.level.goals.any((g) => g.type == GoalType.shooCats);
   Move? best;
   var bestScore = -1.0;
   for (final m in MoveFinder.allMoves(e.board)) {
@@ -41,6 +43,12 @@ Move greedy(GameEngine e, Random r) {
         for (final c in g.cells) {
           s += wanted.contains(g.kind) ? 1.5 : 1;
           if (hasNori && e.noriAt(c) > 0) s += 2;
+          if (hasFire && (e.board[c]?.burning ?? false)) s += 3;
+          if (hasCat) {
+            for (final cat in e.cats) {
+              if (cat.pos == c || cat.pos.isAdjacentTo(c)) s += 3;
+            }
+          }
           if (hasDeliver) {
             // Clearing under an ingredient lets it sink.
             for (var r = 0; r < c.row; r++) {

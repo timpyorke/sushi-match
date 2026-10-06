@@ -7,7 +7,9 @@ enum GoalType {
   breakIce,
   breakBag,
   deliver,
-  clearMats
+  clearMats,
+  putOut,
+  shooCats
 }
 
 class LevelGoal {
@@ -43,6 +45,16 @@ class LevelGoal {
       : type = GoalType.clearMats,
         piece = null;
 
+  /// Put out every burning piece; [count] is how many burned at the start.
+  const LevelGoal.putOut(this.count)
+      : type = GoalType.putOut,
+        piece = null;
+
+  /// Chase every cat off the board; [count] is the number of cats.
+  const LevelGoal.shooCats(this.count)
+      : type = GoalType.shooCats,
+        piece = null;
+
   final GoalType type;
   final PieceKind? piece;
   final int count;
@@ -51,7 +63,9 @@ class LevelGoal {
       {int noriCells = 0,
       int iceCells = 0,
       int bagCells = 0,
-      int matCells = 0}) {
+      int matCells = 0,
+      int fireCells = 0,
+      int catCount = 0}) {
     switch (j['type']) {
       case 'collect':
         return LevelGoal.collect(
@@ -80,6 +94,16 @@ class LevelGoal {
           throw const FormatException('clear_mats needs mat cells in layout');
         }
         return LevelGoal.clearMats(matCells);
+      case 'put_out':
+        if (fireCells == 0) {
+          throw const FormatException('put_out needs fire cells in layout');
+        }
+        return LevelGoal.putOut(fireCells);
+      case 'shoo_cats':
+        if (catCount == 0) {
+          throw const FormatException('shoo_cats needs cats in layout');
+        }
+        return LevelGoal.shooCats(catCount);
       default:
         throw UnsupportedError(
             'Goal type "${j['type']}" is not implemented yet');
@@ -103,6 +127,14 @@ class Conveyor {
   }
 }
 
+/// A thieving cat's starting cell and how many scares it takes to chase it off.
+class CatSpec {
+  const CatSpec(this.row, this.col, this.hp);
+  final int row;
+  final int col;
+  final int hp;
+}
+
 class LevelConfig {
   LevelConfig({
     required this.id,
@@ -113,6 +145,8 @@ class LevelConfig {
     this.ice = const [],
     this.bags = const [],
     this.mats = const [],
+    this.fire = const [],
+    this.cats = const [],
     required this.pieces,
     required this.moves,
     required this.goals,
@@ -142,6 +176,12 @@ class LevelConfig {
   /// Row-major: which blocked cells are bamboo mats (they spread). Mats also
   /// appear in [bags] with one layer.
   final List<bool> mats;
+
+  /// Row-major: pieces that start the level burning; empty means none.
+  final List<bool> fire;
+
+  /// Cats that start on the board; they move and eat pieces every turn.
+  final List<CatSpec> cats;
   final List<PieceKind> pieces;
   final int moves;
   final List<LevelGoal> goals;
@@ -151,7 +191,7 @@ class LevelConfig {
 
   /// Parses the GDD level schema. `nori` / `nori:N` legend values put N
   /// layers under a cell, `ice` / `ice:N` cage the piece that starts there in
-  /// N layers of ice; `bag` / `bag:N` put an N-layer rice bag in the cell, `mat` a bamboo mat;
+  /// N layers of ice; `bag` / `bag:N` put an N-layer rice bag in the cell, `mat` a bamboo mat, `fire` a burning piece, `cat` / `cat:N` a cat with N lives;
   /// other values besides "void" are plain cells.
   factory LevelConfig.fromJson(Map<String, dynamic> j) {
     final board = j['board'] as Map<String, dynamic>;
@@ -179,6 +219,17 @@ class LevelConfig {
         v.startsWith('ice')
             ? (v.contains(':') ? int.parse(v.split(':')[1]) : 1)
             : 0,
+    ];
+    final fire = [for (final v in cellsOf) v == 'fire'];
+    final cats = [
+      for (var i = 0; i < cellsOf.length; i++)
+        if (cellsOf[i].startsWith('cat'))
+          CatSpec(
+              i ~/ cols,
+              i % cols,
+              cellsOf[i].contains(':')
+                  ? int.parse(cellsOf[i].split(':')[1])
+                  : 1),
     ];
     final mats = [for (final v in cellsOf) v == 'mat'];
     final bags = [
@@ -210,6 +261,8 @@ class LevelConfig {
       ice: ice,
       bags: bags,
       mats: mats,
+      fire: fire,
+      cats: cats,
       pieces: [
         for (final p in j['pieces'] as List)
           PieceKind.values.byName(p as String),
@@ -224,7 +277,9 @@ class LevelConfig {
                 for (var i = 0; i < bags.length; i++)
                   if (bags[i] > 0 && !mats[i]) i
               ].length,
-              matCells: mats.where((m) => m).length),
+              matCells: mats.where((m) => m).length,
+              fireCells: fire.where((f) => f).length,
+              catCount: cats.length),
       ],
       stars: (j['stars'] as List? ?? const []).cast<int>(),
       conveyors: conveyors,

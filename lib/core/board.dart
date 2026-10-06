@@ -28,7 +28,8 @@ class Board {
             kind: p.kind,
             special: p.special,
             ingredient: p.ingredient)
-          ..ice = p.ice;
+          ..ice = p.ice
+          ..burning = p.burning;
       }
     }
     return b;

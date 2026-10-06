@@ -46,6 +46,10 @@ class Piece {
 
   bool get frozen => ice > 0;
 
+  /// On fire (grill levels): matching the piece puts it out, otherwise the
+  /// fire spreads to a neighbour at the end of the turn.
+  bool burning = false;
+
   bool get isSpecial => special != null;
   bool get isOmakase => special == SpecialType.omakase;
 

@@ -10,7 +10,7 @@
     "X.......X",
     ".........",
     ".........",
-    ".........",
+    "....C....",
     ".........",
     ".........",
     "X.......X",
@@ -18,7 +18,8 @@
   ],
   "legend": {
     ".": "cell",
-    "X": "void"
+    "X": "void",
+    "C": "cat:1"
   },
   "pieces": [
     "salmon",
@@ -31,22 +32,19 @@
   "moves": 31,
   "goals": [
     {
+      "type": "shoo_cats"
+    },
+    {
       "type": "collect",
       "piece": "kappa",
-      "count": 37
+      "count": 36
     },
     {
       "type": "collect",
       "piece": "maguro",
-      "count": 37
+      "count": 36
     }
   ],
-  "stars": [6600, 9900, 12900],
-  "conveyors": [
-    {
-      "row": 4,
-      "dir": "left"
-    }
-  ],
+  "stars": [6900, 9500, 12300],
   "seed": 222376
 }

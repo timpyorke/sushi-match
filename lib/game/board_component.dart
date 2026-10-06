@@ -18,6 +18,7 @@ import '../core/settings.dart';
 import '../core/piece.dart';
 import '../core/steps.dart';
 import '../services/wallet.dart';
+import 'cat_component.dart';
 import 'piece_component.dart';
 import 'tile_art.dart';
 
@@ -56,6 +57,7 @@ class BoardComponent extends PositionComponent
 
   final _views = <int, PieceComponent>{};
   final _at = <Pos, PieceComponent>{};
+  final _cats = <int, CatComponent>{};
   late final ClipComponent _layer;
 
   bool _busy = false;
@@ -104,6 +106,10 @@ class BoardComponent extends PositionComponent
     for (final p in board.positions) {
       final piece = board[p];
       if (piece != null) _spawnView(PieceSnapshot.of(piece), p);
+    }
+    for (final c in engine.cats) {
+      _layer.add(_cats[c.id] = CatComponent(
+          catId: c.id, hp: c.hp, cellSize: cell, position: _center(c.pos)));
     }
   }
 
@@ -505,6 +511,41 @@ class BoardComponent extends PositionComponent
           }
           _haptic(HapticFeedback.mediumImpact);
           await Future.wait(pops);
+        case IgniteStep(:final pos, :final pieceId):
+          _views[pieceId]?.burning = true;
+          _burst(_center(pos), _emberChip);
+          await _wait(0.18);
+        case CatHitStep(:final hits):
+          final runs = <Future<void>>[];
+          for (final h in hits) {
+            final cat = _cats[h.catId];
+            if (cat == null) continue;
+            cat.hp = h.hp;
+            if (h.hp > 0) {
+              cat.add(SequenceEffect([
+                RotateEffect.by(0.25, EffectController(duration: 0.06)),
+                RotateEffect.by(-0.5, EffectController(duration: 0.12)),
+                RotateEffect.by(0.25, EffectController(duration: 0.06)),
+              ]));
+              continue;
+            }
+            // Out of lives: the cat bolts off the board.
+            _cats.remove(h.catId);
+            final done = Completer<void>();
+            cat.add(MoveByEffect(Vector2(cell * 2.5, -cell * 0.6),
+                EffectController(duration: 0.4, curve: Curves.easeIn),
+                onComplete: () {
+              cat.removeFromParent();
+              done.complete();
+            }));
+            runs.add(done.future);
+          }
+          _haptic(HapticFeedback.lightImpact);
+          await Future.wait(runs);
+          await _wait(0.1);
+        case CatMoveStep(:final catId, :final to):
+          final cat = _cats[catId];
+          if (cat != null) await _moveTo(cat, _center(to), 0.3);
         case MatSpreadStep(:final pos, :final pieceId):
           final v = _views.remove(pieceId);
           if (v != null) {
@@ -571,6 +612,7 @@ class BoardComponent extends PositionComponent
       special: s.special,
       ice: s.ice,
       ingredient: s.ingredient,
+      burning: s.burning,
       cellSize: cell,
       position: from ?? _center(at),
     );
@@ -611,6 +653,7 @@ class BoardComponent extends PositionComponent
   }
 
   static final _rice = Paint()..color = const Color(0xFFFFFDF5);
+  static final _emberChip = Paint()..color = const Color(0xFFFF6A1F);
   static final _goldChip = Paint()..color = const Color(0xFFFFD54F);
   static final _matChip = Paint()..color = const Color(0xFFCDB872);
   static final _sackBurst = Paint()..color = const Color(0xFFE9D3A8);
