@@ -1,0 +1,43 @@
+{
+  "id": 28,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    "X.......X",
+    "NNNNNNNNN",
+    ".........",
+    "NNNNNNNNN",
+    ".........",
+    "NNNNNNNNN",
+    ".........",
+    "NNNNNNNNN",
+    "X.......X"
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "N": "nori:1"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "tamago",
+    "ikura",
+    "ebi"
+  ],
+  "moves": 33,
+  "goals": [
+    {
+      "type": "clear_nori"
+    },
+    {
+      "type": "score",
+      "count": 8400
+    }
+  ],
+  "stars": [13100, 21800, 28000],
+  "seed": 283024
+}

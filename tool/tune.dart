@@ -60,18 +60,30 @@ void main(List<String> args) {
 
   for (final f in files) {
     final text = f.readAsStringSync();
-    final base =
-        LevelConfig.fromJson(jsonDecode(text) as Map<String, dynamic>);
+    final base = LevelConfig.fromJson(jsonDecode(text) as Map<String, dynamic>);
     if (only.isNotEmpty && !only.contains(base.id)) continue;
     final t = (base.id.clamp(1, 20) - 1) / 19;
-    final targetWin = base.id == 21 ? 0.66 : _lerp(0.98, 0.68, t);
-    final target3 = _lerp(0.50, 0.15, t);
+    // Past level 21 the curve flattens (68% -> 60%); every 5th level is a
+    // hard one and every 15th a boss (GDD sawtooth).
+    final late = base.id > 21 ? (base.id - 21) / 29 : 0.0;
+    final dip = base.id % 15 == 0
+        ? 0.18
+        : base.id % 5 == 0
+            ? 0.12
+            : 0.0;
+    final targetWin = base.id == 21
+        ? 0.66
+        : base.id > 21
+            ? _lerp(0.66, 0.58, late) - dip
+            : _lerp(0.98, 0.68, t);
+    final target3 =
+        base.id > 20 ? _lerp(0.15, 0.10, late) : _lerp(0.50, 0.15, t);
 
     // Moves follow a gentle schedule; goal sizes are scaled (binary search,
     // never beyond x1.5 so early levels stay friendly) until the bot wins at
     // the target rate. Levels with nori keep their layout and tune moves.
     final scheduled = (20 + (base.id - 1) * 0.5).round();
-    final fixedGoals = base.goals.any((g) => g.type == GoalType.clearNori);
+    final fixedGoals = base.goals.every((g) => g.type == GoalType.clearNori);
     var moves = scheduled;
     var factor = 1.0;
     List<int> run() {
@@ -91,9 +103,14 @@ void main(List<String> args) {
         if (scores.length / runs >= targetWin) break;
       }
     } else {
-      var lo = 0.4, hi = 1.5;
+      var lo = base.nori.any((n) => n > 0) ? 0.8 : 0.4, hi = 1.5;
       factor = hi;
       scores = run();
+      // Still too easy at the largest goals: take moves away.
+      while (scores.length / runs > targetWin + 0.08 && moves > 14) {
+        moves--;
+        scores = run();
+      }
       if (scores.length / runs < targetWin) {
         for (var i = 0; i < 9; i++) {
           factor = (lo + hi) / 2;
@@ -107,6 +124,12 @@ void main(List<String> args) {
         factor = lo;
       }
       scores = run();
+      // Nori levels can be too hard even with small goals: grant moves.
+      while (
+          scores.length / runs < targetWin - 0.04 && moves < scheduled + 10) {
+        moves++;
+        scores = run();
+      }
     }
     final win = scores.length / runs;
     final tuned = _variant(base, moves, factor);
@@ -127,8 +150,7 @@ void main(List<String> args) {
         '(target ${(targetWin * 100).round()}%) stars [$s1, $s2, $s3]');
 
     if (write) {
-      var out = text.replaceFirst(
-          RegExp(r'"moves":\s*\d+'), '"moves": $moves');
+      var out = text.replaceFirst(RegExp(r'"moves":\s*\d+'), '"moves": $moves');
       final counts = [
         for (final g in tuned.goals)
           if (g.type != GoalType.clearNori) g.count,
@@ -137,8 +159,8 @@ void main(List<String> args) {
       out = out.replaceAllMapped(
           RegExp(r'("type":\s*"(?:collect|score)"[^}]*?"count":\s*)\d+'),
           (m) => '${m[1]}${counts[k++]}');
-      out = out.replaceFirst(RegExp(r'"stars":\s*\[[^\]]*\]'),
-          '"stars": [$s1, $s2, $s3]');
+      out = out.replaceFirst(
+          RegExp(r'"stars":\s*\[[^\]]*\]'), '"stars": [$s1, $s2, $s3]');
       f.writeAsStringSync(out);
     }
   }

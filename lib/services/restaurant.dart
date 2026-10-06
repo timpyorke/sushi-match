@@ -46,6 +46,16 @@ abstract final class Restaurant {
       DecorDef('table', '🪑', 8),
       DecorDef('sign', '🪧', 12),
     ]),
+    ShopDef('kyoto', '⛩️', 31, 45, 40, [
+      DecorDef('lantern', '🏮', 7),
+      DecorDef('table', '🪑', 10),
+      DecorDef('sign', '🪧', 14),
+    ]),
+    ShopDef('hokkaido', '🦀', 46, 60, 60, [
+      DecorDef('lantern', '🏮', 8),
+      DecorDef('table', '🪑', 12),
+      DecorDef('sign', '🪧', 16),
+    ]),
   ];
 
   static const completeCoins = 100;

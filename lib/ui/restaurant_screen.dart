@@ -154,6 +154,10 @@ const _palettes = {
       Color(0xFFF4EBD8), Color(0xFFB98A5A)),
   'osaka': _Palette(Color(0xFFF6C9A0), Color(0xFFE8C48F), Color(0xFFC0392B),
       Color(0xFFFFF1D6), Color(0xFF9C6B43)),
+  'kyoto': _Palette(Color(0xFFD9CFEA), Color(0xFFD8C7A3), Color(0xFF5E7F4F),
+      Color(0xFFF3EBD3), Color(0xFF8A6B4A)),
+  'hokkaido': _Palette(Color(0xFFD4ECF7), Color(0xFFCBD9E2), Color(0xFF1F6F8B),
+      Color(0xFFF7FBFD), Color(0xFF8B8F96)),
 };
 
 /// A little street stall that fills up as decorations are bought. Empty
