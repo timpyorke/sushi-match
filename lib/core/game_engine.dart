@@ -53,6 +53,13 @@ class GameEngine {
             .fold(0, (n, g) => n + g.count),
         movesLeft = level.moves {
     board.lockedRows = {for (final c in level.conveyors) c.row};
+    for (var i = 0; i < level.locks.length; i++) {
+      final kind = level.locks[i];
+      if (kind == null) continue;
+      final at = Pos(i ~/ level.cols, i % level.cols);
+      _lockKinds[at] = kind;
+      board.lockedCells.add(at);
+    }
     BoardFactory.fillInitial(board, level.pieces, rng, _makePiece,
         iceAt: (p) =>
             level.ice.isEmpty ? 0 : level.ice[p.row * level.cols + p.col]);
@@ -60,6 +67,11 @@ class GameEngine {
     for (var i = 0; i < level.fire.length; i++) {
       if (level.fire[i]) {
         board[Pos(i ~/ level.cols, i % level.cols)]!.burning = true;
+      }
+    }
+    for (var i = 0; i < level.timers.length; i++) {
+      if (level.timers[i] > 0) {
+        board[Pos(i ~/ level.cols, i % level.cols)]!.timer = level.timers[i];
       }
     }
   }
@@ -82,6 +94,8 @@ class GameEngine {
         status = o.status,
         _nextId = o._nextId {
     _collected.addAll(o._collected);
+    _lockKinds.addAll(o._lockKinds);
+    _unlocked.addAll(o._unlocked);
   }
 
   /// Independent copy of the current state for bots and solvers to try a
@@ -110,6 +124,13 @@ class GameEngine {
   bool _matBroken = false;
 
   final List<Cat> _cats;
+
+  /// Key locks by cell and the colours already matched to open them.
+  final Map<Pos, PieceKind> _lockKinds = {};
+  final Set<PieceKind> _unlocked = {};
+
+  /// Set when a bomb ran out this turn.
+  bool _bombed = false;
 
   /// Cats startled this turn; they stay put instead of prowling.
   final Set<int> _scared;
@@ -333,6 +354,7 @@ class GameEngine {
       if (!_matBroken && !goals.every((g) => g.done)) {
         shifted.addAll(_spreadMats());
       }
+      if (!goals.every((g) => g.done)) shifted.addAll(_tickBombs());
     }
     _matBroken = false;
     _fireOut = false;
@@ -341,9 +363,10 @@ class GameEngine {
     final won = goals.every((g) => g.done);
     if (won) {
       status = GameStatus.won;
-    } else if (movesLeft <= 0) {
+    } else if (movesLeft <= 0 || _bombed) {
       status = GameStatus.lost;
     }
+    _bombed = false;
     return [
       ...shifted,
       if (won) ..._bonusRound(),
@@ -485,11 +508,15 @@ class GameEngine {
     _cats.removeWhere((c) => c.hp <= 0);
 
     final removed = <ClearedPiece>[];
+    final opened = <PieceKind>{};
     for (final p in cleared) {
       final piece = board[p]!;
       if (piece.burning) _fireOut = true;
       final k = piece.kind;
-      if (k != null && _credit) _collected[k] = (_collected[k] ?? 0) + 1;
+      if (k != null && _credit) {
+        _collected[k] = (_collected[k] ?? 0) + 1;
+        if (_lockKinds.containsValue(k)) opened.add(k);
+      }
       removed.add(ClearedPiece(piece.id, p));
       board[p] = null;
     }
@@ -519,6 +546,17 @@ class GameEngine {
     if (noriLeft.isNotEmpty) steps.add(NoriStep(noriLeft));
 
     if (startled.isNotEmpty) steps.add(CatHitStep(startled));
+
+    // Matching a lock's colour opens every lock of that colour for good.
+    for (final kind in opened) {
+      if (!_unlocked.add(kind)) continue;
+      final cells = [
+        for (final e in _lockKinds.entries)
+          if (e.value == kind) e.key,
+      ];
+      board.lockedCells.removeAll(cells);
+      steps.add(UnlockStep(cells, kind));
+    }
 
     if (cracks.isNotEmpty) {
       final hits = <BagHit>[];
@@ -665,12 +703,28 @@ class GameEngine {
     return steps;
   }
 
-  /// Removes ingredients standing on the lowest open cell of their column.
+  // Gravity runs along "lines": columns for up/down, rows for left/right.
+  // Cells are indexed upstream (where new pieces enter) to downstream.
+
+  int get _lineCount => level.gravity.vertical ? board.cols : board.rows;
+
+  int get _lineLength => level.gravity.vertical ? board.rows : board.cols;
+
+  Pos get _step => Pos(level.gravity.dr, level.gravity.dc);
+
+  Pos _lineCell(int line, int k) => switch (level.gravity) {
+        Gravity.down => Pos(k, line),
+        Gravity.up => Pos(board.rows - 1 - k, line),
+        Gravity.right => Pos(line, k),
+        Gravity.left => Pos(line, board.cols - 1 - k),
+      };
+
+  /// Removes ingredients standing on the last open cell of their line.
   List<ClearedPiece> _deliverReached() {
     final gone = <ClearedPiece>[];
-    for (var c = 0; c < board.cols; c++) {
-      for (var r = board.rows - 1; r >= 0; r--) {
-        final p = Pos(r, c);
+    for (var line = 0; line < _lineCount; line++) {
+      for (var k = _lineLength - 1; k >= 0; k--) {
+        final p = _lineCell(line, k);
         if (!board.isPlayable(p)) continue;
         final piece = board[p];
         if (piece != null && piece.ingredient) {
@@ -693,13 +747,14 @@ class GameEngine {
       for (final p in board.positions)
         if (board[p] != null) board[p]!.id: p,
     };
-    final fresh = <int, (PieceSnapshot, int)>{};
-    // A column splits into segments at rice bags (void cells stay transparent
-    // to falling pieces, bags do not). Only the topmost segment is fed from
-    // above; the others fill by pieces sliding in diagonally.
+    final fresh = <int, (PieceSnapshot, Pos)>{};
+    final step = _step;
+    // A line splits into segments at rice bags (void cells stay transparent
+    // to falling pieces, bags do not). Only the first segment is fed from
+    // upstream; the others fill by pieces sliding in diagonally.
     final segments = <List<Pos>>[];
     final fed = <bool>[];
-    for (var c = 0; c < board.cols; c++) {
+    for (var line = 0; line < _lineCount; line++) {
       var current = <Pos>[];
       var sealed = false;
       void close() {
@@ -711,8 +766,8 @@ class GameEngine {
         current = <Pos>[];
       }
 
-      for (var r = 0; r < board.rows; r++) {
-        final p = Pos(r, c);
+      for (var k = 0; k < _lineLength; k++) {
+        final p = _lineCell(line, k);
         if (bagAt(p) > 0) {
           close();
           sealed = true;
@@ -723,6 +778,21 @@ class GameEngine {
       close();
     }
 
+    // Portals: the piece resting at the end of the segment above an entry
+    // reappears at the top of the exit's segment whenever that has room. The
+    // exit segment is fed by the portal instead of from upstream.
+    final transfers = <(int, int)>[];
+    final portalFed = <int>{};
+    for (final portal in level.portals) {
+      final into = segments.indexWhere((c) => c.last + step == portal.entry);
+      final out = segments.indexWhere((c) => c.first == portal.exit);
+      if (into < 0 || out < 0) continue;
+      transfers.add((into, out));
+      fed[out] = false;
+      portalFed.add(out);
+    }
+
+    final perp = Pos(step.col.abs(), step.row.abs());
     for (var round = 0; round < 100; round++) {
       for (var s = 0; s < segments.length; s++) {
         final cells = segments[s];
@@ -739,34 +809,46 @@ class GameEngine {
         }
         if (!fed[s]) continue;
         final missing = w + 1;
-        final top = cells.first.row;
+        final first = cells.first;
         for (var i = 0; i < missing; i++) {
           final piece = _spawnIngredient()
               ? _makeIngredient()
               : _makePiece(level.pieces[rng.nextInt(level.pieces.length)]);
           board[cells[i]] = piece;
-          fresh[piece.id] = (PieceSnapshot.of(piece), top - missing + i);
+          final back = missing - i;
+          fresh[piece.id] = (
+            PieceSnapshot.of(piece),
+            Pos(first.row - step.row * back, first.col - step.col * back),
+          );
         }
       }
-      // Sealed segments whose top cell is empty pull a piece in from the
-      // neighbouring column one row up.
-      var slid = false;
+      var moved = false;
+      for (final (into, out) in transfers) {
+        final from = segments[into].last, to = segments[out].first;
+        if (board[from] != null && board[to] == null) {
+          board[to] = board[from];
+          board[from] = null;
+          moved = true;
+        }
+      }
+      // Sealed segments whose first cell is empty pull a piece in from the
+      // neighbouring line, one cell upstream.
       for (var s = 0; s < segments.length; s++) {
-        if (fed[s]) continue;
+        if (fed[s] || portalFed.contains(s)) continue;
         final top = segments[s].first;
         if (board[top] != null) continue;
+        final up = top - step;
         final donors = [
-          for (final dc in const [-1, 1])
-            if (board[Pos(top.row - 1, top.col + dc)] != null)
-              Pos(top.row - 1, top.col + dc),
+          for (final d in [perp, Pos(-perp.row, -perp.col)])
+            if (board[up + d] != null) up + d,
         ];
         if (donors.isEmpty) continue;
         final from = donors[rng.nextInt(donors.length)];
         board[top] = board[from];
         board[from] = null;
-        slid = true;
+        moved = true;
       }
-      if (!slid) break;
+      if (!moved) break;
     }
 
     final falls = <FallMove>[];
@@ -811,10 +893,10 @@ class GameEngine {
   void _placeIngredients() {
     if (_ingredientTotal == 0) return;
     final columns = [
-      for (var c = 0; c < board.cols; c++)
+      for (var line = 0; line < _lineCount; line++)
         [
-          for (var r = 0; r < board.rows; r++)
-            if (board.isPlayable(Pos(r, c))) Pos(r, c),
+          for (var k = 0; k < _lineLength; k++)
+            if (board.isPlayable(_lineCell(line, k))) _lineCell(line, k),
         ],
     ].where((cells) => cells.length >= 3).toList()
       ..shuffle(rng);
@@ -823,6 +905,32 @@ class GameEngine {
       board[cells[rng.nextInt((cells.length + 1) ~/ 2)]] = _makeIngredient();
     }
     if (MoveFinder.findMove(board) == null) BoardFactory.shuffle(board, rng);
+  }
+
+  /// Every bomb loses a turn; those at zero explode (the piece is lost and
+  /// so is the level).
+  List<BoardStep> _tickBombs() {
+    final ticks = <int, int>{};
+    final blown = <Pos>[];
+    for (final p in board.positions) {
+      final piece = board[p];
+      if (piece == null || piece.timer == 0) continue;
+      ticks[piece.id] = --piece.timer;
+      if (piece.timer == 0) blown.add(p);
+    }
+    if (ticks.isEmpty) return const [];
+    final exploded = [
+      for (final p in blown) ClearedPiece(board[p]!.id, p),
+    ];
+    for (final p in blown) {
+      board[p] = null;
+    }
+    if (blown.isNotEmpty) _bombed = true;
+    return [
+      BombStep(ticks, exploded),
+      if (blown.isNotEmpty) ..._gravityAndRefill(),
+      if (blown.isNotEmpty) ..._cascade(MatchFinder.find(board), startAt: 1),
+    ];
   }
 
   /// Fire jumps from a burning piece to one neighbour. Called on turns where

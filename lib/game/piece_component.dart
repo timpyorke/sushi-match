@@ -2,6 +2,8 @@ import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flame/components.dart';
+import 'package:flutter/painting.dart'
+    show TextPainter, TextSpan, TextStyle, FontWeight, TextDirection;
 
 import '../core/piece.dart';
 import 'piece_painter.dart';
@@ -14,13 +16,16 @@ class PieceComponent extends PositionComponent {
     this.ice = 0,
     this.ingredient = false,
     this.burning = false,
+    int timer = 0,
     required double cellSize,
     required Vector2 position,
   }) : super(
           position: position,
           size: Vector2.all(cellSize),
           anchor: Anchor.center,
-        );
+        ) {
+    this.timer = timer;
+  }
 
   final int pieceId;
   final PieceKind? kind;
@@ -34,6 +39,43 @@ class PieceComponent extends PositionComponent {
 
   /// On fire (grill levels).
   bool burning;
+
+  int _timer = 0;
+  TextPainter? _timerText;
+
+  /// Bomb countdown shown as a badge (0 = no bomb).
+  int get timer => _timer;
+  set timer(int v) {
+    _timer = v;
+    _timerText = v == 0
+        ? null
+        : (TextPainter(
+            text: TextSpan(
+                text: '$v',
+                style: const TextStyle(
+                    color: Color(0xFFFFFFFF),
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold)),
+            textDirection: TextDirection.ltr)
+          ..layout());
+  }
+
+  static final _bombFill = Paint()..color = const Color(0xFF2B211C);
+  static final _bombEdge = Paint()
+    ..color = const Color(0xFFE5667E)
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 2.5;
+
+  void _drawBomb(Canvas canvas) {
+    final text = _timerText;
+    if (text == null) return;
+    final c = Offset(size.x * 0.78, size.y * 0.24);
+    // Panic as the fuse gets short.
+    final r = size.x * (_timer <= 1 ? 0.22 : 0.19);
+    canvas.drawCircle(c, r, _bombFill);
+    canvas.drawCircle(c, r, _bombEdge);
+    text.paint(canvas, c - Offset(text.width / 2, text.height / 2));
+  }
 
   double _t = 0;
 
@@ -92,6 +134,7 @@ class PieceComponent extends PositionComponent {
       PiecePainter.paint(canvas, size.x, kind, special);
     }
     if (burning) _drawFlame(canvas);
+    _drawBomb(canvas);
     if (ice == 0) return;
     final s = size.x;
     final rr = RRect.fromRectAndRadius(

@@ -15,11 +15,16 @@ class Board {
   /// Rows whose pieces cannot be swapped by hand (conveyor rows).
   Set<int> lockedRows = const {};
 
-  bool isLocked(Pos p) => lockedRows.contains(p.row);
+  /// Single cells whose pieces cannot be swapped yet (key locks).
+  Set<Pos> lockedCells = {};
+
+  bool isLocked(Pos p) => lockedRows.contains(p.row) || lockedCells.contains(p);
 
   /// Independent copy with fresh Piece objects (ids kept).
   Board copy() {
-    final b = Board(rows, cols, _playable)..lockedRows = lockedRows;
+    final b = Board(rows, cols, _playable)
+      ..lockedRows = lockedRows
+      ..lockedCells = Set.of(lockedCells);
     for (var i = 0; i < _cells.length; i++) {
       final p = _cells[i];
       if (p != null) {
@@ -29,7 +34,8 @@ class Board {
             special: p.special,
             ingredient: p.ingredient)
           ..ice = p.ice
-          ..burning = p.burning;
+          ..burning = p.burning
+          ..timer = p.timer;
       }
     }
     return b;

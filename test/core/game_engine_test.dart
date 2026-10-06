@@ -18,6 +18,7 @@ void main() {
   bagTests();
   deliverAndMatTests();
   fireAndCatTests();
+  keyBombGravityPortalTests();
   void expectStableBoard(GameEngine e) {
     final ids = <int>{};
     for (final p in e.board.positions) {
@@ -760,6 +761,164 @@ void fireAndCatTests() {
         for (final p in e.board.positions) {
           expect(ids.add(e.board[p]!.id), isTrue);
         }
+      }
+    });
+  });
+}
+
+LevelConfig _levelWith(
+        {List<String>? layout,
+        Map<String, String>? legend,
+        String gravity = 'down',
+        int size = 7,
+        List<Map<String, dynamic>>? goals}) =>
+    LevelConfig.fromJson({
+      'id': 1,
+      'board': {'cols': size, 'rows': size},
+      'layout': layout,
+      'legend': legend ?? {'.': 'cell'},
+      'gravity': gravity,
+      'pieces': ['salmon', 'maguro', 'tamago', 'ikura', 'kappa'],
+      'moves': 99,
+      'goals': goals ??
+          [
+            {'type': 'score', 'count': 999999},
+          ],
+      'seed': 8,
+    });
+
+List<String> _plain([Map<String, String> put = const {}]) => [
+      for (var r = 0; r < 7; r++)
+        [for (var c = 0; c < 7; c++) put['$r,$c'] ?? '.'].join(),
+    ];
+
+void keyBombGravityPortalTests() {
+  void expectFull(GameEngine e) {
+    final ids = <int>{};
+    for (final p in e.board.positions) {
+      expect(e.board[p], isNotNull, reason: 'hole at $p');
+      expect(ids.add(e.board[p]!.id), isTrue);
+    }
+  }
+
+  group('key lock', () {
+    LevelConfig lockLevel() => _levelWith(
+        layout: _plain({'3,3': 'K'}), legend: {'.': 'cell', 'K': 'key:salmon'});
+
+    test('a locked cell cannot be swapped until its colour is matched', () {
+      final e = GameEngine(lockLevel());
+      expect(e.board.isLocked(const Pos(3, 3)), isTrue);
+      expect(e.trySwap(const Pos(3, 3), const Pos(3, 4)).single,
+          isA<InvalidSwapStep>());
+      final salmon = e.board.positions
+          .firstWhere((p) => e.board[p]!.kind == PieceKind.salmon);
+      final steps = e.useChopsticks(salmon);
+      expect(steps.whereType<UnlockStep>().single.kind, PieceKind.salmon);
+      expect(e.board.isLocked(const Pos(3, 3)), isFalse);
+    });
+
+    test('other colours leave it locked', () {
+      final e = GameEngine(lockLevel());
+      final other = e.board.positions
+          .firstWhere((p) => e.board[p]!.kind == PieceKind.maguro);
+      e.useChopsticks(other);
+      expect(e.board.isLocked(const Pos(3, 3)), isTrue);
+    });
+  });
+
+  group('time bomb', () {
+    LevelConfig bombLevel(int n) => _levelWith(
+        layout: _plain({'3,3': 'B'}), legend: {'.': 'cell', 'B': 'bomb:$n'});
+
+    test('parses onto the starting piece', () {
+      final e = GameEngine(bombLevel(3));
+      expect(e.board[const Pos(3, 3)]!.timer, 3);
+    });
+
+    test('ticks every move and ends the level when it runs out', () {
+      final e = GameEngine(bombLevel(1));
+      final far = MoveFinder.allMoves(e.board).firstWhere((m) =>
+          (m.$1.row - 3).abs() + (m.$1.col - 3).abs() > 3 &&
+          (m.$2.row - 3).abs() + (m.$2.col - 3).abs() > 3);
+      final steps = e.trySwap(far.$1, far.$2);
+      final bomb = steps.whereType<BombStep>();
+      if (bomb.isEmpty) return; // a cascade defused it
+      expect(bomb.first.exploded, hasLength(1));
+      expect(e.status, GameStatus.lost);
+      expectFull(e);
+      e.addMoves(5);
+      expect(e.status, GameStatus.playing);
+    });
+
+    test('matching the bomb defuses it', () {
+      final e = GameEngine(bombLevel(1));
+      e.useChopsticks(const Pos(3, 3));
+      final far = MoveFinder.allMoves(e.board).first;
+      final steps = e.trySwap(far.$1, far.$2);
+      expect(steps.whereType<BombStep>(), isEmpty);
+      expect(e.status, GameStatus.playing);
+    });
+  });
+
+  group('gravity', () {
+    for (final (dir, rowStart, colStart) in [
+      ('left', null, 7),
+      ('right', null, -1),
+      ('up', 7, null),
+    ]) {
+      test('$dir: pieces fall that way and refill from the far edge', () {
+        final e = GameEngine(_levelWith(layout: _plain(), gravity: dir));
+        final steps = e.useChopsticks(const Pos(3, 3));
+        final refill = steps.whereType<RefillStep>().first.pieces.first;
+        if (rowStart != null) {
+          expect(refill.start.row, greaterThanOrEqualTo(rowStart));
+        }
+        if (colStart != null) {
+          expect(colStart == 7 ? refill.start.col >= 7 : refill.start.col < 0,
+              isTrue);
+        }
+        expectFull(e);
+      });
+
+      test('$dir: random play keeps the board full', () {
+        final e = GameEngine(_levelWith(layout: _plain(), gravity: dir));
+        final rng = Random(3);
+        for (var i = 0; i < 30 && e.status == GameStatus.playing; i++) {
+          final moves = MoveFinder.allMoves(e.board);
+          final m = moves[rng.nextInt(moves.length)];
+          e.trySwap(m.$1, m.$2);
+          expectFull(e);
+          expect(mf.MatchFinder.find(e.board), isEmpty);
+        }
+      });
+    }
+  });
+
+  group('portal', () {
+    LevelConfig portalLevel() => _levelWith(
+        layout: _plain({'6,0': 'I', '0,6': 'O'}),
+        legend: {'.': 'cell', 'I': 'portal_in:1', 'O': 'portal_out:1'});
+
+    test('the entry is closed and a piece flows through to the exit', () {
+      final e = GameEngine(portalLevel());
+      expect(e.board.isPlayable(const Pos(6, 0)), isFalse);
+      final entryTop = e.board[const Pos(5, 0)]!.id;
+      final steps = e.useChopsticks(const Pos(4, 6));
+      expectFull(e);
+      final moves = [
+        for (final s in steps.whereType<FallStep>()) ...s.moves,
+      ];
+      expect(moves.any((m) => m.pieceId == entryTop && m.to.col == 6), isTrue);
+    });
+
+    test('random play keeps every open cell filled', () {
+      final e = GameEngine(portalLevel());
+      final rng = Random(12);
+      for (var i = 0; i < 40 && e.status == GameStatus.playing; i++) {
+        final moves = MoveFinder.allMoves(e.board);
+        final m = moves[rng.nextInt(moves.length)];
+        e.trySwap(m.$1, m.$2);
+        expectFull(e);
       }
     });
   });

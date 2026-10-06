@@ -1,4 +1,5 @@
 import 'piece.dart';
+import 'pos.dart';
 
 enum GoalType {
   collect,
@@ -135,6 +136,29 @@ class CatSpec {
   final int hp;
 }
 
+/// Which way pieces fall.
+enum Gravity {
+  down(1, 0),
+  up(-1, 0),
+  left(0, -1),
+  right(0, 1);
+
+  const Gravity(this.dr, this.dc);
+  final int dr;
+  final int dc;
+
+  bool get vertical => dc == 0;
+}
+
+/// A linked pair of teleporters. Pieces reaching the bottom of the segment
+/// above [entry] reappear at [exit], which must be the top cell of its own
+/// segment.
+class PortalSpec {
+  const PortalSpec(this.entry, this.exit);
+  final Pos entry;
+  final Pos exit;
+}
+
 class LevelConfig {
   LevelConfig({
     required this.id,
@@ -147,6 +171,10 @@ class LevelConfig {
     this.mats = const [],
     this.fire = const [],
     this.cats = const [],
+    this.locks = const [],
+    this.timers = const [],
+    this.portals = const [],
+    this.gravity = Gravity.down,
     required this.pieces,
     required this.moves,
     required this.goals,
@@ -182,6 +210,16 @@ class LevelConfig {
 
   /// Cats that start on the board; they move and eat pieces every turn.
   final List<CatSpec> cats;
+
+  /// Row-major: the colour that must be matched before a cell's piece can be
+  /// swapped (null = free); empty means no locks.
+  final List<PieceKind?> locks;
+
+  /// Row-major: bomb countdowns on the pieces that start there (0 = none);
+  /// empty means none. A bomb that reaches 0 ends the level.
+  final List<int> timers;
+  final List<PortalSpec> portals;
+  final Gravity gravity;
   final List<PieceKind> pieces;
   final int moves;
   final List<LevelGoal> goals;
@@ -191,7 +229,8 @@ class LevelConfig {
 
   /// Parses the GDD level schema. `nori` / `nori:N` legend values put N
   /// layers under a cell, `ice` / `ice:N` cage the piece that starts there in
-  /// N layers of ice; `bag` / `bag:N` put an N-layer rice bag in the cell, `mat` a bamboo mat, `fire` a burning piece, `cat` / `cat:N` a cat with N lives;
+  /// N layers of ice; `bag` / `bag:N` put an N-layer rice bag in the cell, `mat` a bamboo mat, `fire` a burning piece, `cat` / `cat:N` a cat with N lives, `key:<kind>` a swap lock, `bomb:N` a
+  /// countdown piece, `portal_in:<id>` / `portal_out:<id>` teleporters;
   /// other values besides "void" are plain cells.
   factory LevelConfig.fromJson(Map<String, dynamic> j) {
     final board = j['board'] as Map<String, dynamic>;
@@ -231,6 +270,30 @@ class LevelConfig {
                   ? int.parse(cellsOf[i].split(':')[1])
                   : 1),
     ];
+    final locks = [
+      for (final v in cellsOf)
+        v.startsWith('key:') ? PieceKind.values.byName(v.split(':')[1]) : null,
+    ];
+    final timers = [
+      for (final v in cellsOf)
+        v.startsWith('bomb') && v.contains(':')
+            ? int.parse(v.split(':')[1])
+            : 0,
+    ];
+    final portalIn = <String, Pos>{}, portalOut = <String, Pos>{};
+    for (var i = 0; i < cellsOf.length; i++) {
+      final v = cellsOf[i];
+      final at = Pos(i ~/ cols, i % cols);
+      if (v.startsWith('portal_in:')) portalIn[v.split(':')[1]] = at;
+      if (v.startsWith('portal_out:')) portalOut[v.split(':')[1]] = at;
+    }
+    final portals = [
+      for (final id in portalIn.keys)
+        PortalSpec(
+            portalIn[id]!,
+            portalOut[id] ??
+                (throw FormatException('portal $id has no exit cell'))),
+    ];
     final mats = [for (final v in cellsOf) v == 'mat'];
     final bags = [
       for (final v in cellsOf)
@@ -255,7 +318,10 @@ class LevelConfig {
       cols: cols,
       playable: [
         for (final v in cellsOf)
-          v != 'void' && !v.startsWith('bag') && v != 'mat',
+          v != 'void' &&
+              !v.startsWith('bag') &&
+              v != 'mat' &&
+              !v.startsWith('portal_in'),
       ],
       nori: nori,
       ice: ice,
@@ -263,6 +329,10 @@ class LevelConfig {
       mats: mats,
       fire: fire,
       cats: cats,
+      locks: locks,
+      timers: timers,
+      portals: portals,
+      gravity: Gravity.values.byName(j['gravity'] as String? ?? 'down'),
       pieces: [
         for (final p in j['pieces'] as List)
           PieceKind.values.byName(p as String),

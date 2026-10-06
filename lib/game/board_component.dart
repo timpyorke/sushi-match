@@ -12,6 +12,7 @@ import 'package:flutter/services.dart' show HapticFeedback;
 
 import '../core/board.dart';
 import '../core/game_engine.dart';
+import '../core/level.dart' show Gravity;
 import '../core/move_finder.dart';
 import '../core/pos.dart';
 import '../core/settings.dart';
@@ -19,6 +20,8 @@ import '../core/piece.dart';
 import '../core/steps.dart';
 import '../services/wallet.dart';
 import 'cat_component.dart';
+import 'overlay_badges.dart';
+import 'piece_painter.dart';
 import 'piece_component.dart';
 import 'tile_art.dart';
 
@@ -58,6 +61,7 @@ class BoardComponent extends PositionComponent
   final _views = <int, PieceComponent>{};
   final _at = <Pos, PieceComponent>{};
   final _cats = <int, CatComponent>{};
+  final _keys = <Pos, KeyLockBadge>{};
   late final ClipComponent _layer;
 
   bool _busy = false;
@@ -107,6 +111,28 @@ class BoardComponent extends PositionComponent
       final piece = board[p];
       if (piece != null) _spawnView(PieceSnapshot.of(piece), p);
     }
+    for (var i = 0; i < engine.level.locks.length; i++) {
+      final kind = engine.level.locks[i];
+      if (kind == null) continue;
+      final at = Pos(i ~/ board.cols, i % board.cols);
+      _layer.add(_keys[at] =
+          KeyLockBadge(kind: kind, cellSize: cell, position: _center(at)));
+    }
+    var portal = 0;
+    for (final p in engine.level.portals) {
+      _layer
+        ..add(PortalBadge(
+            entry: true,
+            tint: portal,
+            cellSize: cell,
+            position: _center(p.entry)))
+        ..add(PortalBadge(
+            entry: false,
+            tint: portal,
+            cellSize: cell,
+            position: _center(p.exit)));
+      portal++;
+    }
     for (final c in engine.cats) {
       _layer.add(_cats[c.id] = CatComponent(
           catId: c.id, hp: c.hp, cellSize: cell, position: _center(c.pos)));
@@ -153,6 +179,37 @@ class BoardComponent extends PositionComponent
     ..strokeWidth = 3
     ..strokeCap = StrokeCap.round;
   static final _sackDot = Paint()..color = const Color(0xFF6B4F2A);
+
+  static final _gravityArrow = Paint()..color = const Color(0xCCFFF1D6);
+
+  /// Little arrows on the frame show which way pieces fall (only drawn when
+  /// it is not the usual "down").
+  void _drawGravityArrows(Canvas canvas) {
+    final g = engine.level.gravity;
+    if (g == Gravity.down) return;
+    final w = size.x, h = size.y;
+    final lines = g.vertical ? board.cols : board.rows;
+    for (var i = 0; i < lines; i++) {
+      final along = (i + 0.5) * cell;
+      final (Offset c, double angle) = switch (g) {
+        Gravity.up => (Offset(along, -_frame / 2), -math.pi / 2),
+        Gravity.left => (Offset(-_frame / 2, along), math.pi),
+        Gravity.right => (Offset(w + _frame / 2, along), 0.0),
+        Gravity.down => (Offset(along, h + _frame / 2), math.pi / 2),
+      };
+      canvas.save();
+      canvas.translate(c.dx, c.dy);
+      canvas.rotate(angle);
+      canvas.drawPath(
+          Path()
+            ..moveTo(-5, -6)
+            ..lineTo(6, 0)
+            ..lineTo(-5, 6)
+            ..close(),
+          _gravityArrow);
+      canvas.restore();
+    }
+  }
 
   static final _matFill = Paint()..color = const Color(0xFFCDB872);
   static final _matSlat = Paint()
@@ -230,6 +287,10 @@ class BoardComponent extends PositionComponent
     for (final p in board.positions) {
       drawCell(p.row, p.col);
     }
+    for (final p in engine.level.portals) {
+      drawCell(p.entry.row, p.entry.col);
+    }
+    _drawGravityArrows(canvas);
     // Bagged cells sit on a plain tile too; the sack is drawn over the pieces.
     for (var i = 0; i < _bags.length; i++) {
       if (_bags[i] > 0) drawCell(i ~/ board.cols, i % board.cols);
@@ -479,14 +540,12 @@ class BoardComponent extends PositionComponent
             final v = _views[m.pieceId];
             if (v == null) continue;
             _at[m.to] = v;
-            pending.add(_land(v, _center(m.to), m.to.row - m.from.row));
+            pending.add(_land(v, _center(m.to), _dist(m.from, m.to)));
           }
         case RefillStep(:final pieces):
           for (final r in pieces) {
-            final start =
-                Vector2(_center(r.to).x, r.startRow * cell + cell / 2);
-            final v = _spawnView(r.piece, r.to, from: start);
-            pending.add(_land(v, _center(r.to), r.to.row - r.startRow));
+            final v = _spawnView(r.piece, r.to, from: _center(r.start));
+            pending.add(_land(v, _center(r.to), _dist(r.start, r.to)));
           }
           await Future.wait(pending);
           pending.clear();
@@ -511,6 +570,33 @@ class BoardComponent extends PositionComponent
           }
           _haptic(HapticFeedback.mediumImpact);
           await Future.wait(pops);
+        case UnlockStep(:final cells, :final kind):
+          for (final p in cells) {
+            final badge = _keys.remove(p);
+            if (badge == null) continue;
+            _burst(_center(p), Paint()..color = PiecePainter.colors[kind]!);
+            badge.add(ScaleEffect.to(Vector2.zero(),
+                EffectController(duration: 0.25, curve: Curves.easeIn),
+                onComplete: badge.removeFromParent));
+          }
+          _haptic(HapticFeedback.mediumImpact);
+          await _wait(0.2);
+        case BombStep(:final ticks, :final exploded):
+          ticks.forEach((id, left) => _views[id]?.timer = left);
+          final pops = <Future<void>>[];
+          for (final d in exploded) {
+            final v = _views.remove(d.pieceId);
+            if (v == null) continue;
+            if (identical(_at[d.pos], v)) _at.remove(d.pos);
+            _burst(v.position, _emberChip);
+            pops.add(_pop(v));
+          }
+          if (exploded.isNotEmpty) {
+            _shake();
+            _haptic(HapticFeedback.heavyImpact);
+          }
+          await Future.wait(pops);
+          await _wait(0.12);
         case IgniteStep(:final pos, :final pieceId):
           _views[pieceId]?.burning = true;
           _burst(_center(pos), _emberChip);
@@ -613,6 +699,7 @@ class BoardComponent extends PositionComponent
       ice: s.ice,
       ingredient: s.ingredient,
       burning: s.burning,
+      timer: s.timer,
       cellSize: cell,
       position: from ?? _center(at),
     );
@@ -624,6 +711,9 @@ class BoardComponent extends PositionComponent
 
   Vector2 _center(Pos p) =>
       Vector2(p.col * cell + cell / 2, p.row * cell + cell / 2);
+
+  int _dist(Pos a, Pos b) =>
+      math.max((a.row - b.row).abs(), (a.col - b.col).abs());
 
   double _fallTime(int rows) => 0.08 + 0.05 * rows;
 

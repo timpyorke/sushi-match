@@ -1,0 +1,53 @@
+{
+  "id": 55,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    "XX.....XX",
+    "X.......X",
+    ".....B...",
+    "...S.....",
+    ".......S.",
+    ".....S...",
+    "...B.....",
+    "X.......X",
+    "XX.....XX"
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "S": "key:kappa",
+    "B": "bomb:8"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "tamago",
+    "ikura",
+    "ebi",
+    "kappa"
+  ],
+  "moves": 47,
+  "goals": [
+    {
+      "type": "collect",
+      "piece": "maguro",
+      "count": 47
+    },
+    {
+      "type": "collect",
+      "piece": "tamago",
+      "count": 47
+    },
+    {
+      "type": "collect",
+      "piece": "salmon",
+      "count": 47
+    }
+  ],
+  "stars": [10100, 15600, 18600],
+  "seed": 555940
+}

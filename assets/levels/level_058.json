@@ -1,0 +1,53 @@
+{
+  "id": 58,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    ".P.....O.",
+    ".........",
+    ".........",
+    ".........",
+    "....C....",
+    ".........",
+    ".........",
+    ".........",
+    "...I.J..."
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "I": "portal_in:1",
+    "O": "portal_out:1",
+    "J": "portal_in:2",
+    "P": "portal_out:2",
+    "C": "cat:1"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "tamago",
+    "ikura",
+    "ebi",
+    "kappa"
+  ],
+  "moves": 27,
+  "goals": [
+    {
+      "type": "shoo_cats"
+    },
+    {
+      "type": "collect",
+      "piece": "maguro",
+      "count": 45
+    },
+    {
+      "type": "score",
+      "count": 12000
+    }
+  ],
+  "stars": [12800, 16600, 21400],
+  "seed": 586264
+}

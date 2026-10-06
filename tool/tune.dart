@@ -30,6 +30,10 @@ LevelConfig _variant(LevelConfig l, int moves, double factor) => LevelConfig(
       mats: l.mats,
       fire: l.fire,
       cats: l.cats,
+      locks: l.locks,
+      timers: l.timers,
+      portals: l.portals,
+      gravity: l.gravity,
       pieces: l.pieces,
       moves: moves,
       goals: [for (final g in l.goals) _scaled(g, factor)],
@@ -75,7 +79,7 @@ void main(List<String> args) {
     final t = (base.id.clamp(1, 20) - 1) / 19;
     // Past level 21 the curve flattens (68% -> 60%); every 5th level is a
     // hard one and every 15th a boss (GDD sawtooth).
-    final late = base.id > 21 ? (base.id - 21) / 29 : 0.0;
+    final late = base.id > 21 ? ((base.id - 21) / 29).clamp(0.0, 1.0) : 0.0;
     final dip = base.id % 15 == 0
         ? 0.18
         : base.id % 5 == 0

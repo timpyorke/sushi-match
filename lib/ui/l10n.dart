@@ -122,6 +122,18 @@ abstract final class L10n {
       'tipCatTitle': 'Fish thief!',
       'tipCatBody': 'The cat eats a piece beside it every move. Clear sushi '
           'on or next to the cat to scare it; scare it enough and it runs off.',
+      'tipKeyTitle': 'Locked cells',
+      'tipKeyBody': 'A padlocked cell cannot be swapped. Match sushi of the '
+          'padlock\'s colour once to open it for good.',
+      'tipBombTitle': 'Time bombs',
+      'tipBombBody': 'A bomb counts down one step every move. Match the piece '
+          'before it hits zero or the kitchen blows up!',
+      'tipPortalTitle': 'Portals',
+      'tipPortalBody': 'Pieces falling into the dark portal pop out of the '
+          'glowing one, so clear space there to keep them coming.',
+      'tipGravityTitle': 'Sideways kitchen',
+      'tipGravityBody': 'The arrows on the frame show which way sushi falls '
+          'in this level. Plan your matches along that direction.',
     },
     'th': {
       'pickPlate': 'เลือกจานเลย',
@@ -236,6 +248,19 @@ abstract final class L10n {
       'tipCatBody':
           'แมวจะกินชิ้นข้าง ๆ ทุกครั้งที่เดิน เคลียร์ชิ้นที่ตัวแมวหรือติดกับแมว '
               'เพื่อไล่ ไล่ครบก็วิ่งหนีไป',
+      'tipKeyTitle': 'ช่องล็อก',
+      'tipKeyBody': 'ช่องที่มีแม่กุญแจสลับไม่ได้ จับคู่ซูชิสีเดียวกับแม่กุญแจ '
+          'สักครั้งก็ปลดล็อกถาวร',
+      'tipBombTitle': 'ระเบิดเวลา',
+      'tipBombBody':
+          'ระเบิดนับถอยหลังลง 1 ทุกครั้งที่เดิน จับคู่ชิ้นนั้นให้ทัน '
+              'ก่อนถึงศูนย์ ไม่งั้นครัวระเบิด!',
+      'tipPortalTitle': 'ประตูมิติ',
+      'tipPortalBody': 'ชิ้นที่ตกลงประตูสีเข้มจะโผล่ออกจากประตูเรืองแสง '
+          'เคลียร์ช่องตรงนั้นให้ชิ้นไหลมาต่อ',
+      'tipGravityTitle': 'ครัวเอียง',
+      'tipGravityBody': 'ลูกศรบนกรอบบอกทิศที่ซูชิตกในด่านนี้ '
+          'วางแผนจับคู่ตามทิศนั้น',
     },
   };
 }

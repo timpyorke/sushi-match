@@ -7,11 +7,18 @@ enum GameStatus { playing, won, lost }
 /// never reads core state that has already moved on.
 class PieceSnapshot {
   const PieceSnapshot(this.id, this.kind, this.special,
-      {this.ice = 0, this.ingredient = false, this.burning = false});
+      {this.ice = 0,
+      this.ingredient = false,
+      this.burning = false,
+      this.timer = 0});
   PieceSnapshot.of(Piece p)
       : this(p.id, p.kind, p.special,
-            ice: p.ice, ingredient: p.ingredient, burning: p.burning);
+            ice: p.ice,
+            ingredient: p.ingredient,
+            burning: p.burning,
+            timer: p.timer);
 
+  final int timer;
   final int ice;
   final bool burning;
   final bool ingredient;
@@ -91,12 +98,12 @@ final class FallStep extends BoardStep {
 }
 
 class RefillPiece {
-  const RefillPiece(this.piece, this.to, this.startRow);
+  const RefillPiece(this.piece, this.to, this.start);
   final PieceSnapshot piece;
   final Pos to;
 
-  /// Virtual row above the board where the piece starts falling (negative).
-  final int startRow;
+  /// Virtual cell beyond the board edge where the piece starts falling.
+  final Pos start;
 }
 
 final class RefillStep extends BoardStep {
@@ -186,6 +193,22 @@ final class CatMoveStep extends BoardStep {
   final int catId;
   final Pos from;
   final Pos to;
+}
+
+/// A key lock opening: [cells] can be swapped from now on.
+final class UnlockStep extends BoardStep {
+  const UnlockStep(this.cells, this.kind);
+  final List<Pos> cells;
+  final PieceKind kind;
+}
+
+/// Bomb countdowns ticking down; bombs that hit 0 explode.
+final class BombStep extends BoardStep {
+  const BombStep(this.ticks, this.exploded);
+
+  /// pieceId -> turns left (0 = exploding).
+  final Map<int, int> ticks;
+  final List<ClearedPiece> exploded;
 }
 
 /// A conveyor row sliding one cell; the end piece wraps to the far side.

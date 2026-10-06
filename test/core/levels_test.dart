@@ -15,7 +15,7 @@ void main() {
         .where((f) => f.path.endsWith('.json'))
         .toList()
       ..sort((a, b) => a.path.compareTo(b.path));
-    expect(files.length, 50);
+    expect(files.length, 60);
     for (final f in files) {
       final level = LevelConfig.fromJson(
           jsonDecode(f.readAsStringSync()) as Map<String, dynamic>);
@@ -27,7 +27,8 @@ void main() {
     }
   });
 
-  test('rice bag levels never leave an open cell empty', () {
+  test('bag, portal and sideways-gravity levels never leave an open cell empty',
+      () {
     final files = Directory('assets/levels')
         .listSync()
         .whereType<File>()
@@ -37,7 +38,10 @@ void main() {
       final level = LevelConfig.fromJson(
           jsonDecode(f.readAsStringSync()) as Map<String, dynamic>);
       // Spreading mats may legitimately starve a sealed pocket.
-      if (!level.bags.any((n) => n > 0) || level.mats.any((m) => m)) continue;
+      final tricky = level.bags.any((n) => n > 0) ||
+          level.portals.isNotEmpty ||
+          level.gravity != Gravity.down;
+      if (!tricky || level.mats.any((m) => m)) continue;
       checked++;
       for (var seed = 0; seed < 3; seed++) {
         final e = GameEngine(level, seed: seed);

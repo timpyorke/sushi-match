@@ -7,6 +7,8 @@ class Pos {
 
   Pos operator +(Pos o) => Pos(row + o.row, col + o.col);
 
+  Pos operator -(Pos o) => Pos(row - o.row, col - o.col);
+
   bool isAdjacentTo(Pos o) => (row - o.row).abs() + (col - o.col).abs() == 1;
 
   @override

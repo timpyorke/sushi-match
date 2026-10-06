@@ -44,6 +44,10 @@ Move greedy(GameEngine e, Random r) {
           s += wanted.contains(g.kind) ? 1.5 : 1;
           if (hasNori && e.noriAt(c) > 0) s += 2;
           if (hasFire && (e.board[c]?.burning ?? false)) s += 3;
+          // Defuse bombs before they go off.
+          if ((e.board[c]?.timer ?? 0) > 0) {
+            s += 6 - e.board[c]!.timer.clamp(0, 5);
+          }
           if (hasCat) {
             for (final cat in e.cats) {
               if (cat.pos == c || cat.pos.isAdjacentTo(c)) s += 3;

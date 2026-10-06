@@ -1,0 +1,129 @@
+import 'dart:math' as math;
+import 'dart:ui';
+
+import 'package:flame/components.dart';
+
+import '../core/piece.dart';
+import 'piece_painter.dart';
+
+/// Padlock tinted with the colour that must be matched to open the cell.
+/// Drawn over the piece (priority above pieces, below the cat).
+class KeyLockBadge extends PositionComponent {
+  KeyLockBadge(
+      {required this.kind, required double cellSize, required Vector2 position})
+      : super(
+            position: position,
+            size: Vector2.all(cellSize),
+            anchor: Anchor.center,
+            priority: 5);
+
+  final PieceKind kind;
+
+  static final _body = Paint();
+  static final _shackle = Paint()
+    ..color = const Color(0xFFFFF1D6)
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 2.6;
+  static final _edge = Paint()
+    ..color = const Color(0xFF2B211C)
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 1.8;
+
+  @override
+  void render(Canvas canvas) {
+    final s = size.x;
+    // A faint tinted frame marks the whole locked cell.
+    final tint = PiecePainter.colors[kind]!;
+    canvas.drawRRect(
+        RRect.fromRectAndRadius(
+            Rect.fromLTWH(0, 0, s, s).deflate(2), Radius.circular(s * 0.16)),
+        Paint()
+          ..color = tint.withValues(alpha: 0.9)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 3);
+    final c = Offset(s * 0.2, s * 0.22);
+    canvas.drawArc(
+        Rect.fromCenter(center: c.translate(0, -4), width: 11, height: 14),
+        math.pi,
+        math.pi,
+        false,
+        _shackle);
+    final rr = RRect.fromRectAndRadius(
+        Rect.fromCenter(center: c.translate(0, 3), width: 17, height: 13),
+        const Radius.circular(3));
+    canvas.drawRRect(rr, _body..color = tint);
+    canvas.drawRRect(rr, _edge);
+  }
+}
+
+/// Teleporter marker. The entry is a swirling dark vortex filling its cell;
+/// the exit is a bright ring around the cell it feeds.
+class PortalBadge extends PositionComponent {
+  PortalBadge(
+      {required this.entry,
+      required this.tint,
+      required double cellSize,
+      required Vector2 position})
+      : super(
+            position: position,
+            size: Vector2.all(cellSize),
+            anchor: Anchor.center,
+            priority: entry ? 1 : 6);
+
+  final bool entry;
+
+  /// Which pair this belongs to, for colour.
+  final int tint;
+  double _t = 0;
+
+  static const _hues = [
+    Color(0xFF8E5BD6),
+    Color(0xFF2AA7A0),
+    Color(0xFFE08A2E)
+  ];
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    _t += dt;
+  }
+
+  @override
+  void render(Canvas canvas) {
+    final s = size.x;
+    final c = Offset(s / 2, s / 2);
+    final hue = _hues[tint % _hues.length];
+    if (entry) {
+      canvas.drawCircle(c, s * 0.4, Paint()..color = const Color(0xFF1B1430));
+      for (var i = 0; i < 3; i++) {
+        final r = s * (0.12 + 0.09 * i);
+        canvas.drawArc(
+            Rect.fromCircle(center: c, radius: r),
+            _t * (2 + i) + i,
+            math.pi * 1.4,
+            false,
+            Paint()
+              ..color = hue
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 3);
+      }
+      return;
+    }
+    canvas.drawRRect(
+        RRect.fromRectAndRadius(
+            Rect.fromLTWH(0, 0, s, s).deflate(2), Radius.circular(s * 0.18)),
+        Paint()
+          ..color = hue
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 3.5);
+    canvas.drawArc(
+        Rect.fromCircle(center: Offset(s * 0.8, s * 0.2), radius: s * 0.1),
+        _t * 4,
+        math.pi * 1.5,
+        false,
+        Paint()
+          ..color = hue
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2.5);
+  }
+}

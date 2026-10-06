@@ -64,7 +64,7 @@ class SushiMatchApp extends StatelessWidget {
   }
 }
 
-const int kLevelCount = 50;
+const int kLevelCount = 60;
 
 /// (id, emoji, l10n prefix) of the first unseen tip this level needs.
 (String, String, String)? _tipFor(LevelConfig level) {
@@ -76,6 +76,10 @@ const int kLevelCount = 50;
     if (level.mats.any((m) => m)) ('mat', '🎋', 'tipMat'),
     if (level.fire.any((f) => f)) ('fire', '🔥', 'tipFire'),
     if (level.cats.isNotEmpty) ('cat', '🐱', 'tipCat'),
+    if (level.locks.any((k) => k != null)) ('key', '🔑', 'tipKey'),
+    if (level.timers.any((t) => t > 0)) ('bomb', '💣', 'tipBomb'),
+    if (level.portals.isNotEmpty) ('portal', '🌀', 'tipPortal'),
+    if (level.gravity != Gravity.down) ('gravity', '↔️', 'tipGravity'),
     if ([
       for (var i = 0; i < level.bags.length; i++)
         if (level.bags[i] > 0 && !level.mats[i]) i,

@@ -50,6 +50,10 @@ class Piece {
   /// fire spreads to a neighbour at the end of the turn.
   bool burning = false;
 
+  /// Bomb countdown in turns (0 = no bomb). At 0 the piece explodes and the
+  /// level is lost.
+  int timer = 0;
+
   bool get isSpecial => special != null;
   bool get isOmakase => special == SpecialType.omakase;
 
