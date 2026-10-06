@@ -339,11 +339,19 @@ class _BoosterButton extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(color: UiArt.ink, fontSize: 11)),
-              Text(stock > 0 ? '×$stock' : '🪙 $price',
-                  style: const TextStyle(
-                      color: UiArt.ink,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold)),
+              if (stock > 0)
+                Text('×$stock',
+                    style: const TextStyle(
+                        color: UiArt.ink,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold))
+              else
+                CoinAmount(price,
+                    size: 14,
+                    style: const TextStyle(
+                        color: UiArt.ink,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold)),
             ],
           ),
         ),

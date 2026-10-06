@@ -6,6 +6,7 @@ abstract final class UiArt {
   static const plank = AssetImage('assets/ui/plank.png');
   static const buttonRound = AssetImage('assets/ui/button_round.png');
   static const star = AssetImage('assets/ui/star.png');
+  static const coin = AssetImage('assets/ui/coin.png');
 
   static const ink = Color(0xFF4A2E1B);
 
@@ -76,6 +77,26 @@ class RoundIconButton extends StatelessWidget {
         ),
         child: Icon(icon, color: Colors.white),
       ),
+    );
+  }
+}
+
+/// Gold coin sprite followed by an amount.
+class CoinAmount extends StatelessWidget {
+  const CoinAmount(this.amount, {super.key, this.size = 16, this.style});
+  final int amount;
+  final double size;
+  final TextStyle? style;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Image(image: UiArt.coin, width: size, height: size),
+        const SizedBox(width: 4),
+        Text('$amount', style: style),
+      ],
     );
   }
 }

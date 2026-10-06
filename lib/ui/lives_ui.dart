@@ -115,21 +115,24 @@ class _WalletBarState extends State<WalletBar> {
         return Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _pill('❤️ ${Wallet.lives.value}'
-                '${left == null ? '' : '  ${_mmss(left)}'}'),
+            _pill(Text(
+                '❤️ ${Wallet.lives.value}'
+                '${left == null ? '' : '  ${_mmss(left)}'}',
+                style: _pillStyle)),
             const SizedBox(width: 8),
-            _pill('🪙 ${Wallet.coins.value}'),
+            _pill(CoinAmount(Wallet.coins.value, size: 20, style: _pillStyle)),
           ],
         );
       },
     );
   }
 
-  Widget _pill(String text) => Container(
+  static const _pillStyle =
+      TextStyle(color: UiArt.ink, fontWeight: FontWeight.bold);
+
+  Widget _pill(Widget child) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: UiArt.plankDecoration(),
-        child: Text(text,
-            style:
-                const TextStyle(color: UiArt.ink, fontWeight: FontWeight.bold)),
+        child: child,
       );
 }
