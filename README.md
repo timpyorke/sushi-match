@@ -41,8 +41,11 @@ particles, haptics, sfx), level select + JSON loader for many levels,
 balancing bot using `MoveFinder.allMoves` + seeds.
 
 ## Balancing
-`dart run tool/balance.dart [runs] [level …]` plays every level with a random
-and a greedy bot and prints win rate and star spread.
+`dart run tool/balance.dart [runs] [level …] [--planner] [--no-belts]` plays
+every level with a random and a greedy bot and prints win rate and star
+spread. `--planner` adds a lookahead bot (uses `GameEngine.fork`, so conveyor
+shifts and cascades are part of its plan); `--no-belts` replays conveyor
+levels without their belts to show what the belts change.
 `dart run tool/tune.dart [runs] [--write]` re-fits each level's moves, goal
 counts and star thresholds to the difficulty curve (see the header of the
 file). Re-run it after changing the engine or adding levels.

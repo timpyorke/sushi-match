@@ -221,6 +221,21 @@ void noriAndBoosterTests() {
 }
 
 void conveyorTests() {
+  test('fork copies the state and plays on without touching the original', () {
+    final e = GameEngine(testLevel(seed: 8));
+    final f = e.fork(1);
+    for (final p in e.board.positions) {
+      expect(f.board[p]!.id, e.board[p]!.id);
+      expect(identical(f.board[p], e.board[p]), isFalse);
+    }
+    final before = {for (final p in e.board.positions) p: e.board[p]!.id};
+    final move = MoveFinder.findMove(f.board)!;
+    f.trySwap(move.$1, move.$2);
+    expect(f.movesLeft, e.movesLeft - 1);
+    expect(e.score, 0);
+    expect({for (final p in e.board.positions) p: e.board[p]!.id}, before);
+  });
+
   test('conveyor shifts its row each turn and keeps the board stable', () {
     final level = LevelConfig.fromJson({
       'id': 99,

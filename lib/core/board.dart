@@ -12,6 +12,18 @@ class Board {
   final List<bool> _playable;
   final List<Piece?> _cells;
 
+  /// Independent copy with fresh Piece objects (ids kept).
+  Board copy() {
+    final b = Board(rows, cols, _playable);
+    for (var i = 0; i < _cells.length; i++) {
+      final p = _cells[i];
+      if (p != null) {
+        b._cells[i] = Piece(id: p.id, kind: p.kind, special: p.special);
+      }
+    }
+    return b;
+  }
+
   int _i(Pos p) => p.row * cols + p.col;
 
   bool inBounds(Pos p) =>

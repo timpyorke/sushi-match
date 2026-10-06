@@ -51,6 +51,39 @@ Move greedy(GameEngine e, Random r) {
   return best!;
 }
 
+/// One-move lookahead: tries every move on forked copies (so conveyor shifts,
+/// cascades and refills all play out) and keeps the one that advances the
+/// goals most. Two samples per move smooth out refill luck.
+Move planner(GameEngine e, Random r) {
+  double progress(GameEngine f) {
+    var total = 0.0;
+    for (final g in f.goals) {
+      total += (g.current / g.goal.count).clamp(0.0, 1.0);
+    }
+    if (f.status == GameStatus.won) total += 10;
+    if (f.status == GameStatus.lost) total -= 1;
+    return total;
+  }
+
+  Move? best;
+  var bestValue = double.negativeInfinity;
+  for (final m in MoveFinder.allMoves(e.board)) {
+    var value = 0.0;
+    const samples = 2;
+    for (var i = 0; i < samples; i++) {
+      final f = e.fork(r.nextInt(1 << 30));
+      f.trySwap(m.$1, m.$2);
+      value += progress(f) / samples;
+    }
+    value += r.nextDouble() * 0.01;
+    if (value > bestValue) {
+      bestValue = value;
+      best = m;
+    }
+  }
+  return best!;
+}
+
 ({bool won, int stars, int score}) play(LevelConfig level, int seed, Move Function(GameEngine, Random) bot) {
   final e = GameEngine(level, seed: seed);
   final r = Random(seed ^ 0x5eed);

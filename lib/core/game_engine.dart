@@ -32,6 +32,23 @@ class GameEngine {
     BoardFactory.fillInitial(board, level.pieces, rng, _makePiece);
   }
 
+  GameEngine._fork(GameEngine o, int seed)
+      : level = o.level,
+        board = o.board.copy(),
+        rng = Random(seed),
+        _nori = List.of(o._nori),
+        movesLeft = o.movesLeft,
+        score = o.score,
+        status = o.status,
+        _nextId = o._nextId {
+    _collected.addAll(o._collected);
+  }
+
+  /// Independent copy of the current state for bots and solvers to try a
+  /// move on. Refills in the copy use a new RNG seeded with [seed], so the
+  /// copy's future differs from the original's.
+  GameEngine fork(int seed) => GameEngine._fork(this, seed);
+
   static const _pointsPerPiece = 20;
 
   final LevelConfig level;
