@@ -292,11 +292,11 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                             onPressed: () => _leave(game),
                           ),
                           const SizedBox(width: 8),
+                          Expanded(child: HudBar(game: game)),
                           RoundIconButton(
                             icon: Icons.restart_alt,
                             onPressed: () => _restart(game),
                           ),
-                          Expanded(child: HudBar(game: game)),
                         ],
                       ),
                     ),
