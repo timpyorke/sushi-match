@@ -5,6 +5,7 @@ import '../core/level.dart';
 import '../game/piece_painter.dart';
 import '../game/sushi_game.dart';
 import '../services/wallet.dart';
+import 'customer_order.dart';
 import 'l10n.dart';
 import 'lives_ui.dart';
 import 'ui_art.dart';
@@ -149,6 +150,13 @@ class ResultOverlay extends StatelessWidget {
                           ],
                         ),
                       ],
+                      const SizedBox(height: 8),
+                      Text(
+                        L10n.t(won ? 'custWin' : 'custLose', {
+                          'name': Customer.forLevel(game.level.id).name,
+                        }),
+                        textAlign: TextAlign.center,
+                      ),
                       const SizedBox(height: 8),
                       Text(L10n.t('scoreN', {'n': s.score})),
                       if (won && s.reward > 0)

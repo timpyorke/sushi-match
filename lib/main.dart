@@ -11,6 +11,7 @@ import 'core/settings.dart';
 import 'game/piece_painter.dart';
 import 'game/sushi_game.dart';
 import 'services/wallet.dart';
+import 'ui/customer_order.dart';
 import 'ui/hud.dart';
 import 'ui/level_select.dart';
 import 'ui/lives_ui.dart';
@@ -163,12 +164,19 @@ class _GameScreenState extends State<GameScreen> {
             }
             return Column(
               children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: RoundIconButton(
-                    icon: Icons.arrow_back,
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
+                Row(
+                  children: [
+                    RoundIconButton(
+                      icon: Icons.arrow_back,
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 12),
+                        child: OrderBubble(level: game.level),
+                      ),
+                    ),
+                  ],
                 ),
                 HudBar(game: game),
                 Expanded(
