@@ -484,7 +484,7 @@ class BoardComponent extends PositionComponent
   }
 
   void _haptic(Future<void> Function() impact) {
-    if (Settings.haptics.value) impact();
+    if (SettingsMirror.haptics) impact();
   }
 
   Future<void> _play(List<BoardStep> steps) async {

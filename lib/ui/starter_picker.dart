@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../services/wallet.dart';
 import 'l10n.dart';
@@ -12,33 +13,35 @@ const _starters = [
 /// Lets the player spend owned Starter boosters before a level begins.
 /// Returns the chosen boosters (empty when the player owns none, so no
 /// dialog appears), or null if the player backed out.
-Future<List<Booster>?> pickStarters(BuildContext context) async {
-  if (_starters.every((s) => Wallet.count(s.$1) <= 0)) return const [];
+Future<List<Booster>?> pickStarters(BuildContext context, WidgetRef ref) async {
+  final wallet = ref.read(walletProvider);
+  if (_starters.every((s) => wallet.count(s.$1) <= 0)) return const [];
   return showDialog<List<Booster>>(
     context: context,
     builder: (_) => const _StarterDialog(),
   );
 }
 
-class _StarterDialog extends StatefulWidget {
+class _StarterDialog extends ConsumerStatefulWidget {
   const _StarterDialog();
 
   @override
-  State<_StarterDialog> createState() => _StarterDialogState();
+  ConsumerState<_StarterDialog> createState() => _StarterDialogState();
 }
 
-class _StarterDialogState extends State<_StarterDialog> {
+class _StarterDialogState extends ConsumerState<_StarterDialog> {
   final _picked = <Booster>{};
 
   @override
   Widget build(BuildContext context) {
+    final wallet = ref.watch(walletProvider);
     return AlertDialog(
       title: Text(L10n.t('startWith')),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           for (final (b, emoji, name) in _starters)
-            if (Wallet.count(b) > 0)
+            if (wallet.count(b) > 0)
               CheckboxListTile(
                 value: _picked.contains(b),
                 onChanged: (on) => setState(
@@ -46,7 +49,7 @@ class _StarterDialogState extends State<_StarterDialog> {
                 title: Text('$emoji ${L10n.t(name)}',
                     style: const TextStyle(
                         color: UiArt.ink, fontWeight: FontWeight.bold)),
-                secondary: Text('×${Wallet.count(b)}'),
+                secondary: Text('×${wallet.count(b)}'),
               ),
         ],
       ),

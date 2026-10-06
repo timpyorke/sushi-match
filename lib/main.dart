@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 
 import 'core/game_engine.dart';
@@ -11,7 +12,7 @@ import 'core/settings.dart';
 import 'game/piece_painter.dart';
 import 'game/sushi_game.dart';
 import 'services/audio.dart';
-import 'services/daily_reward.dart';
+import 'services/store.dart';
 import 'services/wallet.dart';
 import 'ui/daily_reward_dialog.dart';
 import 'ui/customer_order.dart';
@@ -33,11 +34,10 @@ void main() async {
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await _enterImmersive();
   await PiecePainter.loadSprites();
-  await Settings.load();
-  await Wallet.load();
-  await DailyReward.load();
-  await Restaurant.load();
-  await Tips.load();
+  final container = ProviderContainer(
+      overrides: [storeProvider.overrideWithValue(await HiveStore.open())]);
+  // Reading the settings applies them to the audio, language and painter.
+  container.read(settingsProvider);
   await Audio.init();
   Audio.startMusic();
 
@@ -49,7 +49,8 @@ void main() async {
       await _enterImmersive();
     }
   });
-  runApp(const SushiMatchApp());
+  runApp(UncontrolledProviderScope(
+      container: container, child: const SushiMatchApp()));
 }
 
 Future<void> _enterImmersive() =>
@@ -75,7 +76,7 @@ class SushiMatchApp extends StatelessWidget {
 const int kLevelCount = 60;
 
 /// (id, emoji, l10n prefix) of the first unseen tip this level needs.
-(String, String, String)? _tipFor(LevelConfig level) {
+(String, String, String)? _tipFor(LevelConfig level, Set<String> seen) {
   final tips = [
     if (level.conveyors.isNotEmpty) ('conveyor', '➡️🔒', 'tipConveyor'),
     if (level.ice.any((n) => n > 0)) ('ice', '🧊', 'tipIce'),
@@ -95,7 +96,7 @@ const int kLevelCount = 60;
       ('bag', '🌾', 'tipBag'),
   ];
   for (final t in tips) {
-    if (!Tips.isSeen(t.$1)) return t;
+    if (!seen.contains(t.$1)) return t;
   }
   return null;
 }
@@ -103,32 +104,28 @@ const int kLevelCount = 60;
 String _levelAsset(int n) =>
     'assets/levels/level_${n.toString().padLeft(3, '0')}.json';
 
-class LevelSelectScreen extends StatefulWidget {
+class LevelSelectScreen extends ConsumerStatefulWidget {
   const LevelSelectScreen({super.key});
 
   @override
-  State<LevelSelectScreen> createState() => _LevelSelectScreenState();
+  ConsumerState<LevelSelectScreen> createState() => _LevelSelectScreenState();
 }
 
-class _LevelSelectScreenState extends State<LevelSelectScreen> {
-  int _cleared = 0;
-
+class _LevelSelectScreenState extends ConsumerState<LevelSelectScreen> {
   @override
   void initState() {
     super.initState();
-    _refresh();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) maybeShowDailyReward(context);
+      if (mounted) maybeShowDailyReward(context, ref);
     });
-  }
-
-  Future<void> _refresh() async {
-    final c = await Progress.cleared();
-    if (mounted) setState(() => _cleared = c);
   }
 
   @override
   Widget build(BuildContext context) {
+    final cleared = ref.watch(progressProvider);
+    final maxPlayable = ref.watch(restaurantProvider).maxPlayableLevel;
+    // Rebuild on a language change; L10n reads it statically.
+    ref.watch(settingsProvider.select((s) => s.language));
     return Scaffold(
       body: DecoratedBox(
         decoration: const BoxDecoration(
@@ -140,8 +137,8 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
         child: SafeArea(
           child: LevelSelectView(
             levelCount: kLevelCount,
-            cleared: _cleared,
-            maxPlayable: Restaurant.maxPlayableLevel,
+            cleared: cleared,
+            maxPlayable: maxPlayable,
             onShopLocked: (n) {
               final shop = Restaurant.shopOfLevel(n);
               ScaffoldMessenger.of(context)
@@ -151,31 +148,24 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
                   'name': shop == null ? '' : L10n.t(shop.nameKey),
                 }))));
             },
-            onRestaurant: () async {
-              await Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const RestaurantScreen()),
-              );
-              _refresh();
-            },
+            onRestaurant: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const RestaurantScreen()),
+            ),
             onShop: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => const BoosterShopScreen()),
             ),
-            onSettings: () async {
-              await Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const SettingsScreen()),
-              );
-              _refresh();
-            },
+            onSettings: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const SettingsScreen()),
+            ),
             onSelect: (n) async {
-              if (!await ensureLife(context) || !context.mounted) return;
-              final starters = await pickStarters(context);
+              if (!await ensureLife(context, ref) || !context.mounted) return;
+              final starters = await pickStarters(context, ref);
               if (starters == null || !context.mounted) return;
               await Navigator.of(context).push(
                 MaterialPageRoute(
                     builder: (_) =>
                         GameScreen(levelNumber: n, starters: starters)),
               );
-              _refresh();
             },
           ),
         ),
@@ -184,16 +174,16 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
   }
 }
 
-class GameScreen extends StatefulWidget {
+class GameScreen extends ConsumerStatefulWidget {
   const GameScreen({super.key, this.levelNumber = 1, this.starters = const []});
   final int levelNumber;
   final List<Booster> starters;
 
   @override
-  State<GameScreen> createState() => _GameScreenState();
+  ConsumerState<GameScreen> createState() => _GameScreenState();
 }
 
-class _GameScreenState extends State<GameScreen> {
+class _GameScreenState extends ConsumerState<GameScreen> {
   late final Future<SushiGame> _game = _load();
 
   @override
@@ -212,11 +202,16 @@ class _GameScreenState extends State<GameScreen> {
   Future<SushiGame> _load() async {
     final raw = await rootBundle.loadString(_levelAsset(widget.levelNumber));
     final level = LevelConfig.fromJson(jsonDecode(raw) as Map<String, dynamic>);
-    final game = SushiGame(level: level, starters: widget.starters);
+    final progress = ref.read(progressProvider.notifier);
+    final restaurant = ref.read(restaurantProvider.notifier);
+    final game = SushiGame(
+        level: level,
+        wallet: ref.read(walletProvider.notifier),
+        starters: widget.starters);
     game.hud.addListener(() {
       if (game.hud.value.status == GameStatus.won) {
-        Progress.markCleared(widget.levelNumber);
-        Restaurant.recordStars(widget.levelNumber, game.hud.value.stars);
+        progress.markCleared(widget.levelNumber);
+        restaurant.recordStars(widget.levelNumber, game.hud.value.stars);
       }
     });
     return game;
@@ -269,10 +264,10 @@ class _GameScreenState extends State<GameScreen> {
                       PraiseBanner(game: game),
                       // One tip at a time: the first mechanic of this level
                       // the player has not been told about yet.
-                      ListenableBuilder(
-                        listenable: Tips.seen,
-                        builder: (context, _) {
-                          final tip = _tipFor(game.level);
+                      Consumer(
+                        builder: (context, ref, _) {
+                          final tip =
+                              _tipFor(game.level, ref.watch(tipsProvider));
                           return tip == null
                               ? const SizedBox.shrink()
                               : TipOverlay(
@@ -283,13 +278,17 @@ class _GameScreenState extends State<GameScreen> {
                         game: game,
                         onLevels: () => Navigator.of(context).pop(),
                         onNext: widget.levelNumber < kLevelCount &&
-                                widget.levelNumber < Restaurant.maxPlayableLevel
+                                widget.levelNumber <
+                                    ref
+                                        .read(restaurantProvider)
+                                        .maxPlayableLevel
                             ? () async {
-                                if (!await ensureLife(context) ||
+                                if (!await ensureLife(context, ref) ||
                                     !context.mounted) {
                                   return;
                                 }
-                                final starters = await pickStarters(context);
+                                final starters =
+                                    await pickStarters(context, ref);
                                 if (starters == null || !context.mounted) {
                                   return;
                                 }

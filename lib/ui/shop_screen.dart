@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../services/audio.dart';
 import '../services/wallet.dart';
@@ -59,22 +60,20 @@ class BoosterShopScreen extends StatelessWidget {
 }
 
 /// Coin balance on a plank.
-class _CoinPill extends StatelessWidget {
+class _CoinPill extends ConsumerWidget {
   const _CoinPill();
 
   @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder<int>(
-      valueListenable: Wallet.coins,
-      builder: (context, coins, _) => Container(
-        margin: const EdgeInsets.only(right: 12, top: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: UiArt.plankDecoration(),
-        child: CoinAmount(coins,
-            size: 20,
-            style:
-                const TextStyle(color: UiArt.ink, fontWeight: FontWeight.bold)),
-      ),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final coins = ref.watch(walletProvider.select((w) => w.coins));
+    return Container(
+      margin: const EdgeInsets.only(right: 12, top: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: UiArt.plankDecoration(),
+      child: CoinAmount(coins,
+          size: 20,
+          style:
+              const TextStyle(color: UiArt.ink, fontWeight: FontWeight.bold)),
     );
   }
 }
@@ -86,20 +85,14 @@ class BoosterShopList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: Listenable.merge([Wallet.coins, Wallet.stock, Wallet.lives]),
-      builder: (context, _) => ListView(
-        padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
-        children: [
-          for (final (b, emoji, name, desc) in BoosterShopScreen._items)
-            _BoosterCard(
-                booster: b,
-                emoji: emoji,
-                name: L10n.t(name),
-                desc: L10n.t(desc)),
-          const _LivesCard(),
-        ],
-      ),
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+      children: [
+        for (final (b, emoji, name, desc) in BoosterShopScreen._items)
+          _BoosterCard(
+              booster: b, emoji: emoji, name: L10n.t(name), desc: L10n.t(desc)),
+        const _LivesCard(),
+      ],
     );
   }
 }
@@ -182,7 +175,7 @@ class _Card extends StatelessWidget {
   }
 }
 
-class _BoosterCard extends StatelessWidget {
+class _BoosterCard extends ConsumerWidget {
   const _BoosterCard(
       {required this.booster,
       required this.emoji,
@@ -193,12 +186,12 @@ class _BoosterCard extends StatelessWidget {
   final String name;
   final String desc;
 
-  Widget _buyButton(BuildContext context, int qty) {
+  Widget _buyButton(BuildContext context, WidgetRef ref, int qty) {
     final price = Wallet.price(booster, qty);
-    final affordable = Wallet.coins.value >= price;
+    final affordable = ref.watch(walletProvider).coins >= price;
     return FilledButton(
       onPressed: () {
-        final ok = Wallet.buy(booster, qty);
+        final ok = ref.read(walletProvider.notifier).buy(booster, qty);
         if (ok) Audio.play(Sfx.coin);
         _toast(context, ok ? 'bought' : 'notEnoughCoins');
       },
@@ -219,7 +212,7 @@ class _BoosterCard extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final t = Theme.of(context).textTheme;
     return _Card(
       leading: Text(emoji, style: const TextStyle(fontSize: 34)),
@@ -230,7 +223,7 @@ class _BoosterCard extends StatelessWidget {
               style: t.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
           Text(desc, style: t.bodySmall),
           const SizedBox(height: 2),
-          Text(L10n.t('owned', {'n': Wallet.count(booster)}),
+          Text(L10n.t('owned', {'n': ref.watch(walletProvider).count(booster)}),
               style: t.bodySmall?.copyWith(fontWeight: FontWeight.bold)),
         ],
       ),
@@ -238,9 +231,9 @@ class _BoosterCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          _buyButton(context, 1),
+          _buyButton(context, ref, 1),
           const SizedBox(height: 6),
-          _buyButton(context, Wallet.bundleSize),
+          _buyButton(context, ref, Wallet.bundleSize),
           Text(L10n.t('bundleSave'),
               style: t.labelSmall?.copyWith(color: Colors.green.shade800)),
         ],
@@ -249,13 +242,14 @@ class _BoosterCard extends StatelessWidget {
   }
 }
 
-class _LivesCard extends StatelessWidget {
+class _LivesCard extends ConsumerWidget {
   const _LivesCard();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final t = Theme.of(context).textTheme;
-    final full = Wallet.lives.value >= Wallet.maxLives;
+    final lives = ref.watch(walletProvider.select((w) => w.lives));
+    final full = lives >= Wallet.maxLives;
     return _Card(
       leading: const Text('❤️', style: TextStyle(fontSize: 34)),
       body: Column(
@@ -263,10 +257,7 @@ class _LivesCard extends StatelessWidget {
         children: [
           Text(L10n.t('livesTitle'),
               style: t.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-          Text(
-              full
-                  ? L10n.t('livesFull')
-                  : '${Wallet.lives.value} / ${Wallet.maxLives}',
+          Text(full ? L10n.t('livesFull') : '$lives / ${Wallet.maxLives}',
               style: t.bodySmall),
         ],
       ),
@@ -274,7 +265,8 @@ class _LivesCard extends StatelessWidget {
         onPressed: full
             ? null
             : () {
-                final ok = Wallet.refillLifeWithCoins();
+                final ok =
+                    ref.read(walletProvider.notifier).refillLifeWithCoins();
                 if (ok) Audio.play(Sfx.coin);
                 _toast(context, ok ? 'bought' : 'notEnoughCoins');
               },

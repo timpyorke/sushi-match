@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/game_engine.dart';
 import '../core/level.dart';
@@ -102,7 +103,7 @@ class _Chip extends StatelessWidget {
   }
 }
 
-class ResultOverlay extends StatelessWidget {
+class ResultOverlay extends ConsumerWidget {
   const ResultOverlay(
       {super.key, required this.game, this.onNext, required this.onLevels});
   final SushiGame game;
@@ -113,12 +114,13 @@ class ResultOverlay extends StatelessWidget {
 
   /// Replaying costs a life only when the last run was lost, but starting
   /// any run needs one in the bank.
-  Future<void> _again(BuildContext context) async {
-    if (await ensureLife(context)) game.restart();
+  Future<void> _again(BuildContext context, WidgetRef ref) async {
+    if (await ensureLife(context, ref)) game.restart();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final wallet = ref.watch(walletProvider);
     return ValueListenableBuilder<HudState>(
       valueListenable: game.hud,
       builder: (context, s, _) {
@@ -171,12 +173,12 @@ class ResultOverlay extends StatelessWidget {
                       const SizedBox(height: 16),
                       if (!won) ...[
                         FilledButton(
-                          onPressed: Wallet.canUse(Booster.extraMoves)
+                          onPressed: wallet.canUse(Booster.extraMoves)
                               ? game.buyExtraMoves
                               : null,
                           child: Text(L10n.t('extraMoves', {
                             'm': Wallet.extraMovesAmount,
-                            'n': Wallet.count(Booster.extraMoves) > 0
+                            'n': wallet.count(Booster.extraMoves) > 0
                                 ? 0
                                 : Wallet.cost[Booster.extraMoves]!,
                           })),
@@ -191,10 +193,10 @@ class ResultOverlay extends StatelessWidget {
                       ],
                       won && onNext != null
                           ? OutlinedButton(
-                              onPressed: () => _again(context),
+                              onPressed: () => _again(context, ref),
                               child: Text(L10n.t('playAgain')))
                           : FilledButton(
-                              onPressed: () => _again(context),
+                              onPressed: () => _again(context, ref),
                               child: Text(L10n.t(won ? 'playAgain' : 'retry'))),
                       const SizedBox(height: 8),
                       OutlinedButton(
@@ -258,7 +260,7 @@ class PraiseBanner extends StatelessWidget {
 
 /// Booster buttons under the board. Shows stock, or the coin price when the
 /// stock is empty, plus a one-line hint while a booster is armed.
-class BoosterBar extends StatelessWidget {
+class BoosterBar extends ConsumerWidget {
   const BoosterBar({super.key, required this.game});
   final SushiGame game;
 
@@ -269,10 +271,10 @@ class BoosterBar extends StatelessWidget {
   ];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final wallet = ref.watch(walletProvider);
     return ListenableBuilder(
-      listenable:
-          Listenable.merge([game.armed, Wallet.stock, Wallet.coins, game.hud]),
+      listenable: Listenable.merge([game.armed, game.hud]),
       builder: (context, _) {
         final armed = game.armed.value;
         final playing = game.hud.value.status == GameStatus.playing;
@@ -299,10 +301,10 @@ class BoosterBar extends StatelessWidget {
                         child: _BoosterButton(
                       icon: icon,
                       label: L10n.t(key),
-                      stock: Wallet.count(b),
+                      stock: wallet.count(b),
                       price: Wallet.cost[b]!,
                       active: armed == b,
-                      enabled: playing && Wallet.canUse(b),
+                      enabled: playing && wallet.canUse(b),
                       onTap: () => game.tapBooster(b),
                     )),
                   _ShopButton(

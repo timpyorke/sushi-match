@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/settings.dart';
 import '../services/audio.dart';
@@ -7,15 +8,17 @@ import 'l10n.dart';
 import 'ui_art.dart';
 
 /// Spend stars on new restaurants and on decorating them.
-class RestaurantScreen extends StatelessWidget {
+class RestaurantScreen extends ConsumerWidget {
   const RestaurantScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final t = Theme.of(context).textTheme;
-    return ListenableBuilder(
-      listenable: Listenable.merge([Settings.language, Restaurant.revision]),
-      builder: (context, _) => Scaffold(
+    // Rebuild when the language changes; L10n reads it statically.
+    ref.watch(settingsProvider.select((s) => s.language));
+    final shops = ref.watch(restaurantProvider);
+    return Builder(
+      builder: (context) => Scaffold(
         body: DecoratedBox(
           decoration: const BoxDecoration(
             image: DecorationImage(
@@ -42,8 +45,7 @@ class RestaurantScreen extends StatelessWidget {
                   children: [
                     const StarIcon(size: 28),
                     const SizedBox(width: 6),
-                    Text(
-                        L10n.t('starsAvailable', {'n': Restaurant.available}),
+                    Text(L10n.t('starsAvailable', {'n': shops.available}),
                         style: t.titleMedium),
                   ],
                 ),
@@ -64,7 +66,7 @@ class RestaurantScreen extends StatelessWidget {
   }
 }
 
-class _ShopCard extends StatelessWidget {
+class _ShopCard extends ConsumerWidget {
   const _ShopCard({required this.shop});
   final ShopDef shop;
 
@@ -75,10 +77,11 @@ class _ShopCard extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final t = Theme.of(context).textTheme;
-    final open = Restaurant.shopUnlocked(shop);
-    final done = Restaurant.shopComplete(shop);
+    final state = ref.watch(restaurantProvider);
+    final open = state.shopUnlocked(shop);
+    final done = state.shopComplete(shop);
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(20),
@@ -110,8 +113,8 @@ class _ShopCard extends StatelessWidget {
             const SizedBox(height: 12),
             if (!open)
               FilledButton(
-                onPressed: () async {
-                  if (!await Restaurant.buyShop(shop) && context.mounted) {
+                onPressed: () {
+                  if (!ref.read(restaurantProvider.notifier).buyShop(shop)) {
                     _toast(context, L10n.t('needStars'));
                   }
                 },
@@ -123,8 +126,7 @@ class _ShopCard extends StatelessWidget {
                 const SizedBox(height: 12),
                 Text(L10n.t('shopDoneTitle'),
                     style: t.titleSmall?.copyWith(color: UiArt.ink)),
-                Text(L10n.t('shopDoneReward',
-                    {'n': Restaurant.completeCoins})),
+                Text(L10n.t('shopDoneReward', {'n': Restaurant.completeCoins})),
               ],
             ],
           ],
@@ -163,12 +165,12 @@ const _palettes = {
 
 /// A little street stall that fills up as decorations are bought. Empty
 /// spots show a faint price tag; tapping one buys it.
-class ShopScene extends StatelessWidget {
+class ShopScene extends ConsumerWidget {
   const ShopScene({super.key, required this.shop});
   final ShopDef shop;
 
-  Future<void> _buy(BuildContext context, DecorDef d) async {
-    final ok = await Restaurant.buyDecor(shop, d);
+  void _buy(BuildContext context, WidgetRef ref, DecorDef d) {
+    final ok = ref.read(restaurantProvider.notifier).buyDecor(shop, d);
     if (ok) Audio.play(Sfx.coin);
     if (!context.mounted) return;
     ScaffoldMessenger.of(context)
@@ -178,7 +180,8 @@ class ShopScene extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final owned = ref.watch(restaurantProvider);
     final palette = _palettes[shop.id] ?? _palettes['tsukiji']!;
     return AspectRatio(
       aspectRatio: 4 / 3,
@@ -193,8 +196,8 @@ class ShopScene extends StatelessWidget {
                 alignment: _slots[d.id] ?? Alignment.center,
                 child: _Slot(
                   decor: d,
-                  owned: Restaurant.decorOwned(shop, d),
-                  onBuy: () => _buy(context, d),
+                  owned: owned.decorOwned(shop, d),
+                  onBuy: () => _buy(context, ref, d),
                 ),
               ),
           ],
@@ -275,8 +278,7 @@ class _ScenePainter extends CustomPainter {
     final w = size.width, h = size.height;
     canvas.drawRect(Offset.zero & size, Paint()..color = p.sky);
     // Back wall of the stall.
-    canvas.drawRect(
-        Rect.fromLTWH(w * 0.06, h * 0.3, w * 0.88, h * 0.5),
+    canvas.drawRect(Rect.fromLTWH(w * 0.06, h * 0.3, w * 0.88, h * 0.5),
         Paint()..color = p.wall);
     // Striped awning.
     const stripes = 10;
@@ -294,8 +296,8 @@ class _ScenePainter extends CustomPainter {
     // Counter and floor.
     canvas.drawRect(Rect.fromLTWH(w * 0.06, h * 0.66, w * 0.88, h * 0.14),
         Paint()..color = p.floor.withAlpha(235));
-    canvas.drawRect(Rect.fromLTWH(0, h * 0.8, w, h * 0.2),
-        Paint()..color = p.floor);
+    canvas.drawRect(
+        Rect.fromLTWH(0, h * 0.8, w, h * 0.2), Paint()..color = p.floor);
     final plank = Paint()
       ..color = const Color(0x22000000)
       ..strokeWidth = 2;

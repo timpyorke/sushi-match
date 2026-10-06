@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sushi_match/core/level.dart';
 import 'package:sushi_match/core/piece.dart';
-import 'package:sushi_match/core/settings.dart';
+import 'package:sushi_match/ui/l10n.dart';
 import 'package:sushi_match/ui/customer_order.dart';
 
 void main() {
@@ -12,15 +12,15 @@ void main() {
   ];
 
   test('order text lists every goal in English', () {
-    Settings.language.value = 'en';
+    L10n.language = 'en';
     expect(orderText(goals),
         "I'd like 20 Salmon, 15 Tamago and a 5000-point feast, please!");
     expect(orderText(goals.take(1).toList()), "I'd like 20 Salmon, please!");
   });
 
   test('order text is localised in Thai', () {
-    Settings.language.value = 'th';
-    addTearDown(() => Settings.language.value = 'en');
+    L10n.language = 'th';
+    addTearDown(() => L10n.language = 'en');
     expect(orderText(goals), contains('แซลมอน 20 ชิ้น'));
     expect(orderText(goals), contains('กับ'));
   });

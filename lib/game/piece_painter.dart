@@ -229,7 +229,7 @@ abstract final class PiecePainter {
 
   /// Colour-blind mode: a distinct white glyph in the corner of each kind.
   static void _symbol(Canvas canvas, double s, PieceKind kind) {
-    if (!Settings.colorblind.value) return;
+    if (!SettingsMirror.colorblind) return;
     final r = s * 0.13;
     final c = Offset(s * 0.22, s * 0.22);
     final path = Path();

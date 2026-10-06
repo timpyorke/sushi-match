@@ -42,7 +42,7 @@
 - [x] CI: GitHub Actions รัน `flutter analyze` + `flutter test` ทุก PR (ยังไม่มี `.github/`)
 - [ ] Deploy ผ่าน Fastlane
 - [ ] Level editor บนเว็บ (Flutter web) แก้ layout แล้ว export JSON
-- [ ] GDD ระบุ Riverpod + Hive ไว้ ตอนนี้ใช้ `ValueNotifier` + `shared_preferences` ตัดสินใจว่าจะย้ายหรือแก้ GDD ให้ตรงกับของจริง
+- [x] ย้ายไป Riverpod + Hive แล้ว (state เป็น `NotifierProvider`, save ผ่าน `Store` บน Hive; ไม่ได้ย้ายข้อมูลจาก `shared_preferences` เดิม)
 - [x] Lint ที่ค้างอยู่: `lib/game/board_component.dart:144` ชื่อพารามิเตอร์ `gameSize` ไม่ตรงกับ `size` ของ method ที่ override
 
 ## 7. คำถามที่ยังต้องตัดสินใจ

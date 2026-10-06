@@ -33,7 +33,8 @@ class HudState {
 }
 
 class SushiGame extends FlameGame {
-  SushiGame({required this.level, this.starters = const []})
+  SushiGame(
+      {required this.level, required this.wallet, this.starters = const []})
       : _engine = GameEngine(level, seed: _seed(level)) {
     _placeStarters();
     hud = ValueNotifier(_snapshot());
@@ -58,6 +59,7 @@ class SushiGame extends FlameGame {
   int _reward = 0;
 
   final LevelConfig level;
+  final WalletNotifier wallet;
 
   /// Starter boosters picked before the level; each is spent from the wallet
   /// when the board is first laid out.
@@ -75,13 +77,13 @@ class SushiGame extends FlameGame {
 
   void _placeStarters() {
     for (final b in starters) {
-      if (!b.isStarter || Wallet.count(b) <= 0) continue;
+      if (!b.isStarter || wallet.count(b) <= 0) continue;
       final type = b == Booster.starterKnife
           ? (_engine.rng.nextBool()
               ? SpecialType.knifeRow
               : SpecialType.knifeCol)
           : SpecialType.wasabi;
-      if (_engine.placeStarter(type)) Wallet.consume(b);
+      if (_engine.placeStarter(type)) wallet.consume(b);
     }
   }
 
@@ -103,7 +105,7 @@ class SushiGame extends FlameGame {
       onTurnFinished: _sync,
       onPraise: _praise,
       armed: armed,
-      onSpendBooster: Wallet.consume,
+      onSpendBooster: wallet.consume,
     );
     _board = b;
     add(b);
@@ -113,11 +115,11 @@ class SushiGame extends FlameGame {
     if (_engine.status == GameStatus.won && !_rewarded) {
       _rewarded = true;
       _reward = 10 * _engine.stars;
-      Wallet.earn(_reward);
+      wallet.earn(_reward);
       Audio.play(Sfx.win);
     } else if (_engine.status == GameStatus.lost && !_lifeCharged) {
       _lifeCharged = true;
-      Wallet.loseLife();
+      wallet.loseLife();
       Audio.play(Sfx.lose);
     }
     hud.value = _snapshot();
@@ -131,7 +133,7 @@ class SushiGame extends FlameGame {
       case Booster.shuffle:
         _board?.useShuffle();
       case Booster.chopsticks || Booster.freeSwap:
-        armed.value = armed.value == b || !Wallet.canUse(b) ? null : b;
+        armed.value = armed.value == b || !wallet.canUse(b) ? null : b;
       case Booster.extraMoves || Booster.starterKnife || Booster.starterWasabi:
         break;
     }
@@ -140,12 +142,12 @@ class SushiGame extends FlameGame {
   /// Buys +5 moves, e.g. from the "out of moves" screen. Gives the life back.
   bool buyExtraMoves() {
     if (_engine.status == GameStatus.won ||
-        !Wallet.consume(Booster.extraMoves)) {
+        !wallet.consume(Booster.extraMoves)) {
       return false;
     }
     _engine.addMoves(Wallet.extraMovesAmount);
     if (_lifeCharged) {
-      Wallet.refundLife();
+      wallet.refundLife();
       _lifeCharged = false;
     }
     _sync();

@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sushi_match/core/settings.dart';
+import 'package:sushi_match/services/store.dart';
 import 'package:sushi_match/services/tips.dart';
 import 'package:sushi_match/ui/l10n.dart';
 import 'package:sushi_match/ui/tip_overlay.dart';
 
-void main() {
-  setUp(() async {
-    SharedPreferences.setMockInitialValues({});
-    Settings.language.value = 'en';
-    await Tips.load();
-  });
+import '../helpers/riverpod.dart';
 
+void main() {
   testWidgets('shows once, blocks taps, then is remembered', (tester) async {
+    final store = MemoryStore();
+    final c = testContainer(store: store);
     var behindTaps = 0;
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(
-        body: Stack(children: [
-          GestureDetector(onTap: () => behindTaps++),
-          const TipOverlay(id: 'conveyor', emoji: '➡️', text: 'tipConveyor'),
-        ]),
-      ),
-    ));
+    await tester.pumpWidget(scope(
+        c,
+        MaterialApp(
+          home: Scaffold(
+            body: Stack(children: [
+              GestureDetector(onTap: () => behindTaps++),
+              const TipOverlay(
+                  id: 'conveyor', emoji: '➡️', text: 'tipConveyor'),
+            ]),
+          ),
+        )));
     expect(find.text(L10n.t('tipConveyorTitle')), findsOneWidget);
 
     await tester.tapAt(const Offset(10, 10));
@@ -31,12 +31,12 @@ void main() {
     await tester.tap(find.text('Got it!'));
     await tester.pump();
     expect(find.text(L10n.t('tipConveyorTitle')), findsNothing);
-    expect(Tips.isSeen('conveyor'), isTrue);
+    expect(c.read(tipsProvider), contains('conveyor'));
 
-    // Survives a reload.
-    await Tips.load();
-    expect(Tips.isSeen('conveyor'), isTrue);
-    await Tips.reset();
-    expect(Tips.isSeen('conveyor'), isFalse);
+    // Survives a restart.
+    expect(
+        testContainer(store: store).read(tipsProvider), contains('conveyor'));
+    c.read(tipsProvider.notifier).reset();
+    expect(c.read(tipsProvider), isEmpty);
   });
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../services/daily_reward.dart';
 import 'l10n.dart';
@@ -17,26 +18,26 @@ String _label(DailyPrize p) =>
     '🪙${p.coins}${p.booster == null ? '' : ' ${_boosterEmoji[p.booster!.name]}×${p.qty}'}';
 
 /// Shows the 7-day calendar if today's reward is waiting.
-Future<void> maybeShowDailyReward(BuildContext context) async {
-  if (!DailyReward.canClaim) return;
+Future<void> maybeShowDailyReward(BuildContext context, WidgetRef ref) async {
+  if (!ref.read(dailyProvider.notifier).canClaim) return;
   await showDialog<void>(
       context: context, builder: (_) => const DailyRewardDialog());
 }
 
-class DailyRewardDialog extends StatefulWidget {
+class DailyRewardDialog extends ConsumerStatefulWidget {
   const DailyRewardDialog({super.key});
 
   @override
-  State<DailyRewardDialog> createState() => _DailyRewardDialogState();
+  ConsumerState<DailyRewardDialog> createState() => _DailyRewardDialogState();
 }
 
-class _DailyRewardDialogState extends State<DailyRewardDialog> {
-  late final int _today = DailyReward.nextDay;
+class _DailyRewardDialogState extends ConsumerState<DailyRewardDialog> {
+  late final int _today = ref.read(dailyProvider.notifier).nextDay;
   bool _claimed = false;
 
-  Future<void> _claim() async {
-    await DailyReward.claim();
-    if (mounted) setState(() => _claimed = true);
+  void _claim() {
+    ref.read(dailyProvider.notifier).claim();
+    setState(() => _claimed = true);
   }
 
   @override

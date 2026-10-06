@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../services/store.dart';
 import '../services/wallet.dart';
 import 'l10n.dart';
 import 'ui_art.dart';
@@ -14,29 +16,34 @@ String _mmss(Duration d) {
 
 /// True when the player has a life to spend. Otherwise offers to refill one
 /// with coins (rewarded ads would slot in here later) and re-checks.
-Future<bool> ensureLife(BuildContext context) async {
-  Wallet.tick();
-  if (Wallet.lives.value > 0) return true;
+Future<bool> ensureLife(BuildContext context, WidgetRef ref) async {
+  final wallet = ref.read(walletProvider.notifier);
+  wallet.tick();
+  if (ref.read(walletProvider).lives > 0) return true;
   await showDialog<void>(context: context, builder: (_) => const _NoLives());
-  return Wallet.lives.value > 0;
+  return ref.read(walletProvider).lives > 0;
 }
 
-class _NoLives extends StatefulWidget {
+class _NoLives extends ConsumerStatefulWidget {
   const _NoLives();
 
   @override
-  State<_NoLives> createState() => _NoLivesState();
+  ConsumerState<_NoLives> createState() => _NoLivesState();
 }
 
-class _NoLivesState extends State<_NoLives> {
+class _NoLivesState extends ConsumerState<_NoLives> {
   Timer? _timer;
   bool _broke = false;
 
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(
-        const Duration(seconds: 1), (_) => setState(Wallet.tick));
+    // The state only changes when a life arrives; the countdown text needs a
+    // redraw every second regardless.
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      ref.read(walletProvider.notifier).tick();
+      setState(() {});
+    });
   }
 
   @override
@@ -47,12 +54,13 @@ class _NoLivesState extends State<_NoLives> {
 
   @override
   Widget build(BuildContext context) {
-    if (Wallet.lives.value > 0) {
+    final wallet = ref.watch(walletProvider);
+    if (wallet.lives > 0) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) Navigator.pop(context);
       });
     }
-    final left = Wallet.nextLifeIn;
+    final left = wallet.nextLifeIn(ref.read(clockProvider)());
     return AlertDialog(
       title: Text('💔 ${L10n.t('outOfLives')}'),
       content: Column(
@@ -73,7 +81,9 @@ class _NoLivesState extends State<_NoLives> {
             child: Text(L10n.t('wait'))),
         FilledButton(
           onPressed: () {
-            if (!Wallet.refillLifeWithCoins()) setState(() => _broke = true);
+            if (!ref.read(walletProvider.notifier).refillLifeWithCoins()) {
+              setState(() => _broke = true);
+            }
           },
           child: Text(L10n.t('refill', {'n': Wallet.lifeRefillCost})),
         ),
@@ -83,21 +93,25 @@ class _NoLivesState extends State<_NoLives> {
 }
 
 /// Hearts and coins strip for the level-select screen.
-class WalletBar extends StatefulWidget {
+class WalletBar extends ConsumerStatefulWidget {
   const WalletBar({super.key});
 
   @override
-  State<WalletBar> createState() => _WalletBarState();
+  ConsumerState<WalletBar> createState() => _WalletBarState();
 }
 
-class _WalletBarState extends State<WalletBar> {
+class _WalletBarState extends ConsumerState<WalletBar> {
   Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(
-        const Duration(seconds: 1), (_) => setState(Wallet.tick));
+    // The state only changes when a life arrives; the countdown text needs a
+    // redraw every second regardless.
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      ref.read(walletProvider.notifier).tick();
+      setState(() {});
+    });
   }
 
   @override
@@ -108,22 +122,18 @@ class _WalletBarState extends State<WalletBar> {
 
   @override
   Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: Listenable.merge([Wallet.lives, Wallet.coins]),
-      builder: (context, _) {
-        final left = Wallet.nextLifeIn;
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _pill(Text(
-                '❤️ ${Wallet.lives.value}'
-                '${left == null ? '' : '  ${_mmss(left)}'}',
-                style: _pillStyle)),
-            const SizedBox(width: 8),
-            _pill(CoinAmount(Wallet.coins.value, size: 20, style: _pillStyle)),
-          ],
-        );
-      },
+    final wallet = ref.watch(walletProvider);
+    final left = wallet.nextLifeIn(ref.read(clockProvider)());
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _pill(Text(
+            '❤️ ${wallet.lives}'
+            '${left == null ? '' : '  ${_mmss(left)}'}',
+            style: _pillStyle)),
+        const SizedBox(width: 8),
+        _pill(CoinAmount(wallet.coins, size: 20, style: _pillStyle)),
+      ],
     );
   }
 

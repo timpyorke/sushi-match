@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/progress.dart';
 import '../services/daily_reward.dart';
@@ -8,10 +9,10 @@ import '../core/settings.dart';
 import 'l10n.dart';
 import 'ui_art.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
-  Future<void> _confirmReset(BuildContext context) async {
+  Future<void> _confirmReset(BuildContext context, WidgetRef ref) async {
     final ok = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
@@ -28,10 +29,10 @@ class SettingsScreen extends StatelessWidget {
       ),
     );
     if (ok != true) return;
-    await Progress.reset();
-    await Restaurant.reset();
-    await Tips.reset();
-    await DailyReward.reset();
+    ref.read(progressProvider.notifier).reset();
+    ref.read(restaurantProvider.notifier).reset();
+    ref.read(tipsProvider.notifier).reset();
+    ref.read(dailyProvider.notifier).reset();
     if (context.mounted) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
@@ -40,15 +41,10 @@ class SettingsScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final t = Theme.of(context).textTheme;
-    return ValueListenableBuilder<String>(
-      valueListenable: Settings.language,
-      builder: (context, _, __) => _page(context, t),
-    );
-  }
-
-  Widget _page(BuildContext context, TextTheme t) {
+    final settings = ref.watch(settingsProvider);
+    final notifier = ref.read(settingsProvider.notifier);
     return Scaffold(
       body: DecoratedBox(
         decoration: const BoxDecoration(
@@ -80,37 +76,25 @@ class SettingsScreen extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    ValueListenableBuilder<bool>(
-                      valueListenable: Settings.sound,
-                      builder: (_, on, __) => SwitchListTile(
-                        title: Text(L10n.t('soundEffects')),
-                        value: on,
-                        onChanged: Settings.setSound,
-                      ),
+                    SwitchListTile(
+                      title: Text(L10n.t('soundEffects')),
+                      value: settings.sound,
+                      onChanged: notifier.setSound,
                     ),
-                    ValueListenableBuilder<bool>(
-                      valueListenable: Settings.music,
-                      builder: (_, on, __) => SwitchListTile(
-                        title: Text(L10n.t('music')),
-                        value: on,
-                        onChanged: Settings.setMusic,
-                      ),
+                    SwitchListTile(
+                      title: Text(L10n.t('music')),
+                      value: settings.music,
+                      onChanged: notifier.setMusic,
                     ),
-                    ValueListenableBuilder<bool>(
-                      valueListenable: Settings.haptics,
-                      builder: (_, on, __) => SwitchListTile(
-                        title: Text(L10n.t('vibration')),
-                        value: on,
-                        onChanged: Settings.setHaptics,
-                      ),
+                    SwitchListTile(
+                      title: Text(L10n.t('vibration')),
+                      value: settings.haptics,
+                      onChanged: notifier.setHaptics,
                     ),
-                    ValueListenableBuilder<bool>(
-                      valueListenable: Settings.colorblind,
-                      builder: (_, on, __) => SwitchListTile(
-                        title: Text(L10n.t('colorblind')),
-                        value: on,
-                        onChanged: Settings.setColorblind,
-                      ),
+                    SwitchListTile(
+                      title: Text(L10n.t('colorblind')),
+                      value: settings.colorblind,
+                      onChanged: notifier.setColorblind,
                     ),
                     ListTile(
                       leading: const Icon(Icons.language),
@@ -121,15 +105,15 @@ class SettingsScreen extends StatelessWidget {
                           for (final e in L10n.languages.entries)
                             ButtonSegment(value: e.key, label: Text(e.value)),
                         ],
-                        selected: {Settings.language.value},
+                        selected: {settings.language},
                         onSelectionChanged: (v) =>
-                            Settings.setLanguage(v.first),
+                            notifier.setLanguage(v.first),
                       ),
                     ),
                     ListTile(
                       leading: const Icon(Icons.restart_alt),
                       title: Text(L10n.t('resetProgress')),
-                      onTap: () => _confirmReset(context),
+                      onTap: () => _confirmReset(context, ref),
                     ),
                   ],
                 ),
