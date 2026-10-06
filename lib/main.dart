@@ -7,10 +7,12 @@ import 'package:flutter/services.dart';
 import 'core/game_engine.dart';
 import 'core/level.dart';
 import 'core/progress.dart';
+import 'core/settings.dart';
 import 'game/piece_painter.dart';
 import 'game/sushi_game.dart';
 import 'ui/hud.dart';
 import 'ui/level_select.dart';
+import 'ui/settings_screen.dart';
 import 'ui/ui_art.dart';
 
 void main() async {
@@ -18,6 +20,7 @@ void main() async {
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await _enterImmersive();
   await PiecePainter.loadSprites();
+  await Settings.load();
 
   // Bars come back after an edge swipe, the keyboard or a system dialog.
   // Hide them again after a short delay.
@@ -90,6 +93,12 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
           child: LevelSelectView(
             levelCount: kLevelCount,
             cleared: _cleared,
+            onSettings: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const SettingsScreen()),
+              );
+              _refresh();
+            },
             onSelect: (n) async {
               await Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => GameScreen(levelNumber: n)),

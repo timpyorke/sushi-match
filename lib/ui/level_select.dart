@@ -15,13 +15,15 @@ class LevelSelectView extends StatefulWidget {
       {super.key,
       required this.levelCount,
       required this.cleared,
-      required this.onSelect});
+      required this.onSelect,
+      this.onSettings});
 
   final int levelCount;
 
   /// Highest cleared level; the next one is playable, the rest are locked.
   final int cleared;
   final ValueChanged<int> onSelect;
+  final VoidCallback? onSettings;
 
   @override
   State<LevelSelectView> createState() => _LevelSelectViewState();
@@ -75,8 +77,17 @@ class _LevelSelectViewState extends State<LevelSelectView> {
     final t = Theme.of(context).textTheme;
     return Column(
       children: [
+        if (widget.onSettings != null)
+          Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 12),
+              child: RoundIconButton(
+                  icon: Icons.settings, onPressed: widget.onSettings!),
+            ),
+          ),
         Padding(
-          padding: const EdgeInsets.only(top: 24, bottom: 4),
+          padding: const EdgeInsets.only(top: 8, bottom: 4),
           child: Text('Sushi Match',
               style: t.headlineLarge?.copyWith(fontWeight: FontWeight.bold)),
         ),

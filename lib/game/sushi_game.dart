@@ -1,10 +1,11 @@
-import 'dart:ui';
 
 import 'package:flame/game.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 import '../core/game_engine.dart';
 import '../core/level.dart';
+import '../core/settings.dart';
 import 'board_component.dart';
 
 /// What the Flutter HUD needs; refreshed after every turn.
@@ -55,7 +56,10 @@ class SushiGame extends FlameGame {
     add(b);
   }
 
-  void _sync() => hud.value = _snapshot();
+  void _sync() {
+    if (Settings.haptics.value) HapticFeedback.lightImpact();
+    hud.value = _snapshot();
+  }
 
   HudState _snapshot() => HudState(
         movesLeft: _engine.movesLeft,

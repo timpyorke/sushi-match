@@ -11,4 +11,7 @@ abstract final class Progress {
     final prefs = await SharedPreferences.getInstance();
     if (level > (prefs.getInt(_key) ?? 0)) await prefs.setInt(_key, level);
   }
+
+  static Future<void> reset() async =>
+      (await SharedPreferences.getInstance()).remove(_key);
 }
