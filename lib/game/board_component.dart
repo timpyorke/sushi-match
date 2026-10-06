@@ -19,6 +19,7 @@ import '../core/piece.dart';
 import '../core/steps.dart';
 import '../services/wallet.dart';
 import 'piece_component.dart';
+import 'tile_art.dart';
 
 /// View for the board. Owns no rules: it forwards input to [GameEngine]
 /// and plays back the returned [BoardStep]s one by one.
@@ -84,6 +85,7 @@ class BoardComponent extends PositionComponent
 
   @override
   Future<void> onLoad() async {
+    await TileArt.load();
     _layer = ClipComponent.rectangle(size: size);
     add(_layer);
     for (final p in board.positions) {
@@ -123,10 +125,15 @@ class BoardComponent extends PositionComponent
   void render(Canvas canvas) {
     for (final p in board.positions) {
       final rect = Rect.fromLTWH(p.col * cell, p.row * cell, cell, cell);
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(rect.deflate(1.5), const Radius.circular(8)),
-        (p.row + p.col).isEven ? _cellA : _cellB,
-      );
+      final dark = (p.row + p.col).isOdd;
+      if (TileArt.ready) {
+        TileArt.cell(canvas, rect, dark: dark);
+      } else {
+        canvas.drawRRect(
+          RRect.fromRectAndRadius(rect.deflate(1.5), const Radius.circular(8)),
+          dark ? _cellB : _cellA,
+        );
+      }
     }
     for (final c in engine.level.conveyors) {
       final cols = [
@@ -137,14 +144,34 @@ class BoardComponent extends PositionComponent
       final y = c.row * cell;
       final band = Rect.fromLTWH(
           cols.first * cell, y, (cols.last - cols.first + 1) * cell, cell);
-      canvas.drawRRect(
-          RRect.fromRectAndRadius(band.deflate(1), const Radius.circular(8)),
-          _beltPaint);
+      if (TileArt.ready) {
+        for (final col in cols) {
+          final rect = Rect.fromLTWH(col * cell, y, cell, cell);
+          if (col == cols.first) {
+            TileArt.beltCap(canvas, rect, leftEnd: true);
+          } else if (col == cols.last) {
+            TileArt.beltCap(canvas, rect, leftEnd: false);
+          } else {
+            TileArt.belt(canvas, rect);
+          }
+        }
+      } else {
+        canvas.drawRRect(
+            RRect.fromRectAndRadius(band.deflate(1), const Radius.circular(8)),
+            _beltPaint);
+      }
       // Padlocks at both ends: the belt's pieces can't be swapped by hand.
       _drawLock(canvas, Offset(cols.first * cell + 15, y + cell - 14));
       _drawLock(canvas, Offset((cols.last + 1) * cell - 15, y + cell - 14));
       for (final col in cols) {
         final cx = col * cell + cell / 2, cy = y + cell - 9;
+        if (TileArt.ready) {
+          TileArt.arrow(
+              canvas,
+              Rect.fromCenter(center: Offset(cx, cy), width: 20, height: 12),
+              c.dir);
+          continue;
+        }
         final d = c.dir * 6.0;
         canvas.drawPath(
             Path()
