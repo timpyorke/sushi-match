@@ -1,17 +1,25 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Persists the highest level the player has cleared.
-abstract final class Progress {
+import '../services/store.dart';
+
+/// The highest level the player has cleared.
+class ProgressNotifier extends Notifier<int> {
   static const _key = 'cleared_level';
 
-  static Future<int> cleared() async =>
-      (await SharedPreferences.getInstance()).getInt(_key) ?? 0;
+  @override
+  int build() => ref.read(storeProvider).get<int>(_key) ?? 0;
 
-  static Future<void> markCleared(int level) async {
-    final prefs = await SharedPreferences.getInstance();
-    if (level > (prefs.getInt(_key) ?? 0)) await prefs.setInt(_key, level);
+  void markCleared(int level) {
+    if (level <= state) return;
+    state = level;
+    ref.read(storeProvider).put(_key, level);
   }
 
-  static Future<void> reset() async =>
-      (await SharedPreferences.getInstance()).remove(_key);
+  void reset() {
+    state = 0;
+    ref.read(storeProvider).remove(_key);
+  }
 }
+
+final progressProvider =
+    NotifierProvider<ProgressNotifier, int>(ProgressNotifier.new);

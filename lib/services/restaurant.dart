@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'store.dart';
 import 'wallet.dart';
 
 class DecorDef {
@@ -26,9 +27,7 @@ class ShopDef {
   String get nameKey => 'shop_$id';
 }
 
-/// Stars earned from levels are spent here on new restaurants and their
-/// decorations. Spent stars are derived from what is owned, so there is no
-/// counter to drift out of sync.
+/// Restaurant definitions and constants.
 ///
 /// Pacing (a mid-skill bot averages ~2.2 stars a level): the first 15 levels
 /// pay roughly 30 stars, so the second restaurant (24) plus the first one's
@@ -60,29 +59,32 @@ abstract final class Restaurant {
 
   static const completeCoins = 100;
 
-  /// Bumped on every change so screens can rebuild with one listener.
-  static final revision = ValueNotifier<int>(0);
-
-  static final Map<int, int> _best = {};
-  static final Set<String> _owned = {};
-
-  static Future<void> load() async {
-    final prefs = await SharedPreferences.getInstance();
-    _best.clear();
-    for (final k in prefs.getKeys().where((k) => k.startsWith('stars_'))) {
-      _best[int.parse(k.substring(6))] = prefs.getInt(k) ?? 0;
-    }
-    _owned
-      ..clear()
-      ..addAll(prefs.getStringList('restaurant_owned') ?? const []);
-    revision.value++;
-  }
-
-  static int get earned => _best.values.fold(0, (a, b) => a + b);
-
-  static int get spent {
-    var total = 0;
+  static ShopDef? shopOfLevel(int level) {
     for (final s in shops) {
+      if (level >= s.firstLevel && level <= s.lastLevel) return s;
+    }
+    return null;
+  }
+}
+
+/// Stars earned from levels are spent on new restaurants and their
+/// decorations. Spent stars are derived from what is owned, so there is no
+/// counter to drift out of sync.
+@immutable
+class RestaurantState {
+  const RestaurantState({this.best = const {}, this.owned = const {}});
+
+  /// Best star count per level.
+  final Map<int, int> best;
+
+  /// 'shop:<id>' and 'decor:<shop>:<decor>' entries.
+  final Set<String> owned;
+
+  int get earned => best.values.fold(0, (a, b) => a + b);
+
+  int get spent {
+    var total = 0;
+    for (final s in Restaurant.shops) {
       if (shopUnlocked(s)) total += s.unlockCost;
       for (final d in s.decor) {
         if (decorOwned(s, d)) total += d.cost;
@@ -91,83 +93,93 @@ abstract final class Restaurant {
     return total;
   }
 
-  static int get available => earned - spent;
+  int get available => earned - spent;
 
-  static int bestStars(int level) => _best[level] ?? 0;
+  int bestStars(int level) => best[level] ?? 0;
 
-  /// Keeps only the best result per level. Returns the stars gained.
-  static Future<int> recordStars(int level, int stars) async {
-    final before = bestStars(level);
-    if (stars <= before) return 0;
-    _best[level] = stars;
-    revision.value++;
-    await (await SharedPreferences.getInstance()).setInt('stars_$level', stars);
-    return stars - before;
-  }
+  bool shopUnlocked(ShopDef s) =>
+      s.unlockCost == 0 || owned.contains('shop:${s.id}');
 
-  static bool shopUnlocked(ShopDef s) =>
-      s.unlockCost == 0 || _owned.contains('shop:${s.id}');
+  bool decorOwned(ShopDef s, DecorDef d) =>
+      owned.contains('decor:${s.id}:${d.id}');
 
-  static bool decorOwned(ShopDef s, DecorDef d) =>
-      _owned.contains('decor:${s.id}:${d.id}');
-
-  static bool shopComplete(ShopDef s) =>
-      s.decor.every((d) => decorOwned(s, d));
+  bool shopComplete(ShopDef s) => s.decor.every((d) => decorOwned(s, d));
 
   /// Highest level the player may enter: the end of the last shop reached
   /// without skipping a locked one.
-  static int get maxPlayableLevel {
+  int get maxPlayableLevel {
     var last = 0;
-    for (final s in shops) {
+    for (final s in Restaurant.shops) {
       if (!shopUnlocked(s)) break;
       last = s.lastLevel;
     }
     return last;
   }
+}
 
-  static ShopDef? shopOfLevel(int level) {
-    for (final s in shops) {
-      if (level >= s.firstLevel && level <= s.lastLevel) return s;
-    }
-    return null;
+class RestaurantNotifier extends Notifier<RestaurantState> {
+  static const _ownedKey = 'restaurant_owned';
+
+  @override
+  RestaurantState build() {
+    final s = ref.read(storeProvider);
+    return RestaurantState(
+      best: {
+        for (final k in s.keys.where((k) => k.startsWith('stars_')))
+          int.parse(k.substring(6)): s.get<int>(k) ?? 0,
+      },
+      owned: (s.getStringList(_ownedKey) ?? const []).toSet(),
+    );
   }
 
-  static Future<bool> buyShop(ShopDef s) async {
-    if (shopUnlocked(s) || available < s.unlockCost) return false;
-    _owned.add('shop:${s.id}');
-    await _save();
+  /// Keeps only the best result per level. Returns the stars gained.
+  int recordStars(int level, int stars) {
+    final before = state.bestStars(level);
+    if (stars <= before) return 0;
+    state = RestaurantState(
+        best: {...state.best, level: stars}, owned: state.owned);
+    ref.read(storeProvider).put('stars_$level', stars);
+    return stars - before;
+  }
+
+  void _own(String id) {
+    state = RestaurantState(best: state.best, owned: {...state.owned, id});
+    ref.read(storeProvider).put(_ownedKey, state.owned.toList());
+  }
+
+  bool buyShop(ShopDef s) {
+    if (state.shopUnlocked(s) || state.available < s.unlockCost) return false;
+    _own('shop:${s.id}');
     return true;
   }
 
   /// Returns true when the purchase happened. Finishing the last decoration
   /// of a shop pays out coins plus a free Chopsticks.
-  static Future<bool> buyDecor(ShopDef s, DecorDef d) async {
-    if (!shopUnlocked(s) || decorOwned(s, d) || available < d.cost) {
+  bool buyDecor(ShopDef s, DecorDef d) {
+    if (!state.shopUnlocked(s) ||
+        state.decorOwned(s, d) ||
+        state.available < d.cost) {
       return false;
     }
-    _owned.add('decor:${s.id}:${d.id}');
-    if (shopComplete(s)) {
-      Wallet.earn(completeCoins);
-      Wallet.grant(Booster.chopsticks, 1);
+    _own('decor:${s.id}:${d.id}');
+    if (state.shopComplete(s)) {
+      final wallet = ref.read(walletProvider.notifier);
+      wallet.earn(Restaurant.completeCoins);
+      wallet.grant(Booster.chopsticks, 1);
     }
-    await _save();
     return true;
   }
 
-  static Future<void> reset() async {
-    final prefs = await SharedPreferences.getInstance();
-    for (final k in prefs.getKeys().where((k) => k.startsWith('stars_'))) {
-      await prefs.remove(k);
+  void reset() {
+    final s = ref.read(storeProvider);
+    for (final k in s.keys.where((k) => k.startsWith('stars_')).toList()) {
+      s.remove(k);
     }
-    await prefs.remove('restaurant_owned');
-    _best.clear();
-    _owned.clear();
-    revision.value++;
-  }
-
-  static Future<void> _save() async {
-    revision.value++;
-    await (await SharedPreferences.getInstance())
-        .setStringList('restaurant_owned', _owned.toList());
+    s.remove(_ownedKey);
+    state = const RestaurantState();
   }
 }
+
+final restaurantProvider =
+    NotifierProvider<RestaurantNotifier, RestaurantState>(
+        RestaurantNotifier.new);

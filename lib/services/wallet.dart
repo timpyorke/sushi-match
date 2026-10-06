@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'store.dart';
 
 enum Booster {
   extraMoves,
@@ -14,8 +16,7 @@ enum Booster {
   bool get isStarter => this == starterKnife || this == starterWasabi;
 }
 
-/// Lives, coins and booster stock. Lives regenerate lazily: the clock only
-/// matters when someone looks, so no background timer is needed.
+/// Wallet constants and pricing.
 abstract final class Wallet {
   static const maxLives = 5;
   static const lifeEvery = Duration(minutes: 30);
@@ -41,122 +42,166 @@ abstract final class Wallet {
   static int price(Booster b, int qty) => qty >= bundleSize
       ? (cost[b]! * qty * bundleDiscount).round()
       : cost[b]! * qty;
+}
 
-  static final lives = ValueNotifier<int>(maxLives);
-  static final coins = ValueNotifier<int>(startingCoins);
-  static final stock = ValueNotifier<Map<Booster, int>>(const {});
+@immutable
+class WalletState {
+  const WalletState({
+    required this.lives,
+    required this.coins,
+    this.stock = const {},
+    this.since,
+  });
 
-  /// Injectable for tests.
-  static DateTime Function() clock = DateTime.now;
+  final int lives;
+  final int coins;
+  final Map<Booster, int> stock;
 
   /// When the current regeneration cycle started; null while lives are full.
-  static DateTime? _since;
+  final DateTime? since;
 
-  static Future<void> load() async {
-    final prefs = await SharedPreferences.getInstance();
-    lives.value = prefs.getInt('lives') ?? maxLives;
-    coins.value = prefs.getInt('coins') ?? startingCoins;
-    final ms = prefs.getInt('lives_since');
-    _since = ms == null ? null : DateTime.fromMillisecondsSinceEpoch(ms);
-    stock.value = {
-      for (final b in Booster.values) b: prefs.getInt('booster_${b.name}') ?? 0,
-    };
-    tick();
-  }
+  int count(Booster b) => stock[b] ?? 0;
 
-  /// Applies any lives earned since the last call. Cheap; call it freely.
-  static void tick() {
-    final from = _since;
-    if (from == null || lives.value >= maxLives) return;
-    final earned = clock().difference(from).inSeconds ~/ lifeEvery.inSeconds;
-    if (earned <= 0) return;
-    lives.value = (lives.value + earned).clamp(0, maxLives);
-    _since = lives.value >= maxLives ? null : from.add(lifeEvery * earned);
-    _save();
-  }
+  bool canUse(Booster b) => count(b) > 0 || coins >= Wallet.cost[b]!;
 
-  /// Time until the next life, or null when full.
-  static Duration? get nextLifeIn {
-    tick();
-    final from = _since;
-    if (from == null || lives.value >= maxLives) return null;
-    final left = from.add(lifeEvery).difference(clock());
+  /// Time until the next life at [now], or null when full.
+  Duration? nextLifeIn(DateTime now) {
+    final from = since;
+    if (from == null || lives >= Wallet.maxLives) return null;
+    final left = from.add(Wallet.lifeEvery).difference(now);
     return left.isNegative ? Duration.zero : left;
   }
 
-  static void loseLife() {
+  WalletState copyWith(
+          {int? lives,
+          int? coins,
+          Map<Booster, int>? stock,
+          DateTime? since,
+          bool clearSince = false}) =>
+      WalletState(
+        lives: lives ?? this.lives,
+        coins: coins ?? this.coins,
+        stock: stock ?? this.stock,
+        since: clearSince ? null : since ?? this.since,
+      );
+}
+
+/// Lives, coins and booster stock. Lives regenerate lazily: the clock only
+/// matters when someone looks, so no background timer is needed ([tick] is
+/// called by whatever shows the countdown).
+class WalletNotifier extends Notifier<WalletState> {
+  DateTime _now() => ref.read(clockProvider)();
+
+  @override
+  WalletState build() {
+    final s = ref.read(storeProvider);
+    final ms = s.get<int>('lives_since');
+    final loaded = WalletState(
+      lives: s.get<int>('lives') ?? Wallet.maxLives,
+      coins: s.get<int>('coins') ?? Wallet.startingCoins,
+      since: ms == null ? null : DateTime.fromMillisecondsSinceEpoch(ms),
+      stock: {
+        for (final b in Booster.values) b: s.get<int>('booster_${b.name}') ?? 0,
+      },
+    );
+    return _ticked(loaded);
+  }
+
+  WalletState _ticked(WalletState w) {
+    final from = w.since;
+    if (from == null || w.lives >= Wallet.maxLives) return w;
+    final earned =
+        _now().difference(from).inSeconds ~/ Wallet.lifeEvery.inSeconds;
+    if (earned <= 0) return w;
+    final lives = (w.lives + earned).clamp(0, Wallet.maxLives);
+    return lives >= Wallet.maxLives
+        ? w.copyWith(lives: lives, clearSince: true)
+        : w.copyWith(lives: lives, since: from.add(Wallet.lifeEvery * earned));
+  }
+
+  /// Applies any lives earned since the last call. Cheap; call it freely
+  /// (but not from inside a build).
+  void tick() {
+    final next = _ticked(state);
+    if (identical(next, state)) return;
+    _set(next);
+  }
+
+  Duration? get nextLifeIn => state.nextLifeIn(_now());
+
+  /// Stock and affordability for non-widget callers (the game).
+  int count(Booster b) => state.count(b);
+  bool canUse(Booster b) => state.canUse(b);
+
+  void loseLife() {
     tick();
-    if (lives.value <= 0) return;
-    if (lives.value >= maxLives) _since = clock();
-    lives.value--;
-    _save();
+    if (state.lives <= 0) return;
+    _set(state.copyWith(
+      lives: state.lives - 1,
+      since: state.lives >= Wallet.maxLives ? _now() : null,
+    ));
   }
 
   /// Gives a life back (e.g. the player bought extra moves after losing).
-  static void refundLife() {
-    if (lives.value >= maxLives) return;
-    lives.value++;
-    if (lives.value >= maxLives) _since = null;
-    _save();
+  void refundLife() {
+    if (state.lives >= Wallet.maxLives) return;
+    final lives = state.lives + 1;
+    _set(lives >= Wallet.maxLives
+        ? state.copyWith(lives: lives, clearSince: true)
+        : state.copyWith(lives: lives));
   }
 
-  static bool refillLifeWithCoins() {
-    if (coins.value < lifeRefillCost) return false;
-    coins.value -= lifeRefillCost;
+  bool refillLifeWithCoins() {
+    if (state.coins < Wallet.lifeRefillCost) return false;
+    _set(state.copyWith(coins: state.coins - Wallet.lifeRefillCost));
     refundLife();
     return true;
   }
 
-  static void earn(int amount) {
-    coins.value += amount;
-    _save();
-  }
+  void earn(int amount) => _set(state.copyWith(coins: state.coins + amount));
 
   /// Adds free boosters to the stock (e.g. a finished restaurant's reward).
-  static void grant(Booster b, int n) {
-    stock.value = {...stock.value, b: count(b) + n};
-    _save();
-  }
+  void grant(Booster b, int n) =>
+      _set(state.copyWith(stock: {...state.stock, b: state.count(b) + n}));
 
   /// Buys [qty] boosters into the stock; false when the coins don't stretch.
-  static bool buy(Booster b, int qty) {
-    final p = price(b, qty);
-    if (qty <= 0 || coins.value < p) return false;
-    coins.value -= p;
-    stock.value = {...stock.value, b: count(b) + qty};
-    _save();
+  bool buy(Booster b, int qty) {
+    final p = Wallet.price(b, qty);
+    if (qty <= 0 || state.coins < p) return false;
+    _set(state.copyWith(
+        coins: state.coins - p,
+        stock: {...state.stock, b: state.count(b) + qty}));
     return true;
   }
 
-  static int count(Booster b) => stock.value[b] ?? 0;
-
-  static bool canUse(Booster b) => count(b) > 0 || coins.value >= cost[b]!;
-
   /// Uses one from stock, or pays coins when the stock is empty.
-  static bool consume(Booster b) {
-    if (count(b) > 0) {
-      stock.value = {...stock.value, b: count(b) - 1};
-    } else if (coins.value >= cost[b]!) {
-      coins.value -= cost[b]!;
+  bool consume(Booster b) {
+    if (state.count(b) > 0) {
+      _set(state.copyWith(stock: {...state.stock, b: state.count(b) - 1}));
+    } else if (state.coins >= Wallet.cost[b]!) {
+      _set(state.copyWith(coins: state.coins - Wallet.cost[b]!));
     } else {
       return false;
     }
-    _save();
     return true;
   }
 
-  static Future<void> _save() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('lives', lives.value);
-    await prefs.setInt('coins', coins.value);
-    final since = _since;
+  void _set(WalletState next) {
+    state = next;
+    final s = ref.read(storeProvider);
+    s.put('lives', next.lives);
+    s.put('coins', next.coins);
+    final since = next.since;
     if (since == null) {
-      await prefs.remove('lives_since');
+      s.remove('lives_since');
     } else {
-      await prefs.setInt('lives_since', since.millisecondsSinceEpoch);
+      s.put('lives_since', since.millisecondsSinceEpoch);
     }
     for (final b in Booster.values) {
-      await prefs.setInt('booster_${b.name}', count(b));
+      s.put('booster_${b.name}', next.count(b));
     }
   }
 }
+
+final walletProvider =
+    NotifierProvider<WalletNotifier, WalletState>(WalletNotifier.new);

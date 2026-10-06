@@ -1,28 +1,27 @@
-import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'store.dart';
 
 /// First-time explanations, shown once per mechanic and then remembered.
-abstract final class Tips {
+/// The state is the set of tip ids already seen.
+class TipsNotifier extends Notifier<Set<String>> {
   static const _key = 'tips_seen';
 
-  static final seen = ValueNotifier<Set<String>>(const {});
+  @override
+  Set<String> build() =>
+      (ref.read(storeProvider).getStringList(_key) ?? const []).toSet();
 
-  static Future<void> load() async {
-    final prefs = await SharedPreferences.getInstance();
-    seen.value = (prefs.getStringList(_key) ?? const []).toSet();
+  void markSeen(String id) {
+    if (state.contains(id)) return;
+    state = {...state, id};
+    ref.read(storeProvider).put(_key, state.toList());
   }
 
-  static bool isSeen(String id) => seen.value.contains(id);
-
-  static Future<void> markSeen(String id) async {
-    if (isSeen(id)) return;
-    seen.value = {...seen.value, id};
-    await (await SharedPreferences.getInstance())
-        .setStringList(_key, seen.value.toList());
-  }
-
-  static Future<void> reset() async {
-    seen.value = const {};
-    await (await SharedPreferences.getInstance()).remove(_key);
+  void reset() {
+    state = const {};
+    ref.read(storeProvider).remove(_key);
   }
 }
+
+final tipsProvider =
+    NotifierProvider<TipsNotifier, Set<String>>(TipsNotifier.new);

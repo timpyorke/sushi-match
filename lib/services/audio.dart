@@ -1,8 +1,6 @@
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/foundation.dart';
 
-import '../core/settings.dart';
-
 /// Sound effects, one file each under assets/audio/. The shipped files are
 /// synthesised placeholders (tool/gen_sounds.dart); replace any of them with
 /// real audio of the same name.
@@ -70,13 +68,21 @@ abstract final class Audio {
     } catch (e) {
       debugPrint('Audio disabled: $e');
     }
-    Settings.sound.addListener(_syncMusic);
-    Settings.music.addListener(_syncMusic);
+    _syncMusic();
+  }
+
+  static bool _soundOn = true;
+  static bool _musicOn = true;
+
+  /// Called by the settings notifier whenever the sound/music toggles change.
+  static void configure({required bool sound, required bool music}) {
+    _soundOn = sound;
+    _musicOn = music;
     _syncMusic();
   }
 
   static void play(Sfx sfx) {
-    if (!_ready || !Settings.sound.value) return;
+    if (!_ready || !_soundOn) return;
     _safe(() => FlameAudio.play('${sfx.file}.wav', volume: _sfxVolume));
   }
 
@@ -107,7 +113,7 @@ abstract final class Audio {
   static void _syncMusic() {
     if (!_ready) return;
     final bgm = FlameAudio.bgm;
-    if (_musicWanted && Settings.music.value) {
+    if (_musicWanted && _musicOn) {
       if (!bgm.isPlaying) {
         _safe(() => bgm.play(_file(_track), volume: _bgmVolume));
       }

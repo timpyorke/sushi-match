@@ -1,57 +1,93 @@
-import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../services/audio.dart';
+import '../services/store.dart';
+import '../ui/l10n.dart';
 
 /// Player preferences, persisted across launches.
-abstract final class Settings {
-  static const _hapticsKey = 'haptics';
-  static const _soundKey = 'sound';
-  static const _musicKey = 'music';
-  static const _colorblindKey = 'colorblind';
-  static const _languageKey = 'language';
+class SettingsState {
+  const SettingsState({
+    this.haptics = true,
+    this.sound = true,
+    this.music = true,
+    this.colorblind = false,
+    this.language = 'en',
+  });
 
-  /// Mirrors the stored values so the game can read them synchronously.
-  static final haptics = ValueNotifier<bool>(true);
-
-  static final sound = ValueNotifier<bool>(true);
-  static final music = ValueNotifier<bool>(true);
+  final bool haptics;
+  final bool sound;
+  final bool music;
 
   /// Draws a symbol on every piece so kinds differ by more than colour.
-  static final colorblind = ValueNotifier<bool>(false);
+  final bool colorblind;
 
   /// 'en' or 'th'.
-  static final language = ValueNotifier<String>('en');
+  final String language;
 
-  static Future<void> load() async {
-    final prefs = await SharedPreferences.getInstance();
-    haptics.value = prefs.getBool(_hapticsKey) ?? true;
-    sound.value = prefs.getBool(_soundKey) ?? true;
-    music.value = prefs.getBool(_musicKey) ?? true;
-    colorblind.value = prefs.getBool(_colorblindKey) ?? false;
-    language.value = prefs.getString(_languageKey) ?? 'en';
-  }
-
-  static Future<void> setHaptics(bool on) async {
-    haptics.value = on;
-    await (await SharedPreferences.getInstance()).setBool(_hapticsKey, on);
-  }
-
-  static Future<void> setSound(bool on) async {
-    sound.value = on;
-    await (await SharedPreferences.getInstance()).setBool(_soundKey, on);
-  }
-
-  static Future<void> setMusic(bool on) async {
-    music.value = on;
-    await (await SharedPreferences.getInstance()).setBool(_musicKey, on);
-  }
-
-  static Future<void> setColorblind(bool on) async {
-    colorblind.value = on;
-    await (await SharedPreferences.getInstance()).setBool(_colorblindKey, on);
-  }
-
-  static Future<void> setLanguage(String code) async {
-    language.value = code;
-    await (await SharedPreferences.getInstance()).setString(_languageKey, code);
-  }
+  SettingsState copyWith(
+          {bool? haptics,
+          bool? sound,
+          bool? music,
+          bool? colorblind,
+          String? language}) =>
+      SettingsState(
+        haptics: haptics ?? this.haptics,
+        sound: sound ?? this.sound,
+        music: music ?? this.music,
+        colorblind: colorblind ?? this.colorblind,
+        language: language ?? this.language,
+      );
 }
+
+/// Read-only mirror of the settings for code that has no `ref`: the Flame
+/// board, the sprite painter and [L10n]. [SettingsNotifier] keeps it current.
+abstract final class SettingsMirror {
+  static bool haptics = true;
+  static bool colorblind = false;
+}
+
+class SettingsNotifier extends Notifier<SettingsState> {
+  static const _haptics = 'haptics';
+  static const _sound = 'sound';
+  static const _music = 'music';
+  static const _colorblind = 'colorblind';
+  static const _language = 'language';
+
+  @override
+  SettingsState build() {
+    final s = ref.read(storeProvider);
+    final loaded = SettingsState(
+      haptics: s.get<bool>(_haptics) ?? true,
+      sound: s.get<bool>(_sound) ?? true,
+      music: s.get<bool>(_music) ?? true,
+      colorblind: s.get<bool>(_colorblind) ?? false,
+      language: s.get<String>(_language) ?? 'en',
+    );
+    _mirror(loaded);
+    return loaded;
+  }
+
+  void _mirror(SettingsState s) {
+    SettingsMirror.haptics = s.haptics;
+    SettingsMirror.colorblind = s.colorblind;
+    L10n.language = s.language;
+    Audio.configure(sound: s.sound, music: s.music);
+  }
+
+  void _set(SettingsState next, String key, Object value) {
+    state = next;
+    _mirror(next);
+    ref.read(storeProvider).put(key, value);
+  }
+
+  void setHaptics(bool on) => _set(state.copyWith(haptics: on), _haptics, on);
+  void setSound(bool on) => _set(state.copyWith(sound: on), _sound, on);
+  void setMusic(bool on) => _set(state.copyWith(music: on), _music, on);
+  void setColorblind(bool on) =>
+      _set(state.copyWith(colorblind: on), _colorblind, on);
+  void setLanguage(String code) =>
+      _set(state.copyWith(language: code), _language, code);
+}
+
+final settingsProvider =
+    NotifierProvider<SettingsNotifier, SettingsState>(SettingsNotifier.new);
