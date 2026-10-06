@@ -5,7 +5,7 @@
 // and goal counts are scaled to fit. Humans out-plan the bot, so
 // real players will find levels a little easier than the targets.
 //
-//   dart run tool/tune.dart [runs=150] [--write]
+//   dart run tool/tune.dart [runs=150] [level ...] [--write]
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
@@ -47,9 +47,9 @@ int _quantile(List<int> sorted, double q) =>
 int _round100(int n) => (n / 100).round() * 100;
 
 void main(List<String> args) {
-  final runs = int.tryParse(args.firstWhere((a) => !a.startsWith('-'),
-          orElse: () => '150')) ??
-      150;
+  final nums = args.where((a) => !a.startsWith('-')).map(int.parse).toList();
+  final runs = nums.isNotEmpty ? nums.first : 150;
+  final only = nums.skip(1).toSet();
   final write = args.contains('--write');
   final files = Directory('assets/levels')
       .listSync()
@@ -62,6 +62,7 @@ void main(List<String> args) {
     final text = f.readAsStringSync();
     final base =
         LevelConfig.fromJson(jsonDecode(text) as Map<String, dynamic>);
+    if (only.isNotEmpty && !only.contains(base.id)) continue;
     final t = (base.id.clamp(1, 20) - 1) / 19;
     final targetWin = base.id == 21 ? 0.66 : _lerp(0.98, 0.68, t);
     final target3 = _lerp(0.50, 0.15, t);

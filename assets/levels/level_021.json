@@ -33,14 +33,14 @@
     {
       "type": "collect",
       "piece": "salmon",
-      "count": 45
+      "count": 37
     },
     {
       "type": "score",
-      "count": 10500
+      "count": 8500
     }
   ],
-  "stars": [10700, 13900, 16600],
+  "stars": [8800, 11900, 15000],
   "seed": 212143,
   "conveyors": [
     {

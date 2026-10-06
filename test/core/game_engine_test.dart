@@ -221,6 +221,44 @@ void noriAndBoosterTests() {
 }
 
 void conveyorTests() {
+  test('clears caused by the belt itself earn no score', () {
+    final level = LevelConfig.fromJson({
+      'id': 98,
+      'board': {'cols': 7, 'rows': 7},
+      'pieces': ['salmon', 'maguro', 'tamago', 'ikura'],
+      'moves': 60,
+      'goals': [
+        {'type': 'score', 'count': 999999},
+      ],
+      'conveyors': [
+        {'row': 3, 'dir': 'right'},
+        {'row': 5, 'dir': 'left'},
+      ],
+      'seed': 3,
+    });
+    var spoiled = 0;
+    for (var seed = 0; seed < 40; seed++) {
+      final e = GameEngine(level, seed: seed);
+      var scored = 0;
+      for (var turn = 0; turn < 15 && e.status == GameStatus.playing; turn++) {
+        final m = MoveFinder.findMove(e.board)!;
+        final steps = e.trySwap(m.$1, m.$2);
+        final belt = steps.indexWhere((s) => s is ConveyorStep);
+        for (var i = 0; i < steps.length; i++) {
+          final s = steps[i];
+          if (s is! ClearStep) continue;
+          scored += s.scoreGained;
+          if (belt >= 0 && i > belt) {
+            spoiled++;
+            expect(s.scoreGained, 0);
+          }
+        }
+      }
+      expect(e.score, scored);
+    }
+    expect(spoiled, greaterThan(0), reason: 'belts never matched anything');
+  });
+
   test('fork copies the state and plays on without touching the original', () {
     final e = GameEngine(testLevel(seed: 8));
     final f = e.fork(1);

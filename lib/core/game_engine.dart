@@ -63,6 +63,9 @@ class GameEngine {
 
   /// Origins of Wasabi Bombs that still owe their second blast.
   final List<Pos> _aftershocks = [];
+
+  /// False while a conveyor shift's own cascade resolves (see [_endTurn]).
+  bool _credit = true;
   final Map<PieceKind, int> _collected = {};
 
   List<GoalProgress> get goals => [
@@ -206,9 +209,13 @@ class GameEngine {
   List<BoardStep> _endTurn({bool spendMove = true}) {
     final shifted = <BoardStep>[];
     if (spendMove && !goals.every((g) => g.done)) {
-      shifted
-        ..addAll(_runConveyors())
-        ..addAll(_cascade(MatchFinder.find(board), startAt: 1));
+      shifted.addAll(_runConveyors());
+      // Pieces the belt matches by itself are spoiled: they clear, but earn
+      // no score or goal progress. The player must plan the shift, not
+      // lean on it for free cascades.
+      _credit = false;
+      shifted.addAll(_cascade(MatchFinder.find(board), startAt: 1));
+      _credit = true;
     }
     if (spendMove) movesLeft--;
     final won = goals.every((g) => g.done);
@@ -317,7 +324,7 @@ class GameEngine {
     for (final p in cleared) {
       final piece = board[p]!;
       final k = piece.kind;
-      if (k != null) _collected[k] = (_collected[k] ?? 0) + 1;
+      if (k != null && _credit) _collected[k] = (_collected[k] ?? 0) + 1;
       removed.add(ClearedPiece(piece.id, p));
       board[p] = null;
     }
@@ -335,7 +342,7 @@ class GameEngine {
       created.add(SpawnedPiece(PieceSnapshot.of(piece), at));
     }
 
-    final gained = removed.length * _pointsPerPiece * cascade;
+    final gained = _credit ? removed.length * _pointsPerPiece * cascade : 0;
     score += gained;
     steps.add(ClearStep(removed, created, gained, cascade));
 
