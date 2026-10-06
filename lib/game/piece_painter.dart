@@ -22,10 +22,9 @@ abstract final class PiecePainter {
     PieceKind.tako: Color(0xFF3F51B5),
   };
 
-  /// Kinds with a sprite (first sheet, then second sheet); later kinds are
+  /// Kinds with a sprite (the first [spriteKinds] values); later kinds are
   /// vector-only.
   static const spriteKinds = 10;
-  static const _sheet1Kinds = 6;
 
   static final _eye = Paint()..color = const Color(0xFF3B2A20);
   static final _white = Paint()..color = const Color(0xFFFFFFFF);
@@ -35,22 +34,30 @@ abstract final class PiecePainter {
     ..style = PaintingStyle.stroke
     ..strokeWidth = 2;
 
-  static const _sheetAsset = 'assets/sushi/sushi.png';
-  static Image? _sheet;
+  static final _sprites = <PieceKind, Image>{};
+  static final _powerSprites = <SpecialType, Image>{};
 
-  static const _sheet2Asset = 'assets/sushi/sushi02.png';
-  static Image? _sheet2;
+  static const _powerFiles = {
+    SpecialType.knifeRow: 'knife',
+    SpecialType.knifeCol: 'knife',
+    SpecialType.wasabi: 'wasabi',
+    SpecialType.omakase: 'omakase',
+    SpecialType.soyFish: 'soyfish',
+  };
 
-  static const _powerAsset = 'assets/sushi/power-item.png';
-  static Image? _power;
+  static bool get _spritesReady =>
+      _sprites.length == spriteKinds && _powerSprites.isNotEmpty;
 
-  /// Loads the sprite sheets: sushi.png (3 columns x 2 rows) holds the first
-  /// six [PieceKind]s, sushi02.png (2x2) the next four. Until they finish,
-  /// pieces fall back to the vector art.
+  /// Loads one 256px sprite per kind (assets/sprites/sushi/<kind>.png) and per power
+  /// item. Until they finish, pieces fall back to the vector art.
   static Future<void> loadSprites() async {
-    _sheet ??= await _decode(_sheetAsset);
-    _sheet2 ??= await _decode(_sheet2Asset);
-    _power ??= await _decode(_powerAsset);
+    for (final kind in PieceKind.values.take(spriteKinds)) {
+      _sprites[kind] ??= await _decode('assets/sprites/sushi/${kind.name}.png');
+    }
+    for (final e in _powerFiles.entries) {
+      _powerSprites[e.key] ??=
+          await _decode('assets/sprites/power/${e.value}.png');
+    }
   }
 
   static Future<Image> _decode(String asset) async {
@@ -59,23 +66,16 @@ abstract final class PiecePainter {
     return (await codec.getNextFrame()).image;
   }
 
-  /// Power-item sheet is 2x2: knife, wasabi / omakase, soy fish.
   static void _powerSprite(Canvas canvas, Rect dst, SpecialType type,
       {double rotation = 0}) {
-    final sheet = _power!;
-    final cw = sheet.width / 2, ch = sheet.height / 2;
-    final i = switch (type) {
-      SpecialType.knifeRow || SpecialType.knifeCol => 0,
-      SpecialType.wasabi => 1,
-      SpecialType.omakase => 2,
-      SpecialType.soyFish => 3,
-    };
-    final src = Rect.fromLTWH((i % 2) * cw, (i ~/ 2) * ch, cw, ch);
+    final sprite = _powerSprites[type]!;
+    final src =
+        Rect.fromLTWH(0, 0, sprite.width.toDouble(), sprite.height.toDouble());
     canvas.save();
     canvas.translate(dst.center.dx, dst.center.dy);
     canvas.rotate(rotation);
     canvas.drawImageRect(
-        sheet,
+        sprite,
         src,
         Rect.fromCenter(
             center: Offset.zero, width: dst.width, height: dst.height),
@@ -106,18 +106,12 @@ abstract final class PiecePainter {
   }
 
   static void _sprite(Canvas canvas, Rect dst, PieceKind kind) {
-    final second = kind.index >= _sheet1Kinds;
-    final sheet = second ? _sheet2! : _sheet!;
-    final cols = second ? 2 : 3;
-    final cw = sheet.width / cols, ch = sheet.height / 2;
-    final i = second ? kind.index - _sheet1Kinds : kind.index;
-    final src = Rect.fromLTWH((i % cols) * cw, (i ~/ cols) * ch, cw, ch);
-    // Sheet cells aren't always square; fit the cell into [dst] undistorted.
-    final k = math.min(dst.width / cw, dst.height / ch);
-    final fitted =
-        Rect.fromCenter(center: dst.center, width: cw * k, height: ch * k);
+    final img = _sprites[kind]!;
     canvas.drawImageRect(
-        sheet, src, fitted, Paint()..filterQuality = FilterQuality.medium);
+        img,
+        Rect.fromLTWH(0, 0, img.width.toDouble(), img.height.toDouble()),
+        dst,
+        Paint()..filterQuality = FilterQuality.medium);
   }
 
   /// Delivery ingredient: a smiling rice ball on a golden glow.
@@ -165,7 +159,7 @@ abstract final class PiecePainter {
     }
 
     if (kind == null) {
-      if (_power != null) {
+      if (_powerSprites.isNotEmpty) {
         _powerSprite(canvas, Rect.fromLTWH(0, 0, s, s), SpecialType.omakase);
       } else {
         _plate(canvas, c, s);
@@ -173,8 +167,8 @@ abstract final class PiecePainter {
       return;
     }
 
-    if (_sheet != null && _sheet2 != null) {
-      if (special != null && _power != null) {
+    if (_spritesReady) {
+      if (special != null) {
         _specialSprite(canvas, s, kind, special);
         _symbol(canvas, s, kind);
         return;

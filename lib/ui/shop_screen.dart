@@ -27,7 +27,7 @@ class BoosterShopScreen extends StatelessWidget {
       body: DecoratedBox(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/bg.png'),
+            image: AssetImage('assets/backgrounds/bg.png'),
             fit: BoxFit.cover,
           ),
         ),

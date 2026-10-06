@@ -39,62 +39,41 @@ abstract final class UiArt {
       );
 }
 
-/// Booster sprite from assets/items/ (the starter boosters are cropped from the
-/// power-item sheet).
+/// Booster sprite from assets/sprites/boosters/ (the starter boosters use the power
+/// sprites in assets/sprites/power/).
 class BoosterIcon extends StatelessWidget {
   const BoosterIcon(this.booster, {super.key, this.size = 32});
   final Booster booster;
   final double size;
 
   static const _sprites = {
-    Booster.extraMoves: 'hourglass',
-    Booster.chopsticks: 'chopsticks',
-    Booster.freeSwap: 'swap',
-    Booster.shuffle: 'shuffle',
-  };
-  // Quadrants of assets/sushi/power-item.png (2x2 sheet: knife, wasabi / ...).
-  static const _powerCell = {
-    Booster.starterKnife: Alignment.topLeft,
-    Booster.starterWasabi: Alignment.topRight,
+    Booster.extraMoves: 'sprites/boosters/hourglass',
+    Booster.chopsticks: 'sprites/boosters/chopsticks',
+    Booster.freeSwap: 'sprites/boosters/swap',
+    Booster.shuffle: 'sprites/boosters/shuffle',
+    Booster.starterKnife: 'sprites/power/knife',
+    Booster.starterWasabi: 'sprites/power/wasabi',
   };
 
   @override
   Widget build(BuildContext context) {
-    final cell = _powerCell[booster];
-    if (cell != null) {
-      return SizedBox(
-        width: size,
-        height: size,
-        child: ClipRect(
-          child: Align(
-            alignment: cell,
-            widthFactor: 0.5,
-            heightFactor: 0.5,
-            child: Image.asset('assets/sushi/power-item.png',
-                width: size * 2,
-                height: size * 2,
-                cacheWidth: (size * 6).round()),
-          ),
-        ),
-      );
-    }
     final sprite = _sprites[booster];
     if (sprite == null) return SizedBox(width: size, height: size);
-    return Image.asset('assets/items/$sprite.png',
+    return Image.asset('assets/$sprite.png',
         width: size,
         height: size,
-        // Sprites are ~1250px; decode near display size.
+        // Sprites are 192-256px; decode near display size.
         cacheWidth: (size * 3).round());
   }
 }
 
-/// Shopping cart sprite (assets/items/shopping.png).
+/// Shopping cart sprite (assets/ui/shopping.png).
 class ShopIcon extends StatelessWidget {
   const ShopIcon({super.key, this.size = 32});
   final double size;
 
   @override
-  Widget build(BuildContext context) => Image.asset('assets/items/shopping.png',
+  Widget build(BuildContext context) => Image.asset('assets/ui/shopping.png',
       width: size, height: size, cacheWidth: (size * 3).round());
 }
 

@@ -24,8 +24,10 @@ flutter:
   uses-material-design: true
   assets:
     - assets/levels/
-    - assets/images/
-    - assets/sushi/
     - assets/ui/
-    - assets/items/
+    - assets/backgrounds/
+    - assets/sprites/sushi/
+    - assets/sprites/power/
+    - assets/sprites/boosters/
+    - assets/sprites/tiles/
     - assets/audio/

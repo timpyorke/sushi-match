@@ -1,5 +1,5 @@
-/// Declaration order matters: the first [PiecePainter.spriteKinds] values index
-/// cells of the sprite sheet, so new kinds are appended at the end.
+/// Declaration order matters: the first [PiecePainter.spriteKinds] values have
+/// a sprite (assets/sprites/sushi/<name>.png), so new kinds are appended at the end.
 enum PieceKind {
   salmon,
   maguro,

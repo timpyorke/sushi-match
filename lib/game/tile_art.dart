@@ -2,40 +2,34 @@ import 'dart:ui';
 
 import 'package:flutter/services.dart' show rootBundle;
 
-/// Board tile sprites cut from the two 2×2 tile sheets.
+/// Board tile sprites (assets/sprites/tiles/*.png, each pre-cropped to its tile).
 ///
-/// tileset02: light wood cell, dark wood cell, frame strip + corner (only
-/// the strip's wave band and outer rim are used, as the board frame).
-/// tileset01: straight belt, corner belt, arrow, belt end cap.
+/// cell_light/cell_dark: checkerboard cells. frame_strip: wave band + outer
+/// rim of the board frame. belt_straight/belt_corner/belt_cap/arrow: conveyor.
 ///
 /// Until [load] finishes (and in tests that never call it) [ready] is false
 /// and the board falls back to flat colours.
 enum MapTile { straight, corner, cap }
 
 abstract final class TileArt {
-  static const _cellsAsset = 'assets/images/tileset02.png';
-  static const _beltAsset = 'assets/images/tileset01.png';
+  static const _names = [
+    'cell_light',
+    'cell_dark',
+    'frame_strip',
+    'belt_straight',
+    'belt_corner',
+    'belt_cap',
+    'arrow',
+  ];
 
-  static Image? _cells;
-  static Image? _belt;
+  static final _img = <String, Image>{};
 
-  static bool get ready => _cells != null && _belt != null;
-
-  // Source rects in the 1254×1254 sheets (tile + its dark outline).
-  static const _topLeft = Rect.fromLTWH(46, 46, 566, 560);
-  static const _topRight = Rect.fromLTWH(646, 46, 566, 560);
-  static const _bottomRight = Rect.fromLTWH(646, 636, 566, 566);
-
-  /// The orange arrow on the bottom-left tile of tileset01, pointing right.
-  static const _arrow = Rect.fromLTWH(104, 748, 444, 264);
-
-  /// Wave band + outer rim of the frame strip (bottom-left tile of tileset02);
-  /// the thick wood above it is hidden behind the board.
-  static const _frameStrip = Rect.fromLTWH(52, 944, 552, 252);
+  static bool get ready => _img.length == _names.length;
 
   static Future<void> load() async {
-    _cells ??= await _decode(_cellsAsset);
-    _belt ??= await _decode(_beltAsset);
+    for (final n in _names) {
+      _img[n] ??= await _decode('assets/sprites/tiles/$n.png');
+    }
   }
 
   static Future<Image> _decode(String asset) async {
@@ -46,8 +40,11 @@ abstract final class TileArt {
 
   static final _paint = Paint()..filterQuality = FilterQuality.medium;
 
-  static void _draw(Canvas canvas, Image img, Rect src, Rect dst,
+  static void _draw(Canvas canvas, String name, Rect dst,
       {bool flipX = false}) {
+    final img = _img[name]!;
+    final src =
+        Rect.fromLTWH(0, 0, img.width.toDouble(), img.height.toDouble());
     if (!flipX) {
       canvas.drawImageRect(img, src, dst, _paint);
       return;
@@ -62,33 +59,33 @@ abstract final class TileArt {
 
   /// Checkerboard cell: [dark] alternates with the light one.
   static void cell(Canvas canvas, Rect dst, {required bool dark}) =>
-      _draw(canvas, _cells!, dark ? _topRight : _topLeft, dst);
+      _draw(canvas, dark ? 'cell_dark' : 'cell_light', dst);
 
   /// Straight belt segment.
   static void belt(Canvas canvas, Rect dst) =>
-      _draw(canvas, _belt!, _topLeft, dst);
+      _draw(canvas, 'belt_straight', dst);
 
   /// Rounded end of a belt; [leftEnd] mirrors it for the left side.
   static void beltCap(Canvas canvas, Rect dst, {required bool leftEnd}) =>
-      _draw(canvas, _belt!, _bottomRight, dst, flipX: leftEnd);
+      _draw(canvas, 'belt_cap', dst, flipX: leftEnd);
 
   /// One belt-sheet tile for the level map, centred on [centre] in a
   /// [width]×[height] box. [rot] is applied first, then the optional flips.
   static void mapTile(
       Canvas canvas, MapTile kind, Offset centre, double width, double height,
       {double rot = 0, bool flipX = false, bool flipY = false}) {
-    final src = switch (kind) {
-      MapTile.straight => _topLeft,
-      MapTile.corner => _topRight,
-      MapTile.cap => _bottomRight,
-    };
+    final img = _img[switch (kind) {
+      MapTile.straight => 'belt_straight',
+      MapTile.corner => 'belt_corner',
+      MapTile.cap => 'belt_cap',
+    }]!;
     canvas.save();
     canvas.translate(centre.dx, centre.dy);
     canvas.rotate(rot);
     canvas.scale(flipX ? -1 : 1, flipY ? -1 : 1);
     canvas.drawImageRect(
-        _belt!,
-        src,
+        img,
+        Rect.fromLTWH(0, 0, img.width.toDouble(), img.height.toDouble()),
         Rect.fromCenter(center: Offset.zero, width: width, height: height),
         _paint);
     canvas.restore();
@@ -96,7 +93,7 @@ abstract final class TileArt {
 
   /// Direction arrow; [dir] is +1 for right, -1 for left.
   static void arrow(Canvas canvas, Rect dst, int dir) =>
-      _draw(canvas, _belt!, _arrow, dst, flipX: dir < 0);
+      _draw(canvas, 'arrow', dst, flipX: dir < 0);
 
   /// Frame of thickness [t] around [board]. The strip is drawn once per side
   /// and cut at 45° so the band runs round the corners.
@@ -149,14 +146,15 @@ abstract final class TileArt {
         b.height + 2 * t,
       ),
     ];
+    final strip = _img['frame_strip']!;
     for (final (poly, centre, angle, length) in bars) {
       canvas.save();
       canvas.clipPath(Path()..addPolygon(poly, true));
       canvas.translate(centre.dx, centre.dy);
       canvas.rotate(angle);
       canvas.drawImageRect(
-          _cells!,
-          _frameStrip,
+          strip,
+          Rect.fromLTWH(0, 0, strip.width.toDouble(), strip.height.toDouble()),
           Rect.fromCenter(center: Offset.zero, width: length, height: t),
           _paint);
       canvas.restore();
