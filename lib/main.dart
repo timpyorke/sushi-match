@@ -71,7 +71,14 @@ const int kLevelCount = 50;
   final tips = [
     if (level.conveyors.isNotEmpty) ('conveyor', '➡️🔒', 'tipConveyor'),
     if (level.ice.any((n) => n > 0)) ('ice', '🧊', 'tipIce'),
-    if (level.bags.any((n) => n > 0)) ('bag', '🌾', 'tipBag'),
+    if (level.goals.any((g) => g.type == GoalType.deliver))
+      ('deliver', '🍙', 'tipDeliver'),
+    if (level.mats.any((m) => m)) ('mat', '🎋', 'tipMat'),
+    if ([
+      for (var i = 0; i < level.bags.length; i++)
+        if (level.bags[i] > 0 && !level.mats[i]) i,
+    ].isNotEmpty)
+      ('bag', '🌾', 'tipBag'),
   ];
   for (final t in tips) {
     if (!Tips.isSeen(t.$1)) return t;

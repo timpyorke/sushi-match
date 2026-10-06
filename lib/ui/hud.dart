@@ -47,6 +47,8 @@ class HudBar extends StatelessWidget {
         GoalType.clearNori => L10n.t('nori'),
         GoalType.breakIce => L10n.t('ice'),
         GoalType.breakBag => L10n.t('bag'),
+        GoalType.deliver => L10n.t('deliver'),
+        GoalType.clearMats => L10n.t('mat'),
       };
 }
 

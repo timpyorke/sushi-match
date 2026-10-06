@@ -6,20 +6,20 @@
     "rows": 9
   },
   "layout": [
-    "XX.....XX",
-    "X.......X",
     ".........",
-    "NNNNNNNNN",
-    "NNNNNNNNN",
-    "NNNNNNNNN",
     ".........",
-    "X.......X",
-    "XX.....XX"
+    ".........",
+    "..T......",
+    ".........",
+    "......T..",
+    ".........",
+    ".........",
+    "........."
   ],
   "legend": {
     ".": "cell",
     "X": "void",
-    "N": "nori:1"
+    "T": "mat"
   },
   "pieces": [
     "salmon",
@@ -32,14 +32,14 @@
   "moves": 40,
   "goals": [
     {
-      "type": "clear_nori"
+      "type": "clear_mats"
     },
     {
       "type": "score",
-      "count": 9000
+      "count": 11000
     }
   ],
-  "stars": [9500, 12600, 16200],
+  "stars": [11500, 15100, 18600],
   "conveyors": [
     {
       "row": 1,

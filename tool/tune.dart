@@ -27,6 +27,7 @@ LevelConfig _variant(LevelConfig l, int moves, double factor) => LevelConfig(
       nori: l.nori,
       ice: l.ice,
       bags: l.bags,
+      mats: l.mats,
       pieces: l.pieces,
       moves: moves,
       goals: [for (final g in l.goals) _scaled(g, factor)],
@@ -110,7 +111,7 @@ void main(List<String> args) {
         if (scores.length / runs >= targetWin) break;
       }
     } else {
-      var lo = base.nori.any((n) => n > 0) ? 0.8 : 0.4, hi = 1.5;
+      var lo = base.goals.any((g) => !_scalable(g)) ? 0.8 : 0.4, hi = 1.5;
       factor = hi;
       scores = run();
       // Still too easy at the largest goals: take moves away.
@@ -133,7 +134,7 @@ void main(List<String> args) {
       scores = run();
       // Nori levels can be too hard even with small goals: grant moves.
       while (
-          scores.length / runs < targetWin - 0.04 && moves < scheduled + 10) {
+          scores.length / runs < targetWin - 0.04 && moves < scheduled + 14) {
         moves++;
         scores = run();
       }

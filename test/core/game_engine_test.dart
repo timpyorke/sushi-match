@@ -16,6 +16,7 @@ void main() {
   conveyorTests();
   iceTests();
   bagTests();
+  deliverAndMatTests();
   void expectStableBoard(GameEngine e) {
     final ids = <int>{};
     for (final p in e.board.positions) {
@@ -479,6 +480,146 @@ void bagTests() {
         final m = moves[rng.nextInt(moves.length)];
         e.trySwap(m.$1, m.$2);
         expectFull(e);
+      }
+    });
+  });
+}
+
+LevelConfig _deliverLevel({int count = 1}) => LevelConfig.fromJson({
+      'id': 1,
+      'board': {'cols': 7, 'rows': 7},
+      'pieces': ['salmon', 'maguro', 'tamago', 'ikura', 'kappa'],
+      'moves': 99,
+      'goals': [
+        {'type': 'deliver', 'count': count},
+      ],
+      'seed': 11,
+    });
+
+LevelConfig _matLevel() => LevelConfig.fromJson({
+      'id': 1,
+      'board': {'cols': 7, 'rows': 7},
+      'layout': [
+        '.......',
+        '.......',
+        '.......',
+        '...T...',
+        '.......',
+        '.......',
+        '.......',
+      ],
+      'legend': {'.': 'cell', 'T': 'mat'},
+      'pieces': ['salmon', 'maguro', 'tamago', 'ikura', 'kappa'],
+      'moves': 99,
+      'goals': [
+        {'type': 'clear_mats'},
+      ],
+      'seed': 7,
+    });
+
+void deliverAndMatTests() {
+  group('deliver', () {
+    Pos? ingredientAt(GameEngine e) {
+      for (final p in e.board.positions) {
+        if (e.board[p]?.ingredient ?? false) return p;
+      }
+      return null;
+    }
+
+    test('starts with an ingredient in the upper half that never matches', () {
+      final e = GameEngine(_deliverLevel());
+      final at = ingredientAt(e);
+      expect(at, isNotNull);
+      expect(at!.row, lessThan(4));
+      expect(mf.MatchFinder.find(e.board), isEmpty);
+      expect(e.useChopsticks(at), isEmpty);
+    });
+
+    test('an ingredient that reaches the bottom row is delivered', () {
+      final e = GameEngine(_deliverLevel());
+      for (var i = 0; i < 30 && !e.goals.single.done; i++) {
+        final at = ingredientAt(e)!;
+        final steps = e.useChopsticks(Pos(at.row + 1, at.col));
+        if (e.goals.single.done) {
+          expect(steps.whereType<DeliverStep>(), isNotEmpty);
+        }
+      }
+      expect(e.goals.single.done, isTrue);
+      expect(e.status, GameStatus.won);
+    });
+
+    test('no more ingredients appear than the goal asks for', () {
+      final e = GameEngine(_deliverLevel(count: 2));
+      final rng = Random(2);
+      var seen = 0;
+      for (var i = 0; i < 80 && e.status == GameStatus.playing; i++) {
+        final ing = [
+          for (final p in e.board.positions)
+            if (e.board[p]?.ingredient ?? false) p,
+        ];
+        expect(ing.length, lessThanOrEqualTo(2));
+        seen = max(seen, e.goals.single.current + ing.length);
+        final moves = MoveFinder.allMoves(e.board);
+        final m = moves[rng.nextInt(moves.length)];
+        e.trySwap(m.$1, m.$2);
+      }
+      expect(seen, lessThanOrEqualTo(2));
+    });
+  });
+
+  group('bamboo mat', () {
+    test('parses: the mat cell is closed and counts toward the goal', () {
+      final e = GameEngine(_matLevel());
+      expect(e.board.isPlayable(const Pos(3, 3)), isFalse);
+      expect(e.matAt(const Pos(3, 3)), isTrue);
+      expect(e.goals.single.goal.type, GoalType.clearMats);
+      expect(e.goals.single.goal.count, 1);
+      expect(e.goals.single.done, isFalse);
+    });
+
+    test('a clear next to the mat removes it and wins', () {
+      final e = GameEngine(_matLevel());
+      final steps = e.useChopsticks(const Pos(3, 2));
+      expect(steps.whereType<BagStep>().first.hits.single.mat, isTrue);
+      expect(e.matAt(const Pos(3, 3)), isFalse);
+      expect(e.goals.single.done, isTrue);
+    });
+
+    test('a move that destroys no mat lets one spread', () {
+      final e = GameEngine(_matLevel());
+      final far = MoveFinder.allMoves(e.board).firstWhere((m) =>
+          (m.$1.row - 3).abs() + (m.$1.col - 3).abs() > 4 &&
+          (m.$2.row - 3).abs() + (m.$2.col - 3).abs() > 4);
+      final steps = e.trySwap(far.$1, far.$2);
+      final broke = steps.whereType<BagStep>().isNotEmpty;
+      final mats = [
+        for (var r = 0; r < 7; r++)
+          for (var c = 0; c < 7; c++)
+            if (e.matAt(Pos(r, c))) Pos(r, c),
+      ];
+      if (broke) {
+        expect(mats, isEmpty);
+      } else {
+        expect(steps.whereType<MatSpreadStep>(), hasLength(1));
+        expect(mats, hasLength(2));
+        expect(e.board.isPlayable(mats.last), isFalse);
+      }
+    });
+
+    test('the board stays consistent while mats spread', () {
+      final e = GameEngine(_matLevel());
+      final rng = Random(9);
+      for (var i = 0; i < 40 && e.status == GameStatus.playing; i++) {
+        final moves = MoveFinder.allMoves(e.board);
+        if (moves.isEmpty) break;
+        final m = moves[rng.nextInt(moves.length)];
+        e.trySwap(m.$1, m.$2);
+        final ids = <int>{};
+        for (final p in e.board.positions) {
+          final piece = e.board[p];
+          if (piece != null) expect(ids.add(piece.id), isTrue);
+        }
+        expect(mf.MatchFinder.find(e.board), isEmpty);
       }
     });
   });

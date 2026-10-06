@@ -6,20 +6,20 @@
     "rows": 9
   },
   "layout": [
-    ".N.....N.",
-    "NNNNNNNNN",
-    ".N.....N.",
-    ".N.XXX.N.",
-    ".N.XXX.N.",
-    ".N.XXX.N.",
-    ".N.....N.",
-    "NNNNNNNNN",
-    ".N.....N."
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    "....T....",
+    ".........",
+    ".........",
+    ".........",
+    "........."
   ],
   "legend": {
     ".": "cell",
     "X": "void",
-    "N": "nori:1"
+    "T": "mat"
   },
   "pieces": [
     "salmon",
@@ -29,17 +29,17 @@
     "ebi",
     "kappa"
   ],
-  "moves": 47,
+  "moves": 28,
   "goals": [
     {
-      "type": "clear_nori"
+      "type": "clear_mats"
     },
     {
       "type": "collect",
       "piece": "kappa",
-      "count": 22
+      "count": 39
     }
   ],
-  "stars": [7000, 11500, 15500],
+  "stars": [6100, 10300, 13500],
   "seed": 373996
 }

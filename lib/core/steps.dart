@@ -6,10 +6,13 @@ enum GameStatus { playing, won, lost }
 /// Immutable copy of a piece at the moment a step was produced, so the view
 /// never reads core state that has already moved on.
 class PieceSnapshot {
-  const PieceSnapshot(this.id, this.kind, this.special, {this.ice = 0});
-  PieceSnapshot.of(Piece p) : this(p.id, p.kind, p.special, ice: p.ice);
+  const PieceSnapshot(this.id, this.kind, this.special,
+      {this.ice = 0, this.ingredient = false});
+  PieceSnapshot.of(Piece p)
+      : this(p.id, p.kind, p.special, ice: p.ice, ingredient: p.ingredient);
 
   final int ice;
+  final bool ingredient;
   final int id;
   final PieceKind? kind;
   final SpecialType? special;
@@ -123,8 +126,11 @@ final class IceStep extends BoardStep {
 }
 
 class BagHit {
-  const BagHit(this.pos, this.layers);
+  const BagHit(this.pos, this.layers, {this.mat = false});
   final Pos pos;
+
+  /// True when the cracked blocker is a bamboo mat rather than a rice bag.
+  final bool mat;
 
   /// Layers left after the hit (0 = the bag is gone and the cell opens up).
   final int layers;
@@ -134,6 +140,19 @@ class BagHit {
 final class BagStep extends BoardStep {
   const BagStep(this.hits);
   final List<BagHit> hits;
+}
+
+/// Ingredients that reached the bottom row and left for the kitchen.
+final class DeliverStep extends BoardStep {
+  const DeliverStep(this.delivered);
+  final List<ClearedPiece> delivered;
+}
+
+/// A bamboo mat growing onto [pos], swallowing the piece [pieceId] there.
+final class MatSpreadStep extends BoardStep {
+  const MatSpreadStep(this.pos, this.pieceId);
+  final Pos pos;
+  final int pieceId;
 }
 
 /// A conveyor row sliding one cell; the end piece wraps to the far side.

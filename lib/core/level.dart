@@ -1,6 +1,14 @@
 import 'piece.dart';
 
-enum GoalType { collect, score, clearNori, breakIce, breakBag }
+enum GoalType {
+  collect,
+  score,
+  clearNori,
+  breakIce,
+  breakBag,
+  deliver,
+  clearMats
+}
 
 class LevelGoal {
   const LevelGoal.collect(PieceKind this.piece, this.count)
@@ -24,12 +32,26 @@ class LevelGoal {
       : type = GoalType.breakBag,
         piece = null;
 
+  /// Bring [count] ingredients down to the bottom row.
+  const LevelGoal.deliver(this.count)
+      : type = GoalType.deliver,
+        piece = null;
+
+  /// Destroy every bamboo mat; [count] is the number laid out at the start
+  /// (mats spread, so more may have to go).
+  const LevelGoal.clearMats(this.count)
+      : type = GoalType.clearMats,
+        piece = null;
+
   final GoalType type;
   final PieceKind? piece;
   final int count;
 
   factory LevelGoal.fromJson(Map<String, dynamic> j,
-      {int noriCells = 0, int iceCells = 0, int bagCells = 0}) {
+      {int noriCells = 0,
+      int iceCells = 0,
+      int bagCells = 0,
+      int matCells = 0}) {
     switch (j['type']) {
       case 'collect':
         return LevelGoal.collect(
@@ -51,8 +73,14 @@ class LevelGoal {
           throw const FormatException('break_bag needs bag cells in layout');
         }
         return LevelGoal.breakBag(bagCells);
+      case 'deliver':
+        return LevelGoal.deliver(j['count'] as int);
+      case 'clear_mats':
+        if (matCells == 0) {
+          throw const FormatException('clear_mats needs mat cells in layout');
+        }
+        return LevelGoal.clearMats(matCells);
       default:
-        // deliver arrives together with its blocker.
         throw UnsupportedError(
             'Goal type "${j['type']}" is not implemented yet');
     }
@@ -84,6 +112,7 @@ class LevelConfig {
     required this.nori,
     this.ice = const [],
     this.bags = const [],
+    this.mats = const [],
     required this.pieces,
     required this.moves,
     required this.goals,
@@ -109,6 +138,10 @@ class LevelConfig {
   /// Row-major rice bag layers (0 = none). Bagged cells start unplayable and
   /// open once the bag breaks; empty means none.
   final List<int> bags;
+
+  /// Row-major: which blocked cells are bamboo mats (they spread). Mats also
+  /// appear in [bags] with one layer.
+  final List<bool> mats;
   final List<PieceKind> pieces;
   final int moves;
   final List<LevelGoal> goals;
@@ -118,7 +151,7 @@ class LevelConfig {
 
   /// Parses the GDD level schema. `nori` / `nori:N` legend values put N
   /// layers under a cell, `ice` / `ice:N` cage the piece that starts there in
-  /// N layers of ice; `bag` / `bag:N` put an N-layer rice bag in the cell;
+  /// N layers of ice; `bag` / `bag:N` put an N-layer rice bag in the cell, `mat` a bamboo mat;
   /// other values besides "void" are plain cells.
   factory LevelConfig.fromJson(Map<String, dynamic> j) {
     final board = j['board'] as Map<String, dynamic>;
@@ -147,11 +180,14 @@ class LevelConfig {
             ? (v.contains(':') ? int.parse(v.split(':')[1]) : 1)
             : 0,
     ];
+    final mats = [for (final v in cellsOf) v == 'mat'];
     final bags = [
       for (final v in cellsOf)
-        v.startsWith('bag')
-            ? (v.contains(':') ? int.parse(v.split(':')[1]) : 1)
-            : 0,
+        v == 'mat'
+            ? 1
+            : v.startsWith('bag')
+                ? (v.contains(':') ? int.parse(v.split(':')[1]) : 1)
+                : 0,
     ];
     final conveyors = [
       for (final c in (j['conveyors'] as List? ?? const []))
@@ -167,11 +203,13 @@ class LevelConfig {
       rows: rows,
       cols: cols,
       playable: [
-        for (final v in cellsOf) v != 'void' && !v.startsWith('bag'),
+        for (final v in cellsOf)
+          v != 'void' && !v.startsWith('bag') && v != 'mat',
       ],
       nori: nori,
       ice: ice,
       bags: bags,
+      mats: mats,
       pieces: [
         for (final p in j['pieces'] as List)
           PieceKind.values.byName(p as String),
@@ -182,7 +220,11 @@ class LevelConfig {
           LevelGoal.fromJson(g as Map<String, dynamic>,
               noriCells: nori.where((n) => n > 0).length,
               iceCells: ice.where((n) => n > 0).length,
-              bagCells: bags.where((n) => n > 0).length),
+              bagCells: [
+                for (var i = 0; i < bags.length; i++)
+                  if (bags[i] > 0 && !mats[i]) i
+              ].length,
+              matCells: mats.where((m) => m).length),
       ],
       stars: (j['stars'] as List? ?? const []).cast<int>(),
       conveyors: conveyors,

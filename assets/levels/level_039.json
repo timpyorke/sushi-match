@@ -2,24 +2,22 @@
   "id": 39,
   "version": 1,
   "board": {
-    "cols": 9,
-    "rows": 9
+    "cols": 8,
+    "rows": 8
   },
   "layout": [
-    "XXX.N.XXX",
-    "XXX.N.XXX",
-    "XXX.N.XXX",
-    "....N....",
-    "NNNNNNNNN",
-    "....N....",
-    "XXX.N.XXX",
-    "XXX.N.XXX",
-    "XXX.N.XXX"
+    "XXX..XXX",
+    "XX....XX",
+    "X......X",
+    "........",
+    "........",
+    "X......X",
+    "XX....XX",
+    "XXX..XXX"
   ],
   "legend": {
     ".": "cell",
-    "X": "void",
-    "N": "nori:1"
+    "X": "void"
   },
   "pieces": [
     "salmon",
@@ -29,17 +27,18 @@
     "ebi",
     "kappa"
   ],
-  "moves": 39,
+  "moves": 42,
   "goals": [
     {
-      "type": "clear_nori"
+      "type": "deliver",
+      "count": 3
     },
     {
       "type": "collect",
       "piece": "ikura",
-      "count": 25
+      "count": 11
     }
   ],
-  "stars": [5200, 7900, 10300],
+  "stars": [5400, 10100, 13600],
   "seed": 394212
 }

@@ -100,6 +100,35 @@ abstract final class PiecePainter {
         sheet, src, dst, Paint()..filterQuality = FilterQuality.medium);
   }
 
+  /// Delivery ingredient: a smiling rice ball on a golden glow.
+  static void paintIngredient(Canvas canvas, double s) {
+    final tri = Path()
+      ..moveTo(s * 0.5, s * 0.2)
+      ..lineTo(s * 0.82, s * 0.78)
+      ..lineTo(s * 0.18, s * 0.78)
+      ..close();
+    canvas.drawCircle(
+      Offset(s / 2, s / 2),
+      s * 0.44,
+      Paint()
+        ..color = const Color(0xCCFFD54F)
+        ..maskFilter = MaskFilter.blur(BlurStyle.normal, s * 0.1),
+    );
+    final round = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeJoin = StrokeJoin.round
+      ..strokeWidth = s * 0.12;
+    canvas.drawPath(tri, round..color = const Color(0xFFFFFDF5));
+    canvas.drawPath(tri, Paint()..color = const Color(0xFFFFFDF5));
+    canvas.save();
+    canvas.clipPath(tri);
+    canvas.drawRect(Rect.fromLTWH(s * 0.1, s * 0.62, s * 0.8, s * 0.2), _nori);
+    canvas.restore();
+    canvas.drawPath(tri, _outline..strokeJoin = StrokeJoin.round);
+    canvas.drawCircle(Offset(s * 0.43, s * 0.5), s * 0.035, _eye);
+    canvas.drawCircle(Offset(s * 0.57, s * 0.5), s * 0.035, _eye);
+  }
+
   static void paint(
       Canvas canvas, double s, PieceKind? kind, SpecialType? special) {
     final body = Rect.fromLTWH(s * 0.1, s * 0.1, s * 0.8, s * 0.8);

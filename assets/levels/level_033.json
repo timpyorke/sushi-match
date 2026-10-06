@@ -2,24 +2,21 @@
   "id": 33,
   "version": 1,
   "board": {
-    "cols": 9,
-    "rows": 9
+    "cols": 7,
+    "rows": 7
   },
   "layout": [
-    "X...N...X",
-    "....N....",
-    "....N....",
-    "....N....",
-    "NNNNNNNNN",
-    "....N....",
-    "....N....",
-    "....N....",
-    "X...N...X"
+    "X.....X",
+    ".......",
+    ".......",
+    ".......",
+    ".......",
+    ".......",
+    "X.....X"
   ],
   "legend": {
     ".": "cell",
-    "X": "void",
-    "N": "nori:1"
+    "X": "void"
   },
   "pieces": [
     "salmon",
@@ -29,17 +26,18 @@
     "ebi",
     "kappa"
   ],
-  "moves": 34,
+  "moves": 40,
   "goals": [
     {
-      "type": "clear_nori"
+      "type": "deliver",
+      "count": 2
     },
     {
       "type": "collect",
       "piece": "tamago",
-      "count": 39
+      "count": 10
     }
   ],
-  "stars": [7600, 12100, 15500],
+  "stars": [6900, 10200, 14100],
   "seed": 333564
 }

@@ -23,7 +23,11 @@ class Board {
     for (var i = 0; i < _cells.length; i++) {
       final p = _cells[i];
       if (p != null) {
-        b._cells[i] = Piece(id: p.id, kind: p.kind, special: p.special)
+        b._cells[i] = Piece(
+            id: p.id,
+            kind: p.kind,
+            special: p.special,
+            ingredient: p.ingredient)
           ..ice = p.ice;
       }
     }
@@ -40,6 +44,12 @@ class Board {
 
   /// Turns a cell on once the rice bag that blocked it breaks.
   void openCell(Pos p) => _playable[_i(p)] = true;
+
+  /// Closes a cell (a bamboo mat spreading onto it). It must be empty.
+  void closeCell(Pos p) {
+    assert(_cells[_i(p)] == null, 'Cannot close an occupied cell $p');
+    _playable[_i(p)] = false;
+  }
 
   /// Kind used for matching: null for empty cells, Omakase and frozen pieces.
   PieceKind? matchKind(Pos p) {

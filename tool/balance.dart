@@ -25,6 +25,7 @@ LevelConfig _withoutBelts(LevelConfig l) => LevelConfig(
       nori: l.nori,
       ice: l.ice,
       bags: l.bags,
+      mats: l.mats,
       pieces: l.pieces,
       moves: l.moves,
       goals: l.goals,

@@ -11,6 +11,7 @@ class PieceComponent extends PositionComponent {
     required this.kind,
     required this.special,
     this.ice = 0,
+    this.ingredient = false,
     required double cellSize,
     required Vector2 position,
   }) : super(
@@ -26,6 +27,9 @@ class PieceComponent extends PositionComponent {
   /// Ice layers caging the piece (0 = free).
   int ice;
 
+  /// A delivery ingredient (drawn as a rice ball, no kind).
+  final bool ingredient;
+
   static final _iceFill = Paint();
   static final _iceEdge = Paint()
     ..color = const Color(0xFFFFFFFF)
@@ -40,7 +44,11 @@ class PieceComponent extends PositionComponent {
 
   @override
   void render(Canvas canvas) {
-    PiecePainter.paint(canvas, size.x, kind, special);
+    if (ingredient) {
+      PiecePainter.paintIngredient(canvas, size.x);
+    } else {
+      PiecePainter.paint(canvas, size.x, kind, special);
+    }
     if (ice == 0) return;
     final s = size.x;
     final rr = RRect.fromRectAndRadius(

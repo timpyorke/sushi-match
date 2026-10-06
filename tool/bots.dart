@@ -24,7 +24,9 @@ Move greedy(GameEngine e, Random r) {
   };
   final hasNori = e.level.goals.any((g) => g.type == GoalType.clearNori);
   final hasIce = e.level.goals.any((g) => g.type == GoalType.breakIce);
-  final hasBag = e.level.goals.any((g) => g.type == GoalType.breakBag);
+  final hasBag = e.level.goals
+      .any((g) => g.type == GoalType.breakBag || g.type == GoalType.clearMats);
+  final hasDeliver = e.level.goals.any((g) => g.type == GoalType.deliver);
   Move? best;
   var bestScore = -1.0;
   for (final m in MoveFinder.allMoves(e.board)) {
@@ -39,6 +41,12 @@ Move greedy(GameEngine e, Random r) {
         for (final c in g.cells) {
           s += wanted.contains(g.kind) ? 1.5 : 1;
           if (hasNori && e.noriAt(c) > 0) s += 2;
+          if (hasDeliver) {
+            // Clearing under an ingredient lets it sink.
+            for (var r = 0; r < c.row; r++) {
+              if (e.board[Pos(r, c.col)]?.ingredient ?? false) s += 2;
+            }
+          }
           if (hasBag) {
             for (final d in const [
               Pos(0, 1),
@@ -63,6 +71,12 @@ Move greedy(GameEngine e, Random r) {
         if (g.spawn != null) s += 4;
       }
       e.board.swap(m.$1, m.$2);
+    }
+    if (hasDeliver) {
+      // Steer ingredients: a swap that lowers one is worth a lot.
+      for (final (from, to) in [(m.$1, m.$2), (m.$2, m.$1)]) {
+        if ((e.board[from]?.ingredient ?? false) && to.row > from.row) s += 6;
+      }
     }
     s += r.nextDouble() * 0.5;
     if (s > bestScore) {
@@ -111,7 +125,9 @@ Move planner(GameEngine e, Random r) {
   final e = GameEngine(level, seed: seed);
   final r = Random(seed ^ 0x5eed);
   var guard = 0;
-  while (e.status == GameStatus.playing && guard++ < 200) {
+  while (e.status == GameStatus.playing &&
+      guard++ < 200 &&
+      MoveFinder.findMove(e.board) != null) {
     final m = bot(e, r);
     e.trySwap(m.$1, m.$2);
   }

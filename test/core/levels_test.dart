@@ -36,7 +36,8 @@ void main() {
     for (final f in files) {
       final level = LevelConfig.fromJson(
           jsonDecode(f.readAsStringSync()) as Map<String, dynamic>);
-      if (!level.bags.any((n) => n > 0)) continue;
+      // Spreading mats may legitimately starve a sealed pocket.
+      if (!level.bags.any((n) => n > 0) || level.mats.any((m) => m)) continue;
       checked++;
       for (var seed = 0; seed < 3; seed++) {
         final e = GameEngine(level, seed: seed);

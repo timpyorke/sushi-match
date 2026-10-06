@@ -70,6 +70,11 @@ class BoardComponent extends PositionComponent
       for (var c = 0; c < engine.board.cols; c++) engine.bagAt(Pos(r, c)),
   ];
 
+  late final List<bool> _isMat = [
+    for (var r = 0; r < engine.board.rows; r++)
+      for (var c = 0; c < engine.board.cols; c++) engine.matAt(Pos(r, c)),
+  ];
+
   late final List<int> _nori = [
     for (final p in [
       for (var r = 0; r < engine.board.rows; r++)
@@ -142,6 +147,33 @@ class BoardComponent extends PositionComponent
     ..strokeWidth = 3
     ..strokeCap = StrokeCap.round;
   static final _sackDot = Paint()..color = const Color(0xFF6B4F2A);
+
+  static final _matFill = Paint()..color = const Color(0xFFCDB872);
+  static final _matSlat = Paint()
+    ..color = const Color(0xFF8E7A3F)
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 2;
+  static final _matTie = Paint()
+    ..color = const Color(0xFF5E7F4F)
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 3.5;
+
+  /// A bamboo mat: slatted square tied with two green cords.
+  void _drawMat(Canvas canvas, Rect r) {
+    final body = RRect.fromRectAndRadius(
+        r.deflate(cell * 0.07), const Radius.circular(cell * 0.12));
+    canvas.drawRRect(body, _matFill);
+    for (var i = 1; i < 6; i++) {
+      final x = body.left + body.width * i / 6;
+      canvas.drawLine(
+          Offset(x, body.top + 3), Offset(x, body.bottom - 3), _matSlat);
+    }
+    for (final f in const [0.28, 0.72]) {
+      final y = body.top + body.height * f;
+      canvas.drawLine(Offset(body.left, y), Offset(body.right, y), _matTie);
+    }
+    canvas.drawRRect(body, _sackEdge);
+  }
 
   /// A rice sack: round body, gathered neck with a red tie and one dot per
   /// layer left.
@@ -257,11 +289,13 @@ class BoardComponent extends PositionComponent
     }
     for (var i = 0; i < _bags.length; i++) {
       if (_bags[i] == 0) continue;
-      _drawBag(
-          canvas,
-          Rect.fromLTWH(
-              (i % board.cols) * cell, (i ~/ board.cols) * cell, cell, cell),
-          _bags[i]);
+      final rect = Rect.fromLTWH(
+          (i % board.cols) * cell, (i ~/ board.cols) * cell, cell, cell);
+      if (_isMat[i]) {
+        _drawMat(canvas, rect);
+      } else {
+        _drawBag(canvas, rect, _bags[i]);
+      }
     }
     final s = _selected;
     if (s != null) {
@@ -454,10 +488,34 @@ class BoardComponent extends PositionComponent
           layers.forEach((p, n) => _nori[p.row * board.cols + p.col] = n);
         case BagStep(:final hits):
           for (final h in hits) {
-            _bags[h.pos.row * board.cols + h.pos.col] = h.layers;
+            final i = h.pos.row * board.cols + h.pos.col;
+            _bags[i] = h.layers;
+            if (h.layers == 0) _isMat[i] = false;
             _burst(_center(h.pos), h.layers == 0 ? _sackBurst : null);
           }
           await _wait(0.15);
+        case DeliverStep(:final delivered):
+          final pops = <Future<void>>[];
+          for (final d in delivered) {
+            final v = _views.remove(d.pieceId);
+            if (v == null) continue;
+            if (identical(_at[d.pos], v)) _at.remove(d.pos);
+            _burst(v.position, _goldChip);
+            pops.add(_pop(v));
+          }
+          _haptic(HapticFeedback.mediumImpact);
+          await Future.wait(pops);
+        case MatSpreadStep(:final pos, :final pieceId):
+          final v = _views.remove(pieceId);
+          if (v != null) {
+            if (identical(_at[pos], v)) _at.remove(pos);
+            await _pop(v);
+          }
+          final i = pos.row * board.cols + pos.col;
+          _bags[i] = 1;
+          _isMat[i] = true;
+          _burst(_center(pos), _matChip);
+          await _wait(0.1);
         case IceStep(:final hits):
           for (final h in hits) {
             _views[h.pieceId]?.ice = h.layers;
@@ -512,6 +570,7 @@ class BoardComponent extends PositionComponent
       kind: s.kind,
       special: s.special,
       ice: s.ice,
+      ingredient: s.ingredient,
       cellSize: cell,
       position: from ?? _center(at),
     );
@@ -552,6 +611,8 @@ class BoardComponent extends PositionComponent
   }
 
   static final _rice = Paint()..color = const Color(0xFFFFFDF5);
+  static final _goldChip = Paint()..color = const Color(0xFFFFD54F);
+  static final _matChip = Paint()..color = const Color(0xFFCDB872);
   static final _sackBurst = Paint()..color = const Color(0xFFE9D3A8);
   static final _iceChip = Paint()..color = const Color(0xFFBFE8FA);
   static final _sesame = Paint()..color = const Color(0xFF3B2A20);

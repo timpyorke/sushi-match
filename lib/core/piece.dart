@@ -20,14 +20,22 @@ enum SpecialType {
 }
 
 class Piece {
-  Piece({required this.id, required this.kind, this.special})
-      : assert(kind != null || special == SpecialType.omakase);
+  Piece(
+      {required this.id,
+      required this.kind,
+      this.special,
+      this.ingredient = false})
+      : assert(kind != null || special == SpecialType.omakase || ingredient);
 
   /// Stable id so the view can track a piece across steps.
   final int id;
 
-  /// Null only for the Omakase Plate.
+  /// Null for the Omakase Plate and for ingredients.
   final PieceKind? kind;
+
+  /// A delivery ingredient: never matches or clears, it just rides down to
+  /// the bottom row (see [GoalType.deliver]).
+  final bool ingredient;
 
   /// Mutable: Omakase + Knife/Wasabi combos upgrade pieces in place.
   SpecialType? special;

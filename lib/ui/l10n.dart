@@ -32,6 +32,8 @@ abstract final class L10n {
       'nori': 'Nori',
       'ice': 'Ice',
       'bag': 'Rice bags',
+      'deliver': 'Deliver',
+      'mat': 'Mats',
       'salmon': 'Salmon',
       'maguro': 'Maguro',
       'tamago': 'Tamago',
@@ -63,6 +65,8 @@ abstract final class L10n {
       'itemNori': 'every nori sheet cleared',
       'itemIce': 'every block of ice broken',
       'itemBag': 'every rice bag broken',
+      'itemDeliver': '{n} rice balls delivered to the kitchen',
+      'itemMat': 'every bamboo mat cleared',
       'and': 'and',
       'cust0': 'Granny Sakura',
       'cust1': 'Mr. Tanaka',
@@ -102,6 +106,12 @@ abstract final class L10n {
       'tipBagBody': 'A sack blocks its cell and the pieces above it. '
           'Match next to it to open it up; pieces slide in around it. '
           'Break every sack to win.',
+      'tipDeliverTitle': 'Kitchen delivery',
+      'tipDeliverBody': 'Rice balls do not match. Clear the sushi under them '
+          'so they sink, or swap them sideways, until they reach the bottom row.',
+      'tipMatTitle': 'Bamboo mats',
+      'tipMatBody': 'A mat blocks its cell and grows onto a neighbour every '
+          'move where you did not clear one. Match next to a mat to remove it.',
     },
     'th': {
       'pickPlate': 'เลือกจานเลย',
@@ -122,6 +132,8 @@ abstract final class L10n {
       'nori': 'สาหร่าย',
       'ice': 'น้ำแข็ง',
       'bag': 'กระสอบข้าว',
+      'deliver': 'ส่งของ',
+      'mat': 'เสื่อไผ่',
       'salmon': 'แซลมอน',
       'maguro': 'มากุโระ',
       'tamago': 'ทามาโกะ',
@@ -153,6 +165,8 @@ abstract final class L10n {
       'itemNori': 'แกะสาหร่ายให้หมด',
       'itemIce': 'ทุบน้ำแข็งให้หมด',
       'itemBag': 'แกะกระสอบข้าวให้หมด',
+      'itemDeliver': 'ส่งข้าวปั้น {n} ลูกเข้าครัว',
+      'itemMat': 'เก็บเสื่อไผ่ให้หมด',
       'and': 'กับ',
       'cust0': 'คุณยายซากุระ',
       'cust1': 'คุณทานากะ',
@@ -192,6 +206,14 @@ abstract final class L10n {
       'tipBagBody': 'กระสอบตันทั้งช่อง ชิ้นด้านบนตกผ่านไม่ได้ '
           'จับคู่ชิ้นที่อยู่ข้าง ๆ เพื่อแกะกระสอบ ชิ้นจะไหลเฉียงลงมาเติมรอบกระสอบ '
           'แกะให้หมดก็ชนะ',
+      'tipDeliverTitle': 'ส่งของเข้าครัว',
+      'tipDeliverBody':
+          'ข้าวปั้นจับคู่ไม่ได้ เคลียร์ซูชิข้างใต้ให้ข้าวปั้นตกลงไป '
+              'หรือสลับเลื่อนไปด้านข้าง จนถึงแถวล่างสุด',
+      'tipMatTitle': 'เสื่อไผ่',
+      'tipMatBody':
+          'เสื่อตันทั้งช่องและลามไปช่องข้าง ๆ ทุกครั้งที่ไม่ได้เก็บเสื่อ '
+              'จับคู่ชิ้นที่อยู่ติดกับเสื่อเพื่อเก็บเสื่อ',
     },
   };
 }

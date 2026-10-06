@@ -6,21 +6,20 @@
     "rows": 9
   },
   "layout": [
-    "M.......M",
-    ".M.....M.",
-    "..M...M..",
-    "...M.M...",
-    "....M....",
-    "...M.M...",
-    "..M...M..",
-    ".M.....M.",
-    "M.......M"
+    ".........",
+    ".........",
+    "....T....",
+    ".........",
+    "..T......",
+    ".........",
+    "......T..",
+    ".........",
+    "........."
   ],
   "legend": {
     ".": "cell",
     "X": "void",
-    "N": "nori:1",
-    "M": "nori:2"
+    "T": "mat"
   },
   "pieces": [
     "salmon",
@@ -30,30 +29,30 @@
     "ebi",
     "kappa"
   ],
-  "moves": 44,
+  "moves": 38,
   "goals": [
     {
-      "type": "clear_nori"
+      "type": "clear_mats"
     },
     {
       "type": "collect",
       "piece": "maguro",
-      "count": 24
+      "count": 42
     },
     {
       "type": "collect",
       "piece": "ikura",
-      "count": 24
+      "count": 42
     },
     {
       "type": "score",
-      "count": 5600
+      "count": 10500
     }
   ],
-  "stars": [13000, 16300, 19800],
+  "stars": [11100, 13800, 17000],
   "conveyors": [
     {
-      "row": 4,
+      "row": 0,
       "dir": "right"
     }
   ],

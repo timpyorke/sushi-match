@@ -31,11 +31,18 @@ class GameEngine {
         _bags = level.bags.isEmpty
             ? List.filled(level.rows * level.cols, 0)
             : List.of(level.bags),
+        _mats = level.mats.isEmpty
+            ? List.filled(level.rows * level.cols, false)
+            : List.of(level.mats),
+        _ingredientTotal = level.goals
+            .where((g) => g.type == GoalType.deliver)
+            .fold(0, (n, g) => n + g.count),
         movesLeft = level.moves {
     board.lockedRows = {for (final c in level.conveyors) c.row};
     BoardFactory.fillInitial(board, level.pieces, rng, _makePiece,
         iceAt: (p) =>
             level.ice.isEmpty ? 0 : level.ice[p.row * level.cols + p.col]);
+    _placeIngredients();
   }
 
   GameEngine._fork(GameEngine o, int seed)
@@ -44,6 +51,11 @@ class GameEngine {
         rng = Random(seed),
         _nori = List.of(o._nori),
         _bags = List.of(o._bags),
+        _mats = List.of(o._mats),
+        _ingredientTotal = o._ingredientTotal,
+        _delivered = o._delivered,
+        _spawned = o._spawned,
+        _active = o._active,
         movesLeft = o.movesLeft,
         score = o.score,
         status = o.status,
@@ -69,6 +81,19 @@ class GameEngine {
 
   /// Rice bag layers per cell; a bagged cell blocks gravity until it breaks.
   final List<int> _bags;
+
+  /// Which blocked cells are bamboo mats (they spread, bags do not).
+  final List<bool> _mats;
+
+  /// Set when a clear breaks a mat; a turn without one lets the mats spread.
+  bool _matBroken = false;
+
+  final int _ingredientTotal;
+  int _delivered = 0;
+  int _spawned = 0;
+
+  /// Ingredients currently on the board.
+  int _active = 0;
   int _nextId = 0;
 
   /// Origins of Wasabi Bombs that still owe their second blast.
@@ -87,7 +112,9 @@ class GameEngine {
               GoalType.score => score,
               GoalType.clearNori => g.count - _nori.where((n) => n > 0).length,
               GoalType.breakIce => g.count - _frozenCount,
-              GoalType.breakBag => g.count - _bags.where((n) => n > 0).length,
+              GoalType.breakBag => g.count - _bagCount,
+              GoalType.deliver => _delivered,
+              GoalType.clearMats => g.count - _matCount,
             },
           ),
       ];
@@ -100,6 +127,16 @@ class GameEngine {
         for (final p in board.positions)
           if (board[p]?.frozen ?? false) p,
       ].length;
+
+  int get _matCount => _mats.where((m) => m).length;
+
+  int get _bagCount => [
+        for (var i = 0; i < _bags.length; i++)
+          if (_bags[i] > 0 && !_mats[i]) i,
+      ].length;
+
+  /// Whether a bamboo mat covers [p].
+  bool matAt(Pos p) => board.inBounds(p) && _mats[p.row * board.cols + p.col];
 
   /// Rice bag layers currently in [p] (0 when none).
   int bagAt(Pos p) => board.inBounds(p) ? _bags[p.row * board.cols + p.col] : 0;
@@ -126,6 +163,10 @@ class GameEngine {
 
     final specialSwap =
         pa.isOmakase || pb.isOmakase || (pa.isSpecial && pb.isSpecial);
+    // An Omakase has no kind to pair with an ingredient.
+    if (specialSwap && (pa.ingredient || pb.ingredient)) {
+      return [InvalidSwapStep(a, b)];
+    }
     final steps = <BoardStep>[];
     _aftershocks.clear();
     board.swap(a, b);
@@ -154,7 +195,11 @@ class GameEngine {
 
   /// Chopsticks: destroy one piece. Costs no move.
   List<BoardStep> useChopsticks(Pos p) {
-    if (status != GameStatus.playing || board[p] == null) return const [];
+    if (status != GameStatus.playing ||
+        board[p] == null ||
+        board[p]!.ingredient) {
+      return const [];
+    }
     _aftershocks.clear();
     return [
       ..._clear(seed: {p}, cascade: 1),
@@ -242,7 +287,11 @@ class GameEngine {
       _credit = false;
       shifted.addAll(_cascade(MatchFinder.find(board), startAt: 1));
       _credit = true;
+      if (!_matBroken && !goals.every((g) => g.done)) {
+        shifted.addAll(_spreadMats());
+      }
     }
+    _matBroken = false;
     if (spendMove) movesLeft--;
     final won = goals.every((g) => g.done);
     if (won) {
@@ -287,7 +336,11 @@ class GameEngine {
   List<BoardStep> _bonusRound() {
     final plain = [
       for (final p in board.positions)
-        if (board[p] != null && !board[p]!.isSpecial && !board[p]!.frozen) p,
+        if (board[p] != null &&
+            !board[p]!.isSpecial &&
+            !board[p]!.frozen &&
+            !board[p]!.ingredient)
+          p,
     ]..shuffle(rng);
     final picked = plain.take(max(0, movesLeft)).toList();
     movesLeft = 0;
@@ -333,7 +386,7 @@ class GameEngine {
 
     void mark(Pos p) {
       final piece = board[p];
-      if (piece == null) return;
+      if (piece == null || piece.ingredient) return;
       if (piece.frozen) {
         cracked.add(p);
         return;
@@ -403,9 +456,17 @@ class GameEngine {
     if (cracks.isNotEmpty) {
       final hits = <BagHit>[];
       for (final q in cracks) {
-        final left = --_bags[q.row * board.cols + q.col];
-        if (left == 0) board.openCell(q);
-        hits.add(BagHit(q, left));
+        final i = q.row * board.cols + q.col;
+        final left = --_bags[i];
+        final mat = _mats[i];
+        if (left == 0) {
+          board.openCell(q);
+          if (mat) {
+            _mats[i] = false;
+            _matBroken = true;
+          }
+        }
+        hits.add(BagHit(q, left, mat: mat));
       }
       steps.add(BagStep(hits));
     }
@@ -524,7 +585,43 @@ class GameEngine {
 
   // ------------------------------------------------------ gravity/refill --
 
+  /// Settles the board; ingredients that land on the bottom row leave, and
+  /// the gap they leave settles again.
   List<BoardStep> _gravityAndRefill() {
+    final steps = <BoardStep>[];
+    for (var i = 0; i < 20; i++) {
+      steps.addAll(_settle());
+      final gone = _deliverReached();
+      if (gone.isEmpty) break;
+      steps.add(DeliverStep(gone));
+    }
+    return steps;
+  }
+
+  /// Removes ingredients standing on the lowest open cell of their column.
+  List<ClearedPiece> _deliverReached() {
+    final gone = <ClearedPiece>[];
+    for (var c = 0; c < board.cols; c++) {
+      for (var r = board.rows - 1; r >= 0; r--) {
+        final p = Pos(r, c);
+        if (!board.isPlayable(p)) continue;
+        final piece = board[p];
+        if (piece != null && piece.ingredient) {
+          gone.add(ClearedPiece(piece.id, p));
+          board[p] = null;
+          _delivered++;
+          _active--;
+          score += _deliverPoints;
+        }
+        break;
+      }
+    }
+    return gone;
+  }
+
+  static const _deliverPoints = 150;
+
+  List<BoardStep> _settle() {
     final before = <int, Pos>{
       for (final p in board.positions)
         if (board[p] != null) board[p]!.id: p,
@@ -577,8 +674,9 @@ class GameEngine {
         final missing = w + 1;
         final top = cells.first.row;
         for (var i = 0; i < missing; i++) {
-          final piece =
-              _makePiece(level.pieces[rng.nextInt(level.pieces.length)]);
+          final piece = _spawnIngredient()
+              ? _makeIngredient()
+              : _makePiece(level.pieces[rng.nextInt(level.pieces.length)]);
           board[cells[i]] = piece;
           fresh[piece.id] = (PieceSnapshot.of(piece), top - missing + i);
         }
@@ -626,6 +724,74 @@ class GameEngine {
 
   Piece _makePiece(PieceKind k) => Piece(id: _nextId++, kind: k);
 
+  Piece _makeIngredient() {
+    _spawned++;
+    _active++;
+    return Piece(id: _nextId++, kind: null, ingredient: true);
+  }
+
+  static const _maxActiveIngredients = 3;
+
+  /// Whether the next piece fed in from the top is an ingredient. Only
+  /// delivery levels draw from the RNG here, so other levels are unchanged.
+  bool _spawnIngredient() =>
+      _spawned < _ingredientTotal &&
+      _active < _maxActiveIngredients &&
+      rng.nextDouble() < 0.35;
+
+  /// Drops the first ingredients into random columns, somewhere in the upper
+  /// half so the first deliveries come quickly.
+  void _placeIngredients() {
+    if (_ingredientTotal == 0) return;
+    final columns = [
+      for (var c = 0; c < board.cols; c++)
+        [
+          for (var r = 0; r < board.rows; r++)
+            if (board.isPlayable(Pos(r, c))) Pos(r, c),
+        ],
+    ].where((cells) => cells.length >= 3).toList()
+      ..shuffle(rng);
+    final n = min(_ingredientTotal, _maxActiveIngredients);
+    for (final cells in columns.take(n)) {
+      board[cells[rng.nextInt((cells.length + 1) ~/ 2)]] = _makeIngredient();
+    }
+    if (MoveFinder.findMove(board) == null) BoardFactory.shuffle(board, rng);
+  }
+
+  /// A mat grows onto one open cell beside an existing mat, swallowing the
+  /// piece there. Called on turns where no mat was destroyed.
+  List<BoardStep> _spreadMats() {
+    final pool = <Pos>{};
+    for (var i = 0; i < _mats.length; i++) {
+      if (!_mats[i]) continue;
+      final m = Pos(i ~/ board.cols, i % board.cols);
+      for (final d in const [Pos(0, 1), Pos(0, -1), Pos(1, 0), Pos(-1, 0)]) {
+        final q = m + d;
+        final piece = board[q];
+        if (piece != null &&
+            !piece.ingredient &&
+            !piece.frozen &&
+            !board.isLocked(q)) {
+          pool.add(q);
+        }
+      }
+    }
+    if (pool.isEmpty) return const [];
+    final cells = pool.toList();
+    final at = cells[rng.nextInt(cells.length)];
+    final id = board[at]!.id;
+    board[at] = null;
+    board.closeCell(at);
+    final i = at.row * board.cols + at.col;
+    _bags[i] = 1;
+    _mats[i] = true;
+    return [
+      MatSpreadStep(at, id),
+      ..._gravityAndRefill(),
+      ..._cascade(MatchFinder.find(board), startAt: 1),
+    ];
+  }
+
   Set<Pos> _row(int r) => {
         for (var c = 0; c < board.cols; c++)
           if (board.isPlayable(Pos(r, c))) Pos(r, c),
@@ -656,7 +822,7 @@ class GameEngine {
     };
     final candidates = [
       for (final p in board.positions)
-        if (!avoid.contains(p) && board[p] != null) p,
+        if (!avoid.contains(p) && board[p] != null && !board[p]!.ingredient) p,
     ];
     if (candidates.isEmpty) return null;
     final preferred =
