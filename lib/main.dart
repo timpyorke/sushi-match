@@ -14,15 +14,16 @@ import 'game/sushi_game.dart';
 import 'services/audio.dart';
 import 'services/store.dart';
 import 'services/wallet.dart';
-import 'ui/daily_reward_dialog.dart';
 import 'ui/customer_order.dart';
 import 'ui/game_dialog.dart';
+import 'ui/home_screen.dart';
 import 'ui/hud.dart';
 import 'services/restaurant.dart';
 import 'services/tips.dart';
 import 'ui/level_select.dart';
 import 'ui/restaurant_screen.dart';
 import 'ui/shop_screen.dart';
+import 'ui/splash_screen.dart';
 import 'ui/tip_overlay.dart';
 import 'ui/l10n.dart';
 import 'ui/lives_ui.dart';
@@ -57,8 +58,18 @@ void main() async {
 Future<void> _enterImmersive() =>
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
-class SushiTrioApp extends StatelessWidget {
-  const SushiTrioApp({super.key});
+class SushiTrioApp extends StatefulWidget {
+  const SushiTrioApp({super.key, this.showSplash = true});
+
+  /// Tests turn the splash off to land on the home screen directly.
+  final bool showSplash;
+
+  @override
+  State<SushiTrioApp> createState() => _SushiTrioAppState();
+}
+
+class _SushiTrioAppState extends State<SushiTrioApp> {
+  late bool _splash = widget.showSplash;
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +81,14 @@ class SushiTrioApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'Mali',
       ),
-      home: const LevelSelectScreen(),
+      home: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 250),
+        child: _splash
+            ? SplashScreen(
+                key: const ValueKey('splash'),
+                onDone: () => setState(() => _splash = false))
+            : const _Home(key: ValueKey('home')),
+      ),
     );
   }
 }
@@ -106,24 +124,44 @@ const int kLevelCount = 60;
 String _levelAsset(int n) =>
     'assets/levels/level_${n.toString().padLeft(3, '0')}.json';
 
-class LevelSelectScreen extends ConsumerStatefulWidget {
+/// Spends a life, lets the player pick starter boosters, then opens the level.
+Future<void> startLevel(BuildContext context, WidgetRef ref, int n) async {
+  if (!await ensureLife(context, ref) || !context.mounted) return;
+  final starters = await pickStarters(context, ref);
+  if (starters == null || !context.mounted) return;
+  await Navigator.of(context).push(
+    MaterialPageRoute(
+        builder: (_) => GameScreen(levelNumber: n, starters: starters)),
+  );
+}
+
+void _openRestaurant(BuildContext context) => Navigator.of(context)
+    .push(MaterialPageRoute(builder: (_) => const RestaurantScreen()));
+void _openShop(BuildContext context) => Navigator.of(context)
+    .push(MaterialPageRoute(builder: (_) => const BoosterShopScreen()));
+void _openSettings(BuildContext context) => Navigator.of(context)
+    .push(MaterialPageRoute(builder: (_) => const SettingsScreen()));
+
+class _Home extends ConsumerWidget {
+  const _Home({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) => HomeScreen(
+        levelCount: kLevelCount,
+        onPlay: (n) => startLevel(context, ref, n),
+        onLevels: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const LevelSelectScreen())),
+        onRestaurant: () => _openRestaurant(context),
+        onShop: () => _openShop(context),
+        onSettings: () => _openSettings(context),
+      );
+}
+
+class LevelSelectScreen extends ConsumerWidget {
   const LevelSelectScreen({super.key});
 
   @override
-  ConsumerState<LevelSelectScreen> createState() => _LevelSelectScreenState();
-}
-
-class _LevelSelectScreenState extends ConsumerState<LevelSelectScreen> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) maybeShowDailyReward(context, ref);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final cleared = ref.watch(progressProvider);
     final restaurant = ref.watch(restaurantProvider);
     final maxPlayable = restaurant.maxPlayableLevel;
@@ -152,25 +190,11 @@ class _LevelSelectScreenState extends ConsumerState<LevelSelectScreen> {
                   'name': shop == null ? '' : L10n.t(shop.nameKey),
                 }))));
             },
-            onRestaurant: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const RestaurantScreen()),
-            ),
-            onShop: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const BoosterShopScreen()),
-            ),
-            onSettings: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const SettingsScreen()),
-            ),
-            onSelect: (n) async {
-              if (!await ensureLife(context, ref) || !context.mounted) return;
-              final starters = await pickStarters(context, ref);
-              if (starters == null || !context.mounted) return;
-              await Navigator.of(context).push(
-                MaterialPageRoute(
-                    builder: (_) =>
-                        GameScreen(levelNumber: n, starters: starters)),
-              );
-            },
+            onBack: () => Navigator.of(context).maybePop(),
+            onRestaurant: () => _openRestaurant(context),
+            onShop: () => _openShop(context),
+            onSettings: () => _openSettings(context),
+            onSelect: (n) => startLevel(context, ref, n),
           ),
         ),
       ),
@@ -354,7 +378,11 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(12, 4, 12, 0),
-                      child: OrderBubble(level: game.level),
+                      child: ValueListenableBuilder<HudState>(
+                        valueListenable: game.hud,
+                        builder: (context, s, child) =>
+                            OrderBubble(level: game.level, goals: s.goals),
+                      ),
                     ),
                     BoosterBar(game: game),
                   ],

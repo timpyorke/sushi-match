@@ -16,6 +16,10 @@ abstract final class L10n {
   static const _strings = <String, Map<String, String>>{
     'en': {
       'pickPlate': 'Pick a plate',
+      'tagline': 'Match three, serve happy!',
+      'play': 'Play',
+      'levelN': 'Level {n}',
+      'chooseLevel': 'Levels',
       'clearFirst': 'Clear level {n} first',
       'settings': 'Settings',
       'shop': 'Shop',
@@ -174,6 +178,10 @@ abstract final class L10n {
     },
     'th': {
       'pickPlate': 'เลือกจานเลย',
+      'tagline': 'จับคู่สามชิ้น เสิร์ฟให้อิ่มใจ!',
+      'play': 'เล่น',
+      'levelN': 'ด่าน {n}',
+      'chooseLevel': 'เลือกด่าน',
       'clearFirst': 'ผ่านด่าน {n} ก่อนนะ',
       'settings': 'ตั้งค่า',
       'shop': 'ร้านค้า',

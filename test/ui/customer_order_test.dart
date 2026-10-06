@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sushi_trio/core/game_engine.dart';
 import 'package:sushi_trio/core/level.dart';
 import 'package:sushi_trio/core/piece.dart';
 import 'package:sushi_trio/ui/l10n.dart';
@@ -23,6 +25,18 @@ void main() {
     addTearDown(() => L10n.language = 'en');
     expect(orderText(goals), contains('แซลมอน 20 ชิ้น'));
     expect(orderText(goals), contains('กับ'));
+  });
+
+  testWidgets('goal counts show progress and cap at the target',
+      (tester) async {
+    await tester.pumpWidget(MaterialApp(
+        home: Column(children: [
+      GoalCount(progress: GoalProgress(goals[0], 7)),
+      GoalCount(progress: GoalProgress(goals[1], 18)),
+    ])));
+    expect(find.text('7/20'), findsOneWidget);
+    expect(find.text('15/15'), findsOneWidget);
+    expect(find.byIcon(Icons.check), findsOneWidget);
   });
 
   test('every level gets a customer', () {

@@ -22,9 +22,13 @@ class LevelSelectView extends StatefulWidget {
       required this.onShopLocked,
       this.onRestaurant,
       this.onShop,
-      this.onSettings});
+      this.onSettings,
+      this.onBack});
 
   final int levelCount;
+
+  /// Shows a back button at the top left when set.
+  final VoidCallback? onBack;
 
   /// Highest cleared level; the next one is playable, the rest are locked.
   final int cleared;
@@ -109,6 +113,12 @@ class _LevelSelectViewState extends State<LevelSelectView> {
       children: [
         Row(
           children: [
+            if (widget.onBack != null)
+              Padding(
+                padding: const EdgeInsets.only(left: 12, top: 8),
+                child: RoundIconButton(
+                    icon: Icons.arrow_back, onPressed: widget.onBack!),
+              ),
             // Shrinks on narrow phones so the three buttons still fit.
             const Expanded(
               child: Padding(

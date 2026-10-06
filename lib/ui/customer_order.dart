@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../core/game_engine.dart';
 import '../core/level.dart';
+import '../core/piece.dart';
+import '../game/piece_painter.dart';
 import 'l10n.dart';
 import 'ui_art.dart';
 
@@ -50,10 +53,74 @@ String orderText(List<LevelGoal> goals) {
   return L10n.t('orderIntro', {'items': joined});
 }
 
-/// Customer avatar with a speech bubble stating the order.
+/// One goal as "icon current/target"; turns green with a tick once met.
+class GoalCount extends StatelessWidget {
+  const GoalCount({super.key, required this.progress});
+  final GoalProgress progress;
+
+  static Widget _icon(LevelGoal g) => switch (g.type) {
+        GoalType.collect => SizedBox(
+            width: 20,
+            height: 20,
+            child: CustomPaint(painter: _PiecePainter(g.piece!))),
+        GoalType.score => const Text('⭐', style: TextStyle(fontSize: 16)),
+        GoalType.clearNori => const Text('🌿', style: TextStyle(fontSize: 16)),
+        GoalType.breakIce => const Text('🧊', style: TextStyle(fontSize: 16)),
+        GoalType.breakBag => const Text('🌾', style: TextStyle(fontSize: 16)),
+        GoalType.deliver => const Text('🍙', style: TextStyle(fontSize: 16)),
+        GoalType.clearMats => const Text('🎋', style: TextStyle(fontSize: 16)),
+        GoalType.putOut => const Text('🔥', style: TextStyle(fontSize: 16)),
+        GoalType.shooCats => const Text('🐱', style: TextStyle(fontSize: 16)),
+      };
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context).textTheme;
+    final g = progress.goal;
+    final shown = progress.current.clamp(0, g.count);
+    final done = progress.done;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(
+        color: done ? const Color(0xFFC8E6C9) : Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+            color: done ? const Color(0xFF2E7D32) : UiArt.ink, width: 1.5),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _icon(g),
+          const SizedBox(width: 4),
+          Text('$shown/${g.count}',
+              style: t.labelMedium
+                  ?.copyWith(fontWeight: FontWeight.bold, color: UiArt.ink)),
+          if (done)
+            const Icon(Icons.check, size: 14, color: Color(0xFF2E7D32)),
+        ],
+      ),
+    );
+  }
+}
+
+class _PiecePainter extends CustomPainter {
+  _PiecePainter(this.kind);
+  final PieceKind kind;
+
+  @override
+  void paint(Canvas canvas, Size size) =>
+      PiecePainter.paint(canvas, size.width, kind, null);
+
+  @override
+  bool shouldRepaint(_PiecePainter old) => old.kind != kind;
+}
+
+/// Customer avatar with a speech bubble stating the order. With [goals] it
+/// also shows a live count for each one.
 class OrderBubble extends StatelessWidget {
-  const OrderBubble({super.key, required this.level});
+  const OrderBubble({super.key, required this.level, this.goals});
   final LevelConfig level;
+  final List<GoalProgress>? goals;
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +145,13 @@ class OrderBubble extends StatelessWidget {
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                     style: t.bodySmall?.copyWith(color: UiArt.ink)),
+                if (goals != null && goals!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Wrap(spacing: 6, runSpacing: 4, children: [
+                      for (final p in goals!) GoalCount(progress: p),
+                    ]),
+                  ),
               ],
             ),
           ),
