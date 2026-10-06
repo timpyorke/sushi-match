@@ -1,0 +1,25 @@
+{
+  "id": 11,
+  "version": 1,
+  "board": { "cols": 9, "rows": 9 },
+  "layout": [
+    "XX.....XX",
+    "X.......X",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    "X.......X",
+    "XX.....XX"
+  ],
+  "legend": { ".": "cell", "X": "void" },
+  "pieces": ["salmon", "maguro", "tamago", "ikura", "kappa"],
+  "moves": 24,
+  "goals": [
+    { "type": "collect", "piece": "maguro", "count": 28 },
+    { "type": "collect", "piece": "ikura", "count": 20 }
+  ],
+  "stars": [4500, 7000, 9500],
+  "seed": 111113
+}

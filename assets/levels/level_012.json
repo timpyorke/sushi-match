@@ -1,0 +1,23 @@
+{
+  "id": 12,
+  "version": 1,
+  "board": { "cols": 8, "rows": 8 },
+  "layout": [
+    "XX....XX",
+    "X......X",
+    "........",
+    "........",
+    "........",
+    "........",
+    "X......X",
+    "XX....XX"
+  ],
+  "legend": { ".": "cell", "X": "void" },
+  "pieces": ["salmon", "maguro", "tamago", "ikura", "ebi"],
+  "moves": 22,
+  "goals": [
+    { "type": "score", "count": 5500 }
+  ],
+  "stars": [5500, 6500, 8000],
+  "seed": 121207
+}

@@ -1,0 +1,25 @@
+{
+  "id": 14,
+  "version": 1,
+  "board": { "cols": 9, "rows": 9 },
+  "layout": [
+    "XX.....XX",
+    "X.......X",
+    "...XXX...",
+    "...XXX...",
+    "...XXX...",
+    "...XXX...",
+    "...XXX...",
+    "X.......X",
+    "XX.....XX"
+  ],
+  "legend": { ".": "cell", "X": "void" },
+  "pieces": ["salmon", "maguro", "tamago", "ebi", "kappa"],
+  "moves": 26,
+  "goals": [
+    { "type": "collect", "piece": "kappa", "count": 30 },
+    { "type": "collect", "piece": "tamago", "count": 24 }
+  ],
+  "stars": [5000, 7500, 10000],
+  "seed": 141419
+}

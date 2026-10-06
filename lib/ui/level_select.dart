@@ -1,12 +1,16 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../core/piece.dart';
 import '../game/piece_painter.dart';
 import 'ui_art.dart';
 
-/// Kaiten-sushi style level picker: plates ride on conveyor belts, tap one to
-/// play that level.
-class LevelSelectView extends StatelessWidget {
+/// Level picker laid out as a tidy serpentine belt: straight rows joined by
+/// U-turns, each row running the opposite way. Level 1 sits at the bottom;
+/// the player scrolls up through the levels. Starts centred on the
+/// level they should play next.
+class LevelSelectView extends StatefulWidget {
   const LevelSelectView(
       {super.key,
       required this.levelCount,
@@ -19,12 +23,56 @@ class LevelSelectView extends StatelessWidget {
   final int cleared;
   final ValueChanged<int> onSelect;
 
-  static const _perBelt = 5;
+  @override
+  State<LevelSelectView> createState() => _LevelSelectViewState();
+}
+
+class _LevelSelectViewState extends State<LevelSelectView> {
+  static const _perRow = 3;
+  static const _rowGap = 110.0;
+  static const _uTurn = _rowGap / 2;
+  static const _margin = _uTurn + 28;
+  static const _padding = 80.0;
+
+  final _scroll = ScrollController();
+  bool _positioned = false;
+
+  int get _rows => (widget.levelCount / _perRow).ceil();
+
+  double get _mapHeight => (_rows - 1) * _rowGap + _padding * 2;
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
+
+  /// The list is reversed, so offset 0 is the bottom (level 1).
+  void _focusCurrent(double viewport) {
+    if (_positioned) return;
+    _positioned = true;
+    final current = math.min(widget.cleared + 1, widget.levelCount);
+    final row = (current - 1) ~/ _perRow;
+    final target = _padding + row * _rowGap - viewport / 2;
+    final max = math.max(0.0, _mapHeight - viewport);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scroll.hasClients) _scroll.jumpTo(target.clamp(0.0, max));
+    });
+  }
+
+  void _tap(int n) {
+    if (n > widget.cleared + 1) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text('Clear level ${n - 1} first')));
+      return;
+    }
+    widget.onSelect(n);
+  }
 
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).textTheme;
-    final beltCount = (levelCount / _perBelt).ceil();
     return Column(
       children: [
         Padding(
@@ -34,113 +82,98 @@ class LevelSelectView extends StatelessWidget {
         ),
         Text('Pick a plate', style: t.titleMedium),
         Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              for (var b = 0; b < beltCount; b++) ...[
-                _Belt(
-                  levels: [
-                    for (var n = b * _perBelt + 1;
-                        n <= levelCount && n <= (b + 1) * _perBelt;
-                        n++)
-                      n
+          child: LayoutBuilder(builder: (context, box) {
+            _focusCurrent(box.maxHeight);
+            final w = box.maxWidth;
+            final step = (w - _margin * 2) / (_perRow - 1);
+            // Centre of level n (1-based), y measured from the top of the map.
+            // Odd rows run right-to-left so the belt snakes.
+            Offset centre(int n) {
+              final row = (n - 1) ~/ _perRow;
+              final col = (n - 1) % _perRow;
+              final x = _margin + (row.isOdd ? _perRow - 1 - col : col) * step;
+              return Offset(x, _mapHeight - _padding - row * _rowGap);
+            }
+
+            return SingleChildScrollView(
+              controller: _scroll,
+              reverse: true,
+              child: SizedBox(
+                width: w,
+                height: _mapHeight,
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: CustomPaint(
+                        painter: _PathPainter([
+                          for (var n = 1; n <= widget.levelCount; n++) centre(n)
+                        ]),
+                      ),
+                    ),
+                    for (var n = 1; n <= widget.levelCount; n++)
+                      Positioned(
+                        left: centre(n).dx - 36,
+                        top: centre(n).dy - 49,
+                        child: _Plate(
+                          level: n,
+                          locked: n > widget.cleared + 1,
+                          done: n <= widget.cleared,
+                          current: n == widget.cleared + 1,
+                          onTap: () => _tap(n),
+                        ),
+                      ),
                   ],
-                  cleared: cleared,
-                  onSelect: (n) {
-                    if (n > cleared + 1) {
-                      ScaffoldMessenger.of(context)
-                        ..hideCurrentSnackBar()
-                        ..showSnackBar(SnackBar(
-                            content: Text('Clear level ${n - 1} first')));
-                      return;
-                    }
-                    onSelect(n);
-                  },
                 ),
-                const SizedBox(height: 28),
-              ],
-            ],
-          ),
+              ),
+            );
+          }),
         ),
       ],
     );
   }
 }
 
-class _Belt extends StatelessWidget {
-  const _Belt({
-    required this.levels,
-    required this.cleared,
-    required this.onSelect,
-  });
-
-  final List<int> levels;
-  final int cleared;
-  final ValueChanged<int> onSelect;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 130,
-      child: Stack(
-        children: [
-          const Positioned(
-            left: 0,
-            right: 0,
-            bottom: 8,
-            height: 34,
-            child: CustomPaint(painter: _TrackPainter()),
-          ),
-          Positioned.fill(
-            bottom: 14,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                for (final n in levels)
-                  Expanded(
-                      child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          alignment: Alignment.bottomCenter,
-                          child: _Plate(
-                            level: n,
-                            locked: n > cleared + 1,
-                            done: n <= cleared,
-                            onTap: () => onSelect(n),
-                          ))),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _TrackPainter extends CustomPainter {
-  const _TrackPainter();
+/// Wooden belt that snakes through the level centres.
+class _PathPainter extends CustomPainter {
+  _PathPainter(this.points);
+  final List<Offset> points;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final r =
-        RRect.fromRectAndRadius(Offset.zero & size, const Radius.circular(6));
-    canvas.drawRRect(r, Paint()..color = const Color(0xFF4A3B33));
-    canvas.drawRRect(
-        r,
-        Paint()
-          ..color = const Color(0xFF2B211C)
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 3);
-    final tick = Paint()
-      ..color = const Color(0xFF6D5A4E)
-      ..strokeWidth = 3;
-    const slot = 60.0;
-    for (var x = 0.0; x < size.width + slot; x += slot) {
-      canvas.drawLine(Offset(x, 8), Offset(x - 8, size.height - 8), tick);
+    final path = Path()..moveTo(points.first.dx, points.first.dy);
+    for (var i = 1; i < points.length; i++) {
+      final a = points[i - 1], b = points[i];
+      if (a.dy == b.dy) {
+        path.lineTo(b.dx, b.dy);
+      } else {
+        // U-turn at the end of a row: bulge away from the map centre.
+        final right = a.dx > size.width / 2;
+        path.arcToPoint(b,
+            radius: Radius.circular((a.dy - b.dy).abs() / 2),
+            clockwise: !right);
+      }
+    }
+    Paint stroke(double w, Color c) => Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round
+      ..strokeWidth = w
+      ..color = c;
+    canvas.drawPath(path, stroke(44, const Color(0xFF2B211C)));
+    canvas.drawPath(path, stroke(36, const Color(0xFF4A3B33)));
+    // Dashes like the belt's slats.
+    for (final m in path.computeMetrics()) {
+      for (var d = 0.0; d < m.length; d += 22) {
+        final t = m.getTangentForOffset(d)!;
+        final n = Offset(-t.vector.dy, t.vector.dx);
+        canvas.drawLine(t.position - n * 13, t.position + n * 13,
+            stroke(3, const Color(0xFF6D5A4E)));
+      }
     }
   }
 
   @override
-  bool shouldRepaint(_TrackPainter old) => false;
+  bool shouldRepaint(_PathPainter old) => old.points != points;
 }
 
 class _Plate extends StatelessWidget {
@@ -148,10 +181,14 @@ class _Plate extends StatelessWidget {
       {required this.level,
       required this.locked,
       required this.done,
+      required this.current,
       required this.onTap});
   final int level;
   final bool locked;
   final bool done;
+
+  /// The next level to play: gets a glow.
+  final bool current;
   final VoidCallback onTap;
 
   @override
@@ -163,15 +200,26 @@ class _Plate extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(
+          Container(
             width: 64,
             height: 64,
+            decoration: current
+                ? const BoxDecoration(
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                          color: Color(0xCCFFD54F),
+                          blurRadius: 18,
+                          spreadRadius: 4)
+                    ],
+                  )
+                : null,
             child: locked
                 ? const Icon(Icons.lock, size: 40, color: Colors.black54)
                 : CustomPaint(painter: _SushiPainter(kind)),
           ),
           Container(
-            width: 84,
+            width: 72,
             height: 34,
             alignment: Alignment.center,
             decoration: BoxDecoration(
