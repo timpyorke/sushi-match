@@ -39,6 +39,9 @@ class BoardComponent extends PositionComponent
   static const double cell = 64;
   static const double _hintDelay = 5;
 
+  /// Thickness of the wooden frame drawn round the board.
+  static const double _frame = 26;
+
   final GameEngine engine;
   final void Function() onTurnFinished;
 
@@ -97,7 +100,8 @@ class BoardComponent extends PositionComponent
   @override
   void onGameResize(Vector2 gameSize) {
     super.onGameResize(gameSize);
-    final s = math.min(gameSize.x * 0.96 / size.x, gameSize.y * 0.96 / size.y);
+    final s = math.min(gameSize.x * 0.96 / (size.x + 2 * _frame),
+        gameSize.y * 0.96 / (size.y + 2 * _frame));
     scale = Vector2.all(s);
     position = (gameSize - size * s) / 2;
   }
@@ -123,6 +127,9 @@ class BoardComponent extends PositionComponent
 
   @override
   void render(Canvas canvas) {
+    if (TileArt.ready) {
+      TileArt.frame(canvas, Offset.zero & Size(size.x, size.y), _frame);
+    }
     for (final p in board.positions) {
       final rect = Rect.fromLTWH(p.col * cell, p.row * cell, cell, cell);
       final dark = (p.row + p.col).isOdd;
