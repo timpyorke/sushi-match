@@ -123,7 +123,8 @@ class _LevelSelectScreenState extends ConsumerState<LevelSelectScreen> {
   @override
   Widget build(BuildContext context) {
     final cleared = ref.watch(progressProvider);
-    final maxPlayable = ref.watch(restaurantProvider).maxPlayableLevel;
+    final restaurant = ref.watch(restaurantProvider);
+    final maxPlayable = restaurant.maxPlayableLevel;
     // Rebuild on a language change; L10n reads it statically.
     ref.watch(settingsProvider.select((s) => s.language));
     return Scaffold(
@@ -138,6 +139,7 @@ class _LevelSelectScreenState extends ConsumerState<LevelSelectScreen> {
           child: LevelSelectView(
             levelCount: kLevelCount,
             cleared: cleared,
+            stars: restaurant.best,
             maxPlayable: maxPlayable,
             onShopLocked: (n) {
               final shop = Restaurant.shopOfLevel(n);
@@ -217,6 +219,41 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     return game;
   }
 
+  /// Asks before throwing away a run in progress; finished runs need no ask.
+  Future<bool> _confirmLoss(
+      SushiGame game, String title, String body, String action) async {
+    if (game.hud.value.status != GameStatus.playing) return true;
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(L10n.t(title)),
+        content: Text(L10n.t(body)),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.of(ctx).pop(false),
+              child: Text(L10n.t('cancel'))),
+          FilledButton(
+              onPressed: () => Navigator.of(ctx).pop(true),
+              child: Text(L10n.t(action))),
+        ],
+      ),
+    );
+    return ok ?? false;
+  }
+
+  Future<void> _leave(SushiGame game) async {
+    if (await _confirmLoss(game, 'leaveTitle', 'leaveBody', 'leave') &&
+        mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+
+  Future<void> _restart(SushiGame game) async {
+    if (await _confirmLoss(game, 'restartTitle', 'restartBody', 'restart')) {
+      game.restart();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -239,75 +276,86 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                     : const CircularProgressIndicator(),
               );
             }
-            return Column(
-              children: [
-                Row(
+            return PopScope(
+                canPop: false,
+                onPopInvokedWithResult: (didPop, _) {
+                  if (!didPop) _leave(game);
+                },
+                child: Column(
                   children: [
-                    RoundIconButton(
-                      icon: Icons.arrow_back,
-                      onPressed: () => Navigator.of(context).pop(),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: Row(
+                        children: [
+                          RoundIconButton(
+                            icon: Icons.arrow_back,
+                            onPressed: () => _leave(game),
+                          ),
+                          const SizedBox(width: 8),
+                          RoundIconButton(
+                            icon: Icons.restart_alt,
+                            onPressed: () => _restart(game),
+                          ),
+                          Expanded(child: HudBar(game: game)),
+                        ],
+                      ),
                     ),
                     Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 12),
-                        child: OrderBubble(level: game.level),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          GameWidget(game: game),
+                          PraiseBanner(game: game),
+                          // One tip at a time: the first mechanic of this level
+                          // the player has not been told about yet.
+                          Consumer(
+                            builder: (context, ref, _) {
+                              final tip =
+                                  _tipFor(game.level, ref.watch(tipsProvider));
+                              return tip == null
+                                  ? const SizedBox.shrink()
+                                  : TipOverlay(
+                                      id: tip.$1, emoji: tip.$2, text: tip.$3);
+                            },
+                          ),
+                          ResultOverlay(
+                            game: game,
+                            onLevels: () => Navigator.of(context).pop(),
+                            onNext: widget.levelNumber < kLevelCount &&
+                                    widget.levelNumber <
+                                        ref
+                                            .read(restaurantProvider)
+                                            .maxPlayableLevel
+                                ? () async {
+                                    if (!await ensureLife(context, ref) ||
+                                        !context.mounted) {
+                                      return;
+                                    }
+                                    final starters =
+                                        await pickStarters(context, ref);
+                                    if (starters == null || !context.mounted) {
+                                      return;
+                                    }
+                                    Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                        builder: (_) => GameScreen(
+                                            levelNumber: widget.levelNumber + 1,
+                                            starters: starters),
+                                      ),
+                                    );
+                                  }
+                                : null,
+                          ),
+                        ],
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(12, 4, 12, 0),
+                      child: OrderBubble(level: game.level),
+                    ),
+                    BoosterBar(game: game),
                   ],
-                ),
-                HudBar(game: game),
-                Expanded(
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      GameWidget(game: game),
-                      PraiseBanner(game: game),
-                      // One tip at a time: the first mechanic of this level
-                      // the player has not been told about yet.
-                      Consumer(
-                        builder: (context, ref, _) {
-                          final tip =
-                              _tipFor(game.level, ref.watch(tipsProvider));
-                          return tip == null
-                              ? const SizedBox.shrink()
-                              : TipOverlay(
-                                  id: tip.$1, emoji: tip.$2, text: tip.$3);
-                        },
-                      ),
-                      ResultOverlay(
-                        game: game,
-                        onLevels: () => Navigator.of(context).pop(),
-                        onNext: widget.levelNumber < kLevelCount &&
-                                widget.levelNumber <
-                                    ref
-                                        .read(restaurantProvider)
-                                        .maxPlayableLevel
-                            ? () async {
-                                if (!await ensureLife(context, ref) ||
-                                    !context.mounted) {
-                                  return;
-                                }
-                                final starters =
-                                    await pickStarters(context, ref);
-                                if (starters == null || !context.mounted) {
-                                  return;
-                                }
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: (_) => GameScreen(
-                                        levelNumber: widget.levelNumber + 1,
-                                        starters: starters),
-                                  ),
-                                );
-                              }
-                            : null,
-                      ),
-                    ],
-                  ),
-                ),
-                BoosterBar(game: game),
-              ],
-            );
+                ));
           },
         ),
       ),

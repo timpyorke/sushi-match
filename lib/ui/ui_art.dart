@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 
 import '../services/audio.dart';
 
-/// Sprites cut from assets/ui/particle.png.
+/// Sprites under assets/ui/.
 abstract final class UiArt {
   static const panel = AssetImage('assets/ui/panel.png');
-  static const plank = AssetImage('assets/ui/plank.png');
+  static const heart = AssetImage('assets/ui/heart.png');
   static const buttonRound = AssetImage('assets/ui/button_round.png');
   static const star = AssetImage('assets/ui/star.png');
   static const coin = AssetImage('assets/ui/coin.png');
 
   static const ink = Color(0xFF4A2E1B);
+  static const paper = Color(0xFFFBF1DC);
 
   /// Wooden board with wave corners; stretches without distorting the frame.
   static BoxDecoration panelDecoration() => const BoxDecoration(
@@ -24,13 +25,16 @@ abstract final class UiArt {
         ),
       );
 
-  static BoxDecoration plankDecoration() => const BoxDecoration(
-        image: DecorationImage(
-          image: plank,
-          fit: BoxFit.fill,
-          scale: 5,
-          centerSlice: Rect.fromLTRB(12, 12, 154, 34),
-        ),
+  /// Flat cream chip with a thin ink outline. Replaces the old wood-grain
+  /// plank so only the big panels carry the wood-and-wave frame.
+  static BoxDecoration plankDecoration() => BoxDecoration(
+        color: paper,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: ink.withValues(alpha: 0.55), width: 1.5),
+        boxShadow: const [
+          BoxShadow(
+              color: Color(0x33000000), blurRadius: 4, offset: Offset(0, 2)),
+        ],
       );
 }
 
@@ -82,6 +86,26 @@ class RoundIconButton extends StatelessWidget {
         ),
         child: Icon(icon, color: Colors.white),
       ),
+    );
+  }
+}
+
+/// Red heart sprite followed by an amount.
+class HeartAmount extends StatelessWidget {
+  const HeartAmount(this.text, {super.key, this.size = 20, this.style});
+  final String text;
+  final double size;
+  final TextStyle? style;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Image(image: UiArt.heart, width: size, height: size),
+        const SizedBox(width: 4),
+        Text(text, style: style),
+      ],
     );
   }
 }

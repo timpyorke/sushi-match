@@ -1,24 +1,22 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 
 import '../core/piece.dart';
 import '../game/piece_painter.dart';
 import '../services/audio.dart';
-import '../game/tile_art.dart';
+import '../services/restaurant.dart';
 import 'l10n.dart';
 import 'lives_ui.dart';
 import 'ui_art.dart';
 
-/// Level picker laid out as a tidy serpentine belt: straight rows joined by
-/// U-turns, each row running the opposite way. Level 1 sits at the bottom;
-/// the player scrolls up through the levels. Starts centred on the
-/// level they should play next.
+/// Level picker grouped by Japanese region. Each restaurant is one zone: a
+/// banner (region name, progress, lock state) above a grid of its levels.
+/// Opens scrolled to the zone holding the next level to play.
 class LevelSelectView extends StatefulWidget {
   const LevelSelectView(
       {super.key,
       required this.levelCount,
       required this.cleared,
+      this.stars = const {},
       required this.onSelect,
       this.maxPlayable,
       required this.onShopLocked,
@@ -30,6 +28,9 @@ class LevelSelectView extends StatefulWidget {
 
   /// Highest cleared level; the next one is playable, the rest are locked.
   final int cleared;
+
+  /// Best stars (1-3) per level number.
+  final Map<int, int> stars;
   final ValueChanged<int> onSelect;
 
   /// Highest level whose restaurant is unlocked; null means no limit.
@@ -45,27 +46,24 @@ class LevelSelectView extends StatefulWidget {
   State<LevelSelectView> createState() => _LevelSelectViewState();
 }
 
+/// Banner colours and kanji for a [ShopDef], matched by id.
+class _ZoneStyle {
+  const _ZoneStyle(this.kanji, this.top, this.bottom);
+  final String kanji;
+  final Color top, bottom;
+}
+
+const _zoneStyles = {
+  'tsukiji': _ZoneStyle('東京', Color(0xFF4FA3D1), Color(0xFF2B6E99)),
+  'osaka': _ZoneStyle('大阪', Color(0xFFF08A3C), Color(0xFFC25A16)),
+  'kyoto': _ZoneStyle('京都', Color(0xFFE56B8F), Color(0xFFB03A60)),
+  'hokkaido': _ZoneStyle('北海道', Color(0xFF6FC3C9), Color(0xFF3A8A98)),
+};
+
 class _LevelSelectViewState extends State<LevelSelectView> {
-  static const _perRow = 3;
-  static const _rowGap = 112.0;
-  static const _uTurn = _rowGap / 2;
-  static const _margin = _uTurn + 32;
-  static const _padding = 80.0;
-
   final _scroll = ScrollController();
+  final _currentKey = GlobalKey();
   bool _positioned = false;
-
-  @override
-  void initState() {
-    super.initState();
-    TileArt.load().then((_) {
-      if (mounted) setState(() {});
-    });
-  }
-
-  int get _rows => (widget.levelCount / _perRow).ceil();
-
-  double get _mapHeight => (_rows - 1) * _rowGap + _padding * 2;
 
   @override
   void dispose() {
@@ -73,17 +71,14 @@ class _LevelSelectViewState extends State<LevelSelectView> {
     super.dispose();
   }
 
-  /// The list is reversed, so offset 0 is the bottom (level 1).
-  void _focusCurrent(double viewport) {
+  void _focusCurrent() {
     if (_positioned) return;
     _positioned = true;
-    final current = math.min(widget.cleared + 1,
-        math.min(widget.levelCount, widget.maxPlayable ?? widget.levelCount));
-    final row = (current - 1) ~/ _perRow;
-    final target = _padding + row * _rowGap - viewport / 2;
-    final max = math.max(0.0, _mapHeight - viewport);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scroll.hasClients) _scroll.jumpTo(target.clamp(0.0, max));
+      final ctx = _currentKey.currentContext;
+      if (ctx != null && ctx.mounted) {
+        Scrollable.ensureVisible(ctx, alignment: 0.1);
+      }
     });
   }
 
@@ -108,6 +103,8 @@ class _LevelSelectViewState extends State<LevelSelectView> {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).textTheme;
+    final next = widget.cleared + 1;
+    _focusCurrent();
     return Column(
       children: [
         Row(
@@ -150,155 +147,167 @@ class _LevelSelectViewState extends State<LevelSelectView> {
         ),
         Text(L10n.t('pickPlate'), style: t.titleMedium),
         Expanded(
-          child: LayoutBuilder(builder: (context, box) {
-            _focusCurrent(box.maxHeight);
-            final w = box.maxWidth;
-            final step = (w - _margin * 2) / (_perRow - 1);
-            // Centre of level n (1-based), y measured from the top of the map.
-            // Odd rows run right-to-left so the belt snakes.
-            Offset centre(int n) {
-              final row = (n - 1) ~/ _perRow;
-              final col = (n - 1) % _perRow;
-              final x = _margin + (row.isOdd ? _perRow - 1 - col : col) * step;
-              return Offset(x, _mapHeight - _padding - row * _rowGap);
-            }
-
-            return SingleChildScrollView(
-              controller: _scroll,
-              reverse: true,
-              child: SizedBox(
-                width: w,
-                height: _mapHeight,
-                child: Stack(
-                  children: [
-                    Positioned.fill(
-                      child: CustomPaint(
-                        painter: _PathPainter([
-                          for (var n = 1; n <= widget.levelCount; n++) centre(n)
-                        ], _rows, _rowGap, _mapHeight - _padding, _uTurn,
-                            _margin),
-                      ),
+          child: SingleChildScrollView(
+            controller: _scroll,
+            padding: const EdgeInsets.fromLTRB(12, 12, 12, 24),
+            child: Column(
+              children: [
+                for (final shop in Restaurant.shops)
+                  if (shop.firstLevel <= widget.levelCount)
+                    _ZoneSection(
+                      key: next >= shop.firstLevel && next <= shop.lastLevel
+                          ? _currentKey
+                          : null,
+                      shop: shop,
+                      levelCount: widget.levelCount,
+                      cleared: widget.cleared,
+                      stars: widget.stars,
+                      locked: _shopLocked(shop.firstLevel),
+                      onTap: _tap,
                     ),
-                    for (var n = 1; n <= widget.levelCount; n++)
-                      Positioned(
-                        left: centre(n).dx - 36,
-                        top: centre(n).dy - 49,
-                        child: _Plate(
-                          level: n,
-                          locked: n > widget.cleared + 1 || _shopLocked(n),
-                          done: n <= widget.cleared,
-                          current: n == widget.cleared + 1 && !_shopLocked(n),
-                          onTap: () => _tap(n),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            );
-          }),
+              ],
+            ),
+          ),
         ),
       ],
     );
   }
 }
 
-/// Wooden belt that snakes through the level centres.
-class _PathPainter extends CustomPainter {
-  _PathPainter(
-      this.points, this.rows, this.rowGap, this.baseY, this.tile, this.margin);
-  final List<Offset> points;
-  final int rows;
-  final double rowGap, baseY, tile, margin;
+/// One region: banner plus a 5-wide grid of its levels.
+class _ZoneSection extends StatelessWidget {
+  const _ZoneSection(
+      {super.key,
+      required this.shop,
+      required this.levelCount,
+      required this.cleared,
+      required this.stars,
+      required this.locked,
+      required this.onTap});
+  final ShopDef shop;
+  final int levelCount, cleared;
+  final Map<int, int> stars;
+  final bool locked;
+  final ValueChanged<int> onTap;
 
-  /// Belt built from tileset01: straights along each row, corner tiles at
-  /// the U-turns and a rounded cap at both ends of the whole belt.
-  void _paintTiles(Canvas canvas, Size size) {
-    final s = tile;
-    final xl = margin - s, xr = size.width - margin + s;
-    final n = math.max(2, ((xr - xl) / s).round());
-    final dx = (xr - xl) / n;
-    for (var r = 0; r < rows; r++) {
-      final y = baseY - r * rowGap;
-      final first = r == 0, last = r == rows - 1;
-      for (var i = 0; i <= n; i++) {
-        final c = Offset(xl + i * dx, y);
-        if (i > 0 && i < n) {
-          TileArt.mapTile(canvas, MapTile.straight, c, dx + 0.6, s);
-        } else if (i == 0) {
-          if (first || (last && r.isOdd)) {
-            TileArt.mapTile(canvas, MapTile.cap, c, s, s, flipX: true);
-          } else if (r.isOdd) {
-            TileArt.mapTile(canvas, MapTile.corner, c, s, s, rot: math.pi);
-          } else {
-            TileArt.mapTile(canvas, MapTile.corner, c, s, s, flipX: true);
-          }
-        } else if (last && r.isEven) {
-          TileArt.mapTile(canvas, MapTile.cap, c, s, s);
-        } else if (r.isEven) {
-          TileArt.mapTile(canvas, MapTile.corner, c, s, s, flipY: true);
-        } else {
-          TileArt.mapTile(canvas, MapTile.corner, c, s, s);
-        }
-      }
-      if (last) continue;
-      final x = r.isEven ? xr : xl;
-      TileArt.mapTile(canvas, MapTile.straight, Offset(x, y - s), s, s + 0.6,
-          rot: math.pi / 2);
-    }
-  }
+  static const _perRow = 5;
 
   @override
-  void paint(Canvas canvas, Size size) {
-    if (TileArt.ready) {
-      _paintTiles(canvas, size);
-      return;
-    }
-    final path = Path()..moveTo(points.first.dx, points.first.dy);
-    for (var i = 1; i < points.length; i++) {
-      final a = points[i - 1], b = points[i];
-      if (a.dy == b.dy) {
-        path.lineTo(b.dx, b.dy);
-      } else {
-        // U-turn at the end of a row: bulge away from the map centre.
-        final right = a.dx > size.width / 2;
-        path.arcToPoint(b,
-            radius: Radius.circular((a.dy - b.dy).abs() / 2),
-            clockwise: !right);
-      }
-    }
-    Paint stroke(double w, Color c) => Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round
-      ..strokeWidth = w
-      ..color = c;
-    canvas.drawPath(path, stroke(44, const Color(0xFF2B211C)));
-    canvas.drawPath(path, stroke(36, const Color(0xFF4A3B33)));
-    // Dashes like the belt's slats.
-    for (final m in path.computeMetrics()) {
-      for (var d = 0.0; d < m.length; d += 22) {
-        final t = m.getTangentForOffset(d)!;
-        final n = Offset(-t.vector.dy, t.vector.dx);
-        canvas.drawLine(t.position - n * 13, t.position + n * 13,
-            stroke(3, const Color(0xFF6D5A4E)));
-      }
-    }
+  Widget build(BuildContext context) {
+    final t = Theme.of(context).textTheme;
+    final style = _zoneStyles[shop.id]!;
+    final last = shop.lastLevel < levelCount ? shop.lastLevel : levelCount;
+    final total = last - shop.firstLevel + 1;
+    final done = (cleared - (shop.firstLevel - 1)).clamp(0, total);
+    final top = locked ? Colors.blueGrey.shade300 : style.top;
+    final bottom = locked ? Colors.blueGrey.shade500 : style.bottom;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 18),
+      child: Container(
+        decoration: BoxDecoration(
+          color: UiArt.paper,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: bottom, width: 3),
+          boxShadow: const [
+            BoxShadow(
+                color: Colors.black38, blurRadius: 6, offset: Offset(0, 3))
+          ],
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [top, bottom]),
+              ),
+              child: Row(
+                children: [
+                  Text(shop.emoji, style: const TextStyle(fontSize: 32)),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(L10n.t('zone_${shop.id}'),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: t.titleMedium?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold)),
+                        Text(L10n.t(shop.nameKey),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style:
+                                t.bodySmall?.copyWith(color: Colors.white70)),
+                      ],
+                    ),
+                  ),
+                  Text(style.kanji,
+                      style: t.titleLarge?.copyWith(
+                          color: Colors.white54, fontWeight: FontWeight.bold)),
+                  const SizedBox(width: 10),
+                  if (locked)
+                    const Icon(Icons.lock_outline, color: Colors.white)
+                  else
+                    Text('$done/$total',
+                        style: t.titleMedium?.copyWith(
+                            color: Colors.white, fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: LayoutBuilder(builder: (context, box) {
+                final cell = box.maxWidth / _perRow;
+                return Wrap(
+                  children: [
+                    for (var n = shop.firstLevel; n <= last; n++)
+                      SizedBox(
+                        width: cell,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: _Plate(
+                            level: n,
+                            size: (cell - 10).clamp(36.0, 56.0),
+                            locked: n > cleared + 1 || locked,
+                            done: n <= cleared,
+                            stars: stars[n] ?? 0,
+                            current: n == cleared + 1 && !locked,
+                            onTap: () => onTap(n),
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              }),
+            ),
+          ],
+        ),
+      ),
+    );
   }
-
-  @override
-  bool shouldRepaint(_PathPainter old) => true;
 }
 
 class _Plate extends StatelessWidget {
   const _Plate(
       {required this.level,
+      required this.size,
       required this.locked,
       required this.done,
+      required this.stars,
       required this.current,
       required this.onTap});
   final int level;
+  final double size;
   final bool locked;
   final bool done;
+
+  /// Best stars earned on this level (0-3).
+  final int stars;
 
   /// The next level to play: gets a glow.
   final bool current;
@@ -314,8 +323,8 @@ class _Plate extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 64,
-            height: 64,
+            width: size,
+            height: size,
             decoration: current
                 ? const BoxDecoration(
                     shape: BoxShape.circle,
@@ -328,40 +337,50 @@ class _Plate extends StatelessWidget {
                   )
                 : null,
             child: locked
-                ? const Icon(Icons.lock, size: 40, color: Colors.black54)
+                ? Icon(Icons.lock, size: size * 0.6, color: Colors.black54)
                 : CustomPaint(painter: _SushiPainter(kind)),
           ),
+          const SizedBox(height: 2),
           Container(
-            width: 72,
-            height: 34,
+            width: size + 4,
+            height: 28,
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: locked ? Colors.grey.shade400 : Colors.white,
-              borderRadius: BorderRadius.circular(17),
+              borderRadius: BorderRadius.circular(14),
               border: Border.all(
                   color:
                       locked ? Colors.grey.shade600 : const Color(0xFFB71C2C),
-                  width: 3),
-              boxShadow: const [
-                BoxShadow(
-                    color: Colors.black38, blurRadius: 4, offset: Offset(0, 3))
-              ],
+                  width: 2.5),
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('$level',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(fontWeight: FontWeight.bold)),
-                if (done) ...[
-                  const SizedBox(width: 4),
-                  const StarIcon(size: 20),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('$level',
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(fontWeight: FontWeight.bold)),
                 ],
-              ],
+              ),
             ),
           ),
+          if (done)
+            Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (var i = 1; i <= 3; i++)
+                    StarIcon(
+                        size: (size / 3).clamp(10.0, 16.0), lit: i <= stars),
+                ],
+              ),
+            )
+          else
+            SizedBox(height: (size / 3).clamp(10.0, 16.0) + 2),
         ],
       ),
     );

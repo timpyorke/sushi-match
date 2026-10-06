@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/game_engine.dart';
-import '../core/level.dart';
-import '../game/piece_painter.dart';
 import '../game/sushi_game.dart';
 import '../services/wallet.dart';
 import 'customer_order.dart';
@@ -12,6 +10,8 @@ import 'lives_ui.dart';
 import 'shop_screen.dart';
 import 'ui_art.dart';
 
+/// Moves left plus the score as a bar that fills toward the third star, with
+/// each star sitting at the score that earns it.
 class HudBar extends StatelessWidget {
   const HudBar({super.key, required this.game});
   final SushiGame game;
@@ -20,52 +20,79 @@ class HudBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueListenableBuilder<HudState>(
       valueListenable: game.hud,
-      builder: (context, s, _) => Padding(
-        padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-        child: Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            _Chip(label: L10n.t('moves'), value: '${s.movesLeft}'),
-            _Chip(label: L10n.t('score'), value: '${s.score}'),
-            for (final g in s.goals)
-              _Chip(
-                label: _goalLabel(g.goal),
-                value: '${g.current.clamp(0, g.goal.count)}/${g.goal.count}',
-                color: g.goal.piece == null
-                    ? null
-                    : PiecePainter.colors[g.goal.piece!],
-                done: g.done,
-              ),
-          ],
-        ),
+      builder: (context, s, _) => Row(
+        children: [
+          _Chip(label: L10n.t('moves'), value: '${s.movesLeft}'),
+          const SizedBox(width: 8),
+          Expanded(
+              child: _ScoreStars(score: s.score, thresholds: game.level.stars)),
+        ],
       ),
     );
   }
+}
 
-  static String _goalLabel(LevelGoal g) => switch (g.type) {
-        GoalType.collect => L10n.t(g.piece!.name),
-        GoalType.score => L10n.t('target'),
-        GoalType.clearNori => L10n.t('nori'),
-        GoalType.breakIce => L10n.t('ice'),
-        GoalType.breakBag => L10n.t('bag'),
-        GoalType.deliver => L10n.t('deliver'),
-        GoalType.clearMats => L10n.t('mat'),
-        GoalType.putOut => L10n.t('fire'),
-        GoalType.shooCats => L10n.t('cat'),
-      };
+class _ScoreStars extends StatelessWidget {
+  const _ScoreStars({required this.score, required this.thresholds});
+  final int score;
+  final List<int> thresholds;
+
+  static const _star = 26.0;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context).textTheme;
+    final top = thresholds.isEmpty ? 1 : thresholds.last;
+    final fill = (score / top).clamp(0.0, 1.0);
+    return Container(
+      padding: const EdgeInsets.fromLTRB(14, 6, 14, 8),
+      decoration: UiArt.plankDecoration(),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('${L10n.t('score')} $score',
+              style: t.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold, color: UiArt.ink)),
+          const SizedBox(height: 2),
+          LayoutBuilder(builder: (context, box) {
+            final w = box.maxWidth - _star;
+            return SizedBox(
+              height: _star,
+              child: Stack(
+                alignment: Alignment.centerLeft,
+                children: [
+                  Positioned(
+                    left: _star / 2,
+                    right: _star / 2,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(6),
+                      child: LinearProgressIndicator(
+                        value: fill,
+                        minHeight: 10,
+                        backgroundColor: Colors.black26,
+                        color: const Color(0xFFFFB300),
+                      ),
+                    ),
+                  ),
+                  for (final th in thresholds)
+                    Positioned(
+                      left: w * (th / top),
+                      child: StarIcon(size: _star, lit: score >= th),
+                    ),
+                ],
+              ),
+            );
+          }),
+        ],
+      ),
+    );
+  }
 }
 
 class _Chip extends StatelessWidget {
-  const _Chip(
-      {required this.label,
-      required this.value,
-      this.color,
-      this.done = false});
+  const _Chip({required this.label, required this.value});
   final String label;
   final String value;
-  final Color? color;
-  final bool done;
 
   @override
   Widget build(BuildContext context) {
@@ -76,25 +103,8 @@ class _Chip extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (color != null) ...[
-                Container(
-                  width: 10,
-                  height: 10,
-                  decoration: BoxDecoration(
-                    color: color,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: UiArt.ink, width: 1.5),
-                  ),
-                ),
-                const SizedBox(width: 4),
-              ],
-              Text(label, style: t.labelSmall?.copyWith(color: UiArt.ink)),
-            ],
-          ),
-          Text(done ? '✓' : value,
+          Text(label, style: t.labelSmall?.copyWith(color: UiArt.ink)),
+          Text(value,
               style: t.titleMedium
                   ?.copyWith(fontWeight: FontWeight.bold, color: UiArt.ink)),
         ],
@@ -302,10 +312,12 @@ class BoosterBar extends ConsumerWidget {
                       icon: icon,
                       label: L10n.t(key),
                       stock: wallet.count(b),
-                      price: Wallet.cost[b]!,
                       active: armed == b,
-                      enabled: playing && wallet.canUse(b),
-                      onTap: () => game.tapBooster(b),
+                      enabled: playing,
+                      // Out of stock: the "+" opens the shop to buy more.
+                      onTap: wallet.count(b) > 0
+                          ? () => game.tapBooster(b)
+                          : () => showBoosterShopSheet(context),
                     )),
                   _ShopButton(
                       enabled: playing,
@@ -325,14 +337,12 @@ class _BoosterButton extends StatelessWidget {
       {required this.icon,
       required this.label,
       required this.stock,
-      required this.price,
       required this.active,
       required this.enabled,
       required this.onTap});
   final String icon;
   final String label;
   final int stock;
-  final int price;
   final bool active;
   final bool enabled;
   final VoidCallback onTap;
@@ -359,19 +369,11 @@ class _BoosterButton extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(color: UiArt.ink, fontSize: 11)),
-              if (stock > 0)
-                Text('×$stock',
-                    style: const TextStyle(
-                        color: UiArt.ink,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold))
-              else
-                CoinAmount(price,
-                    size: 14,
-                    style: const TextStyle(
-                        color: UiArt.ink,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold)),
+              Text(stock > 0 ? '×$stock' : '+',
+                  style: const TextStyle(
+                      color: UiArt.ink,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold)),
             ],
           ),
         ),

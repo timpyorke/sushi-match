@@ -19,12 +19,21 @@ void main() {
 
   testWidgets('clearing a level unlocks the next', (WidgetTester tester) async {
     await tester.pumpWidget(scope(
-        testContainer(store: MemoryStore({'cleared_level': 3})),
+        testContainer(
+            store: MemoryStore({
+          'cleared_level': 3,
+          'stars_1': 3,
+          'stars_2': 1,
+          'stars_3': 2
+        })),
         const SushiMatchApp()));
     await tester.pump();
 
     expect(find.byIcon(Icons.lock), findsNWidgets(56));
-    expect(find.byType(StarIcon), findsNWidgets(3));
+    // Three stars under each cleared level, lit by the best result.
+    expect(find.byType(StarIcon), findsNWidgets(9));
+    expect(find.byWidgetPredicate((w) => w is StarIcon && w.lit),
+        findsNWidgets(6));
   });
 }
 

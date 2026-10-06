@@ -127,8 +127,8 @@ class _WalletBarState extends ConsumerState<WalletBar> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _pill(Text(
-            '❤️ ${wallet.lives}'
+        _pill(HeartAmount(
+            '${wallet.lives}'
             '${left == null ? '' : '  ${_mmss(left)}'}',
             style: _pillStyle)),
         const SizedBox(width: 8),
