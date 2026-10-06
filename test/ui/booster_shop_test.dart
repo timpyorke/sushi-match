@@ -11,6 +11,10 @@ void main() {
 
   testWidgets('lists every booster and buying one adds it to the stock',
       (tester) async {
+    // Cards are tall; make room so the lazy list builds every one.
+    tester.view.physicalSize = const Size(800, 3200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
     final c = testContainer();
     await tester
         .pumpWidget(scope(c, const MaterialApp(home: BoosterShopScreen())));

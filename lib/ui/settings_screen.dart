@@ -6,6 +6,7 @@ import '../services/daily_reward.dart';
 import '../services/restaurant.dart';
 import '../services/tips.dart';
 import '../core/settings.dart';
+import 'game_dialog.dart';
 import 'l10n.dart';
 import 'ui_art.dart';
 
@@ -15,16 +16,17 @@ class SettingsScreen extends ConsumerWidget {
   Future<void> _confirmReset(BuildContext context, WidgetRef ref) async {
     final ok = await showDialog<bool>(
       context: context,
-      builder: (_) => AlertDialog(
-        title: Text(L10n.t('resetTitle')),
-        content: Text(L10n.t('resetBody')),
+      builder: (_) => GameDialog(
+        title: L10n.t('resetTitle'),
+        content: Text(L10n.t('resetBody'), textAlign: TextAlign.center),
         actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: Text(L10n.t('cancel'))),
-          TextButton(
+          GameDialogButton(
+              primary: true,
               onPressed: () => Navigator.pop(context, true),
-              child: Text(L10n.t('reset'))),
+              label: L10n.t('reset')),
+          GameDialogButton(
+              onPressed: () => Navigator.pop(context, false),
+              label: L10n.t('cancel')),
         ],
       ),
     );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../services/daily_reward.dart';
+import 'game_dialog.dart';
 import 'l10n.dart';
 import 'ui_art.dart';
 
@@ -42,10 +43,11 @@ class _DailyRewardDialogState extends ConsumerState<DailyRewardDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text('🎁 ${L10n.t('dailyTitle')}'),
+    return GameDialog(
+      title: '🎁 ${L10n.t('dailyTitle')}',
+      width: 360,
       content: SizedBox(
-        width: 320,
+        width: 280,
         child: Wrap(
           spacing: 8,
           runSpacing: 8,
@@ -62,11 +64,14 @@ class _DailyRewardDialogState extends ConsumerState<DailyRewardDialog> {
       ),
       actions: [
         _claimed
-            ? FilledButton(
+            ? GameDialogButton(
+                primary: true,
                 onPressed: () => Navigator.pop(context),
                 child: const Icon(Icons.check))
-            : FilledButton(
-                onPressed: _claim, child: Text(L10n.t('dailyClaim'))),
+            : GameDialogButton(
+                primary: true,
+                onPressed: _claim,
+                label: L10n.t('dailyClaim')),
       ],
     );
   }

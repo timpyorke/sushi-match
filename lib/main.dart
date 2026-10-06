@@ -16,6 +16,7 @@ import 'services/store.dart';
 import 'services/wallet.dart';
 import 'ui/daily_reward_dialog.dart';
 import 'ui/customer_order.dart';
+import 'ui/game_dialog.dart';
 import 'ui/hud.dart';
 import 'services/restaurant.dart';
 import 'services/tips.dart';
@@ -225,16 +226,17 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     if (game.hud.value.status != GameStatus.playing) return true;
     final ok = await showDialog<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(L10n.t(title)),
-        content: Text(L10n.t(body)),
+      builder: (ctx) => GameDialog(
+        title: L10n.t(title),
+        content: Text(L10n.t(body), textAlign: TextAlign.center),
         actions: [
-          TextButton(
-              onPressed: () => Navigator.of(ctx).pop(false),
-              child: Text(L10n.t('cancel'))),
-          FilledButton(
+          GameDialogButton(
+              primary: true,
               onPressed: () => Navigator.of(ctx).pop(true),
-              child: Text(L10n.t(action))),
+              label: L10n.t(action)),
+          GameDialogButton(
+              onPressed: () => Navigator.of(ctx).pop(false),
+              label: L10n.t('cancel')),
         ],
       ),
     );

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../services/store.dart';
 import '../services/wallet.dart';
+import 'game_dialog.dart';
 import 'l10n.dart';
 import 'ui_art.dart';
 
@@ -61,8 +62,8 @@ class _NoLivesState extends ConsumerState<_NoLives> {
       });
     }
     final left = wallet.nextLifeIn(ref.read(clockProvider)());
-    return AlertDialog(
-      title: Text('💔 ${L10n.t('outOfLives')}'),
+    return GameDialog(
+      title: '💔 ${L10n.t('outOfLives')}',
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -76,17 +77,17 @@ class _NoLivesState extends ConsumerState<_NoLives> {
         ],
       ),
       actions: [
-        TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(L10n.t('wait'))),
-        FilledButton(
+        GameDialogButton(
+          primary: true,
           onPressed: () {
             if (!ref.read(walletProvider.notifier).refillLifeWithCoins()) {
               setState(() => _broke = true);
             }
           },
-          child: Text(L10n.t('refill', {'n': Wallet.lifeRefillCost})),
+          label: L10n.t('refill', {'n': Wallet.lifeRefillCost}),
         ),
+        GameDialogButton(
+            onPressed: () => Navigator.pop(context), label: L10n.t('wait')),
       ],
     );
   }

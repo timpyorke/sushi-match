@@ -157,7 +157,8 @@ class _Card extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(14),
+      // Wave corners of the panel frame eat ~25px, keep content clear of them.
+      padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 26),
       decoration: UiArt.panelDecoration(),
       child: DefaultTextStyle.merge(
         style: const TextStyle(color: UiArt.ink),
