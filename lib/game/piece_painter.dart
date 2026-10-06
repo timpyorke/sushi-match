@@ -16,7 +16,16 @@ abstract final class PiecePainter {
     PieceKind.ikura: Color(0xFFFF5A36),
     PieceKind.ebi: Color(0xFFFF9EB5),
     PieceKind.kappa: Color(0xFF4CAF50),
+    PieceKind.unagi: Color(0xFF8D5524),
+    PieceKind.hotate: Color(0xFFCDB4DB),
+    PieceKind.ika: Color(0xFF8EC9E8),
+    PieceKind.tako: Color(0xFF3F51B5),
   };
+
+  /// Kinds with a sprite (first sheet, then second sheet); later kinds are
+  /// vector-only.
+  static const spriteKinds = 10;
+  static const _sheet1Kinds = 6;
 
   static final _eye = Paint()..color = const Color(0xFF3B2A20);
   static final _white = Paint()..color = const Color(0xFFFFFFFF);
@@ -29,13 +38,18 @@ abstract final class PiecePainter {
   static const _sheetAsset = 'assets/sushi/sushi.png';
   static Image? _sheet;
 
+  static const _sheet2Asset = 'assets/sushi/sushi02.png';
+  static Image? _sheet2;
+
   static const _powerAsset = 'assets/sushi/power-item.png';
   static Image? _power;
 
-  /// Loads the sprite sheet (3 columns x 2 rows, in [PieceKind] order).
-  /// Until it finishes, pieces fall back to the vector art.
+  /// Loads the sprite sheets: sushi.png (3 columns x 2 rows) holds the first
+  /// six [PieceKind]s, sushi02.png (2x2) the next four. Until they finish,
+  /// pieces fall back to the vector art.
   static Future<void> loadSprites() async {
     _sheet ??= await _decode(_sheetAsset);
+    _sheet2 ??= await _decode(_sheet2Asset);
     _power ??= await _decode(_powerAsset);
   }
 
@@ -92,12 +106,18 @@ abstract final class PiecePainter {
   }
 
   static void _sprite(Canvas canvas, Rect dst, PieceKind kind) {
-    final sheet = _sheet!;
-    final cw = sheet.width / 3, ch = sheet.height / 2;
-    final i = kind.index;
-    final src = Rect.fromLTWH((i % 3) * cw, (i ~/ 3) * ch, cw, ch);
+    final second = kind.index >= _sheet1Kinds;
+    final sheet = second ? _sheet2! : _sheet!;
+    final cols = second ? 2 : 3;
+    final cw = sheet.width / cols, ch = sheet.height / 2;
+    final i = second ? kind.index - _sheet1Kinds : kind.index;
+    final src = Rect.fromLTWH((i % cols) * cw, (i ~/ cols) * ch, cw, ch);
+    // Sheet cells aren't always square; fit the cell into [dst] undistorted.
+    final k = math.min(dst.width / cw, dst.height / ch);
+    final fitted =
+        Rect.fromCenter(center: dst.center, width: cw * k, height: ch * k);
     canvas.drawImageRect(
-        sheet, src, dst, Paint()..filterQuality = FilterQuality.medium);
+        sheet, src, fitted, Paint()..filterQuality = FilterQuality.medium);
   }
 
   /// Delivery ingredient: a smiling rice ball on a golden glow.
@@ -153,15 +173,18 @@ abstract final class PiecePainter {
       return;
     }
 
-    if (_sheet != null) {
+    if (_sheet != null && _sheet2 != null) {
       if (special != null && _power != null) {
         _specialSprite(canvas, s, kind, special);
-      } else {
+        _symbol(canvas, s, kind);
+        return;
+      }
+      if (kind.index < spriteKinds) {
         _sprite(canvas, Rect.fromLTWH(0, 0, s, s), kind);
         _special(canvas, s, body, c, special);
+        _symbol(canvas, s, kind);
+        return;
       }
-      _symbol(canvas, s, kind);
-      return;
     }
 
     final fill = Paint()..color = colors[kind]!;
@@ -214,6 +237,85 @@ abstract final class PiecePainter {
         canvas.drawCircle(c, body.width / 2, _nori);
         canvas.drawCircle(c, body.width * 0.38, _white);
         canvas.drawCircle(c, body.width * 0.2, fill);
+      case PieceKind.unagi:
+        final slab = Rect.fromCenter(
+            center: c, width: body.width, height: body.height * 0.62);
+        final rr = RRect.fromRectAndRadius(slab, Radius.circular(s * 0.14));
+        canvas.drawRRect(rr, fill);
+        canvas.save();
+        canvas.clipRRect(rr);
+        final sauce = Paint()
+          ..color = const Color(0xCC2B1408)
+          ..strokeWidth = s * 0.06;
+        for (var i = -1; i <= 1; i++) {
+          final x = c.dx + i * s * 0.26;
+          canvas.drawLine(Offset(x - s * 0.1, slab.bottom),
+              Offset(x + s * 0.1, slab.top), sauce);
+        }
+        canvas.restore();
+        canvas.drawRect(
+            Rect.fromCenter(center: c, width: s * 0.1, height: slab.height),
+            _nori);
+      case PieceKind.hotate:
+        final base = Offset(c.dx, body.bottom - s * 0.04);
+        final fan = Path()
+          ..moveTo(base.dx, base.dy)
+          ..arcTo(Rect.fromCircle(center: base, radius: body.width * 0.55),
+              math.pi * 1.1, math.pi * 0.8, false)
+          ..close();
+        canvas.drawPath(fan, fill);
+        final rib = Paint()
+          ..color = const Color(0xFF9B7FB5)
+          ..strokeWidth = s * 0.03;
+        for (var i = 0; i < 5; i++) {
+          final a = math.pi * (1.1 + 0.8 * (i + 0.5) / 5);
+          canvas.drawLine(
+              base, base + Offset(math.cos(a), math.sin(a)) * (s * 0.44), rib);
+        }
+        canvas.drawPath(fan, _outline);
+      case PieceKind.ika:
+        final rr = RRect.fromRectAndRadius(body, Radius.circular(s * 0.12));
+        canvas.drawRRect(rr, fill);
+        canvas.save();
+        canvas.clipRRect(rr);
+        final cut = Paint()
+          ..color = const Color(0xCCFFFFFF)
+          ..strokeWidth = s * 0.035;
+        for (var i = -3; i <= 3; i++) {
+          final d = i * s * 0.2;
+          canvas.drawLine(Offset(body.left + d, body.top),
+              Offset(body.left + d + body.height, body.bottom), cut);
+          canvas.drawLine(Offset(body.right + d, body.top),
+              Offset(body.right + d - body.height, body.bottom), cut);
+        }
+        canvas.restore();
+      case PieceKind.tako:
+        final head = Rect.fromCenter(
+            center: Offset(c.dx, c.dy - s * 0.1),
+            width: body.width,
+            height: body.height * 0.75);
+        canvas.drawArc(head, math.pi, math.pi, true, fill);
+        final legs = Paint()
+          ..color = fill.color
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = s * 0.15
+          ..strokeCap = StrokeCap.round;
+        for (var i = 0; i < 3; i++) {
+          final x = body.left + body.width * (0.2 + 0.3 * i);
+          canvas.drawPath(
+              Path()
+                ..moveTo(x, c.dy - s * 0.1)
+                ..quadraticBezierTo(x + s * 0.1 * (i.isEven ? 1 : -1),
+                    c.dy + s * 0.2, x, body.bottom - s * 0.04),
+              legs);
+        }
+        final sucker = Paint()..color = const Color(0xCCFFFFFF);
+        for (var i = 0; i < 3; i++) {
+          canvas.drawCircle(
+              Offset(body.left + body.width * (0.2 + 0.3 * i), c.dy + s * 0.16),
+              s * 0.03,
+              sucker);
+        }
     }
 
     // Kawaii eyes.
@@ -264,6 +366,44 @@ abstract final class PiecePainter {
         path
           ..addRect(Rect.fromCenter(center: c, width: r * 2, height: t * 2))
           ..addRect(Rect.fromCenter(center: c, width: t * 2, height: r * 2));
+      case PieceKind.unagi:
+        for (var i = 0; i < 6; i++) {
+          final a = i * math.pi / 3;
+          final pt = c + Offset(math.cos(a), math.sin(a)) * (r * 1.1);
+          i == 0 ? path.moveTo(pt.dx, pt.dy) : path.lineTo(pt.dx, pt.dy);
+        }
+        path.close();
+      case PieceKind.hotate:
+        path
+          ..moveTo(c.dx - r, c.dy + r * 0.7)
+          ..arcTo(
+              Rect.fromCircle(center: Offset(c.dx, c.dy + r * 0.7), radius: r),
+              math.pi,
+              math.pi,
+              false)
+          ..close();
+      case PieceKind.ika:
+        for (var i = 0; i < 5; i++) {
+          final a = -math.pi / 2 + i * 2 * math.pi / 5;
+          final pt = c + Offset(math.cos(a), math.sin(a)) * (r * 1.15);
+          i == 0 ? path.moveTo(pt.dx, pt.dy) : path.lineTo(pt.dx, pt.dy);
+        }
+        path.close();
+      case PieceKind.tako:
+        final t = r * 0.34;
+        path
+          ..addPolygon([
+            c + Offset(-r, -r + t),
+            c + Offset(-r + t, -r),
+            c + Offset(r, r - t),
+            c + Offset(r - t, r),
+          ], true)
+          ..addPolygon([
+            c + Offset(r, -r + t),
+            c + Offset(r - t, -r),
+            c + Offset(-r, r - t),
+            c + Offset(-r + t, r),
+          ], true);
     }
     canvas.drawPath(path, _symbolFill);
     canvas.drawPath(path, _outline);

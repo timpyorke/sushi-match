@@ -1,4 +1,17 @@
-enum PieceKind { salmon, maguro, tamago, ikura, ebi, kappa }
+/// Declaration order matters: the first [PiecePainter.spriteKinds] values index
+/// cells of the sprite sheet, so new kinds are appended at the end.
+enum PieceKind {
+  salmon,
+  maguro,
+  tamago,
+  ikura,
+  ebi,
+  kappa,
+  unagi,
+  hotate,
+  ika,
+  tako
+}
 
 enum SpecialType {
   /// Chef Knife from a horizontal 4 — clears the whole row.

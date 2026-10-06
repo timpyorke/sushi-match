@@ -27,9 +27,9 @@
     "tamago",
     "ikura",
     "ebi",
-    "kappa"
+    "tako"
   ],
-  "moves": 38,
+  "moves": 42,
   "goals": [
     {
       "type": "clear_mats"
@@ -37,19 +37,19 @@
     {
       "type": "collect",
       "piece": "maguro",
-      "count": 42
+      "count": 50
     },
     {
       "type": "collect",
       "piece": "ikura",
-      "count": 42
+      "count": 50
     },
     {
       "type": "score",
-      "count": 10500
+      "count": 12600
     }
   ],
-  "stars": [11100, 13800, 17000],
+  "stars": [13100, 15700, 17800],
   "conveyors": [
     {
       "row": 0,

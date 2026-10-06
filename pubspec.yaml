@@ -27,4 +27,5 @@ flutter:
     - assets/images/
     - assets/sushi/
     - assets/ui/
+    - assets/items/
     - assets/audio/

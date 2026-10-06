@@ -26,7 +26,7 @@
     "maguro",
     "tamago",
     "ikura",
-    "ebi",
+    "tako",
     "kappa"
   ],
   "moves": 42,
@@ -36,9 +36,9 @@
     },
     {
       "type": "score",
-      "count": 8400
+      "count": 8100
     }
   ],
-  "stars": [8500, 11100, 14700],
+  "stars": [8400, 11300, 14700],
   "seed": 444752
 }

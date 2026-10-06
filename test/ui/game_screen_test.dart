@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sushi_match/main.dart';
+import 'package:sushi_match/ui/ui_art.dart';
 
 import '../helpers/riverpod.dart';
 
@@ -13,7 +14,7 @@ void main() {
     await tester.pumpWidget(scope(
         testContainer(), const MaterialApp(home: GameScreen(levelNumber: 1))));
     await tester.pump(const Duration(seconds: 1));
-    expect(find.text('🛒'), findsOneWidget);
+    expect(find.byType(ShopIcon), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }

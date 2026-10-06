@@ -30,10 +30,10 @@
     "maguro",
     "tamago",
     "ikura",
-    "ebi",
+    "unagi",
     "kappa"
   ],
-  "moves": 27,
+  "moves": 39,
   "goals": [
     {
       "type": "shoo_cats"
@@ -41,13 +41,13 @@
     {
       "type": "collect",
       "piece": "maguro",
-      "count": 45
+      "count": 68
     },
     {
       "type": "score",
-      "count": 12000
+      "count": 18000
     }
   ],
-  "stars": [12800, 16600, 21400],
+  "stars": [18800, 25200, 29800],
   "seed": 586264
 }

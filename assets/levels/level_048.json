@@ -24,13 +24,13 @@
   },
   "pieces": [
     "salmon",
-    "maguro",
+    "tako",
     "tamago",
     "ikura",
     "ebi",
     "kappa"
   ],
-  "moves": 38,
+  "moves": 44,
   "goals": [
     {
       "type": "break_ice"
@@ -38,10 +38,10 @@
     {
       "type": "collect",
       "piece": "ebi",
-      "count": 42
+      "count": 51
     }
   ],
-  "stars": [6600, 9200, 12300],
+  "stars": [7800, 11500, 14000],
   "conveyors": [
     {
       "row": 1,

@@ -23,25 +23,25 @@
   "pieces": [
     "salmon",
     "maguro",
-    "tamago",
+    "hotate",
     "ikura",
     "ebi",
     "kappa"
   ],
-  "moves": 40,
+  "moves": 46,
   "goals": [
     {
       "type": "collect",
       "piece": "ikura",
-      "count": 48
+      "count": 56
     },
     {
       "type": "collect",
       "piece": "ebi",
-      "count": 48
+      "count": 56
     }
   ],
-  "stars": [8300, 12600, 15000],
+  "stars": [10300, 14500, 17100],
   "gravity": "left",
   "seed": 535724
 }

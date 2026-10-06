@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../services/audio.dart';
+import '../services/wallet.dart';
 
 /// Sprites under assets/ui/.
 abstract final class UiArt {
@@ -36,6 +37,65 @@ abstract final class UiArt {
               color: Color(0x33000000), blurRadius: 4, offset: Offset(0, 2)),
         ],
       );
+}
+
+/// Booster sprite from assets/items/ (the starter boosters are cropped from the
+/// power-item sheet).
+class BoosterIcon extends StatelessWidget {
+  const BoosterIcon(this.booster, {super.key, this.size = 32});
+  final Booster booster;
+  final double size;
+
+  static const _sprites = {
+    Booster.extraMoves: 'hourglass',
+    Booster.chopsticks: 'chopsticks',
+    Booster.freeSwap: 'swap',
+    Booster.shuffle: 'shuffle',
+  };
+  // Quadrants of assets/sushi/power-item.png (2x2 sheet: knife, wasabi / ...).
+  static const _powerCell = {
+    Booster.starterKnife: Alignment.topLeft,
+    Booster.starterWasabi: Alignment.topRight,
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final cell = _powerCell[booster];
+    if (cell != null) {
+      return SizedBox(
+        width: size,
+        height: size,
+        child: ClipRect(
+          child: Align(
+            alignment: cell,
+            widthFactor: 0.5,
+            heightFactor: 0.5,
+            child: Image.asset('assets/sushi/power-item.png',
+                width: size * 2,
+                height: size * 2,
+                cacheWidth: (size * 6).round()),
+          ),
+        ),
+      );
+    }
+    final sprite = _sprites[booster];
+    if (sprite == null) return SizedBox(width: size, height: size);
+    return Image.asset('assets/items/$sprite.png',
+        width: size,
+        height: size,
+        // Sprites are ~1250px; decode near display size.
+        cacheWidth: (size * 3).round());
+  }
+}
+
+/// Shopping cart sprite (assets/items/shopping.png).
+class ShopIcon extends StatelessWidget {
+  const ShopIcon({super.key, this.size = 32});
+  final double size;
+
+  @override
+  Widget build(BuildContext context) => Image.asset('assets/items/shopping.png',
+      width: size, height: size, cacheWidth: (size * 3).round());
 }
 
 /// Gold star, greyed out when [lit] is false.

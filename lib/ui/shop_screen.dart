@@ -12,12 +12,12 @@ class BoosterShopScreen extends StatelessWidget {
   const BoosterShopScreen({super.key});
 
   static const _items = [
-    (Booster.extraMoves, '➕', 'extraMovesName', 'descExtraMoves'),
-    (Booster.chopsticks, '🥢', 'chopsticks', 'descChopsticks'),
-    (Booster.freeSwap, '🔄', 'freeSwap', 'descFreeSwap'),
-    (Booster.shuffle, '🔀', 'shuffle', 'descShuffle'),
-    (Booster.starterKnife, '🔪', 'starterKnife', 'descStarterKnife'),
-    (Booster.starterWasabi, '🟢', 'starterWasabi', 'descStarterWasabi'),
+    (Booster.extraMoves, 'extraMovesName', 'descExtraMoves'),
+    (Booster.chopsticks, 'chopsticks', 'descChopsticks'),
+    (Booster.freeSwap, 'freeSwap', 'descFreeSwap'),
+    (Booster.shuffle, 'shuffle', 'descShuffle'),
+    (Booster.starterKnife, 'starterKnife', 'descStarterKnife'),
+    (Booster.starterWasabi, 'starterWasabi', 'descStarterWasabi'),
   ];
 
   @override
@@ -88,9 +88,8 @@ class BoosterShopList extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
       children: [
-        for (final (b, emoji, name, desc) in BoosterShopScreen._items)
-          _BoosterCard(
-              booster: b, emoji: emoji, name: L10n.t(name), desc: L10n.t(desc)),
+        for (final (b, name, desc) in BoosterShopScreen._items)
+          _BoosterCard(booster: b, name: L10n.t(name), desc: L10n.t(desc)),
         const _LivesCard(),
       ],
     );
@@ -119,7 +118,9 @@ Future<void> showBoosterShopSheet(BuildContext context) {
               padding: const EdgeInsets.fromLTRB(20, 14, 8, 0),
               child: Row(
                 children: [
-                  Text('🛒 ${L10n.t('shop')}',
+                  const ShopIcon(size: 32),
+                  const SizedBox(width: 8),
+                  Text(L10n.t('shop'),
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: UiArt.ink, fontWeight: FontWeight.bold)),
                   const Spacer(),
@@ -177,12 +178,8 @@ class _Card extends StatelessWidget {
 
 class _BoosterCard extends ConsumerWidget {
   const _BoosterCard(
-      {required this.booster,
-      required this.emoji,
-      required this.name,
-      required this.desc});
+      {required this.booster, required this.name, required this.desc});
   final Booster booster;
-  final String emoji;
   final String name;
   final String desc;
 
@@ -215,7 +212,7 @@ class _BoosterCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final t = Theme.of(context).textTheme;
     return _Card(
-      leading: Text(emoji, style: const TextStyle(fontSize: 34)),
+      leading: BoosterIcon(booster, size: 48),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

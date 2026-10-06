@@ -27,9 +27,9 @@
     "tamago",
     "ikura",
     "ebi",
-    "kappa"
+    "hotate"
   ],
-  "moves": 33,
+  "moves": 48,
   "goals": [
     {
       "type": "break_ice"
@@ -37,10 +37,10 @@
     {
       "type": "collect",
       "piece": "ebi",
-      "count": 45
+      "count": 68
     }
   ],
-  "stars": [7100, 11200, 15000],
+  "stars": [12000, 17400, 20200],
   "gravity": "up",
   "seed": 566048
 }

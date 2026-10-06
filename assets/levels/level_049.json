@@ -27,11 +27,11 @@
     "salmon",
     "maguro",
     "tamago",
-    "ikura",
+    "unagi",
     "ebi",
     "kappa"
   ],
-  "moves": 34,
+  "moves": 44,
   "goals": [
     {
       "type": "break_bag"
@@ -42,9 +42,9 @@
     {
       "type": "collect",
       "piece": "salmon",
-      "count": 42
+      "count": 60
     }
   ],
-  "stars": [7000, 10900, 17000],
+  "stars": [10100, 14800, 20100],
   "seed": 495292
 }

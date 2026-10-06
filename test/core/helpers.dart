@@ -3,7 +3,7 @@ import 'package:sushi_match/core/level.dart';
 import 'package:sushi_match/core/piece.dart';
 import 'package:sushi_match/core/pos.dart';
 
-/// s=salmon m=maguro t=tamago i=ikura e=ebi k=kappa X=void .=empty
+/// s=salmon m=maguro t=tamago i=ikura e=ebi k=kappa u=unagi h=hotate a=ika o=tako X=void .=empty
 Board boardFrom(List<String> rows) {
   const map = {
     's': PieceKind.salmon,
@@ -12,6 +12,10 @@ Board boardFrom(List<String> rows) {
     'i': PieceKind.ikura,
     'e': PieceKind.ebi,
     'k': PieceKind.kappa,
+    'u': PieceKind.unagi,
+    'h': PieceKind.hotate,
+    'a': PieceKind.ika,
+    'o': PieceKind.tako,
   };
   final cols = rows.first.length;
   final b = Board(rows.length, cols, [

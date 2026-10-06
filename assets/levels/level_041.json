@@ -27,7 +27,7 @@
     "tamago",
     "ikura",
     "ebi",
-    "kappa"
+    "ika"
   ],
   "moves": 40,
   "goals": [
@@ -36,10 +36,10 @@
     },
     {
       "type": "score",
-      "count": 11000
+      "count": 10700
     }
   ],
-  "stars": [11500, 15100, 18600],
+  "stars": [11200, 15600, 19200],
   "conveyors": [
     {
       "row": 1,

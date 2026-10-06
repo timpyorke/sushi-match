@@ -275,9 +275,9 @@ class BoosterBar extends ConsumerWidget {
   final SushiGame game;
 
   static const _items = [
-    (Booster.chopsticks, '🥢', 'chopsticks'),
-    (Booster.freeSwap, '🔄', 'freeSwap'),
-    (Booster.shuffle, '🔀', 'shuffle'),
+    (Booster.chopsticks, 'chopsticks'),
+    (Booster.freeSwap, 'freeSwap'),
+    (Booster.shuffle, 'shuffle'),
   ];
 
   @override
@@ -306,10 +306,10 @@ class BoosterBar extends ConsumerWidget {
                 ),
               Row(
                 children: [
-                  for (final (b, icon, key) in _items)
+                  for (final (b, key) in _items)
                     Expanded(
                         child: _BoosterButton(
-                      icon: icon,
+                      booster: b,
                       label: L10n.t(key),
                       stock: wallet.count(b),
                       active: armed == b,
@@ -334,13 +334,13 @@ class BoosterBar extends ConsumerWidget {
 
 class _BoosterButton extends StatelessWidget {
   const _BoosterButton(
-      {required this.icon,
+      {required this.booster,
       required this.label,
       required this.stock,
       required this.active,
       required this.enabled,
       required this.onTap});
-  final String icon;
+  final Booster booster;
   final String label;
   final int stock;
   final bool active;
@@ -364,7 +364,7 @@ class _BoosterButton extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(icon, style: const TextStyle(fontSize: 22)),
+              BoosterIcon(booster, size: 32),
               Text(label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -402,7 +402,7 @@ class _ShopButton extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('🛒', style: TextStyle(fontSize: 22)),
+              const ShopIcon(size: 32),
               Text(L10n.t('shop'),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

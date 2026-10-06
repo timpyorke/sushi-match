@@ -26,10 +26,10 @@
     "maguro",
     "tamago",
     "ikura",
-    "ebi",
+    "ika",
     "kappa"
   ],
-  "moves": 39,
+  "moves": 43,
   "goals": [
     {
       "type": "put_out"
@@ -37,10 +37,10 @@
     {
       "type": "collect",
       "piece": "tamago",
-      "count": 39
+      "count": 51
     }
   ],
-  "stars": [7500, 11400, 14200],
+  "stars": [7600, 11900, 16000],
   "conveyors": [
     {
       "row": 3,
