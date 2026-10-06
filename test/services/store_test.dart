@@ -35,15 +35,12 @@ void main() {
     final c = testContainer(store: store);
     final s = c.read(settingsProvider.notifier);
     s.setLanguage('th');
-    s.setColorblind(true);
     s.setHaptics(false);
     expect(L10n.language, 'th');
-    expect(SettingsMirror.colorblind, isTrue);
     expect(SettingsMirror.haptics, isFalse);
 
     final again = testContainer(store: store).read(settingsProvider);
     expect(again.language, 'th');
-    expect(again.colorblind, isTrue);
     expect(again.haptics, isFalse);
     expect(again.sound, isTrue);
   });

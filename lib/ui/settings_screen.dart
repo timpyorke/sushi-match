@@ -67,9 +67,7 @@ class SettingsScreen extends ConsumerWidget {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12),
-                child: Text(L10n.t('settings'),
-                    style:
-                        t.headlineLarge?.copyWith(fontWeight: FontWeight.bold)),
+                child: OutlinedTitle(L10n.t('settings'), style: t.headlineLarge),
               ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 24),
@@ -92,11 +90,6 @@ class SettingsScreen extends ConsumerWidget {
                       title: Text(L10n.t('vibration')),
                       value: settings.haptics,
                       onChanged: notifier.setHaptics,
-                    ),
-                    SwitchListTile(
-                      title: Text(L10n.t('colorblind')),
-                      value: settings.colorblind,
-                      onChanged: notifier.setColorblind,
                     ),
                     ListTile(
                       leading: const Icon(Icons.language),

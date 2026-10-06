@@ -142,8 +142,7 @@ class _LevelSelectViewState extends State<LevelSelectView> {
         ),
         Padding(
           padding: const EdgeInsets.only(top: 8, bottom: 4),
-          child: Text('Sushi Trio',
-              style: t.headlineLarge?.copyWith(fontWeight: FontWeight.bold)),
+          child: OutlinedTitle('Sushi Trio', style: t.headlineLarge),
         ),
         Text(L10n.t('pickPlate'), style: t.titleMedium),
         Expanded(

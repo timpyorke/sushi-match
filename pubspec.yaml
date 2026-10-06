@@ -22,6 +22,12 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: Mali
+      fonts:
+        - asset: assets/fonts/Mali-Regular.ttf
+        - asset: assets/fonts/Mali-Bold.ttf
+          weight: 700
   assets:
     - assets/levels/
     - assets/ui/

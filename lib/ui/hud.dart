@@ -150,11 +150,8 @@ class ResultOverlay extends ConsumerWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(L10n.t(won ? 'win' : 'lose'),
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall
-                              ?.copyWith(color: UiArt.ink)),
+                      OutlinedTitle(L10n.t(won ? 'win' : 'lose'),
+                          style: Theme.of(context).textTheme.headlineSmall),
                       if (won) ...[
                         const SizedBox(height: 8),
                         Row(

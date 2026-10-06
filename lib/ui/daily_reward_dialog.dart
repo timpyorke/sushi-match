@@ -87,7 +87,10 @@ class _DayCell extends StatelessWidget {
   Widget build(BuildContext context) {
     final big = day == DailyReward.prizes.length - 1;
     return Container(
-      width: big ? 148 : 66,
+      // 280 wide content: three equal cells per row, day 7 spans the row.
+      width: big ? 280 : 88,
+      height: big ? 64 : 56,
+      alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
       decoration: BoxDecoration(
         color: today ? const Color(0xFFFFE08A) : const Color(0xFFF3E3C3),

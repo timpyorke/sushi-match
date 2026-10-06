@@ -35,9 +35,7 @@ class TipOverlay extends ConsumerWidget {
               children: [
                 Text(emoji, style: const TextStyle(fontSize: 40)),
                 const SizedBox(height: 8),
-                Text(L10n.t('${text}Title'),
-                    style: t.titleLarge?.copyWith(
-                        color: UiArt.ink, fontWeight: FontWeight.bold)),
+                OutlinedTitle(L10n.t('${text}Title'), style: t.titleLarge),
                 const SizedBox(height: 8),
                 Text(L10n.t('${text}Body'), textAlign: TextAlign.center),
                 const SizedBox(height: 16),

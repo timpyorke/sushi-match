@@ -68,6 +68,7 @@ class SushiTrioApp extends StatelessWidget {
       theme: ThemeData(
         colorSchemeSeed: const Color(0xFFB71C2C),
         useMaterial3: true,
+        fontFamily: 'Mali',
       ),
       home: const LevelSelectScreen(),
     );

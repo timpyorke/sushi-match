@@ -3,6 +3,37 @@ import 'package:flutter/material.dart';
 import '../services/audio.dart';
 import '../services/wallet.dart';
 
+/// Cute sticker-style title: ink fill with a thick white outline.
+class OutlinedTitle extends StatelessWidget {
+  const OutlinedTitle(this.text, {super.key, this.style, this.strokeWidth = 6});
+
+  final String text;
+  final TextStyle? style;
+  final double strokeWidth;
+
+  @override
+  Widget build(BuildContext context) {
+    final base = (style ?? const TextStyle())
+        .copyWith(fontWeight: FontWeight.bold, height: 1.2);
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Text(text,
+            textAlign: TextAlign.center,
+            style: base.copyWith(
+                foreground: Paint()
+                  ..style = PaintingStyle.stroke
+                  ..strokeWidth = strokeWidth
+                  ..strokeJoin = StrokeJoin.round
+                  ..color = Colors.white)),
+        Text(text,
+            textAlign: TextAlign.center,
+            style: base.copyWith(color: UiArt.ink)),
+      ],
+    );
+  }
+}
+
 /// Sprites under assets/ui/.
 abstract final class UiArt {
   static const panel = AssetImage('assets/ui/panel.png');

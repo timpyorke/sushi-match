@@ -36,9 +36,7 @@ class RestaurantScreen extends ConsumerWidget {
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                 ),
-                Text(L10n.t('restaurant'),
-                    style:
-                        t.headlineLarge?.copyWith(fontWeight: FontWeight.bold)),
+                OutlinedTitle(L10n.t('restaurant'), style: t.headlineLarge),
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -51,7 +49,7 @@ class RestaurantScreen extends ConsumerWidget {
                 ),
                 Expanded(
                   child: ListView(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.fromLTRB(12, 8, 12, 24),
                     children: [
                       for (final s in Restaurant.shops) _ShopCard(shop: s),
                     ],
@@ -83,8 +81,9 @@ class _ShopCard extends ConsumerWidget {
     final open = state.shopUnlocked(shop);
     final done = state.shopComplete(shop);
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(20),
+      margin: const EdgeInsets.only(bottom: 12),
+      // Same inset as GameDialog so content clears the wave-corner frame.
+      padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 40),
       decoration: UiArt.panelDecoration(),
       child: DefaultTextStyle.merge(
         style: const TextStyle(color: UiArt.ink),

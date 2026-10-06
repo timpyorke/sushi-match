@@ -46,9 +46,7 @@ class BoosterShopScreen extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Text(L10n.t('shop'),
-                    style:
-                        t.headlineLarge?.copyWith(fontWeight: FontWeight.bold)),
+                child: OutlinedTitle(L10n.t('shop'), style: t.headlineLarge),
               ),
               const Expanded(child: BoosterShopList()),
             ],

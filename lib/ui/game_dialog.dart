@@ -36,13 +36,8 @@ class GameDialog extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(title,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall
-                          ?.copyWith(
-                              color: UiArt.ink, fontWeight: FontWeight.bold)),
+                  OutlinedTitle(title,
+                      style: Theme.of(context).textTheme.headlineSmall),
                   if (content != null) ...[
                     const SizedBox(height: 12),
                     content!,
