@@ -14,8 +14,10 @@ Board boardFrom(List<String> rows) {
     'k': PieceKind.kappa,
   };
   final cols = rows.first.length;
-  final b = Board(rows.length, cols,
-      [for (final r in rows) for (final ch in r.split('')) ch != 'X']);
+  final b = Board(rows.length, cols, [
+    for (final r in rows)
+      for (final ch in r.split('')) ch != 'X'
+  ]);
   var id = 0;
   for (var r = 0; r < rows.length; r++) {
     for (var c = 0; c < cols; c++) {

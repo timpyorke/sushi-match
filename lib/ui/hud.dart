@@ -169,3 +169,47 @@ class ResultOverlay extends StatelessWidget {
     );
   }
 }
+
+/// Chef's cheer that pops in over the board after a combo and fades out.
+class PraiseBanner extends StatelessWidget {
+  const PraiseBanner({super.key, required this.game});
+  final SushiGame game;
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      child: ValueListenableBuilder<({String text, int n})?>(
+        valueListenable: game.praise,
+        builder: (context, p, _) {
+          if (p == null) return const SizedBox.shrink();
+          return Center(
+            child: TweenAnimationBuilder<double>(
+              key: ValueKey(p.n),
+              tween: Tween(begin: 0, end: 1),
+              duration: const Duration(milliseconds: 1100),
+              builder: (context, t, child) => Opacity(
+                opacity: t < 0.7 ? 1 : (1 - t) / 0.3,
+                child: Transform.scale(
+                  scale: 0.6 +
+                      0.6 * Curves.easeOutBack.transform((t * 3).clamp(0, 1)),
+                  child: child,
+                ),
+              ),
+              child: Text(
+                p.text,
+                style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white,
+                  shadows: const [
+                    Shadow(color: UiArt.ink, blurRadius: 6),
+                    Shadow(color: UiArt.ink, offset: Offset(2, 2)),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}

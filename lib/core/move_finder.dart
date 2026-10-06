@@ -60,7 +60,10 @@ abstract final class MoveFinder {
     for (final dr in const [-1, 0]) {
       for (final dc in const [-1, 0]) {
         final r = p.row + dr, c = p.col + dc;
-        if (same(r, c) && same(r, c + 1) && same(r + 1, c) && same(r + 1, c + 1)) {
+        if (same(r, c) &&
+            same(r, c + 1) &&
+            same(r + 1, c) &&
+            same(r + 1, c + 1)) {
           return true;
         }
       }

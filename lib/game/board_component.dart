@@ -6,11 +6,13 @@ import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/events.dart';
 import 'package:flutter/animation.dart' show Curve, Curves;
+import 'package:flutter/services.dart' show HapticFeedback;
 
 import '../core/board.dart';
 import '../core/game_engine.dart';
 import '../core/move_finder.dart';
 import '../core/pos.dart';
+import '../core/settings.dart';
 import '../core/steps.dart';
 import 'piece_component.dart';
 
@@ -18,8 +20,11 @@ import 'piece_component.dart';
 /// and plays back the returned [BoardStep]s one by one.
 class BoardComponent extends PositionComponent
     with TapCallbacks, DragCallbacks {
-  BoardComponent({required this.engine, required this.onTurnFinished})
-      : super(
+  BoardComponent({
+    required this.engine,
+    required this.onTurnFinished,
+    required this.onPraise,
+  }) : super(
           size: Vector2(engine.board.cols * cell, engine.board.rows * cell),
         );
 
@@ -29,6 +34,9 @@ class BoardComponent extends PositionComponent
 
   final GameEngine engine;
   final void Function() onTurnFinished;
+
+  /// Called with the chef's cheer when a turn chained into a combo.
+  final void Function(String) onPraise;
 
   final _views = <int, PieceComponent>{};
   final _at = <Pos, PieceComponent>{};
@@ -134,7 +142,10 @@ class BoardComponent extends PositionComponent
     _busy = true;
     _clearHint();
     try {
-      await _play(engine.trySwap(a, b));
+      final steps = engine.trySwap(a, b);
+      final cheer = _praiseFor(steps);
+      if (cheer != null) onPraise(cheer);
+      await _play(steps);
     } finally {
       _busy = false;
       _resetIdle();
@@ -143,6 +154,21 @@ class BoardComponent extends PositionComponent
   }
 
   // ------------------------------------------------------------ playback --
+
+  /// Chef's cheer by cascade depth (GDD: Oishii! → Sugoi! → Omakase!).
+  static String? _praiseFor(List<BoardStep> steps) {
+    final depth = steps
+        .whereType<ClearStep>()
+        .fold<int>(0, (m, s) => math.max(m, s.cascade));
+    if (depth >= 4) return 'Omakase!';
+    if (depth == 3) return 'Sugoi!';
+    if (depth == 2) return 'Oishii!';
+    return null;
+  }
+
+  void _haptic(Future<void> Function() impact) {
+    if (Settings.haptics.value) impact();
+  }
 
   Future<void> _play(List<BoardStep> steps) async {
     // Falls and the refill that follows run together for a snappier feel.
@@ -174,6 +200,9 @@ class BoardComponent extends PositionComponent
             if (identical(_at[c.pos], v)) _at.remove(c.pos);
             pops.add(_pop(v));
           }
+          _haptic(created.isEmpty
+              ? HapticFeedback.lightImpact
+              : HapticFeedback.mediumImpact);
           await Future.wait(pops);
           for (final s in created) {
             final v = _spawnView(s.piece, s.pos)..scale = Vector2.zero();
@@ -188,14 +217,17 @@ class BoardComponent extends PositionComponent
             final v = _views[m.pieceId];
             if (v == null) continue;
             _at[m.to] = v;
-            pending.add(_moveTo(v, _center(m.to), _fallTime(m.to.row - m.from.row),
+            pending.add(_moveTo(
+                v, _center(m.to), _fallTime(m.to.row - m.from.row),
                 curve: Curves.easeIn));
           }
         case RefillStep(:final pieces):
           for (final r in pieces) {
-            final start = Vector2(_center(r.to).x, r.startRow * cell + cell / 2);
+            final start =
+                Vector2(_center(r.to).x, r.startRow * cell + cell / 2);
             final v = _spawnView(r.piece, r.to, from: start);
-            pending.add(_moveTo(v, _center(r.to), _fallTime(r.to.row - r.startRow),
+            pending.add(_moveTo(
+                v, _center(r.to), _fallTime(r.to.row - r.startRow),
                 curve: Curves.easeIn));
           }
           await Future.wait(pending);

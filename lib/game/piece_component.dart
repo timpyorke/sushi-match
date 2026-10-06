@@ -23,5 +23,6 @@ class PieceComponent extends PositionComponent {
   SpecialType? special;
 
   @override
-  void render(Canvas canvas) => PiecePainter.paint(canvas, size.x, kind, special);
+  void render(Canvas canvas) =>
+      PiecePainter.paint(canvas, size.x, kind, special);
 }

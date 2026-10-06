@@ -41,6 +41,9 @@ class GameEngine {
   GameStatus status = GameStatus.playing;
 
   int _nextId = 0;
+
+  /// Origins of Wasabi Bombs that still owe their second blast.
+  final List<Pos> _aftershocks = [];
   final Map<PieceKind, int> _collected = {};
 
   List<GoalProgress> get goals => [
@@ -73,6 +76,7 @@ class GameEngine {
     final specialSwap =
         pa.isOmakase || pb.isOmakase || (pa.isSpecial && pb.isSpecial);
     final steps = <BoardStep>[];
+    _aftershocks.clear();
     board.swap(a, b);
 
     if (specialSwap) {
@@ -98,7 +102,23 @@ class GameEngine {
   List<BoardStep> _cascade(List<MatchGroup> groups, {required int startAt}) {
     final steps = <BoardStep>[];
     var depth = startAt;
-    while (groups.isNotEmpty && depth < 200) {
+    while (depth < 200) {
+      if (_aftershocks.isNotEmpty) {
+        // Wasabi blasts a second time once the board has settled.
+        final o = _aftershocks.removeAt(0);
+        final area = _square(o, 1);
+        steps
+          ..addAll(_clear(
+            seed: area,
+            cascade: depth,
+            pre: [SpecialActivateStep(SpecialType.wasabi, o, area)],
+          ))
+          ..addAll(_gravityAndRefill());
+        depth++;
+        groups = MatchFinder.find(board);
+        continue;
+      }
+      if (groups.isEmpty) break;
       steps
         ..addAll(_clear(
           seed: {for (final g in groups) ...g.cells},
@@ -115,16 +135,47 @@ class GameEngine {
   List<BoardStep> _endTurn() {
     // TODO(conveyor): shift conveyor rows here, before the move is counted.
     movesLeft--;
-    if (goals.every((g) => g.done)) {
+    final won = goals.every((g) => g.done);
+    if (won) {
       status = GameStatus.won;
     } else if (movesLeft <= 0) {
       status = GameStatus.lost;
     }
-    // TODO(bonus-round): convert leftover moves into specials on win.
     return [
+      if (won) ..._bonusRound(),
       if (status == GameStatus.playing && MoveFinder.findMove(board) == null)
         ShuffleStep(BoardFactory.shuffle(board, rng)),
       TurnEndStep(movesLeft: movesLeft, score: score, status: status),
+    ];
+  }
+
+  /// Turns each leftover move into a random Knife/Wasabi on a plain piece,
+  /// then sets them all off for extra score (and so extra stars).
+  List<BoardStep> _bonusRound() {
+    final plain = [
+      for (final p in board.positions)
+        if (board[p] != null && !board[p]!.isSpecial) p,
+    ]..shuffle(rng);
+    final picked = plain.take(max(0, movesLeft)).toList();
+    movesLeft = 0;
+    if (picked.isEmpty) return const [];
+
+    const types = [
+      SpecialType.knifeRow,
+      SpecialType.knifeCol,
+      SpecialType.wasabi,
+    ];
+    final changes = <int, SpecialType>{};
+    for (final p in picked) {
+      final t = types[rng.nextInt(types.length)];
+      board[p]!.special = t;
+      changes[board[p]!.id] = t;
+    }
+    return [
+      TransformStep(changes),
+      ..._clear(seed: picked.toSet(), cascade: 1),
+      ..._gravityAndRefill(),
+      ..._cascade(MatchFinder.find(board), startAt: 2),
     ];
   }
 
@@ -156,6 +207,7 @@ class GameEngine {
       final p = queue.removeFirst();
       if (!activated.add(p)) continue;
       final type = board[p]!.special!;
+      if (type == SpecialType.wasabi) _aftershocks.add(p);
       final area = _areaOf(type, p, avoid: cleared);
       steps.add(SpecialActivateStep(type, p, area));
       area.forEach(mark);
@@ -197,7 +249,7 @@ class GameEngine {
       case SpecialType.knifeCol:
         return _col(o.col);
       case SpecialType.wasabi:
-        // TODO(gdd): Wasabi should blast twice; single 3×3 for the prototype.
+        // First 3×3 blast; the second one runs from _cascade (_aftershocks).
         return _square(o, 1);
       case SpecialType.omakase:
         // Hit by another special: clear a random kind still on the board.
@@ -223,7 +275,10 @@ class GameEngine {
       final x = o == a ? b : a;
       final other = board[x]!;
       if (other.isOmakase) {
-        final all = {for (final p in board.positions) if (board[p] != null) p};
+        final all = {
+          for (final p in board.positions)
+            if (board[p] != null) p
+        };
         return _clear(
           seed: all,
           consumed: {a, b},
@@ -253,8 +308,7 @@ class GameEngine {
         }
         pre.add(TransformStep(changes));
       }
-      return _clear(
-          seed: {o, ...targets}, consumed: {o}, pre: pre, cascade: 1);
+      return _clear(seed: {o, ...targets}, consumed: {o}, pre: pre, cascade: 1);
     }
 
     // ---- Two non-Omakase specials ----
@@ -321,7 +375,8 @@ class GameEngine {
       final missing = w + 1;
       final top = cells.first.row;
       for (var i = 0; i < missing; i++) {
-        final piece = _makePiece(level.pieces[rng.nextInt(level.pieces.length)]);
+        final piece =
+            _makePiece(level.pieces[rng.nextInt(level.pieces.length)]);
         board[cells[i]] = piece;
         refills.add(
             RefillPiece(PieceSnapshot.of(piece), cells[i], top - missing + i));
@@ -354,8 +409,10 @@ class GameEngine {
               Pos(o.row + dr, o.col + dc),
       };
 
-  Set<Pos> _ofKind(PieceKind k) =>
-      {for (final p in board.positions) if (board[p]?.kind == k) p};
+  Set<Pos> _ofKind(PieceKind k) => {
+        for (final p in board.positions)
+          if (board[p]?.kind == k) p
+      };
 
   /// Soy Fish prefers pieces a collect goal still needs.
   Pos? _fishTarget({required Set<Pos> avoid}) {

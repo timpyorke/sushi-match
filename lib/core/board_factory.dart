@@ -22,7 +22,10 @@ abstract final class BoardFactory {
         if (l1 != null && l1 == l2) banned.add(l1);
         if (u1 != null && u1 == u2) banned.add(u1);
         if (l1 != null && l1 == u1 && l1 == ul) banned.add(l1);
-        final allowed = [for (final k in kinds) if (!banned.contains(k)) k];
+        final allowed = [
+          for (final k in kinds)
+            if (!banned.contains(k)) k
+        ];
         final pool = allowed.isEmpty ? kinds : allowed;
         b[p] = make(pool[rng.nextInt(pool.length)]);
       }
@@ -36,7 +39,10 @@ abstract final class BoardFactory {
   /// Rearranges existing pieces until there are no matches and a move exists.
   /// Returns pieceId -> new position for the view.
   static Map<int, Pos> shuffle(Board b, Random rng) {
-    final cells = [for (final p in b.positions) if (b[p] != null) p];
+    final cells = [
+      for (final p in b.positions)
+        if (b[p] != null) p
+    ];
     final pieces = [for (final p in cells) b[p]!];
     for (var attempt = 0; attempt < 100; attempt++) {
       pieces.shuffle(rng);

@@ -59,8 +59,8 @@ class LevelConfig {
     final board = j['board'] as Map<String, dynamic>;
     final rows = board['rows'] as int;
     final cols = board['cols'] as int;
-    final layout = (j['layout'] as List?)?.cast<String>() ??
-        List.filled(rows, '.' * cols);
+    final layout =
+        (j['layout'] as List?)?.cast<String>() ?? List.filled(rows, '.' * cols);
     final legend = (j['legend'] as Map?)?.cast<String, String>() ??
         const {'.': 'cell', 'X': 'void'};
     if (layout.length != rows || layout.any((l) => l.length != cols)) {

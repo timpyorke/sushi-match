@@ -2,8 +2,10 @@ import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sushi_match/core/game_engine.dart';
+import 'package:sushi_match/core/level.dart';
 import 'package:sushi_match/core/match_finder.dart' as mf;
 import 'package:sushi_match/core/move_finder.dart';
+import 'package:sushi_match/core/piece.dart';
 import 'package:sushi_match/core/pos.dart';
 import 'package:sushi_match/core/steps.dart';
 
@@ -93,5 +95,45 @@ void main() {
       }
     }
     expect(sawCascade, isTrue);
+  });
+
+  test('wasabi blasts a second time after the board settles', () {
+    var sawSecondBlast = false;
+    final moves = MoveFinder.allMoves(GameEngine(testLevel(seed: 5)).board);
+    for (final (a, b) in moves) {
+      final e = GameEngine(testLevel(seed: 5, moves: 99));
+      e.board[a]!.special = SpecialType.wasabi;
+      final blasts = e
+          .trySwap(a, b)
+          .whereType<SpecialActivateStep>()
+          .where((s) => s.type == SpecialType.wasabi && s.origin == b)
+          .length;
+      if (blasts >= 2) {
+        sawSecondBlast = true;
+        break;
+      }
+    }
+    expect(sawSecondBlast, isTrue);
+  });
+
+  test('leftover moves become a bonus round on win', () {
+    final level = LevelConfig.fromJson({
+      'id': 1,
+      'board': {'cols': 7, 'rows': 7},
+      'pieces': ['salmon', 'maguro', 'tamago', 'ikura', 'kappa'],
+      'moves': 30,
+      'goals': [
+        {'type': 'score', 'count': 1},
+      ],
+      'seed': 1,
+    });
+    final e = GameEngine(level);
+    final (a, b) = MoveFinder.allMoves(e.board).first;
+    final steps = e.trySwap(a, b);
+    expect(e.status, GameStatus.won);
+    expect(steps.whereType<TransformStep>(), isNotEmpty);
+    expect(steps.whereType<SpecialActivateStep>(), isNotEmpty);
+    expect(e.movesLeft, 0);
+    expect((steps.last as TurnEndStep).movesLeft, 0);
   });
 }

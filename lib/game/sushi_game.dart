@@ -1,11 +1,10 @@
+import 'dart:ui' show Color;
 
 import 'package:flame/game.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 
 import '../core/game_engine.dart';
 import '../core/level.dart';
-import '../core/settings.dart';
 import 'board_component.dart';
 
 /// What the Flutter HUD needs; refreshed after every turn.
@@ -27,9 +26,21 @@ class HudState {
 }
 
 class SushiGame extends FlameGame {
-  SushiGame({required this.level}) : _engine = GameEngine(level) {
+  SushiGame({required this.level})
+      : _engine = GameEngine(level, seed: _seed(level)) {
     hud = ValueNotifier(_snapshot());
   }
+
+  /// Build with `--dart-define=DETERMINISTIC_SEED=true` to replay each level's
+  /// JSON `seed` exactly (debugging, bot runs). Players get a fresh board.
+  static const _deterministic = bool.fromEnvironment('DETERMINISTIC_SEED');
+
+  static int _seed(LevelConfig level) =>
+      _deterministic ? level.seed : DateTime.now().microsecondsSinceEpoch;
+
+  /// Chef's cheer for the latest turn; null when there is none to show.
+  final praise = ValueNotifier<({String text, int n})?>(null);
+  int _praiseCount = 0;
 
   final LevelConfig level;
   GameEngine _engine;
@@ -44,22 +55,22 @@ class SushiGame extends FlameGame {
 
   void restart() {
     _board?.removeFromParent();
-    // New seed each retry; pass level.seed instead to replay identically.
-    _engine = GameEngine(level, seed: DateTime.now().microsecondsSinceEpoch);
+    _engine = GameEngine(level, seed: _seed(level));
+    praise.value = null;
     _mountBoard();
     _sync();
   }
 
   void _mountBoard() {
-    final b = BoardComponent(engine: _engine, onTurnFinished: _sync);
+    final b = BoardComponent(
+        engine: _engine, onTurnFinished: _sync, onPraise: _praise);
     _board = b;
     add(b);
   }
 
-  void _sync() {
-    if (Settings.haptics.value) HapticFeedback.lightImpact();
-    hud.value = _snapshot();
-  }
+  void _sync() => hud.value = _snapshot();
+
+  void _praise(String text) => praise.value = (text: text, n: ++_praiseCount);
 
   HudState _snapshot() => HudState(
         movesLeft: _engine.movesLeft,

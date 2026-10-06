@@ -172,6 +172,7 @@ class _GameScreenState extends State<GameScreen> {
                     fit: StackFit.expand,
                     children: [
                       GameWidget(game: game),
+                      PraiseBanner(game: game),
                       ResultOverlay(
                         game: game,
                         onLevels: () => Navigator.of(context).pop(),
