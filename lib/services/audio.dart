@@ -7,6 +7,7 @@ import '../core/settings.dart';
 /// synthesised placeholders (tool/gen_sounds.dart); replace any of them with
 /// real audio of the same name.
 enum Sfx {
+  tap('tap'),
   swap('swap'),
   invalid('invalid'),
   match1('match_1'),
@@ -45,7 +46,12 @@ enum Sfx {
 /// [Settings.music]. Silent until [init] runs, so unit and widget tests (which
 /// have no audio plugin) need no setup.
 abstract final class Audio {
-  static const _bgm = 'bgm.wav';
+  /// One looping track per restaurant (assets/audio/bgm_<id>.wav).
+  static const tracks = ['tsukiji', 'osaka', 'kyoto', 'hokkaido'];
+
+  static String _file(String track) => 'bgm_$track.wav';
+
+  static String _track = 'tsukiji';
   static const _sfxVolume = 0.7;
   static const _bgmVolume = 0.35;
 
@@ -56,7 +62,7 @@ abstract final class Audio {
     try {
       await FlameAudio.audioCache.loadAll([
         for (final s in Sfx.values) '${s.file}.wav',
-        _bgm,
+        for (final t in tracks) _file(t),
       ]);
       // Pauses the music when the app goes to the background.
       FlameAudio.bgm.initialize();
@@ -75,8 +81,21 @@ abstract final class Audio {
   }
 
   /// Starts the looping BGM (if enabled in settings); [stopMusic] ends it.
-  static void startMusic() {
+  /// Pass a restaurant id to switch to its track; the same track keeps playing.
+  static void startMusic([String? track]) {
     _musicWanted = true;
+    if (track != null && tracks.contains(track) && track != _track) {
+      _track = track;
+      if (_ready && FlameAudio.bgm.isPlaying) {
+        // Stop is async; start the new track only once it has finished.
+        _safe(() async {
+          await FlameAudio.bgm.stop();
+          _syncMusic();
+          return null;
+        });
+        return;
+      }
+    }
     _syncMusic();
   }
 
@@ -89,7 +108,9 @@ abstract final class Audio {
     if (!_ready) return;
     final bgm = FlameAudio.bgm;
     if (_musicWanted && Settings.music.value) {
-      if (!bgm.isPlaying) _safe(() => bgm.play(_bgm, volume: _bgmVolume));
+      if (!bgm.isPlaying) {
+        _safe(() => bgm.play(_file(_track), volume: _bgmVolume));
+      }
     } else if (bgm.isPlaying) {
       _safe(bgm.stop);
     }

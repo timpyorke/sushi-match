@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../services/audio.dart';
+
 /// Sprites cut from assets/ui/particle.png.
 abstract final class UiArt {
   static const panel = AssetImage('assets/ui/panel.png');
@@ -67,7 +69,10 @@ class RoundIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onPressed,
+      onTap: () {
+        Audio.play(Sfx.tap);
+        onPressed();
+      },
       child: Container(
         width: 48,
         height: 48,

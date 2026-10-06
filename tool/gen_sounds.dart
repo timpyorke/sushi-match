@@ -178,6 +178,7 @@ Map<String, Float64List> _sfx() {
     }
     return b;
   }();
+  out['tap'] = _sweep(700, 560, 0.05, decay: 40);
   out['coin'] = _seq([(988, 0), (1318.5, 0.06)], 0.35, dur: 0.25, decay: 10);
 
   out['win'] = _seq([
@@ -198,29 +199,35 @@ Map<String, Float64List> _sfx() {
   return out;
 }
 
-/// ~20 s lo-fi loop in the Hirajoshi scale (A B C E F): plucked melody over a
-/// sparse bass, tempo 96 bpm, 8 bars.
-Float64List _bgm() {
-  const bpm = 96;
-  const eighth = 60 / bpm / 2;
+/// One lo-fi loop per restaurant: plucked melody over a sparse bass in the
+/// Hirajoshi scale (A B C E F), 8 bars. [bpm] sets the pace, [shift] moves
+/// the key (frequency ratio), [melody] picks the tune.
+Float64List _bgm({required int bpm, double shift = 1, int variant = 0}) {
+  final eighth = 60 / bpm / 2;
   const bars = 8;
-  const total = bars * 8 * eighth;
+  final total = bars * 8 * eighth;
   final out = _buf(total);
 
   const a = [5, -1, 7, -1, 8, -1, 7, 6, 5, -1, 3, -1, 5, -1, -1, -1];
   const b = [8, -1, 9, -1, 8, -1, 7, -1, 6, -1, 5, -1, 3, -1, -1, -1];
   const b2 = [8, -1, 9, -1, 8, -1, 7, -1, 6, -1, 5, -1, 5, -1, -1, -1];
+  const c = [3, -1, 5, 6, 7, -1, 5, -1, 8, -1, 7, -1, 6, 5, 3, -1];
+  const d = [10, -1, 8, -1, 7, -1, 8, 7, 6, -1, 5, -1, 5, -1, -1, -1];
   const scale = [
     220.0, 246.94, 261.63, 329.63, 349.23, // A3 B3 C4 E4 F4
     440.0, 493.88, 523.25, 659.25, 698.46, 880.0, // A4 B4 C5 E5 F5 A5
   ];
-  final melody = [...a, ...b, ...a, ...b2];
+  final melody = switch (variant) {
+    1 => [...c, ...b, ...c, ...b2],
+    2 => [...a, ...d, ...c, ...b2],
+    _ => [...a, ...b, ...a, ...b2],
+  };
   for (var i = 0; i < melody.length; i++) {
     if (melody[i] < 0) continue;
-    _mix(out, _pluck(scale[melody[i]], 1.4), i * eighth, 0.3);
+    _mix(out, _pluck(scale[melody[i]] * shift, 1.4), i * eighth, 0.3);
   }
   for (var bar = 0; bar < bars; bar++) {
-    final root = bar.isEven ? 110.0 : 87.31; // A2 / F2
+    final root = (bar.isEven ? 110.0 : 87.31) * shift; // A2 / F2
     _mix(out, _pluck(root, 1.8, damp: 0.998), bar * 8 * eighth, 0.55);
     _mix(
         out, _pluck(root * 1.5, 1.2, damp: 0.998), (bar * 8 + 4) * eighth, 0.3);
@@ -233,7 +240,16 @@ void main() {
   for (final e in _sfx().entries) {
     File('${dir.path}/${e.key}.wav').writeAsBytesSync(_wav(e.value));
   }
-  File('${dir.path}/bgm.wav').writeAsBytesSync(_wav(_bgm(), peak: 0.6));
+  final tracks = {
+    'tsukiji': _bgm(bpm: 96),
+    'osaka': _bgm(bpm: 112, shift: 1.122, variant: 1),
+    'kyoto': _bgm(bpm: 80, shift: 0.891, variant: 2),
+    'hokkaido': _bgm(bpm: 104, shift: 1.335, variant: 1),
+  };
+  for (final e in tracks.entries) {
+    File('${dir.path}/bgm_${e.key}.wav')
+        .writeAsBytesSync(_wav(e.value, peak: 0.6));
+  }
   for (final f in dir.listSync().whereType<File>().toList()
     ..sort((x, y) => x.path.compareTo(y.path))) {
     print('${f.path}  ${(f.lengthSync() / 1024).round()} KB');

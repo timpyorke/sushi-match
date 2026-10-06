@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../core/piece.dart';
 import '../game/piece_painter.dart';
+import '../services/audio.dart';
 import '../game/tile_art.dart';
 import 'l10n.dart';
 import 'lives_ui.dart';
@@ -100,6 +101,7 @@ class _LevelSelectViewState extends State<LevelSelectView> {
             SnackBar(content: Text(L10n.t('clearFirst', {'n': n - 1}))));
       return;
     }
+    Audio.play(Sfx.tap);
     widget.onSelect(n);
   }
 
