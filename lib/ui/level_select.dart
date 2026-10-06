@@ -18,6 +18,9 @@ class LevelSelectView extends StatefulWidget {
       required this.levelCount,
       required this.cleared,
       required this.onSelect,
+      this.maxPlayable,
+      required this.onShopLocked,
+      this.onRestaurant,
       this.onSettings});
 
   final int levelCount;
@@ -25,6 +28,13 @@ class LevelSelectView extends StatefulWidget {
   /// Highest cleared level; the next one is playable, the rest are locked.
   final int cleared;
   final ValueChanged<int> onSelect;
+
+  /// Highest level whose restaurant is unlocked; null means no limit.
+  final int? maxPlayable;
+  final VoidCallback? onRestaurant;
+
+  /// Called when a level behind a locked restaurant is tapped.
+  final ValueChanged<int> onShopLocked;
   final VoidCallback? onSettings;
 
   @override
@@ -55,7 +65,8 @@ class _LevelSelectViewState extends State<LevelSelectView> {
   void _focusCurrent(double viewport) {
     if (_positioned) return;
     _positioned = true;
-    final current = math.min(widget.cleared + 1, widget.levelCount);
+    final current = math.min(widget.cleared + 1,
+        math.min(widget.levelCount, widget.maxPlayable ?? widget.levelCount));
     final row = (current - 1) ~/ _perRow;
     final target = _padding + row * _rowGap - viewport / 2;
     final max = math.max(0.0, _mapHeight - viewport);
@@ -64,7 +75,13 @@ class _LevelSelectViewState extends State<LevelSelectView> {
     });
   }
 
+  bool _shopLocked(int n) => n > (widget.maxPlayable ?? widget.levelCount);
+
   void _tap(int n) {
+    if (_shopLocked(n)) {
+      widget.onShopLocked(n);
+      return;
+    }
     if (n > widget.cleared + 1) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
@@ -87,6 +104,12 @@ class _LevelSelectViewState extends State<LevelSelectView> {
               child: WalletBar(),
             ),
             const Spacer(),
+            if (widget.onRestaurant != null)
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: RoundIconButton(
+                    icon: Icons.storefront, onPressed: widget.onRestaurant!),
+              ),
             if (widget.onSettings != null)
               Padding(
                 padding: const EdgeInsets.only(right: 12),
@@ -136,9 +159,10 @@ class _LevelSelectViewState extends State<LevelSelectView> {
                         top: centre(n).dy - 49,
                         child: _Plate(
                           level: n,
-                          locked: n > widget.cleared + 1,
+                          locked: n > widget.cleared + 1 || _shopLocked(n),
                           done: n <= widget.cleared,
-                          current: n == widget.cleared + 1,
+                          current:
+                              n == widget.cleared + 1 && !_shopLocked(n),
                           onTap: () => _tap(n),
                         ),
                       ),

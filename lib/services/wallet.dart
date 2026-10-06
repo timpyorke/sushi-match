@@ -90,6 +90,12 @@ abstract final class Wallet {
     _save();
   }
 
+  /// Adds free boosters to the stock (e.g. a finished restaurant's reward).
+  static void grant(Booster b, int n) {
+    stock.value = {...stock.value, b: count(b) + n};
+    _save();
+  }
+
   static int count(Booster b) => stock.value[b] ?? 0;
 
   static bool canUse(Booster b) => count(b) > 0 || coins.value >= cost[b]!;

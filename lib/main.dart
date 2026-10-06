@@ -13,7 +13,10 @@ import 'game/sushi_game.dart';
 import 'services/wallet.dart';
 import 'ui/customer_order.dart';
 import 'ui/hud.dart';
+import 'services/restaurant.dart';
 import 'ui/level_select.dart';
+import 'ui/restaurant_screen.dart';
+import 'ui/l10n.dart';
 import 'ui/lives_ui.dart';
 import 'ui/settings_screen.dart';
 import 'ui/ui_art.dart';
@@ -25,6 +28,7 @@ void main() async {
   await PiecePainter.loadSprites();
   await Settings.load();
   await Wallet.load();
+  await Restaurant.load();
 
   // Bars come back after an edge swipe, the keyboard or a system dialog.
   // Hide them again after a short delay.
@@ -97,6 +101,22 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
           child: LevelSelectView(
             levelCount: kLevelCount,
             cleared: _cleared,
+            maxPlayable: Restaurant.maxPlayableLevel,
+            onShopLocked: (n) {
+              final shop = Restaurant.shopOfLevel(n);
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(SnackBar(
+                    content: Text(L10n.t('shopLockedHint', {
+                  'name': shop == null ? '' : L10n.t(shop.nameKey),
+                }))));
+            },
+            onRestaurant: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const RestaurantScreen()),
+              );
+              _refresh();
+            },
             onSettings: () async {
               await Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const SettingsScreen()),
@@ -135,6 +155,7 @@ class _GameScreenState extends State<GameScreen> {
     game.hud.addListener(() {
       if (game.hud.value.status == GameStatus.won) {
         Progress.markCleared(widget.levelNumber);
+        Restaurant.recordStars(widget.levelNumber, game.hud.value.stars);
       }
     });
     return game;
@@ -188,7 +209,8 @@ class _GameScreenState extends State<GameScreen> {
                       ResultOverlay(
                         game: game,
                         onLevels: () => Navigator.of(context).pop(),
-                        onNext: widget.levelNumber < kLevelCount
+                        onNext: widget.levelNumber < kLevelCount &&
+                                widget.levelNumber < Restaurant.maxPlayableLevel
                             ? () async {
                                 if (!await ensureLife(context) ||
                                     !context.mounted) {
