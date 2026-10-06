@@ -56,8 +56,35 @@ void main() {
     expect(Wallet.consume(Booster.shuffle), isFalse);
   });
 
+  test('shop: single price, bundle discount, and stock goes up', () {
+    expect(Wallet.price(Booster.chopsticks, 1), 15);
+    expect(Wallet.price(Booster.chopsticks, 3), 36); // 45 less 20%
+    expect(Wallet.buy(Booster.chopsticks, 3), isTrue);
+    expect(Wallet.count(Booster.chopsticks), 3);
+    expect(Wallet.coins.value, Wallet.startingCoins - 36);
+  });
+
+  test('shop: buying fails without enough coins and changes nothing', () {
+    Wallet.coins.value = 10;
+    expect(Wallet.buy(Booster.extraMoves, 1), isFalse);
+    expect(Wallet.count(Booster.extraMoves), 0);
+    expect(Wallet.coins.value, 10);
+  });
+
   test('every string exists in both languages', () {
-    const keys = ['pickPlate', 'win', 'lose', 'chopsticks', 'extraMoves'];
+    const keys = [
+      'pickPlate',
+      'win',
+      'lose',
+      'chopsticks',
+      'extraMoves',
+      'shop',
+      'owned',
+      'bought',
+      'bundleSave',
+      'descShuffle',
+      'livesFull',
+    ];
     for (final lang in L10n.languages.keys) {
       Settings.language.value = lang;
       for (final k in keys) {

@@ -20,6 +20,15 @@ abstract final class Wallet {
     Booster.shuffle: 10,
   };
 
+  /// Shop bundle: buying this many at once is [bundleDiscount] cheaper.
+  static const bundleSize = 3;
+  static const bundleDiscount = 0.8;
+
+  /// Coins for buying [qty] of [b] in the shop.
+  static int price(Booster b, int qty) => qty >= bundleSize
+      ? (cost[b]! * qty * bundleDiscount).round()
+      : cost[b]! * qty;
+
   static final lives = ValueNotifier<int>(maxLives);
   static final coins = ValueNotifier<int>(startingCoins);
   static final stock = ValueNotifier<Map<Booster, int>>(const {});
@@ -94,6 +103,16 @@ abstract final class Wallet {
   static void grant(Booster b, int n) {
     stock.value = {...stock.value, b: count(b) + n};
     _save();
+  }
+
+  /// Buys [qty] boosters into the stock; false when the coins don't stretch.
+  static bool buy(Booster b, int qty) {
+    final p = price(b, qty);
+    if (qty <= 0 || coins.value < p) return false;
+    coins.value -= p;
+    stock.value = {...stock.value, b: count(b) + qty};
+    _save();
+    return true;
   }
 
   static int count(Booster b) => stock.value[b] ?? 0;

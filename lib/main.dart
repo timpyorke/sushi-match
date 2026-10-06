@@ -17,6 +17,7 @@ import 'services/restaurant.dart';
 import 'services/tips.dart';
 import 'ui/level_select.dart';
 import 'ui/restaurant_screen.dart';
+import 'ui/shop_screen.dart';
 import 'ui/tip_overlay.dart';
 import 'ui/l10n.dart';
 import 'ui/lives_ui.dart';
@@ -146,6 +147,9 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
               );
               _refresh();
             },
+            onShop: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const BoosterShopScreen()),
+            ),
             onSettings: () async {
               await Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const SettingsScreen()),

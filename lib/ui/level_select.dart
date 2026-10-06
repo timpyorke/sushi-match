@@ -22,6 +22,7 @@ class LevelSelectView extends StatefulWidget {
       this.maxPlayable,
       required this.onShopLocked,
       this.onRestaurant,
+      this.onShop,
       this.onSettings});
 
   final int levelCount;
@@ -33,6 +34,7 @@ class LevelSelectView extends StatefulWidget {
   /// Highest level whose restaurant is unlocked; null means no limit.
   final int? maxPlayable;
   final VoidCallback? onRestaurant;
+  final VoidCallback? onShop;
 
   /// Called when a level behind a locked restaurant is tapped.
   final ValueChanged<int> onShopLocked;
@@ -108,11 +110,23 @@ class _LevelSelectViewState extends State<LevelSelectView> {
       children: [
         Row(
           children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 12, top: 8),
-              child: WalletBar(),
+            // Shrinks on narrow phones so the three buttons still fit.
+            const Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(left: 12, top: 8),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: WalletBar(),
+                ),
+              ),
             ),
-            const Spacer(),
+            if (widget.onShop != null)
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: RoundIconButton(
+                    icon: Icons.shopping_bag, onPressed: widget.onShop!),
+              ),
             if (widget.onRestaurant != null)
               Padding(
                 padding: const EdgeInsets.only(right: 8),
