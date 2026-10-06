@@ -36,7 +36,7 @@ class SushiGame extends FlameGame {
   late final ValueNotifier<HudState> hud;
 
   @override
-  Color backgroundColor() => const Color(0xFFF3E6D0);
+  Color backgroundColor() => const Color(0x00000000);
 
   @override
   Future<void> onLoad() async => _mountBoard();

@@ -8,10 +8,24 @@ import 'core/level.dart';
 import 'game/sushi_game.dart';
 import 'ui/hud.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  await _enterImmersive();
+
+  // Bars come back after an edge swipe, the keyboard or a system dialog.
+  // Hide them again after a short delay.
+  SystemChrome.setSystemUIChangeCallback((visible) async {
+    if (visible) {
+      await Future.delayed(const Duration(seconds: 2));
+      await _enterImmersive();
+    }
+  });
   runApp(const SushiMatchApp());
 }
+
+Future<void> _enterImmersive() =>
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
 class SushiMatchApp extends StatelessWidget {
   const SushiMatchApp({super.key});
@@ -42,16 +56,21 @@ class _GameScreenState extends State<GameScreen> {
 
   Future<SushiGame> _load() async {
     final raw = await rootBundle.loadString('assets/levels/level_001.json');
-    final level =
-        LevelConfig.fromJson(jsonDecode(raw) as Map<String, dynamic>);
+    final level = LevelConfig.fromJson(jsonDecode(raw) as Map<String, dynamic>);
     return SushiGame(level: level);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF3E6D0),
-      body: SafeArea(
+        body: DecoratedBox(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/bg.png'),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: SafeArea(
         child: FutureBuilder<SushiGame>(
           future: _game,
           builder: (context, snap) {
@@ -80,6 +99,6 @@ class _GameScreenState extends State<GameScreen> {
           },
         ),
       ),
-    );
+    ));
   }
 }

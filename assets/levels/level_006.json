@@ -1,0 +1,23 @@
+{
+  "id": 6,
+  "version": 1,
+  "board": { "cols": 8, "rows": 8 },
+  "layout": [
+    "........",
+    "........",
+    "........",
+    "........",
+    "........",
+    "........",
+    "........",
+    "........"
+  ],
+  "legend": { ".": "cell", "X": "void" },
+  "pieces": ["salmon", "maguro", "tamago", "ebi", "kappa"],
+  "moves": 20,
+  "goals": [
+    { "type": "collect", "piece": "ebi", "count": 25 }
+  ],
+  "stars": [3000, 4800, 7000],
+  "seed": 60613
+}
