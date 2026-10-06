@@ -187,7 +187,12 @@ class GameEngine {
   }
 
   List<BoardStep> _endTurn({bool spendMove = true}) {
-    // TODO(conveyor): shift conveyor rows here, before the move is counted.
+    final shifted = <BoardStep>[];
+    if (spendMove && !goals.every((g) => g.done)) {
+      shifted
+        ..addAll(_runConveyors())
+        ..addAll(_cascade(MatchFinder.find(board), startAt: 1));
+    }
     if (spendMove) movesLeft--;
     final won = goals.every((g) => g.done);
     if (won) {
@@ -196,11 +201,35 @@ class GameEngine {
       status = GameStatus.lost;
     }
     return [
+      ...shifted,
       if (won) ..._bonusRound(),
       if (status == GameStatus.playing && MoveFinder.findMove(board) == null)
         ShuffleStep(BoardFactory.shuffle(board, rng)),
       TurnEndStep(movesLeft: movesLeft, score: score, status: status),
     ];
+  }
+
+  /// Slides every conveyor row one cell along its playable cells, wrapping
+  /// the last piece round. Returns nothing when no piece moved.
+  List<BoardStep> _runConveyors() {
+    final steps = <BoardStep>[];
+    for (final c in level.conveyors) {
+      final cells = [
+        for (var col = 0; col < board.cols; col++)
+          if (board.isPlayable(Pos(c.row, col))) Pos(c.row, col),
+      ];
+      if (cells.length < 2) continue;
+      final pieces = [for (final p in cells) board[p]];
+      if (pieces.any((p) => p == null)) continue;
+      final moves = <FallMove>[];
+      for (var i = 0; i < cells.length; i++) {
+        final to = cells[(i + c.dir + cells.length) % cells.length];
+        board[to] = pieces[i];
+        moves.add(FallMove(pieces[i]!.id, cells[i], to));
+      }
+      steps.add(ConveyorStep(moves));
+    }
+    return steps;
   }
 
   /// Turns each leftover move into a random Knife/Wasabi on a plain piece,

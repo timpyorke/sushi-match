@@ -12,7 +12,7 @@ void main() {
         .where((f) => f.path.endsWith('.json'))
         .toList()
       ..sort((a, b) => a.path.compareTo(b.path));
-    expect(files.length, 20);
+    expect(files.length, 21);
     for (final f in files) {
       final level = LevelConfig.fromJson(
           jsonDecode(f.readAsStringSync()) as Map<String, dynamic>);

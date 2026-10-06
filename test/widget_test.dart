@@ -14,7 +14,7 @@ void main() {
     await tester.pump();
 
     expect(find.text('Pick a plate'), findsOneWidget);
-    expect(find.byIcon(Icons.lock), findsNWidgets(19));
+    expect(find.byIcon(Icons.lock), findsNWidgets(20));
   });
 
   testWidgets('clearing a level unlocks the next', (WidgetTester tester) async {
@@ -22,7 +22,7 @@ void main() {
     await tester.pumpWidget(const SushiMatchApp());
     await tester.pump();
 
-    expect(find.byIcon(Icons.lock), findsNWidgets(16));
+    expect(find.byIcon(Icons.lock), findsNWidgets(17));
     expect(find.byType(StarIcon), findsNWidgets(3));
   });
 }

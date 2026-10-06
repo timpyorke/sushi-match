@@ -56,7 +56,7 @@ class SushiMatchApp extends StatelessWidget {
   }
 }
 
-const int kLevelCount = 20;
+const int kLevelCount = 21;
 
 String _levelAsset(int n) =>
     'assets/levels/level_${n.toString().padLeft(3, '0')}.json';

@@ -106,6 +106,12 @@ final class NoriStep extends BoardStep {
   final Map<Pos, int> layers;
 }
 
+/// A conveyor row sliding one cell; the end piece wraps to the far side.
+final class ConveyorStep extends BoardStep {
+  const ConveyorStep(this.moves);
+  final List<FallMove> moves;
+}
+
 final class ShuffleStep extends BoardStep {
   const ShuffleStep(this.positions);
 

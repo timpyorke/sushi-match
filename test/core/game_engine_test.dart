@@ -13,6 +13,7 @@ import 'helpers.dart';
 
 void main() {
   noriAndBoosterTests();
+  conveyorTests();
   void expectStableBoard(GameEngine e) {
     final ids = <int>{};
     for (final p in e.board.positions) {
@@ -216,5 +217,31 @@ void noriAndBoosterTests() {
       expect(e.status, GameStatus.playing);
       expect(e.movesLeft, 5);
     });
+  });
+}
+
+void conveyorTests() {
+  test('conveyor shifts its row each turn and keeps the board stable', () {
+    final level = LevelConfig.fromJson({
+      'id': 99,
+      'board': {'cols': 7, 'rows': 7},
+      'pieces': ['salmon', 'maguro', 'tamago', 'ikura', 'kappa'],
+      'moves': 30,
+      'goals': [
+        {'type': 'collect', 'piece': 'salmon', 'count': 9999},
+      ],
+      'conveyors': [
+        {'row': 3, 'dir': 'right'},
+      ],
+      'seed': 5,
+    });
+    final e = GameEngine(level);
+    expect(level.conveyors.single.dir, 1);
+    final move = MoveFinder.findMove(e.board)!;
+    final steps = e.trySwap(move.$1, move.$2);
+    expect(steps.whereType<ConveyorStep>(), isNotEmpty);
+    final ids = {for (final p in e.board.positions) e.board[p]!.id};
+    expect(ids.length, 49);
+    expect(mf.MatchFinder.find(e.board), isEmpty);
   });
 }

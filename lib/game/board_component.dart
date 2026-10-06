@@ -78,6 +78,8 @@ class BoardComponent extends PositionComponent
     ..color = const Color(0xFF6BAA75)
     ..style = PaintingStyle.stroke
     ..strokeWidth = 2.5;
+  static final _beltPaint = Paint()..color = const Color(0x664A3B2A);
+  static final _beltArrow = Paint()..color = const Color(0xCCFFF1D6);
   static final _selPaint = Paint()..color = const Color(0x88FFFFFF);
 
   @override
@@ -106,6 +108,30 @@ class BoardComponent extends PositionComponent
         RRect.fromRectAndRadius(rect.deflate(1.5), const Radius.circular(8)),
         (p.row + p.col).isEven ? _cellA : _cellB,
       );
+    }
+    for (final c in engine.level.conveyors) {
+      final cols = [
+        for (var col = 0; col < board.cols; col++)
+          if (board.isPlayable(Pos(c.row, col))) col,
+      ];
+      if (cols.isEmpty) continue;
+      final y = c.row * cell;
+      final band = Rect.fromLTWH(
+          cols.first * cell, y, (cols.last - cols.first + 1) * cell, cell);
+      canvas.drawRRect(
+          RRect.fromRectAndRadius(band.deflate(1), const Radius.circular(8)),
+          _beltPaint);
+      for (final col in cols) {
+        final cx = col * cell + cell / 2, cy = y + cell - 9;
+        final d = c.dir * 6.0;
+        canvas.drawPath(
+            Path()
+              ..moveTo(cx - d, cy - 5)
+              ..lineTo(cx + d, cy)
+              ..lineTo(cx - d, cy + 5)
+              ..close(),
+            _beltArrow);
+      }
     }
     for (var i = 0; i < _nori.length; i++) {
       final layers = _nori[i];
@@ -308,6 +334,18 @@ class BoardComponent extends PositionComponent
           pending.clear();
         case NoriStep(:final layers):
           layers.forEach((p, n) => _nori[p.row * board.cols + p.col] = n);
+        case ConveyorStep(:final moves):
+          for (final m in moves) {
+            _at.remove(m.from);
+          }
+          final slides = <Future<void>>[];
+          for (final m in moves) {
+            final v = _views[m.pieceId];
+            if (v == null) continue;
+            _at[m.to] = v;
+            slides.add(_moveTo(v, _center(m.to), 0.3));
+          }
+          await Future.wait(slides);
         case ShuffleStep(:final positions):
           _at.clear();
           final moves = <Future<void>>[];

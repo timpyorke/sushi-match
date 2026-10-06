@@ -38,6 +38,22 @@ class LevelGoal {
   }
 }
 
+/// A row whose pieces slide one cell in [dir] (-1 left, +1 right) every turn.
+class Conveyor {
+  const Conveyor(this.row, this.dir);
+  final int row;
+  final int dir;
+
+  factory Conveyor.fromJson(Map<String, dynamic> j) {
+    final dir = switch (j['dir']) {
+      'left' => -1,
+      'right' => 1,
+      final d => throw FormatException('conveyor dir "$d" must be left/right'),
+    };
+    return Conveyor(j['row'] as int, dir);
+  }
+}
+
 class LevelConfig {
   LevelConfig({
     required this.id,
@@ -50,6 +66,7 @@ class LevelConfig {
     required this.goals,
     required this.stars,
     required this.seed,
+    this.conveyors = const [],
   });
 
   final int id;
@@ -66,6 +83,7 @@ class LevelConfig {
   final List<LevelGoal> goals;
   final List<int> stars;
   final int seed;
+  final List<Conveyor> conveyors;
 
   /// Parses the GDD level schema. `nori` / `nori:N` legend values put N
   /// layers under a cell; other values besides "void" are plain cells for now
@@ -91,6 +109,15 @@ class LevelConfig {
             ? (v.contains(':') ? int.parse(v.split(':')[1]) : 1)
             : 0,
     ];
+    final conveyors = [
+      for (final c in (j['conveyors'] as List? ?? const []))
+        Conveyor.fromJson(c as Map<String, dynamic>),
+    ];
+    for (final c in conveyors) {
+      if (c.row < 0 || c.row >= rows) {
+        throw FormatException('conveyor row ${c.row} is off the board');
+      }
+    }
     return LevelConfig(
       id: j['id'] as int,
       rows: rows,
@@ -108,6 +135,7 @@ class LevelConfig {
               noriCells: nori.where((n) => n > 0).length),
       ],
       stars: (j['stars'] as List? ?? const []).cast<int>(),
+      conveyors: conveyors,
       seed: j['seed'] as int? ?? DateTime.now().millisecondsSinceEpoch,
     );
   }
