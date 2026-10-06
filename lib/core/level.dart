@@ -1,6 +1,6 @@
 import 'piece.dart';
 
-enum GoalType { collect, score, clearNori }
+enum GoalType { collect, score, clearNori, breakIce }
 
 class LevelGoal {
   const LevelGoal.collect(PieceKind this.piece, this.count)
@@ -14,11 +14,17 @@ class LevelGoal {
       : type = GoalType.clearNori,
         piece = null;
 
+  /// Break every block of ice; [count] is the number of iced cells.
+  const LevelGoal.breakIce(this.count)
+      : type = GoalType.breakIce,
+        piece = null;
+
   final GoalType type;
   final PieceKind? piece;
   final int count;
 
-  factory LevelGoal.fromJson(Map<String, dynamic> j, {int noriCells = 0}) {
+  factory LevelGoal.fromJson(Map<String, dynamic> j,
+      {int noriCells = 0, int iceCells = 0}) {
     switch (j['type']) {
       case 'collect':
         return LevelGoal.collect(
@@ -30,6 +36,11 @@ class LevelGoal {
           throw const FormatException('clear_nori needs nori cells in layout');
         }
         return LevelGoal.clearNori(noriCells);
+      case 'break_ice':
+        if (iceCells == 0) {
+          throw const FormatException('break_ice needs ice cells in layout');
+        }
+        return LevelGoal.breakIce(iceCells);
       default:
         // deliver / break arrive together with their blockers.
         throw UnsupportedError(
@@ -61,6 +72,7 @@ class LevelConfig {
     required this.cols,
     required this.playable,
     required this.nori,
+    this.ice = const [],
     required this.pieces,
     required this.moves,
     required this.goals,
@@ -78,6 +90,10 @@ class LevelConfig {
 
   /// Row-major nori layers under each cell (0 = none).
   final List<int> nori;
+
+  /// Row-major ice layers caging the piece that starts in each cell; empty
+  /// means none.
+  final List<int> ice;
   final List<PieceKind> pieces;
   final int moves;
   final List<LevelGoal> goals;
@@ -86,8 +102,9 @@ class LevelConfig {
   final List<Conveyor> conveyors;
 
   /// Parses the GDD level schema. `nori` / `nori:N` legend values put N
-  /// layers under a cell; other values besides "void" are plain cells for now
-  /// (ice, ... come later).
+  /// layers under a cell, `ice` / `ice:N` cage the piece that starts there in
+  /// N layers of ice; other values besides "void" are plain cells for now
+  /// (rice bags, ... come later).
   factory LevelConfig.fromJson(Map<String, dynamic> j) {
     final board = j['board'] as Map<String, dynamic>;
     final rows = board['rows'] as int;
@@ -109,6 +126,12 @@ class LevelConfig {
             ? (v.contains(':') ? int.parse(v.split(':')[1]) : 1)
             : 0,
     ];
+    final ice = [
+      for (final v in cellsOf)
+        v.startsWith('ice')
+            ? (v.contains(':') ? int.parse(v.split(':')[1]) : 1)
+            : 0,
+    ];
     final conveyors = [
       for (final c in (j['conveyors'] as List? ?? const []))
         Conveyor.fromJson(c as Map<String, dynamic>),
@@ -124,6 +147,7 @@ class LevelConfig {
       cols: cols,
       playable: [for (final v in cellsOf) v != 'void'],
       nori: nori,
+      ice: ice,
       pieces: [
         for (final p in j['pieces'] as List)
           PieceKind.values.byName(p as String),
@@ -132,7 +156,8 @@ class LevelConfig {
       goals: [
         for (final g in j['goals'] as List)
           LevelGoal.fromJson(g as Map<String, dynamic>,
-              noriCells: nori.where((n) => n > 0).length),
+              noriCells: nori.where((n) => n > 0).length,
+              iceCells: ice.where((n) => n > 0).length),
       ],
       stars: (j['stars'] as List? ?? const []).cast<int>(),
       conveyors: conveyors,

@@ -212,6 +212,18 @@ class _GameScreenState extends State<GameScreen> {
                       if (game.level.conveyors.isNotEmpty)
                         const TipOverlay(
                             id: 'conveyor', emoji: '➡️🔒', text: 'tipConveyor'),
+                      // Never stack two tips: ice waits until the belt tip
+                      // has been dismissed.
+                      if (game.level.ice.any((n) => n > 0))
+                        ListenableBuilder(
+                          listenable: Tips.seen,
+                          builder: (context, _) =>
+                              game.level.conveyors.isNotEmpty &&
+                                      !Tips.isSeen('conveyor')
+                                  ? const SizedBox.shrink()
+                                  : const TipOverlay(
+                                      id: 'ice', emoji: '🧊', text: 'tipIce'),
+                        ),
                       ResultOverlay(
                         game: game,
                         onLevels: () => Navigator.of(context).pop(),

@@ -8,17 +8,18 @@
   "layout": [
     "XXXX.XXXX",
     "XXX...XXX",
-    "XX.....XX",
+    "XXIIIIIXX",
     "X.......X",
     ".........",
     "X.......X",
-    "XX.....XX",
+    "XXIIIIIXX",
     "XXX...XXX",
     "XXXX.XXXX"
   ],
   "legend": {
     ".": "cell",
-    "X": "void"
+    "X": "void",
+    "I": "ice:1"
   },
   "pieces": [
     "salmon",
@@ -31,20 +32,13 @@
   "moves": 38,
   "goals": [
     {
+      "type": "break_ice"
+    },
+    {
       "type": "score",
-      "count": 5900
-    },
-    {
-      "type": "collect",
-      "piece": "ebi",
-      "count": 20
-    },
-    {
-      "type": "collect",
-      "piece": "tamago",
-      "count": 20
+      "count": 5700
     }
   ],
-  "stars": [6200, 8000, 10600],
+  "stars": [5800, 7700, 9600],
   "seed": 363888
 }

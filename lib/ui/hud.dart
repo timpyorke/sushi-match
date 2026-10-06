@@ -45,6 +45,7 @@ class HudBar extends StatelessWidget {
         GoalType.collect => L10n.t(g.piece!.name),
         GoalType.score => L10n.t('target'),
         GoalType.clearNori => L10n.t('nori'),
+        GoalType.breakIce => L10n.t('ice'),
       };
 }
 

@@ -23,7 +23,8 @@ class Board {
     for (var i = 0; i < _cells.length; i++) {
       final p = _cells[i];
       if (p != null) {
-        b._cells[i] = Piece(id: p.id, kind: p.kind, special: p.special);
+        b._cells[i] = Piece(id: p.id, kind: p.kind, special: p.special)
+          ..ice = p.ice;
       }
     }
     return b;
@@ -36,6 +37,12 @@ class Board {
 
   /// False for out-of-bounds and void cells.
   bool isPlayable(Pos p) => inBounds(p) && _playable[_i(p)];
+
+  /// Kind used for matching: null for empty cells, Omakase and frozen pieces.
+  PieceKind? matchKind(Pos p) {
+    final piece = this[p];
+    return piece == null || piece.frozen ? null : piece.kind;
+  }
 
   Piece? operator [](Pos p) => inBounds(p) ? _cells[_i(p)] : null;
 

@@ -6,19 +6,20 @@
     "rows": 9
   },
   "layout": [
-    ".........",
-    ".........",
-    ".........",
-    "...X.X...",
-    ".........",
-    "...X.X...",
-    ".........",
-    ".........",
-    "........."
+    "....I....",
+    "....I....",
+    "....I....",
+    "...XIX...",
+    "IIIIIIIII",
+    "...XIX...",
+    "....I....",
+    "....I....",
+    "....I...."
   ],
   "legend": {
     ".": "cell",
-    "X": "void"
+    "X": "void",
+    "I": "ice:1"
   },
   "pieces": [
     "salmon",
@@ -31,21 +32,19 @@
   "moves": 37,
   "goals": [
     {
-      "type": "collect",
-      "piece": "salmon",
-      "count": 34
+      "type": "break_ice"
     },
     {
       "type": "collect",
-      "piece": "ikura",
-      "count": 34
+      "piece": "salmon",
+      "count": 28
     },
     {
       "type": "collect",
       "piece": "kappa",
-      "count": 34
+      "count": 28
     }
   ],
-  "stars": [6500, 8900, 11400],
+  "stars": [5600, 8400, 11400],
   "seed": 343672
 }

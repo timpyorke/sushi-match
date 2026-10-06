@@ -10,7 +10,8 @@ abstract final class BoardFactory {
   /// Fills every playable cell so the board starts with no matches (no 3-runs,
   /// no 2×2) and at least one valid move.
   static void fillInitial(Board b, List<PieceKind> kinds, Random rng,
-      Piece Function(PieceKind) make) {
+      Piece Function(PieceKind) make,
+      {int Function(Pos)? iceAt}) {
     for (var attempt = 0; attempt < 100; attempt++) {
       for (final p in b.positions) {
         final banned = <PieceKind>{};
@@ -27,7 +28,9 @@ abstract final class BoardFactory {
             if (!banned.contains(k)) k
         ];
         final pool = allowed.isEmpty ? kinds : allowed;
-        b[p] = make(pool[rng.nextInt(pool.length)]);
+        final piece = make(pool[rng.nextInt(pool.length)]);
+        piece.ice = iceAt?.call(p) ?? 0;
+        b[p] = piece;
       }
       if (MatchFinder.find(b).isEmpty && MoveFinder.findMove(b) != null) {
         return;

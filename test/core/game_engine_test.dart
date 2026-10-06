@@ -14,6 +14,7 @@ import 'helpers.dart';
 void main() {
   noriAndBoosterTests();
   conveyorTests();
+  iceTests();
   void expectStableBoard(GameEngine e) {
     final ids = <int>{};
     for (final p in e.board.positions) {
@@ -327,5 +328,78 @@ void conveyorTests() {
     final ids = {for (final p in e.board.positions) e.board[p]!.id};
     expect(ids.length, 49);
     expect(mf.MatchFinder.find(e.board), isEmpty);
+  });
+}
+
+LevelConfig _iceLevel() => LevelConfig.fromJson({
+      'id': 1,
+      'board': {'cols': 7, 'rows': 7},
+      'layout': [
+        '.......',
+        '.......',
+        '.......',
+        '...I...',
+        '.......',
+        '.......',
+        '.......',
+      ],
+      'legend': {'.': 'cell', 'I': 'ice:2'},
+      'pieces': ['salmon', 'maguro', 'tamago', 'ikura', 'kappa'],
+      'moves': 99,
+      'goals': [
+        {'type': 'break_ice'},
+      ],
+      'seed': 1,
+    });
+
+void iceTests() {
+  group('ice', () {
+    test('parses layers and goal size; starts the piece frozen', () {
+      final level = _iceLevel();
+      expect(level.ice.where((n) => n > 0), [2]);
+      expect(level.goals.single.type, GoalType.breakIce);
+      expect(level.goals.single.count, 1);
+      final e = GameEngine(level);
+      expect(e.board[const Pos(3, 3)]!.ice, 2);
+      expect(e.goals.single.current, 0);
+    });
+
+    test('frozen pieces cannot be swapped by hand', () {
+      final e = GameEngine(_iceLevel());
+      final steps = e.trySwap(const Pos(3, 3), const Pos(3, 4));
+      expect(steps.single, isA<InvalidSwapStep>());
+      expect(e.movesLeft, 99);
+      expect(e.useFreeSwap(const Pos(3, 3), const Pos(0, 0)), isEmpty);
+    });
+
+    test('frozen pieces neither match nor offer moves', () {
+      final b = boardFrom(['sss', 'mtm', 'tmt']);
+      expect(mf.MatchFinder.find(b), hasLength(1));
+      b[const Pos(0, 1)]!.ice = 1;
+      expect(mf.MatchFinder.find(b), isEmpty);
+    });
+
+    test('a clear next to the ice cracks it layer by layer', () {
+      final e = GameEngine(_iceLevel());
+      final id = e.board[const Pos(3, 3)]!.id;
+      Pos where() => e.board.positions.firstWhere((p) => e.board[p]!.id == id);
+      final steps = e.useChopsticks(const Pos(3, 2));
+      // Cascades from the refill may crack it again, but never skip a layer.
+      expect(steps.whereType<IceStep>().first.hits.single.layers, 1);
+      for (var i = 0; i < 20 && !e.goals.single.done; i++) {
+        e.useChopsticks(where() + const Pos(0, 1));
+      }
+      expect(e.goals.single.done, isTrue);
+      expect(e.status, GameStatus.won);
+    });
+
+    test('chopsticks on the ice itself crack it without clearing the piece',
+        () {
+      final e = GameEngine(_iceLevel());
+      final id = e.board[const Pos(3, 3)]!.id;
+      e.useChopsticks(const Pos(3, 3));
+      final at = e.board.positions.firstWhere((p) => e.board[p]!.id == id);
+      expect(e.board[at]!.ice, 1);
+    });
   });
 }

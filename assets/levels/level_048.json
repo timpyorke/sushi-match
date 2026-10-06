@@ -9,16 +9,18 @@
     ".........",
     ".........",
     "X.......X",
-    "XX.....XX",
-    "XXX...XXX",
-    "XX.....XX",
+    "XX.JJJ.XX",
+    "XXXJJJXXX",
+    "XX.JJJ.XX",
     "X.......X",
     ".........",
     "........."
   ],
   "legend": {
     ".": "cell",
-    "X": "void"
+    "X": "void",
+    "I": "ice:1",
+    "J": "ice:2"
   },
   "pieces": [
     "salmon",
@@ -28,19 +30,18 @@
     "ebi",
     "kappa"
   ],
-  "moves": 44,
+  "moves": 38,
   "goals": [
     {
-      "type": "score",
-      "count": 9100
+      "type": "break_ice"
     },
     {
       "type": "collect",
       "piece": "ebi",
-      "count": 25
+      "count": 42
     }
   ],
-  "stars": [9500, 12100, 15800],
+  "stars": [6600, 9200, 12300],
   "conveyors": [
     {
       "row": 1,

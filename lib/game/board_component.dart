@@ -390,6 +390,12 @@ class BoardComponent extends PositionComponent
           pending.clear();
         case NoriStep(:final layers):
           layers.forEach((p, n) => _nori[p.row * board.cols + p.col] = n);
+        case IceStep(:final hits):
+          for (final h in hits) {
+            _views[h.pieceId]?.ice = h.layers;
+            if (h.layers == 0) _burst(_center(h.pos), _iceChip);
+          }
+          await _wait(0.12);
         case ConveyorStep(:final moves):
           for (final m in moves) {
             _at.remove(m.from);
@@ -437,6 +443,7 @@ class BoardComponent extends PositionComponent
       pieceId: s.id,
       kind: s.kind,
       special: s.special,
+      ice: s.ice,
       cellSize: cell,
       position: from ?? _center(at),
     );
@@ -477,11 +484,12 @@ class BoardComponent extends PositionComponent
   }
 
   static final _rice = Paint()..color = const Color(0xFFFFFDF5);
+  static final _iceChip = Paint()..color = const Color(0xFFBFE8FA);
   static final _sesame = Paint()..color = const Color(0xFF3B2A20);
   final _rng = math.Random();
 
   /// Rice and sesame grains flying off a cleared piece.
-  void _burst(Vector2 at) {
+  void _burst(Vector2 at, [Paint? paint]) {
     _layer.add(ParticleSystemComponent(
       position: at.clone(),
       particle: Particle.generate(
@@ -493,7 +501,7 @@ class BoardComponent extends PositionComponent
               (_rng.nextDouble() - 0.5) * 240, -60 - _rng.nextDouble() * 170),
           child: CircleParticle(
             radius: i.isEven ? 2.8 : 2.0,
-            paint: i.isEven ? _rice : _sesame,
+            paint: paint ?? (i.isEven ? _rice : _sesame),
           ),
         ),
       ),

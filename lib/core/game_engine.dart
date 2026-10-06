@@ -30,7 +30,9 @@ class GameEngine {
         _nori = List.of(level.nori),
         movesLeft = level.moves {
     board.lockedRows = {for (final c in level.conveyors) c.row};
-    BoardFactory.fillInitial(board, level.pieces, rng, _makePiece);
+    BoardFactory.fillInitial(board, level.pieces, rng, _makePiece,
+        iceAt: (p) =>
+            level.ice.isEmpty ? 0 : level.ice[p.row * level.cols + p.col]);
   }
 
   GameEngine._fork(GameEngine o, int seed)
@@ -77,6 +79,7 @@ class GameEngine {
               GoalType.collect => _collected[g.piece] ?? 0,
               GoalType.score => score,
               GoalType.clearNori => g.count - _nori.where((n) => n > 0).length,
+              GoalType.breakIce => g.count - _frozenCount,
             },
           ),
       ];
@@ -84,6 +87,11 @@ class GameEngine {
   int get stars => status != GameStatus.won
       ? 0
       : max(1, level.stars.where((s) => score >= s).length);
+
+  int get _frozenCount => [
+        for (final p in board.positions)
+          if (board[p]?.frozen ?? false) p,
+      ].length;
 
   /// Nori layers currently under [p] (0 when none).
   int noriAt(Pos p) =>
@@ -102,6 +110,8 @@ class GameEngine {
     if (pa == null || pb == null) return const [];
     // Conveyor rows are locked: the belt moves them, the player cannot.
     if (board.isLocked(a) || board.isLocked(b)) return [InvalidSwapStep(a, b)];
+    // Iced pieces stay put until the ice is cracked.
+    if (pa.frozen || pb.frozen) return [InvalidSwapStep(a, b)];
 
     final specialSwap =
         pa.isOmakase || pb.isOmakase || (pa.isSpecial && pb.isSpecial);
@@ -148,7 +158,9 @@ class GameEngine {
     if (status != GameStatus.playing ||
         a == b ||
         board[a] == null ||
-        board[b] == null) {
+        board[b] == null ||
+        board[a]!.frozen ||
+        board[b]!.frozen) {
       return const [];
     }
     _aftershocks.clear();
@@ -264,7 +276,7 @@ class GameEngine {
   List<BoardStep> _bonusRound() {
     final plain = [
       for (final p in board.positions)
-        if (board[p] != null && !board[p]!.isSpecial) p,
+        if (board[p] != null && !board[p]!.isSpecial && !board[p]!.frozen) p,
     ]..shuffle(rng);
     final picked = plain.take(max(0, movesLeft)).toList();
     movesLeft = 0;
@@ -305,10 +317,17 @@ class GameEngine {
     final cleared = <Pos>{};
     final activated = <Pos>{...consumed};
     final queue = Queue<Pos>();
+    // Iced pieces hit by a blast or touched by a clear lose one layer.
+    final cracked = <Pos>{};
 
     void mark(Pos p) {
       final piece = board[p];
-      if (piece == null || !cleared.add(p)) return;
+      if (piece == null) return;
+      if (piece.frozen) {
+        cracked.add(p);
+        return;
+      }
+      if (!cleared.add(p)) return;
       if (piece.isSpecial && !activated.contains(p)) queue.add(p);
     }
 
@@ -321,6 +340,13 @@ class GameEngine {
       final area = _areaOf(type, p, avoid: cleared);
       steps.add(SpecialActivateStep(type, p, area));
       area.forEach(mark);
+    }
+
+    for (final p in cleared) {
+      for (final d in const [Pos(0, 1), Pos(0, -1), Pos(1, 0), Pos(-1, 0)]) {
+        final q = p + d;
+        if (board[q]?.frozen ?? false) cracked.add(q);
+      }
     }
 
     final removed = <ClearedPiece>[];
@@ -355,6 +381,12 @@ class GameEngine {
       if (_nori[i] > 0) noriLeft[p] = --_nori[i];
     }
     if (noriLeft.isNotEmpty) steps.add(NoriStep(noriLeft));
+
+    if (cracked.isNotEmpty) {
+      steps.add(IceStep([
+        for (final p in cracked) IceHit(board[p]!.id, p, --board[p]!.ice),
+      ]));
+    }
     return steps;
   }
 

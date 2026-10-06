@@ -6,9 +6,10 @@ enum GameStatus { playing, won, lost }
 /// Immutable copy of a piece at the moment a step was produced, so the view
 /// never reads core state that has already moved on.
 class PieceSnapshot {
-  const PieceSnapshot(this.id, this.kind, this.special);
-  PieceSnapshot.of(Piece p) : this(p.id, p.kind, p.special);
+  const PieceSnapshot(this.id, this.kind, this.special, {this.ice = 0});
+  PieceSnapshot.of(Piece p) : this(p.id, p.kind, p.special, ice: p.ice);
 
+  final int ice;
   final int id;
   final PieceKind? kind;
   final SpecialType? special;
@@ -104,6 +105,21 @@ final class NoriStep extends BoardStep {
 
   /// cell -> layers remaining (0 = sheet gone).
   final Map<Pos, int> layers;
+}
+
+class IceHit {
+  const IceHit(this.pieceId, this.pos, this.layers);
+  final int pieceId;
+  final Pos pos;
+
+  /// Layers left after the hit (0 = the piece is free).
+  final int layers;
+}
+
+/// Ice cracked by a clear or a special blast.
+final class IceStep extends BoardStep {
+  const IceStep(this.hits);
+  final List<IceHit> hits;
 }
 
 /// A conveyor row sliding one cell; the end piece wraps to the far side.

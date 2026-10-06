@@ -32,6 +32,12 @@ class Piece {
   /// Mutable: Omakase + Knife/Wasabi combos upgrade pieces in place.
   SpecialType? special;
 
+  /// Ice layers caging the piece. A frozen piece cannot be swapped or
+  /// matched; clears next to it (or special blasts) crack one layer each.
+  int ice = 0;
+
+  bool get frozen => ice > 0;
+
   bool get isSpecial => special != null;
   bool get isOmakase => special == SpecialType.omakase;
 

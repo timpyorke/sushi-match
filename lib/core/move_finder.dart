@@ -20,7 +20,7 @@ abstract final class MoveFinder {
         final q = p + d;
         if (!b.isPlayable(q) || b.isLocked(p) || b.isLocked(q)) continue;
         final pa = b[p], pb = b[q];
-        if (pa == null || pb == null) continue;
+        if (pa == null || pb == null || pa.frozen || pb.frozen) continue;
         if (pa.isOmakase || pb.isOmakase || (pa.isSpecial && pb.isSpecial)) {
           yield (p, q);
           continue;
@@ -35,9 +35,9 @@ abstract final class MoveFinder {
 
   /// Cheap local check: does the piece at [p] belong to a 3-run or 2×2?
   static bool hasMatchAt(Board b, Pos p) {
-    final k = b[p]?.kind;
+    final k = b.matchKind(p);
     if (k == null) return false;
-    bool same(int r, int c) => b[Pos(r, c)]?.kind == k;
+    bool same(int r, int c) => b.matchKind(Pos(r, c)) == k;
 
     var h = 1;
     for (var c = p.col - 1; same(p.row, c); c--) {

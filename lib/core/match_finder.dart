@@ -31,10 +31,10 @@ abstract final class MatchFinder {
     for (var r = 0; r < b.rows; r++) {
       var c = 0;
       while (c < b.cols) {
-        final k = b[Pos(r, c)]?.kind;
+        final k = b.matchKind(Pos(r, c));
         var end = c + 1;
         if (k != null) {
-          while (end < b.cols && b[Pos(r, end)]?.kind == k) {
+          while (end < b.cols && b.matchKind(Pos(r, end)) == k) {
             end++;
           }
           if (end - c >= 3) {
@@ -49,10 +49,10 @@ abstract final class MatchFinder {
     for (var c = 0; c < b.cols; c++) {
       var r = 0;
       while (r < b.rows) {
-        final k = b[Pos(r, c)]?.kind;
+        final k = b.matchKind(Pos(r, c));
         var end = r + 1;
         if (k != null) {
-          while (end < b.rows && b[Pos(end, c)]?.kind == k) {
+          while (end < b.rows && b.matchKind(Pos(end, c)) == k) {
             end++;
           }
           if (end - r >= 3) {
@@ -66,11 +66,11 @@ abstract final class MatchFinder {
 
     for (var r = 0; r < b.rows - 1; r++) {
       for (var c = 0; c < b.cols - 1; c++) {
-        final k = b[Pos(r, c)]?.kind;
+        final k = b.matchKind(Pos(r, c));
         if (k != null &&
-            b[Pos(r, c + 1)]?.kind == k &&
-            b[Pos(r + 1, c)]?.kind == k &&
-            b[Pos(r + 1, c + 1)]?.kind == k) {
+            b.matchKind(Pos(r, c + 1)) == k &&
+            b.matchKind(Pos(r + 1, c)) == k &&
+            b.matchKind(Pos(r + 1, c + 1)) == k) {
           units.add(_Unit([
             Pos(r, c),
             Pos(r, c + 1),

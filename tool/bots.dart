@@ -23,6 +23,7 @@ Move greedy(GameEngine e, Random r) {
       if (g.piece != null) g.piece,
   };
   final hasNori = e.level.goals.any((g) => g.type == GoalType.clearNori);
+  final hasIce = e.level.goals.any((g) => g.type == GoalType.breakIce);
   Move? best;
   var bestScore = -1.0;
   for (final m in MoveFinder.allMoves(e.board)) {
@@ -37,6 +38,16 @@ Move greedy(GameEngine e, Random r) {
         for (final c in g.cells) {
           s += wanted.contains(g.kind) ? 1.5 : 1;
           if (hasNori && e.noriAt(c) > 0) s += 2;
+          if (hasIce) {
+            for (final d in const [
+              Pos(0, 1),
+              Pos(0, -1),
+              Pos(1, 0),
+              Pos(-1, 0)
+            ]) {
+              if (e.board[c + d]?.frozen ?? false) s += 2;
+            }
+          }
         }
         if (g.spawn != null) s += 4;
       }
@@ -84,7 +95,8 @@ Move planner(GameEngine e, Random r) {
   return best!;
 }
 
-({bool won, int stars, int score}) play(LevelConfig level, int seed, Move Function(GameEngine, Random) bot) {
+({bool won, int stars, int score}) play(
+    LevelConfig level, int seed, Move Function(GameEngine, Random) bot) {
   final e = GameEngine(level, seed: seed);
   final r = Random(seed ^ 0x5eed);
   var guard = 0;
@@ -94,4 +106,3 @@ Move planner(GameEngine e, Random r) {
   }
   return (won: e.status == GameStatus.won, stars: e.stars, score: e.score);
 }
-

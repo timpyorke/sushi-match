@@ -8,17 +8,18 @@
   "layout": [
     "XXX...XXX",
     "XX.....XX",
-    "X.......X",
-    ".........",
-    ".........",
-    ".........",
-    "X.......X",
+    "X.I...I.X",
+    "...I.I...",
+    "....I....",
+    "...I.I...",
+    "X.I...I.X",
     "XX.....XX",
     "XXX...XXX"
   ],
   "legend": {
     ".": "cell",
-    "X": "void"
+    "X": "void",
+    "I": "ice:1"
   },
   "pieces": [
     "salmon",
@@ -31,16 +32,14 @@
   "moves": 35,
   "goals": [
     {
-      "type": "collect",
-      "piece": "maguro",
-      "count": 36
+      "type": "break_ice"
     },
     {
       "type": "collect",
-      "piece": "ebi",
-      "count": 36
+      "piece": "maguro",
+      "count": 37
     }
   ],
-  "stars": [6300, 9400, 11900],
+  "stars": [6200, 9300, 12600],
   "seed": 313348
 }

@@ -30,6 +30,7 @@ abstract final class L10n {
       'score': 'Score',
       'target': 'Target',
       'nori': 'Nori',
+      'ice': 'Ice',
       'salmon': 'Salmon',
       'maguro': 'Maguro',
       'tamago': 'Tamago',
@@ -59,6 +60,7 @@ abstract final class L10n {
       'itemCollect': '{n} {piece}',
       'itemScore': 'a {n}-point feast',
       'itemNori': 'every nori sheet cleared',
+      'itemIce': 'every block of ice broken',
       'and': 'and',
       'cust0': 'Granny Sakura',
       'cust1': 'Mr. Tanaka',
@@ -90,6 +92,10 @@ abstract final class L10n {
       'tipConveyorBody': 'Rows with arrows slide one step after every move. '
           'They are locked, so you cannot swap them by hand. '
           'Plan ahead: matches the belt makes by itself earn nothing.',
+      'tipIceTitle': 'Frozen sushi',
+      'tipIceBody': 'Iced pieces cannot be swapped or matched. '
+          'Match next to one, or catch it in a blast, to crack a layer. '
+          'Break all the ice to win.',
     },
     'th': {
       'pickPlate': 'เลือกจานเลย',
@@ -108,6 +114,7 @@ abstract final class L10n {
       'score': 'คะแนน',
       'target': 'เป้าหมาย',
       'nori': 'สาหร่าย',
+      'ice': 'น้ำแข็ง',
       'salmon': 'แซลมอน',
       'maguro': 'มากุโระ',
       'tamago': 'ทามาโกะ',
@@ -137,6 +144,7 @@ abstract final class L10n {
       'itemCollect': '{piece} {n} ชิ้น',
       'itemScore': 'คะแนนให้ถึง {n}',
       'itemNori': 'แกะสาหร่ายให้หมด',
+      'itemIce': 'ทุบน้ำแข็งให้หมด',
       'and': 'กับ',
       'cust0': 'คุณยายซากุระ',
       'cust1': 'คุณทานากะ',
@@ -168,6 +176,10 @@ abstract final class L10n {
       'tipConveyorBody': 'แถวที่มีลูกศรจะเลื่อนไป 1 ช่องทุกครั้งที่เดิน '
           'และถูกล็อกไว้ สลับด้วยมือไม่ได้ '
           'วางแผนล่วงหน้านะ ชิ้นที่สายพานจับคู่เองไม่ได้คะแนน',
+      'tipIceTitle': 'ซูชิติดน้ำแข็ง',
+      'tipIceBody': 'ชิ้นที่ถูกน้ำแข็งครอบสลับหรือจับคู่ไม่ได้ '
+          'ให้จับคู่ชิ้นที่อยู่ข้าง ๆ หรือใช้ชิ้นพิเศษระเบิดเพื่อทุบน้ำแข็งทีละชั้น '
+          'ทุบให้หมดก็ชนะ',
     },
   };
 }

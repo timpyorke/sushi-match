@@ -23,6 +23,7 @@ LevelConfig _withoutBelts(LevelConfig l) => LevelConfig(
       cols: l.cols,
       playable: l.playable,
       nori: l.nori,
+      ice: l.ice,
       pieces: l.pieces,
       moves: l.moves,
       goals: l.goals,
@@ -63,8 +64,7 @@ void main(List<String> args) {
     final level = LevelConfig.fromJson(
         jsonDecode(f.readAsStringSync()) as Map<String, dynamic>);
     if (only.isNotEmpty && !only.contains(level.id)) continue;
-    String line(LevelConfig l) =>
-        '${row(l, random)} | ${row(l, greedy)}'
+    String line(LevelConfig l) => '${row(l, random)} | ${row(l, greedy)}'
         '${withPlanner ? ' | ${row(l, planner)}' : ''}';
     final head = '${level.id.toString().padLeft(3)}  '
         '${level.moves.toString().padLeft(5)} | ';

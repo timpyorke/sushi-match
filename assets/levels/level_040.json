@@ -9,16 +9,18 @@
     "XXX...XXX",
     "XX.....XX",
     "X.......X",
-    ".........",
-    ".........",
-    ".........",
+    "...JJJ...",
+    "...JJJ...",
+    "...JJJ...",
     "X.......X",
     "XX.....XX",
     "XXX...XXX"
   ],
   "legend": {
     ".": "cell",
-    "X": "void"
+    "X": "void",
+    "I": "ice:1",
+    "J": "ice:2"
   },
   "pieces": [
     "salmon",
@@ -28,25 +30,18 @@
     "ebi",
     "kappa"
   ],
-  "moves": 37,
+  "moves": 29,
   "goals": [
+    {
+      "type": "break_ice"
+    },
     {
       "type": "collect",
       "piece": "ebi",
-      "count": 42
-    },
-    {
-      "type": "collect",
-      "piece": "tamago",
-      "count": 42
-    },
-    {
-      "type": "collect",
-      "piece": "maguro",
-      "count": 42
+      "count": 36
     }
   ],
-  "stars": [7500, 10600, 13100],
+  "stars": [5400, 7600, 9500],
   "conveyors": [
     {
       "row": 2,
