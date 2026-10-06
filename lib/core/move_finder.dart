@@ -18,7 +18,7 @@ abstract final class MoveFinder {
     for (final p in b.positions) {
       for (final d in _dirs) {
         final q = p + d;
-        if (!b.isPlayable(q)) continue;
+        if (!b.isPlayable(q) || b.isLocked(p) || b.isLocked(q)) continue;
         final pa = b[p], pb = b[q];
         if (pa == null || pb == null) continue;
         if (pa.isOmakase || pb.isOmakase || (pa.isSpecial && pb.isSpecial)) {

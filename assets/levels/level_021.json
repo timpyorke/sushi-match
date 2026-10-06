@@ -37,15 +37,10 @@
     },
     {
       "type": "score",
-      "count": 8500
+      "count": 8600
     }
   ],
-  "stars": [8800, 11900, 15000],
+  "stars": [9000, 12000, 15000],
   "seed": 212143,
-  "conveyors": [
-    {
-      "row": 4,
-      "dir": "right"
-    }
-  ]
+  "conveyors": [{"row": 2, "dir": "right"}, {"row": 6, "dir": "left"}]
 }

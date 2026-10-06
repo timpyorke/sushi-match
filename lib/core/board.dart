@@ -12,9 +12,14 @@ class Board {
   final List<bool> _playable;
   final List<Piece?> _cells;
 
+  /// Rows whose pieces cannot be swapped by hand (conveyor rows).
+  Set<int> lockedRows = const {};
+
+  bool isLocked(Pos p) => lockedRows.contains(p.row);
+
   /// Independent copy with fresh Piece objects (ids kept).
   Board copy() {
-    final b = Board(rows, cols, _playable);
+    final b = Board(rows, cols, _playable)..lockedRows = lockedRows;
     for (var i = 0; i < _cells.length; i++) {
       final p = _cells[i];
       if (p != null) {

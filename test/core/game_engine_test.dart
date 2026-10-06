@@ -221,6 +221,37 @@ void noriAndBoosterTests() {
 }
 
 void conveyorTests() {
+  test('belt rows are locked: no hand swaps, no suggested moves', () {
+    final level = LevelConfig.fromJson({
+      'id': 97,
+      'board': {'cols': 7, 'rows': 7},
+      'pieces': ['salmon', 'maguro', 'tamago', 'ikura', 'kappa'],
+      'moves': 30,
+      'goals': [
+        {'type': 'score', 'count': 999999},
+      ],
+      'conveyors': [
+        {'row': 3, 'dir': 'right'},
+      ],
+      'seed': 9,
+    });
+    final e = GameEngine(level);
+    expect(MoveFinder.findMove(e.board), isNotNull);
+    for (final m in MoveFinder.allMoves(e.board)) {
+      expect(m.$1.row, isNot(3));
+      expect(m.$2.row, isNot(3));
+    }
+    final ids = {for (final p in e.board.positions) p: e.board[p]!.id};
+    for (final (a, b) in [
+      (const Pos(3, 2), const Pos(3, 3)),
+      (const Pos(2, 2), const Pos(3, 2)),
+    ]) {
+      expect(e.trySwap(a, b).single, isA<InvalidSwapStep>());
+    }
+    expect(e.movesLeft, 30);
+    expect({for (final p in e.board.positions) p: e.board[p]!.id}, ids);
+  });
+
   test('clears caused by the belt itself earn no score', () {
     final level = LevelConfig.fromJson({
       'id': 98,

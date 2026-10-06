@@ -29,6 +29,7 @@ class GameEngine {
         rng = Random(seed ?? level.seed),
         _nori = List.of(level.nori),
         movesLeft = level.moves {
+    board.lockedRows = {for (final c in level.conveyors) c.row};
     BoardFactory.fillInitial(board, level.pieces, rng, _makePiece);
   }
 
@@ -99,6 +100,8 @@ class GameEngine {
     }
     final pa = board[a], pb = board[b];
     if (pa == null || pb == null) return const [];
+    // Conveyor rows are locked: the belt moves them, the player cannot.
+    if (board.isLocked(a) || board.isLocked(b)) return [InvalidSwapStep(a, b)];
 
     final specialSwap =
         pa.isOmakase || pb.isOmakase || (pa.isSpecial && pb.isSpecial);
