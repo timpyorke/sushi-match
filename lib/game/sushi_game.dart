@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 
 import '../core/game_engine.dart';
 import '../core/level.dart';
+import '../services/audio.dart';
 import '../services/wallet.dart';
 import 'board_component.dart';
 
@@ -94,9 +95,11 @@ class SushiGame extends FlameGame {
       _rewarded = true;
       _reward = 10 * _engine.stars;
       Wallet.earn(_reward);
+      Audio.play(Sfx.win);
     } else if (_engine.status == GameStatus.lost && !_lifeCharged) {
       _lifeCharged = true;
       Wallet.loseLife();
+      Audio.play(Sfx.lose);
     }
     hud.value = _snapshot();
   }

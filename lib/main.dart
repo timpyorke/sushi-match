@@ -10,6 +10,7 @@ import 'core/progress.dart';
 import 'core/settings.dart';
 import 'game/piece_painter.dart';
 import 'game/sushi_game.dart';
+import 'services/audio.dart';
 import 'services/wallet.dart';
 import 'ui/customer_order.dart';
 import 'ui/hud.dart';
@@ -33,6 +34,8 @@ void main() async {
   await Wallet.load();
   await Restaurant.load();
   await Tips.load();
+  await Audio.init();
+  Audio.startMusic();
 
   // Bars come back after an edge swipe, the keyboard or a system dialog.
   // Hide them again after a short delay.

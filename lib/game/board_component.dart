@@ -18,6 +18,7 @@ import '../core/pos.dart';
 import '../core/settings.dart';
 import '../core/piece.dart';
 import '../core/steps.dart';
+import '../services/audio.dart';
 import '../services/wallet.dart';
 import 'cat_component.dart';
 import 'overlay_badges.dart';
@@ -495,8 +496,10 @@ class BoardComponent extends PositionComponent
       }
       switch (step) {
         case SwapStep(:final a, :final b):
+          Audio.play(Sfx.swap);
           await _swapViews(a, b);
         case InvalidSwapStep(:final a, :final b):
+          Audio.play(Sfx.invalid);
           await _swapViews(a, b);
           await _swapViews(a, b);
         case SpecialActivateStep(
@@ -509,12 +512,16 @@ class BoardComponent extends PositionComponent
           }
           if (type == SpecialType.wasabi || comboWith == SpecialType.wasabi) {
             _shake();
+            Audio.play(Sfx.boom);
+          } else {
+            Audio.play(Sfx.special);
           }
           await _wait(0.12);
         case TransformStep(:final changes):
           changes.forEach((id, t) => _views[id]?.special = t);
           await _wait(0.25);
-        case ClearStep(:final cleared, :final created):
+        case ClearStep(:final cleared, :final created, :final cascade):
+          Audio.play(Sfx.forCascade(cascade));
           final pops = <Future<void>>[];
           for (final c in cleared) {
             final v = _views.remove(c.pieceId);
@@ -552,6 +559,7 @@ class BoardComponent extends PositionComponent
         case NoriStep(:final layers):
           layers.forEach((p, n) => _nori[p.row * board.cols + p.col] = n);
         case BagStep(:final hits):
+          Audio.play(Sfx.crack);
           for (final h in hits) {
             final i = h.pos.row * board.cols + h.pos.col;
             _bags[i] = h.layers;
@@ -560,6 +568,7 @@ class BoardComponent extends PositionComponent
           }
           await _wait(0.15);
         case DeliverStep(:final delivered):
+          Audio.play(Sfx.chime);
           final pops = <Future<void>>[];
           for (final d in delivered) {
             final v = _views.remove(d.pieceId);
@@ -571,6 +580,7 @@ class BoardComponent extends PositionComponent
           _haptic(HapticFeedback.mediumImpact);
           await Future.wait(pops);
         case UnlockStep(:final cells, :final kind):
+          Audio.play(Sfx.unlock);
           for (final p in cells) {
             final badge = _keys.remove(p);
             if (badge == null) continue;
@@ -592,6 +602,7 @@ class BoardComponent extends PositionComponent
             pops.add(_pop(v));
           }
           if (exploded.isNotEmpty) {
+            Audio.play(Sfx.boom);
             _shake();
             _haptic(HapticFeedback.heavyImpact);
           }
@@ -602,6 +613,7 @@ class BoardComponent extends PositionComponent
           _burst(_center(pos), _emberChip);
           await _wait(0.18);
         case CatHitStep(:final hits):
+          Audio.play(Sfx.meow);
           final runs = <Future<void>>[];
           for (final h in hits) {
             final cat = _cats[h.catId];
@@ -644,6 +656,7 @@ class BoardComponent extends PositionComponent
           _burst(_center(pos), _matChip);
           await _wait(0.1);
         case IceStep(:final hits):
+          Audio.play(Sfx.crack);
           for (final h in hits) {
             _views[h.pieceId]?.ice = h.layers;
             if (h.layers == 0) _burst(_center(h.pos), _iceChip);
@@ -662,6 +675,7 @@ class BoardComponent extends PositionComponent
           }
           await Future.wait(slides);
         case ShuffleStep(:final positions):
+          Audio.play(Sfx.shuffle);
           _at.clear();
           final moves = <Future<void>>[];
           positions.forEach((id, p) {

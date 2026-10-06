@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../services/audio.dart';
 import '../services/wallet.dart';
 import 'l10n.dart';
 import 'ui_art.dart';
@@ -196,6 +197,7 @@ class _BoosterCard extends StatelessWidget {
     return FilledButton(
       onPressed: () {
         final ok = Wallet.buy(booster, qty);
+        if (ok) Audio.play(Sfx.coin);
         _toast(context, ok ? 'bought' : 'notEnoughCoins');
       },
       style: FilledButton.styleFrom(
@@ -269,8 +271,11 @@ class _LivesCard extends StatelessWidget {
       buy: FilledButton(
         onPressed: full
             ? null
-            : () => _toast(context,
-                Wallet.refillLifeWithCoins() ? 'bought' : 'notEnoughCoins'),
+            : () {
+                final ok = Wallet.refillLifeWithCoins();
+                if (ok) Audio.play(Sfx.coin);
+                _toast(context, ok ? 'bought' : 'notEnoughCoins');
+              },
         child: Text(L10n.t('refill', {'n': Wallet.lifeRefillCost})),
       ),
     );

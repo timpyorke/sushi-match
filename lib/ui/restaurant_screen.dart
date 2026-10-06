@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/settings.dart';
+import '../services/audio.dart';
 import '../services/restaurant.dart';
 import 'l10n.dart';
 import 'ui_art.dart';
@@ -168,6 +169,7 @@ class ShopScene extends StatelessWidget {
 
   Future<void> _buy(BuildContext context, DecorDef d) async {
     final ok = await Restaurant.buyDecor(shop, d);
+    if (ok) Audio.play(Sfx.coin);
     if (!context.mounted) return;
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()

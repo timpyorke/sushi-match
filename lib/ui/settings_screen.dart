@@ -79,6 +79,22 @@ class SettingsScreen extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     ValueListenableBuilder<bool>(
+                      valueListenable: Settings.sound,
+                      builder: (_, on, __) => SwitchListTile(
+                        title: Text(L10n.t('soundEffects')),
+                        value: on,
+                        onChanged: Settings.setSound,
+                      ),
+                    ),
+                    ValueListenableBuilder<bool>(
+                      valueListenable: Settings.music,
+                      builder: (_, on, __) => SwitchListTile(
+                        title: Text(L10n.t('music')),
+                        value: on,
+                        onChanged: Settings.setMusic,
+                      ),
+                    ),
+                    ValueListenableBuilder<bool>(
                       valueListenable: Settings.haptics,
                       builder: (_, on, __) => SwitchListTile(
                         title: Text(L10n.t('vibration')),
