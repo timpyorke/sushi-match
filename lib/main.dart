@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'core/game_engine.dart';
 import 'core/level.dart';
 import 'core/progress.dart';
+import 'game/piece_painter.dart';
 import 'game/sushi_game.dart';
 import 'ui/hud.dart';
 import 'ui/level_select.dart';
@@ -15,6 +16,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await _enterImmersive();
+  await PiecePainter.loadSprites();
 
   // Bars come back after an edge swipe, the keyboard or a system dialog.
   // Hide them again after a short delay.

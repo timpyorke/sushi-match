@@ -1,6 +1,8 @@
 import 'dart:math' as math;
 import 'dart:ui';
 
+import 'package:flutter/services.dart';
+
 import '../core/piece.dart';
 
 /// Grey-box art: every kind differs by colour AND shape (colour-blind safe,
@@ -23,6 +25,27 @@ abstract final class PiecePainter {
     ..style = PaintingStyle.stroke
     ..strokeWidth = 2;
 
+  static const _sheetAsset = 'assets/sushi/sushi.png';
+  static Image? _sheet;
+
+  /// Loads the sprite sheet (3 columns x 2 rows, in [PieceKind] order).
+  /// Until it finishes, pieces fall back to the vector art.
+  static Future<void> loadSprites() async {
+    if (_sheet != null) return;
+    final data = await rootBundle.load(_sheetAsset);
+    final codec = await instantiateImageCodec(data.buffer.asUint8List());
+    _sheet = (await codec.getNextFrame()).image;
+  }
+
+  static void _sprite(Canvas canvas, Rect dst, PieceKind kind) {
+    final sheet = _sheet!;
+    final cw = sheet.width / 3, ch = sheet.height / 2;
+    final i = kind.index;
+    final src = Rect.fromLTWH((i % 3) * cw, (i ~/ 3) * ch, cw, ch);
+    canvas.drawImageRect(
+        sheet, src, dst, Paint()..filterQuality = FilterQuality.medium);
+  }
+
   static void paint(
       Canvas canvas, double s, PieceKind? kind, SpecialType? special) {
     final body = Rect.fromLTWH(s * 0.1, s * 0.1, s * 0.8, s * 0.8);
@@ -40,6 +63,12 @@ abstract final class PiecePainter {
 
     if (kind == null) {
       _plate(canvas, c, s);
+      return;
+    }
+
+    if (_sheet != null) {
+      _sprite(canvas, Rect.fromLTWH(0, 0, s, s), kind);
+      _special(canvas, s, body, c, special);
       return;
     }
 
@@ -100,6 +129,11 @@ abstract final class PiecePainter {
     canvas.drawCircle(Offset(c.dx - s * 0.12, ey), s * 0.045, _eye);
     canvas.drawCircle(Offset(c.dx + s * 0.12, ey), s * 0.045, _eye);
 
+    _special(canvas, s, body, c, special);
+  }
+
+  static void _special(
+      Canvas canvas, double s, Rect body, Offset c, SpecialType? special) {
     switch (special) {
       case SpecialType.knifeRow:
         _knife(canvas, c, s, horizontal: true);
@@ -107,7 +141,8 @@ abstract final class PiecePainter {
         _knife(canvas, c, s, horizontal: false);
       case SpecialType.wasabi:
         final at = Offset(body.right - s * 0.06, body.top + s * 0.06);
-        canvas.drawCircle(at, s * 0.15, Paint()..color = const Color(0xFF8BC34A));
+        canvas.drawCircle(
+            at, s * 0.15, Paint()..color = const Color(0xFF8BC34A));
         canvas.drawCircle(at, s * 0.15, _outline);
       case SpecialType.soyFish:
         _fish(canvas, Offset(body.right - s * 0.1, body.bottom - s * 0.08), s);
