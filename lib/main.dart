@@ -11,6 +11,7 @@ import 'game/piece_painter.dart';
 import 'game/sushi_game.dart';
 import 'ui/hud.dart';
 import 'ui/level_select.dart';
+import 'ui/ui_art.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -151,8 +152,8 @@ class _GameScreenState extends State<GameScreen> {
               children: [
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: IconButton(
-                    icon: const Icon(Icons.arrow_back),
+                  child: RoundIconButton(
+                    icon: Icons.arrow_back,
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                 ),

@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:sushi_match/main.dart';
+import 'package:sushi_match/ui/ui_art.dart';
 
 void main() {
   narrowTest();
@@ -22,7 +23,7 @@ void main() {
     await tester.pump();
 
     expect(find.byIcon(Icons.lock), findsNWidgets(6));
-    expect(find.text('3 ★'), findsOneWidget);
+    expect(find.byType(StarIcon), findsNWidgets(3));
   });
 }
 

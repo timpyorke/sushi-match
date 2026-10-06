@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../core/piece.dart';
 import '../game/piece_painter.dart';
+import 'ui_art.dart';
 
 /// Kaiten-sushi style level picker: plates ride on conveyor belts, tap one to
 /// play that level.
@@ -185,11 +186,20 @@ class _Plate extends StatelessWidget {
                     color: Colors.black38, blurRadius: 4, offset: Offset(0, 3))
               ],
             ),
-            child: Text(done ? '$level ★' : '$level',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge
-                    ?.copyWith(fontWeight: FontWeight.bold)),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('$level',
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(fontWeight: FontWeight.bold)),
+                if (done) ...[
+                  const SizedBox(width: 4),
+                  const StarIcon(size: 20),
+                ],
+              ],
+            ),
           ),
         ],
       ),

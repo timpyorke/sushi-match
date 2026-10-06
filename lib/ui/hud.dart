@@ -4,6 +4,7 @@ import '../core/game_engine.dart';
 import '../core/level.dart';
 import '../game/piece_painter.dart';
 import '../game/sushi_game.dart';
+import 'ui_art.dart';
 
 class HudBar extends StatelessWidget {
   const HudBar({super.key, required this.game});
@@ -57,18 +58,32 @@ class _Chip extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Theme.of(context).textTheme;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: color == null ? null : Border.all(color: color!, width: 2),
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+      decoration: UiArt.plankDecoration(),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(label, style: t.labelSmall),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (color != null) ...[
+                Container(
+                  width: 10,
+                  height: 10,
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: UiArt.ink, width: 1.5),
+                  ),
+                ),
+                const SizedBox(width: 4),
+              ],
+              Text(label, style: t.labelSmall?.copyWith(color: UiArt.ink)),
+            ],
+          ),
           Text(done ? '✓' : value,
-              style: t.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+              style: t.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold, color: UiArt.ink)),
         ],
       ),
     );
@@ -94,39 +109,57 @@ class ResultOverlay extends StatelessWidget {
         return ColoredBox(
           color: Colors.black38,
           child: Center(
-            child: Card(
+            child: Container(
+              width: 320,
+              decoration: UiArt.panelDecoration(),
               child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(won ? 'Oishii! 🍣' : 'Out of moves',
-                        style: Theme.of(context).textTheme.headlineSmall),
-                    if (won) ...[
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 44, vertical: 48),
+                child: DefaultTextStyle.merge(
+                  style: const TextStyle(color: UiArt.ink),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(won ? 'Oishii! 🍣' : 'Out of moves',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(color: UiArt.ink)),
+                      if (won) ...[
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            for (var i = 0; i < 3; i++)
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 2),
+                                child: StarIcon(size: 40, lit: i < s.stars),
+                              ),
+                          ],
+                        ),
+                      ],
                       const SizedBox(height: 8),
-                      Text('★' * s.stars + '☆' * (3 - s.stars),
-                          style: const TextStyle(
-                              fontSize: 32, color: Color(0xFFF5B301))),
-                    ],
-                    const SizedBox(height: 8),
-                    Text('Score ${s.score}'),
-                    const SizedBox(height: 16),
-                    if (won && onNext != null) ...[
-                      FilledButton(
-                          onPressed: onNext, child: const Text('Next level')),
+                      Text('Score ${s.score}'),
+                      const SizedBox(height: 16),
+                      if (won && onNext != null) ...[
+                        FilledButton(
+                            onPressed: onNext, child: const Text('Next level')),
+                        const SizedBox(height: 8),
+                      ],
+                      won && onNext != null
+                          ? OutlinedButton(
+                              onPressed: game.restart,
+                              child: const Text('Play again'))
+                          : FilledButton(
+                              onPressed: game.restart,
+                              child: Text(won ? 'Play again' : 'Retry')),
                       const SizedBox(height: 8),
+                      OutlinedButton(
+                          onPressed: onLevels,
+                          child: const Text('Level select')),
                     ],
-                    won && onNext != null
-                        ? OutlinedButton(
-                            onPressed: game.restart,
-                            child: const Text('Play again'))
-                        : FilledButton(
-                            onPressed: game.restart,
-                            child: Text(won ? 'Play again' : 'Retry')),
-                    const SizedBox(height: 8),
-                    OutlinedButton(
-                        onPressed: onLevels, child: const Text('Level select')),
-                  ],
+                  ),
                 ),
               ),
             ),

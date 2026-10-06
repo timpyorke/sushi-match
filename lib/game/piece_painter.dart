@@ -28,13 +28,66 @@ abstract final class PiecePainter {
   static const _sheetAsset = 'assets/sushi/sushi.png';
   static Image? _sheet;
 
+  static const _powerAsset = 'assets/sushi/power-item.png';
+  static Image? _power;
+
   /// Loads the sprite sheet (3 columns x 2 rows, in [PieceKind] order).
   /// Until it finishes, pieces fall back to the vector art.
   static Future<void> loadSprites() async {
-    if (_sheet != null) return;
-    final data = await rootBundle.load(_sheetAsset);
+    _sheet ??= await _decode(_sheetAsset);
+    _power ??= await _decode(_powerAsset);
+  }
+
+  static Future<Image> _decode(String asset) async {
+    final data = await rootBundle.load(asset);
     final codec = await instantiateImageCodec(data.buffer.asUint8List());
-    _sheet = (await codec.getNextFrame()).image;
+    return (await codec.getNextFrame()).image;
+  }
+
+  /// Power-item sheet is 2x2: knife, wasabi / omakase, soy fish.
+  static void _powerSprite(Canvas canvas, Rect dst, SpecialType type,
+      {double rotation = 0}) {
+    final sheet = _power!;
+    final cw = sheet.width / 2, ch = sheet.height / 2;
+    final i = switch (type) {
+      SpecialType.knifeRow || SpecialType.knifeCol => 0,
+      SpecialType.wasabi => 1,
+      SpecialType.omakase => 2,
+      SpecialType.soyFish => 3,
+    };
+    final src = Rect.fromLTWH((i % 2) * cw, (i ~/ 2) * ch, cw, ch);
+    canvas.save();
+    canvas.translate(dst.center.dx, dst.center.dy);
+    canvas.rotate(rotation);
+    canvas.drawImageRect(
+        sheet,
+        src,
+        Rect.fromCenter(
+            center: Offset.zero, width: dst.width, height: dst.height),
+        Paint()..filterQuality = FilterQuality.medium);
+    canvas.restore();
+  }
+
+  /// Power items stand alone (no sushi underneath). They still match by
+  /// colour, so a glow in the kind's colour sits behind the sprite.
+  /// Knife art points up-left; rotate it to lie along the row/column it clears.
+  static void _specialSprite(
+      Canvas canvas, double s, PieceKind kind, SpecialType type) {
+    canvas.drawCircle(
+      Offset(s / 2, s / 2),
+      s * 0.36,
+      Paint()
+        ..color = colors[kind]!.withValues(alpha: 0.85)
+        ..maskFilter = MaskFilter.blur(BlurStyle.normal, s * 0.12),
+    );
+    final rotation = switch (type) {
+      SpecialType.knifeRow => -math.pi / 4,
+      SpecialType.knifeCol => math.pi / 4,
+      _ => 0.0,
+    };
+    _powerSprite(
+        canvas, Rect.fromLTWH(s * 0.05, s * 0.05, s * 0.9, s * 0.9), type,
+        rotation: rotation);
   }
 
   static void _sprite(Canvas canvas, Rect dst, PieceKind kind) {
@@ -62,13 +115,21 @@ abstract final class PiecePainter {
     }
 
     if (kind == null) {
-      _plate(canvas, c, s);
+      if (_power != null) {
+        _powerSprite(canvas, Rect.fromLTWH(0, 0, s, s), SpecialType.omakase);
+      } else {
+        _plate(canvas, c, s);
+      }
       return;
     }
 
     if (_sheet != null) {
-      _sprite(canvas, Rect.fromLTWH(0, 0, s, s), kind);
-      _special(canvas, s, body, c, special);
+      if (special != null && _power != null) {
+        _specialSprite(canvas, s, kind, special);
+      } else {
+        _sprite(canvas, Rect.fromLTWH(0, 0, s, s), kind);
+        _special(canvas, s, body, c, special);
+      }
       return;
     }
 
