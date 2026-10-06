@@ -34,6 +34,41 @@ class OutlinedTitle extends StatelessWidget {
   }
 }
 
+/// Subtitle on the wooden plank sprite. The plank is stretched as a nine-patch
+/// so the rounded ends stay undistorted.
+class PlankSubtitle extends StatelessWidget {
+  const PlankSubtitle({super.key, this.text, this.child})
+      : assert(text != null || child != null);
+
+  final String? text;
+  final Widget? child;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context).textTheme;
+    return Container(
+      constraints: const BoxConstraints(minHeight: 40),
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 6),
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/ui/plank.png'),
+          fit: BoxFit.fill,
+          // 829x230 sprite: scale shrinks it to ~138x38 logical units and
+          // centerSlice is expressed in those units.
+          scale: 6,
+          centerSlice: Rect.fromLTRB(16, 16, 122, 22),
+        ),
+      ),
+      child: DefaultTextStyle.merge(
+        style: (t.titleMedium ?? const TextStyle())
+            .copyWith(color: UiArt.ink, fontWeight: FontWeight.bold),
+        textAlign: TextAlign.center,
+        child: child ?? Text(text!),
+      ),
+    );
+  }
+}
+
 /// Sprites under assets/ui/.
 abstract final class UiArt {
   static const panel = AssetImage('assets/ui/panel.png');

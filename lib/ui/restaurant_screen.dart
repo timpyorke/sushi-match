@@ -38,14 +38,15 @@ class RestaurantScreen extends ConsumerWidget {
                 ),
                 OutlinedTitle(L10n.t('restaurant'), style: t.headlineLarge),
                 const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const StarIcon(size: 28),
-                    const SizedBox(width: 6),
-                    Text(L10n.t('starsAvailable', {'n': shops.available}),
-                        style: t.titleMedium),
-                  ],
+                PlankSubtitle(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const StarIcon(size: 24),
+                      const SizedBox(width: 6),
+                      Text(L10n.t('starsAvailable', {'n': shops.available})),
+                    ],
+                  ),
                 ),
                 Expanded(
                   child: ListView(
