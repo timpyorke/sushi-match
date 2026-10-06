@@ -28,57 +28,119 @@ class BoosterShopScreen extends StatelessWidget {
           ),
         ),
         child: SafeArea(
-          child: ListenableBuilder(
-            listenable:
-                Listenable.merge([Wallet.coins, Wallet.stock, Wallet.lives]),
-            builder: (context, _) => Column(
-              children: [
-                Row(
-                  children: [
-                    RoundIconButton(
-                      icon: Icons.arrow_back,
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                    const Spacer(),
-                    Container(
-                      margin: const EdgeInsets.only(right: 12, top: 8),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 8),
-                      decoration: UiArt.plankDecoration(),
-                      child: CoinAmount(Wallet.coins.value,
-                          size: 20,
-                          style: const TextStyle(
-                              color: UiArt.ink, fontWeight: FontWeight.bold)),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Text(L10n.t('shop'),
-                      style: t.headlineLarge
-                          ?.copyWith(fontWeight: FontWeight.bold)),
-                ),
-                Expanded(
-                  child: ListView(
-                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
-                    children: [
-                      for (final (b, emoji, name, desc) in _items)
-                        _BoosterCard(
-                            booster: b,
-                            emoji: emoji,
-                            name: L10n.t(name),
-                            desc: L10n.t(desc)),
-                      const _LivesCard(),
-                    ],
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  RoundIconButton(
+                    icon: Icons.arrow_back,
+                    onPressed: () => Navigator.of(context).pop(),
                   ),
-                ),
-              ],
-            ),
+                  const Spacer(),
+                  const _CoinPill(),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Text(L10n.t('shop'),
+                    style:
+                        t.headlineLarge?.copyWith(fontWeight: FontWeight.bold)),
+              ),
+              const Expanded(child: BoosterShopList()),
+            ],
           ),
         ),
       ),
     );
   }
+}
+
+/// Coin balance on a plank.
+class _CoinPill extends StatelessWidget {
+  const _CoinPill();
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<int>(
+      valueListenable: Wallet.coins,
+      builder: (context, coins, _) => Container(
+        margin: const EdgeInsets.only(right: 12, top: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: UiArt.plankDecoration(),
+        child: CoinAmount(coins,
+            size: 20,
+            style:
+                const TextStyle(color: UiArt.ink, fontWeight: FontWeight.bold)),
+      ),
+    );
+  }
+}
+
+/// The scrolling list of things to buy; shared by the shop screen and the
+/// in-level sheet.
+class BoosterShopList extends StatelessWidget {
+  const BoosterShopList({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: Listenable.merge([Wallet.coins, Wallet.stock, Wallet.lives]),
+      builder: (context, _) => ListView(
+        padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+        children: [
+          for (final (b, emoji, name, desc) in BoosterShopScreen._items)
+            _BoosterCard(
+                booster: b,
+                emoji: emoji,
+                name: L10n.t(name),
+                desc: L10n.t(desc)),
+          const _LivesCard(),
+        ],
+      ),
+    );
+  }
+}
+
+/// Opens the shop over the current level so boosters can be topped up
+/// without leaving the board.
+Future<void> showBoosterShopSheet(BuildContext context) {
+  return showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: const Color(0xFFF3E3C3),
+    shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+    // Own messenger + scaffold so purchase toasts show above the sheet rather
+    // than behind it on the level's scaffold.
+    builder: (context) => SizedBox(
+      height: MediaQuery.sizeOf(context).height * 0.78,
+      child: ScaffoldMessenger(
+          child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 14, 8, 0),
+              child: Row(
+                children: [
+                  Text('🛒 ${L10n.t('shop')}',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: UiArt.ink, fontWeight: FontWeight.bold)),
+                  const Spacer(),
+                  const Padding(
+                      padding: EdgeInsets.only(bottom: 8), child: _CoinPill()),
+                  IconButton(
+                      icon: const Icon(Icons.close, color: UiArt.ink),
+                      onPressed: () => Navigator.of(context).pop()),
+                ],
+              ),
+            ),
+            const Expanded(child: BoosterShopList()),
+          ],
+        ),
+      )),
+    ),
+  );
 }
 
 void _toast(BuildContext context, String key) {

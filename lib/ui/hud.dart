@@ -8,6 +8,7 @@ import '../services/wallet.dart';
 import 'customer_order.dart';
 import 'l10n.dart';
 import 'lives_ui.dart';
+import 'shop_screen.dart';
 import 'ui_art.dart';
 
 class HudBar extends StatelessWidget {
@@ -292,10 +293,10 @@ class BoosterBar extends StatelessWidget {
                   ),
                 ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   for (final (b, icon, key) in _items)
-                    _BoosterButton(
+                    Expanded(
+                        child: _BoosterButton(
                       icon: icon,
                       label: L10n.t(key),
                       stock: Wallet.count(b),
@@ -303,7 +304,10 @@ class BoosterBar extends StatelessWidget {
                       active: armed == b,
                       enabled: playing && Wallet.canUse(b),
                       onTap: () => game.tapBooster(b),
-                    ),
+                    )),
+                  _ShopButton(
+                      enabled: playing,
+                      onTap: () => showBoosterShopSheet(context)),
                 ],
               ),
             ],
@@ -338,7 +342,7 @@ class _BoosterButton extends StatelessWidget {
       child: GestureDetector(
         onTap: enabled ? onTap : null,
         child: Container(
-          width: 92,
+          margin: const EdgeInsets.symmetric(horizontal: 3),
           padding: const EdgeInsets.symmetric(vertical: 6),
           decoration: UiArt.plankDecoration().copyWith(
             boxShadow: active
@@ -366,6 +370,40 @@ class _BoosterButton extends StatelessWidget {
                         color: UiArt.ink,
                         fontSize: 12,
                         fontWeight: FontWeight.bold)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Opens the booster shop sheet without leaving the level.
+class _ShopButton extends StatelessWidget {
+  const _ShopButton({required this.enabled, required this.onTap});
+  final bool enabled;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Opacity(
+      opacity: enabled ? 1 : 0.45,
+      child: GestureDetector(
+        onTap: enabled ? onTap : null,
+        child: Container(
+          width: 52,
+          margin: const EdgeInsets.only(left: 3),
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          decoration: UiArt.plankDecoration(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('🛒', style: TextStyle(fontSize: 22)),
+              Text(L10n.t('shop'),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: UiArt.ink, fontSize: 11)),
+              const SizedBox(height: 16),
             ],
           ),
         ),

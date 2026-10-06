@@ -10,6 +10,8 @@ void main() {
     await Wallet.load();
   });
 
+  sheetTests();
+
   testWidgets('lists every booster and buying one adds it to the stock',
       (tester) async {
     await tester.pumpWidget(const MaterialApp(home: BoosterShopScreen()));
@@ -35,5 +37,28 @@ void main() {
     await tester.pump();
     expect(find.text('Not enough coins'), findsOneWidget);
     expect(Wallet.count(Booster.extraMoves), 0);
+  });
+}
+
+void sheetTests() {
+  testWidgets('the in-level sheet buys boosters too', (tester) async {
+    tester.view.physicalSize = const Size(500, 1400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(MaterialApp(
+      home: Builder(
+        builder: (context) => TextButton(
+            onPressed: () => showBoosterShopSheet(context),
+            child: const Text('open')),
+      ),
+    ));
+    await tester.tap(find.text('open'));
+    await tester.pumpAndSettle();
+    expect(find.text('Shuffle'), findsOneWidget);
+
+    await tester.tap(find.text('×1  ').at(3)); // Shuffle, the 4th card
+    await tester.pump();
+    expect(Wallet.count(Booster.shuffle), 1);
+    expect(tester.takeException(), isNull);
   });
 }
