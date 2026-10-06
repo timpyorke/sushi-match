@@ -117,12 +117,7 @@ class _ShopCard extends StatelessWidget {
                 child: Text(L10n.t('unlockShop', {'n': shop.unlockCost})),
               )
             else ...[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  for (final d in shop.decor) _DecorTile(shop: shop, decor: d),
-                ],
-              ),
+              ShopScene(shop: shop),
               if (done) ...[
                 const SizedBox(height: 12),
                 Text(L10n.t('shopDoneTitle'),
@@ -138,47 +133,172 @@ class _ShopCard extends StatelessWidget {
   }
 }
 
-class _DecorTile extends StatelessWidget {
-  const _DecorTile({required this.shop, required this.decor});
+/// Where each decoration sits in the scene, as fractions of its size.
+const _slots = {
+  'lantern': Alignment(-0.62, 0.12),
+  'sign': Alignment(0, -0.7),
+  'table': Alignment(0.62, 0.72),
+};
+
+class _Palette {
+  const _Palette(this.sky, this.wall, this.awningA, this.awningB, this.floor);
+  final Color sky;
+  final Color wall;
+  final Color awningA;
+  final Color awningB;
+  final Color floor;
+}
+
+const _palettes = {
+  'tsukiji': _Palette(Color(0xFFBFE3F0), Color(0xFFE9D3A8), Color(0xFF2F5D8C),
+      Color(0xFFF4EBD8), Color(0xFFB98A5A)),
+  'osaka': _Palette(Color(0xFFF6C9A0), Color(0xFFE8C48F), Color(0xFFC0392B),
+      Color(0xFFFFF1D6), Color(0xFF9C6B43)),
+};
+
+/// A little street stall that fills up as decorations are bought. Empty
+/// spots show a faint price tag; tapping one buys it.
+class ShopScene extends StatelessWidget {
+  const ShopScene({super.key, required this.shop});
   final ShopDef shop;
-  final DecorDef decor;
+
+  Future<void> _buy(BuildContext context, DecorDef d) async {
+    final ok = await Restaurant.buyDecor(shop, d);
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+          SnackBar(content: Text(L10n.t(ok ? 'decorBought' : 'needStars'))));
+  }
 
   @override
   Widget build(BuildContext context) {
-    final owned = Restaurant.decorOwned(shop, decor);
-    final t = Theme.of(context).textTheme;
-    return GestureDetector(
-      onTap: owned
-          ? null
-          : () async {
-              final ok = await Restaurant.buyDecor(shop, decor);
-              if (!context.mounted) return;
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(SnackBar(
-                    content: Text(L10n.t(ok ? 'decorBought' : 'needStars'))));
-            },
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Opacity(
-            opacity: owned ? 1 : 0.3,
-            child: Text(decor.emoji, style: const TextStyle(fontSize: 40)),
-          ),
-          Text(L10n.t(decor.nameKey),
-              style: t.labelSmall?.copyWith(color: UiArt.ink)),
-          if (!owned)
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('${decor.cost}',
-                    style: t.labelLarge?.copyWith(
-                        color: UiArt.ink, fontWeight: FontWeight.bold)),
-                const StarIcon(size: 14),
-              ],
-            ),
-        ],
+    final palette = _palettes[shop.id] ?? _palettes['tsukiji']!;
+    return AspectRatio(
+      aspectRatio: 4 / 3,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            CustomPaint(painter: _ScenePainter(palette)),
+            for (final d in shop.decor)
+              Align(
+                alignment: _slots[d.id] ?? Alignment.center,
+                child: _Slot(
+                  decor: d,
+                  owned: Restaurant.decorOwned(shop, d),
+                  onBuy: () => _buy(context, d),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
+}
+
+class _Slot extends StatelessWidget {
+  const _Slot({required this.decor, required this.owned, required this.onBuy});
+  final DecorDef decor;
+  final bool owned;
+  final VoidCallback onBuy;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context).textTheme;
+    return GestureDetector(
+      onTap: owned ? null : onBuy,
+      child: SizedBox(
+        width: 76,
+        height: 76,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            AnimatedOpacity(
+              duration: const Duration(milliseconds: 200),
+              opacity: owned ? 0 : 1,
+              child: Container(
+                width: 66,
+                height: 66,
+                decoration: BoxDecoration(
+                  color: Colors.white70,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: UiArt.ink.withAlpha(150), width: 2),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Opacity(
+                      opacity: 0.55,
+                      child: Text(decor.emoji,
+                          style: const TextStyle(fontSize: 26)),
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text('${decor.cost}',
+                            style: t.labelLarge?.copyWith(
+                                color: UiArt.ink, fontWeight: FontWeight.bold)),
+                        const StarIcon(size: 13),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            AnimatedScale(
+              scale: owned ? 1 : 0,
+              duration: const Duration(milliseconds: 450),
+              curve: Curves.elasticOut,
+              child: Text(decor.emoji, style: const TextStyle(fontSize: 52)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ScenePainter extends CustomPainter {
+  _ScenePainter(this.p);
+  final _Palette p;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width, h = size.height;
+    canvas.drawRect(Offset.zero & size, Paint()..color = p.sky);
+    // Back wall of the stall.
+    canvas.drawRect(
+        Rect.fromLTWH(w * 0.06, h * 0.3, w * 0.88, h * 0.5),
+        Paint()..color = p.wall);
+    // Striped awning.
+    const stripes = 10;
+    final sw = w * 0.92 / stripes;
+    for (var i = 0; i < stripes; i++) {
+      final path = Path()
+        ..moveTo(w * 0.04 + i * sw, h * 0.3)
+        ..lineTo(w * 0.04 + (i + 1) * sw, h * 0.3)
+        ..lineTo(w * 0.04 + (i + 1) * sw, h * 0.44)
+        ..arcToPoint(Offset(w * 0.04 + i * sw, h * 0.44),
+            radius: Radius.circular(sw / 2), clockwise: true)
+        ..close();
+      canvas.drawPath(path, Paint()..color = i.isEven ? p.awningA : p.awningB);
+    }
+    // Counter and floor.
+    canvas.drawRect(Rect.fromLTWH(w * 0.06, h * 0.66, w * 0.88, h * 0.14),
+        Paint()..color = p.floor.withAlpha(235));
+    canvas.drawRect(Rect.fromLTWH(0, h * 0.8, w, h * 0.2),
+        Paint()..color = p.floor);
+    final plank = Paint()
+      ..color = const Color(0x22000000)
+      ..strokeWidth = 2;
+    for (var i = 1; i < 4; i++) {
+      final y = h * 0.8 + i * h * 0.05;
+      canvas.drawLine(Offset(0, y), Offset(w, y), plank);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_ScenePainter old) => old.p != p;
 }
