@@ -3,7 +3,7 @@ import 'package:sushi_trio/services/restaurant.dart';
 import 'package:sushi_trio/ui/map/japan_map.dart';
 
 void main() {
-  final layout = MapLayout(Restaurant.shops, 60);
+  final layout = MapLayout(Restaurant.shops, Restaurant.totalLevels);
 
   test('map rows are rectangular and use only legend characters', () {
     expect(layout.grid.length, layout.rows);
@@ -16,8 +16,9 @@ void main() {
   });
 
   test('every level sits on land, climbing the map in level order', () {
-    expect(layout.nodes.length, 60);
-    for (var i = 0; i < 60; i++) {
+    final total = Restaurant.totalLevels;
+    expect(layout.nodes.length, total);
+    for (var i = 0; i < total; i++) {
       final p = layout.nodes[i];
       expect(layout.tileAt(p.dx.floor(), p.dy.floor()), isNot(MapTile.sea),
           reason: 'level ${i + 1} is in the sea');
@@ -25,7 +26,7 @@ void main() {
         expect(layout.nodeDist[i], greaterThan(layout.nodeDist[i - 1]));
       }
     }
-    // Tokyo (level 1) is below Hokkaido (level 60).
+    // Tokyo (level 1) is below the last restaurant.
     expect(layout.nodes.first.dy, greaterThan(layout.nodes.last.dy));
   });
 

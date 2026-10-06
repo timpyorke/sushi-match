@@ -47,6 +47,17 @@ abstract final class Audio {
   /// One looping track per restaurant (assets/audio/bgm_<id>.wav).
   static const tracks = ['tsukiji', 'osaka', 'kyoto', 'hokkaido'];
 
+  /// Restaurants without a track of their own borrow one until real music is
+  /// dropped in (add the file, list it in [tracks], remove the alias).
+  static const _alias = {
+    'fukuoka': 'osaka',
+    'okinawa': 'tsukiji',
+    'omakase': 'kyoto',
+  };
+
+  /// The track a restaurant plays.
+  static String trackFor(String shopId) => _alias[shopId] ?? shopId;
+
   static String _file(String track) => 'bgm_$track.wav';
 
   static String _track = 'tsukiji';
@@ -88,8 +99,9 @@ abstract final class Audio {
 
   /// Starts the looping BGM (if enabled in settings); [stopMusic] ends it.
   /// Pass a restaurant id to switch to its track; the same track keeps playing.
-  static void startMusic([String? track]) {
+  static void startMusic([String? shopId]) {
     _musicWanted = true;
+    final track = shopId == null ? null : trackFor(shopId);
     if (track != null && tracks.contains(track) && track != _track) {
       _track = track;
       if (_ready && FlameAudio.bgm.isPlaying) {

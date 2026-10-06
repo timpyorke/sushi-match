@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sushi_trio/services/restaurant.dart';
 import 'package:sushi_trio/main.dart';
 import 'package:sushi_trio/services/store.dart';
 import 'package:sushi_trio/ui/ui_art.dart';
@@ -57,7 +58,7 @@ void main() {
     await _openLevels(tester);
 
     expect(find.text('Pick a plate'), findsOneWidget);
-    expect(find.byIcon(Icons.lock), findsNWidgets(59));
+    expect(find.byIcon(Icons.lock), findsNWidgets(Restaurant.totalLevels - 1));
   });
 
   testWidgets('clearing a level unlocks the next', (WidgetTester tester) async {
@@ -74,7 +75,7 @@ void main() {
     expect(find.text('Level 4'), findsOneWidget);
 
     await _openLevels(tester);
-    expect(find.byIcon(Icons.lock), findsNWidgets(56));
+    expect(find.byIcon(Icons.lock), findsNWidgets(Restaurant.totalLevels - 4));
     // Three stars under each cleared level, lit by the best result.
     expect(find.byType(StarIcon), findsNWidgets(9));
     expect(find.byWidgetPredicate((w) => w is StarIcon && w.lit),

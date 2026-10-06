@@ -1,0 +1,51 @@
+{
+  "id": 80,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    ".........",
+    ".........",
+    ".........",
+    "..A....B.",
+    ".......A.",
+    ".........",
+    "....A....",
+    ".........",
+    "........."
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "A": "bomb:10",
+    "B": "cat:2"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "tamago",
+    "ikura",
+    "hotate",
+    "kappa"
+  ],
+  "moves": 50,
+  "goals": [
+    {
+      "type": "shoo_cats"
+    },
+    {
+      "type": "collect",
+      "piece": "salmon",
+      "count": 32
+    },
+    {
+      "type": "collect",
+      "piece": "tamago",
+      "count": 32
+    }
+  ],
+  "stars": [13500, 20600, 26300],
+  "seed": 610960
+}

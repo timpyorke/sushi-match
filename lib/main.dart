@@ -93,7 +93,8 @@ class _SushiTrioAppState extends State<SushiTrioApp> {
   }
 }
 
-const int kLevelCount = 60;
+/// Levels in the game; grows by editing `Restaurant.shops`.
+final int kLevelCount = Restaurant.totalLevels;
 
 /// (id, emoji, l10n prefix) of the first unseen tip this level needs.
 (String, String, String)? _tipFor(LevelConfig level, Set<String> seen) {

@@ -1,0 +1,47 @@
+{
+  "id": 83,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    "XX...A.XX",
+    "X.......X",
+    "..T...T..",
+    ".........",
+    ".........",
+    ".........",
+    "..T...T..",
+    "X.......X",
+    "XX.B...XX"
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "A": "portal_out:1",
+    "B": "portal_in:1",
+    "T": "mat"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "tamago",
+    "ikura",
+    "hotate",
+    "kappa"
+  ],
+  "moves": 40,
+  "goals": [
+    {
+      "type": "clear_mats"
+    },
+    {
+      "type": "collect",
+      "piece": "hotate",
+      "count": 60
+    }
+  ],
+  "stars": [12800, 18500, 24900],
+  "seed": 611371
+}

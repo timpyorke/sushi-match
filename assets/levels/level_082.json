@@ -1,0 +1,44 @@
+{
+  "id": 82,
+  "version": 1,
+  "board": {
+    "cols": 8,
+    "rows": 8
+  },
+  "layout": [
+    "XXX..XXX",
+    "XX....XX",
+    "X......X",
+    "........",
+    "........",
+    "X......X",
+    "XX....XX",
+    "XXX..XXX"
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "tamago",
+    "ikura",
+    "hotate",
+    "kappa"
+  ],
+  "moves": 50,
+  "goals": [
+    {
+      "type": "deliver",
+      "count": 4
+    },
+    {
+      "type": "collect",
+      "piece": "ikura",
+      "count": 21
+    }
+  ],
+  "stars": [7000, 10400, 16800],
+  "seed": 611234
+}

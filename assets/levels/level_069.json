@@ -1,0 +1,51 @@
+{
+  "id": 69,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    ".........",
+    ".........",
+    ".........",
+    "...AAA...",
+    "...AAA...",
+    "...AAA...",
+    ".........",
+    ".........",
+    "........."
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "A": "ice:2"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "tamago",
+    "ikura",
+    "ebi",
+    "kappa"
+  ],
+  "moves": 50,
+  "goals": [
+    {
+      "type": "break_ice"
+    },
+    {
+      "type": "collect",
+      "piece": "salmon",
+      "count": 66
+    },
+    {
+      "type": "collect",
+      "piece": "kappa",
+      "count": 66
+    }
+  ],
+  "stars": [12400, 16600, 20300],
+  "gravity": "left",
+  "seed": 609453
+}

@@ -1,0 +1,51 @@
+{
+  "id": 76,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    "........."
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "tamago",
+    "ikura",
+    "hotate",
+    "kappa"
+  ],
+  "moves": 50,
+  "goals": [
+    {
+      "type": "collect",
+      "piece": "salmon",
+      "count": 57
+    },
+    {
+      "type": "collect",
+      "piece": "hotate",
+      "count": 57
+    },
+    {
+      "type": "score",
+      "count": 13800
+    }
+  ],
+  "stars": [14300, 17800, 24000],
+  "gravity": "right",
+  "seed": 610412
+}

@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 // Sets each level's `moves`, goal counts and `stars` so a greedy bot hits a difficulty
-// curve: win rate falls from 98% (level 1) to 68% (level 20); the share of
+// curve: win rate falls from 98% (level 1) to 68% (level 20), then to ~52% by
+// level 100; the share of
 // plays reaching 3 stars falls from 50% to 15%. Moves follow a fixed schedule
 // and goal counts are scaled to fit. Humans out-plan the bot, so
 // real players will find levels a little easier than the targets.
@@ -80,7 +81,9 @@ void main(List<String> args) {
     // Past level 21 the curve flattens (68% -> 60%); every 5th level is a
     // hard one and every 15th a boss (GDD sawtooth).
     final late = base.id > 21 ? ((base.id - 21) / 29).clamp(0.0, 1.0) : 0.0;
-    final dip = base.id % 15 == 0
+    // Levels 51-100 keep easing from 58% to 52%; the finale (100) is a boss.
+    final deep = base.id > 50 ? ((base.id - 50) / 50).clamp(0.0, 1.0) : 0.0;
+    final dip = base.id % 15 == 0 || base.id == 100
         ? 0.18
         : base.id % 5 == 0
             ? 0.12
@@ -88,7 +91,7 @@ void main(List<String> args) {
     final targetWin = base.id == 21
         ? 0.66
         : base.id > 21
-            ? _lerp(0.66, 0.58, late) - dip
+            ? _lerp(0.66, 0.58, late) - _lerp(0, 0.06, deep) - dip
             : _lerp(0.98, 0.68, t);
     final target3 =
         base.id > 20 ? _lerp(0.15, 0.10, late) : _lerp(0.50, 0.15, t);
@@ -96,7 +99,9 @@ void main(List<String> args) {
     // Moves follow a gentle schedule; goal sizes are scaled (binary search,
     // never beyond x1.5 so early levels stay friendly) until the bot wins at
     // the target rate. Levels with nori keep their layout and tune moves.
-    final scheduled = (20 + (base.id - 1) * 0.5).round();
+    // The schedule stops growing at 50 moves (level 60) so long levels stay
+    // playable in one sitting.
+    final scheduled = (20 + (base.id - 1) * 0.5).round().clamp(20, 50);
     final fixedGoals = base.goals.every((g) => !_scalable(g));
     var moves = scheduled;
     var factor = 1.0;

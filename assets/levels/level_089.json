@@ -1,0 +1,52 @@
+{
+  "id": 89,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    "XX.....XX",
+    "X.......X",
+    "..A...A..",
+    ".....B...",
+    ".........",
+    ".........",
+    "..A..BA..",
+    "X.......X",
+    "XX.....XX"
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "A": "bag:2",
+    "B": "key:hotate"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "tamago",
+    "ikura",
+    "hotate",
+    "kappa"
+  ],
+  "moves": 50,
+  "goals": [
+    {
+      "type": "break_bag"
+    },
+    {
+      "type": "collect",
+      "piece": "maguro",
+      "count": 63
+    },
+    {
+      "type": "collect",
+      "piece": "salmon",
+      "count": 63
+    }
+  ],
+  "stars": [11800, 14400, 17100],
+  "gravity": "left",
+  "seed": 612193
+}

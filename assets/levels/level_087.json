@@ -1,0 +1,49 @@
+{
+  "id": 87,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    ".........",
+    ".........",
+    "....A....",
+    ".........",
+    ".........",
+    ".......A.",
+    ".........",
+    ".........",
+    "........."
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "A": "cat:1"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "tamago",
+    "ikura",
+    "hotate",
+    "kappa"
+  ],
+  "moves": 50,
+  "goals": [
+    {
+      "type": "shoo_cats"
+    },
+    {
+      "type": "collect",
+      "piece": "ikura",
+      "count": 47
+    },
+    {
+      "type": "score",
+      "count": 13900
+    }
+  ],
+  "stars": [14400, 17400, 22000],
+  "seed": 611919
+}

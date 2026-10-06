@@ -1,0 +1,53 @@
+{
+  "id": 98,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    "XXX...XXX",
+    "XX.....XX",
+    "X.G...G.X",
+    ".N.....N.",
+    ".N..A..N.",
+    ".N.....N.",
+    "X.G...G.X",
+    "XX.....XX",
+    "XXX...XXX"
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "A": "ice:2",
+    "N": "nori:1",
+    "G": "bag:1"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "tamago",
+    "unagi",
+    "ebi",
+    "kappa"
+  ],
+  "moves": 50,
+  "goals": [
+    {
+      "type": "clear_nori"
+    },
+    {
+      "type": "break_ice"
+    },
+    {
+      "type": "break_bag"
+    },
+    {
+      "type": "collect",
+      "piece": "unagi",
+      "count": 61
+    }
+  ],
+  "stars": [9700, 13200, 15000],
+  "seed": 613426
+}

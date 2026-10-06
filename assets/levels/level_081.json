@@ -1,0 +1,45 @@
+{
+  "id": 81,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    "XXX...XXX",
+    "XX.....XX",
+    "X......FX",
+    "...NNN...",
+    "...NNN...",
+    "...NNN...",
+    "X..F....X",
+    "XX.....XX",
+    "XXX...XXX"
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "N": "nori:1",
+    "F": "fire"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "tamago",
+    "ikura",
+    "hotate",
+    "kappa"
+  ],
+  "moves": 50,
+  "goals": [
+    {
+      "type": "clear_nori"
+    },
+    {
+      "type": "put_out"
+    }
+  ],
+  "stars": [11800, 20900, 30500],
+  "gravity": "left",
+  "seed": 611097
+}

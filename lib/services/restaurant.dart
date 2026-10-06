@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/settings.dart';
 import 'store.dart';
 import 'wallet.dart';
 
@@ -32,7 +33,9 @@ class ShopDef {
 /// Pacing (a mid-skill bot averages ~2.2 stars a level): the first 15 levels
 /// pay roughly 30 stars, so the second restaurant (24) plus the first one's
 /// decoration (16) cannot both be afforded on the first pass. Replaying for
-/// 3 stars closes the gap.
+/// 3 stars closes the gap. Unlock costs after Hokkaido stay near 40 so that
+/// buying every restaurant in turn (without decor) needs ~90% of the
+/// stars available so far; decor is the optional star sink.
 abstract final class Restaurant {
   static const shops = [
     ShopDef('tsukiji', '🐟', 1, 15, 0, [
@@ -55,7 +58,27 @@ abstract final class Restaurant {
       DecorDef('table', '🪑', 12),
       DecorDef('sign', '🪧', 16),
     ]),
+    ShopDef('fukuoka', '🍜', 61, 75, 38, [
+      DecorDef('lantern', '🏮', 9),
+      DecorDef('table', '🪑', 13),
+      DecorDef('sign', '🪧', 18),
+    ]),
+    ShopDef('okinawa', '🌺', 76, 90, 40, [
+      DecorDef('lantern', '🏮', 10),
+      DecorDef('table', '🪑', 15),
+      DecorDef('sign', '🪧', 20),
+    ]),
+    ShopDef('omakase', '👑', 91, 100, 42, [
+      DecorDef('lantern', '🏮', 12),
+      DecorDef('table', '🪑', 17),
+      DecorDef('sign', '🪧', 24),
+    ]),
   ];
+
+  /// Number of levels in the game: the end of the last restaurant. To add
+  /// levels, extend the last shop or append a new one (see
+  /// docs/adding-levels.md).
+  static int get totalLevels => shops.last.lastLevel;
 
   static const completeCoins = 100;
 
@@ -148,7 +171,10 @@ class RestaurantNotifier extends Notifier<RestaurantState> {
   }
 
   bool buyShop(ShopDef s) {
-    if (state.shopUnlocked(s) || state.available < s.unlockCost) return false;
+    final free = ref.read(settingsProvider).testMode;
+    if (state.shopUnlocked(s) || (!free && state.available < s.unlockCost)) {
+      return false;
+    }
     _own('shop:${s.id}');
     return true;
   }
@@ -158,7 +184,7 @@ class RestaurantNotifier extends Notifier<RestaurantState> {
   bool buyDecor(ShopDef s, DecorDef d) {
     if (!state.shopUnlocked(s) ||
         state.decorOwned(s, d) ||
-        state.available < d.cost) {
+        (!ref.read(settingsProvider).testMode && state.available < d.cost)) {
       return false;
     }
     _own('decor:${s.id}:${d.id}');

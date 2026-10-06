@@ -59,10 +59,41 @@ const kMapRegions = {
       bottom: Color(0xFF3A8A98),
       land: Color(0xFFE8F2F4),
       deco: {'c': 'm', 'f': 'm'}),
+  'fukuoka': MapRegion(
+      kanji: '福岡',
+      top: Color(0xFF5B5FC7),
+      bottom: Color(0xFF353A8C),
+      land: Color(0xFFC9B27E),
+      deco: {'m': 'c', 'f': 'c', 'c': 'c'}),
+  'okinawa': MapRegion(
+      kanji: '沖縄',
+      top: Color(0xFF2EC4B6),
+      bottom: Color(0xFF138A8A),
+      land: Color(0xFFF0DFAE),
+      deco: {'m': 'f', 'c': 'f'}),
+  'omakase': MapRegion(
+      kanji: '極',
+      top: Color(0xFFD4A537),
+      bottom: Color(0xFF9A6A12),
+      land: Color(0xFFD9C08A),
+      deco: {'m': 'c', 'f': 'c'}),
 };
 
-/// One band of the map (top to bottom). Row 2 is where the band's last level
-/// sits and row 10 its first; rows 0-1 are left free for the name banner.
+/// Fallback for a restaurant added without a region entry yet, so a missing
+/// entry never crashes the map (a test still insists every shop has one).
+const kDefaultRegion = MapRegion(
+    kanji: '寿司',
+    top: Color(0xFF8E8E9A),
+    bottom: Color(0xFF5E5E6B),
+    land: Color(0xFFBFD3A0));
+
+MapRegion regionOf(String shopId) => kMapRegions[shopId] ?? kDefaultRegion;
+
+/// One band of the map (top to bottom), one per restaurant. Row 2 is where the
+/// band's last level sits and row 10 its first; rows 0-1 are left free for the
+/// name banner. Any number of levels (up to ~20) is spread along the band's
+/// path, so a restaurant of 10 or 15 levels needs no map change; more bands
+/// are stacked above, so the map grows with `Restaurant.shops`.
 const _bandTemplate = [
   '..LLLL..',
   '.LmLLfL.',
@@ -102,14 +133,16 @@ class MapLayout {
 
     grid = [
       for (var b = 0; b < bands; b++)
-        ..._bandRows(kMapRegions[shops[bands - 1 - b].id]!),
+        ..._bandRows(regionOf(shops[bands - 1 - b].id),
+            mirrored: (bands - 1 - b).isOdd),
     ];
 
     final pts = <Offset>[];
     for (var s = 0; s < bands; s++) {
       final dy = bandTop(s) * 1.0;
       for (final p in _bandPath) {
-        pts.add(Offset(p.dx, p.dy + dy));
+        // Odd bands run the other way round, so the route snakes up the map.
+        pts.add(Offset(s.isOdd ? kMapCols - p.dx : p.dx, p.dy + dy));
       }
     }
     path = pts;
@@ -159,9 +192,10 @@ class MapLayout {
 
   MapTile tileAt(int col, int row) => kMapLegend[grid[row][col]]!;
 
-  Iterable<String> _bandRows(MapRegion r) => _bandTemplate.map((row) {
+  Iterable<String> _bandRows(MapRegion r, {required bool mirrored}) =>
+      _bandTemplate.map((row) {
         final out = StringBuffer();
-        for (final ch in row.split('')) {
+        for (final ch in (mirrored ? row.split('').reversed : row.split(''))) {
           out.write(r.deco[ch] ?? ch);
         }
         return out.toString();

@@ -1,0 +1,49 @@
+{
+  "id": 88,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    "XXX...XXX",
+    "XX.....XX",
+    "X.AAAAA.X",
+    "..A...A..",
+    "..A.I.A..",
+    "..A...A..",
+    "X.AAAAA.X",
+    "XX.....XX",
+    "XXX...XXX"
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "A": "nori:2",
+    "I": "ice:1"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "tamago",
+    "ikura",
+    "hotate",
+    "kappa"
+  ],
+  "moves": 50,
+  "goals": [
+    {
+      "type": "clear_nori"
+    },
+    {
+      "type": "break_ice"
+    },
+    {
+      "type": "collect",
+      "piece": "hotate",
+      "count": 57
+    }
+  ],
+  "stars": [9300, 14600, 17400],
+  "seed": 612056
+}

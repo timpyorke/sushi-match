@@ -1,0 +1,50 @@
+{
+  "id": 97,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    "XX.....XX",
+    "X.......X",
+    "...F.....",
+    ".........",
+    "....T....",
+    "......F..",
+    ".........",
+    "X.......X",
+    "XX.....XX"
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "T": "mat",
+    "F": "fire"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "tamago",
+    "unagi",
+    "ebi",
+    "kappa"
+  ],
+  "moves": 50,
+  "goals": [
+    {
+      "type": "clear_mats"
+    },
+    {
+      "type": "put_out"
+    },
+    {
+      "type": "collect",
+      "piece": "maguro",
+      "count": 60
+    }
+  ],
+  "stars": [11000, 16800, 22200],
+  "gravity": "left",
+  "seed": 613289
+}

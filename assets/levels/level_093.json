@@ -1,0 +1,61 @@
+{
+  "id": 93,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    ".........",
+    ".........",
+    ".........",
+    "....A....",
+    ".........",
+    ".........",
+    ".......A.",
+    ".........",
+    "........."
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "A": "cat:1"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "tamago",
+    "unagi",
+    "ebi",
+    "kappa"
+  ],
+  "moves": 42,
+  "goals": [
+    {
+      "type": "shoo_cats"
+    },
+    {
+      "type": "collect",
+      "piece": "unagi",
+      "count": 69
+    },
+    {
+      "type": "collect",
+      "piece": "maguro",
+      "count": 69
+    }
+  ],
+  "stars": [12100, 16600, 22400],
+  "gravity": "up",
+  "conveyors": [
+    {
+      "row": 3,
+      "dir": "right"
+    },
+    {
+      "row": 5,
+      "dir": "left"
+    }
+  ],
+  "seed": 612741
+}

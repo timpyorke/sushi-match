@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sushi_trio/core/game_engine.dart';
 import 'package:sushi_trio/core/level.dart';
 import 'package:sushi_trio/core/move_finder.dart';
+import 'package:sushi_trio/services/restaurant.dart';
 
 void main() {
   test('every level file parses and its goals are reachable', () {
@@ -15,7 +16,7 @@ void main() {
         .where((f) => f.path.endsWith('.json'))
         .toList()
       ..sort((a, b) => a.path.compareTo(b.path));
-    expect(files.length, 60);
+    expect(files.length, Restaurant.totalLevels);
     for (final f in files) {
       final level = LevelConfig.fromJson(
           jsonDecode(f.readAsStringSync()) as Map<String, dynamic>);

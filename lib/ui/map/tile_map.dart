@@ -27,7 +27,7 @@ class TileMapPainter extends CustomPainter {
     final fill = Paint();
     for (var r = 0; r < layout.rows; r++) {
       final shop = layout.shopOfRow(r);
-      final region = kMapRegions[layout.shops[shop].id]!;
+      final region = regionOf(layout.shops[shop].id);
       for (var c = 0; c < kMapCols; c++) {
         final rect = Rect.fromLTWH(c * tile, r * tile, tile + 0.5, tile + 0.5);
         final type = layout.tileAt(c, r);
@@ -148,7 +148,7 @@ class RegionBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).textTheme;
-    final style = kMapRegions[shopId]!;
+    final style = regionOf(shopId);
     final top = locked ? Colors.blueGrey.shade300 : style.top;
     final bottom = locked ? Colors.blueGrey.shade500 : style.bottom;
     return Container(
