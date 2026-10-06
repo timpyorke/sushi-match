@@ -39,11 +39,26 @@ class _ScoreStars extends StatelessWidget {
 
   static const _star = 26.0;
 
+  /// Stars sit at evenly spaced slots, so the bar is piecewise linear between
+  /// the score thresholds instead of proportional to the raw score.
+  static double _fillFor(int score, List<int> th) {
+    if (th.isEmpty) return 0;
+    var lo = 0;
+    for (var i = 0; i < th.length; i++) {
+      if (score < th[i]) {
+        final span = th[i] - lo;
+        final part = span <= 0 ? 0.0 : (score - lo) / span;
+        return (i + part) / th.length;
+      }
+      lo = th[i];
+    }
+    return 1;
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).textTheme;
-    final top = thresholds.isEmpty ? 1 : thresholds.last;
-    final fill = (score / top).clamp(0.0, 1.0);
+    final fill = _fillFor(score, thresholds);
     return Container(
       padding: const EdgeInsets.fromLTRB(14, 6, 14, 8),
       decoration: UiArt.plankDecoration(),
@@ -74,10 +89,10 @@ class _ScoreStars extends StatelessWidget {
                       ),
                     ),
                   ),
-                  for (final th in thresholds)
+                  for (var i = 0; i < thresholds.length; i++)
                     Positioned(
-                      left: w * (th / top),
-                      child: StarIcon(size: _star, lit: score >= th),
+                      left: w * (i + 1) / thresholds.length,
+                      child: StarIcon(size: _star, lit: score >= thresholds[i]),
                     ),
                 ],
               ),
