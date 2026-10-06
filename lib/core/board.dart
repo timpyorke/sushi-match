@@ -4,7 +4,7 @@ import 'pos.dart';
 class Board {
   Board(this.rows, this.cols, List<bool> playable)
       : assert(playable.length == rows * cols),
-        _playable = List.unmodifiable(playable),
+        _playable = List.of(playable),
         _cells = List<Piece?>.filled(rows * cols, null);
 
   final int rows;
@@ -35,8 +35,11 @@ class Board {
   bool inBounds(Pos p) =>
       p.row >= 0 && p.row < rows && p.col >= 0 && p.col < cols;
 
-  /// False for out-of-bounds and void cells.
+  /// False for out-of-bounds and void cells (and rice bags until broken).
   bool isPlayable(Pos p) => inBounds(p) && _playable[_i(p)];
+
+  /// Turns a cell on once the rice bag that blocked it breaks.
+  void openCell(Pos p) => _playable[_i(p)] = true;
 
   /// Kind used for matching: null for empty cells, Omakase and frozen pieces.
   PieceKind? matchKind(Pos p) {

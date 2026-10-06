@@ -15,6 +15,7 @@ void main() {
   noriAndBoosterTests();
   conveyorTests();
   iceTests();
+  bagTests();
   void expectStableBoard(GameEngine e) {
     final ids = <int>{};
     for (final p in e.board.positions) {
@@ -400,6 +401,85 @@ void iceTests() {
       e.useChopsticks(const Pos(3, 3));
       final at = e.board.positions.firstWhere((p) => e.board[p]!.id == id);
       expect(e.board[at]!.ice, 1);
+    });
+  });
+}
+
+LevelConfig _bagLevel({int layers = 1}) => LevelConfig.fromJson({
+      'id': 1,
+      'board': {'cols': 7, 'rows': 7},
+      'layout': [
+        '.......',
+        '.......',
+        '.......',
+        '...B...',
+        '.......',
+        '.......',
+        '.......',
+      ],
+      'legend': {'.': 'cell', 'B': 'bag:$layers'},
+      'pieces': ['salmon', 'maguro', 'tamago', 'ikura', 'kappa'],
+      'moves': 99,
+      'goals': [
+        {'type': 'break_bag'},
+      ],
+      'seed': 3,
+    });
+
+void bagTests() {
+  group('rice bag', () {
+    void expectFull(GameEngine e) {
+      for (final p in e.board.positions) {
+        expect(e.board[p], isNotNull, reason: 'hole at $p');
+      }
+      expect(mf.MatchFinder.find(e.board), isEmpty);
+    }
+
+    test('parses: the bagged cell is closed and the goal counts bags', () {
+      final level = _bagLevel(layers: 2);
+      expect(level.bags.where((n) => n > 0), [2]);
+      expect(level.goals.single.type, GoalType.breakBag);
+      expect(level.goals.single.count, 1);
+      final e = GameEngine(level);
+      expect(e.board.isPlayable(const Pos(3, 3)), isFalse);
+      expect(e.bagAt(const Pos(3, 3)), 2);
+      expect(e.goals.single.done, isFalse);
+    });
+
+    test('the cell under a bag refills from the side, not from above', () {
+      final e = GameEngine(_bagLevel());
+      // (4,3) sits directly below the sack, so only a diagonal slide can
+      // fill it; the sack's own cell must stay closed meanwhile.
+      e.useChopsticks(const Pos(4, 3));
+      expectFull(e);
+    });
+
+    test('a clear next to the bag cracks it, opens the cell and wins', () {
+      final e = GameEngine(_bagLevel());
+      final steps = e.useChopsticks(const Pos(3, 2));
+      expect(steps.whereType<BagStep>().first.hits.single.layers, 0);
+      expect(e.board.isPlayable(const Pos(3, 3)), isTrue);
+      expect(e.board[const Pos(3, 3)], isNotNull);
+      expect(e.goals.single.done, isTrue);
+      expect(e.status, GameStatus.won);
+    });
+
+    test('two layers need two clears', () {
+      final e = GameEngine(_bagLevel(layers: 2));
+      e.useChopsticks(const Pos(3, 2));
+      expect(e.bagAt(const Pos(3, 3)), 1);
+      expect(e.goals.single.done, isFalse);
+    });
+
+    test('random play keeps every open cell filled', () {
+      final e = GameEngine(_bagLevel(layers: 3));
+      final rng = Random(5);
+      for (var i = 0; i < 60 && e.status == GameStatus.playing; i++) {
+        final moves = MoveFinder.allMoves(e.board);
+        final m = moves[rng.nextInt(moves.length)];
+        e.trySwap(m.$1, m.$2);
+        expectFull(e);
+      }
     });
   });
 }

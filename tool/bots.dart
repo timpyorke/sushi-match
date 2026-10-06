@@ -24,6 +24,7 @@ Move greedy(GameEngine e, Random r) {
   };
   final hasNori = e.level.goals.any((g) => g.type == GoalType.clearNori);
   final hasIce = e.level.goals.any((g) => g.type == GoalType.breakIce);
+  final hasBag = e.level.goals.any((g) => g.type == GoalType.breakBag);
   Move? best;
   var bestScore = -1.0;
   for (final m in MoveFinder.allMoves(e.board)) {
@@ -38,6 +39,16 @@ Move greedy(GameEngine e, Random r) {
         for (final c in g.cells) {
           s += wanted.contains(g.kind) ? 1.5 : 1;
           if (hasNori && e.noriAt(c) > 0) s += 2;
+          if (hasBag) {
+            for (final d in const [
+              Pos(0, 1),
+              Pos(0, -1),
+              Pos(1, 0),
+              Pos(-1, 0)
+            ]) {
+              if (e.bagAt(c + d) > 0) s += 2;
+            }
+          }
           if (hasIce) {
             for (final d in const [
               Pos(0, 1),

@@ -9,16 +9,17 @@
     ".........",
     ".........",
     ".........",
+    "..B...B..",
+    "..B...B..",
     ".........",
-    ".........",
-    ".........",
-    ".........",
+    "....B....",
     ".........",
     "........."
   ],
   "legend": {
     ".": "cell",
-    "X": "void"
+    "X": "void",
+    "B": "bag:1"
   },
   "pieces": [
     "salmon",
@@ -31,28 +32,22 @@
   "moves": 39,
   "goals": [
     {
-      "type": "collect",
-      "piece": "salmon",
-      "count": 43
+      "type": "break_bag"
     },
     {
       "type": "score",
-      "count": 12700
+      "count": 11000
     }
   ],
-  "stars": [12900, 15800, 20500],
+  "stars": [11300, 14300, 19600],
   "conveyors": [
     {
       "row": 1,
       "dir": "left"
     },
     {
-      "row": 4,
-      "dir": "right"
-    },
-    {
       "row": 7,
-      "dir": "left"
+      "dir": "right"
     }
   ],
   "seed": 384104

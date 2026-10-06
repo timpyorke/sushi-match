@@ -36,6 +36,7 @@ String orderText(List<LevelGoal> goals) {
         GoalType.score => L10n.t('itemScore', {'n': g.count}),
         GoalType.clearNori => L10n.t('itemNori'),
         GoalType.breakIce => L10n.t('itemIce'),
+        GoalType.breakBag => L10n.t('itemBag'),
       },
   ];
   final joined = items.length < 2

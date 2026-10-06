@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sushi_match/core/game_engine.dart';
 import 'package:sushi_match/core/level.dart';
+import 'package:sushi_match/core/move_finder.dart';
 
 void main() {
   test('every level file parses and its goals are reachable', () {
@@ -22,5 +25,33 @@ void main() {
         expect(level.pieces, contains(g.piece), reason: f.path);
       }
     }
+  });
+
+  test('rice bag levels never leave an open cell empty', () {
+    final files = Directory('assets/levels')
+        .listSync()
+        .whereType<File>()
+        .where((f) => f.path.endsWith('.json'));
+    var checked = 0;
+    for (final f in files) {
+      final level = LevelConfig.fromJson(
+          jsonDecode(f.readAsStringSync()) as Map<String, dynamic>);
+      if (!level.bags.any((n) => n > 0)) continue;
+      checked++;
+      for (var seed = 0; seed < 3; seed++) {
+        final e = GameEngine(level, seed: seed);
+        final rng = Random(seed);
+        for (var i = 0; i < 40 && e.status == GameStatus.playing; i++) {
+          final moves = MoveFinder.allMoves(e.board);
+          final m = moves[rng.nextInt(moves.length)];
+          e.trySwap(m.$1, m.$2);
+          for (final p in e.board.positions) {
+            expect(e.board[p], isNotNull,
+                reason: 'level ${level.id} seed $seed hole at $p');
+          }
+        }
+      }
+    }
+    expect(checked, greaterThan(0));
   });
 }

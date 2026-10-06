@@ -31,6 +31,7 @@ abstract final class L10n {
       'target': 'Target',
       'nori': 'Nori',
       'ice': 'Ice',
+      'bag': 'Rice bags',
       'salmon': 'Salmon',
       'maguro': 'Maguro',
       'tamago': 'Tamago',
@@ -61,6 +62,7 @@ abstract final class L10n {
       'itemScore': 'a {n}-point feast',
       'itemNori': 'every nori sheet cleared',
       'itemIce': 'every block of ice broken',
+      'itemBag': 'every rice bag broken',
       'and': 'and',
       'cust0': 'Granny Sakura',
       'cust1': 'Mr. Tanaka',
@@ -96,6 +98,10 @@ abstract final class L10n {
       'tipIceBody': 'Iced pieces cannot be swapped or matched. '
           'Match next to one, or catch it in a blast, to crack a layer. '
           'Break all the ice to win.',
+      'tipBagTitle': 'Rice bags',
+      'tipBagBody': 'A sack blocks its cell and the pieces above it. '
+          'Match next to it to open it up; pieces slide in around it. '
+          'Break every sack to win.',
     },
     'th': {
       'pickPlate': 'เลือกจานเลย',
@@ -115,6 +121,7 @@ abstract final class L10n {
       'target': 'เป้าหมาย',
       'nori': 'สาหร่าย',
       'ice': 'น้ำแข็ง',
+      'bag': 'กระสอบข้าว',
       'salmon': 'แซลมอน',
       'maguro': 'มากุโระ',
       'tamago': 'ทามาโกะ',
@@ -145,6 +152,7 @@ abstract final class L10n {
       'itemScore': 'คะแนนให้ถึง {n}',
       'itemNori': 'แกะสาหร่ายให้หมด',
       'itemIce': 'ทุบน้ำแข็งให้หมด',
+      'itemBag': 'แกะกระสอบข้าวให้หมด',
       'and': 'กับ',
       'cust0': 'คุณยายซากุระ',
       'cust1': 'คุณทานากะ',
@@ -180,6 +188,10 @@ abstract final class L10n {
       'tipIceBody': 'ชิ้นที่ถูกน้ำแข็งครอบสลับหรือจับคู่ไม่ได้ '
           'ให้จับคู่ชิ้นที่อยู่ข้าง ๆ หรือใช้ชิ้นพิเศษระเบิดเพื่อทุบน้ำแข็งทีละชั้น '
           'ทุบให้หมดก็ชนะ',
+      'tipBagTitle': 'กระสอบข้าว',
+      'tipBagBody': 'กระสอบตันทั้งช่อง ชิ้นด้านบนตกผ่านไม่ได้ '
+          'จับคู่ชิ้นที่อยู่ข้าง ๆ เพื่อแกะกระสอบ ชิ้นจะไหลเฉียงลงมาเติมรอบกระสอบ '
+          'แกะให้หมดก็ชนะ',
     },
   };
 }

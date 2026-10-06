@@ -6,19 +6,20 @@
     "rows": 9
   },
   "layout": [
+    "XXX...XXX",
+    "XX.....XX",
+    "X.B...B.X",
     ".........",
+    "....B....",
     ".........",
-    ".........",
-    "...XXX...",
-    "...XXX...",
-    "...XXX...",
-    ".........",
-    ".........",
-    "........."
+    "X.B...B.X",
+    "XX.....XX",
+    "XXX...XXX"
   ],
   "legend": {
     ".": "cell",
-    "X": "void"
+    "X": "void",
+    "B": "bag:1"
   },
   "pieces": [
     "salmon",
@@ -31,25 +32,13 @@
   "moves": 42,
   "goals": [
     {
+      "type": "break_bag"
+    },
+    {
       "type": "score",
-      "count": 7700
-    },
-    {
-      "type": "collect",
-      "piece": "tamago",
-      "count": 22
+      "count": 8400
     }
   ],
-  "stars": [7800, 10900, 14500],
-  "conveyors": [
-    {
-      "row": 2,
-      "dir": "left"
-    },
-    {
-      "row": 6,
-      "dir": "right"
-    }
-  ],
+  "stars": [8500, 11100, 14700],
   "seed": 444752
 }

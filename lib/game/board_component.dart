@@ -65,6 +65,11 @@ class BoardComponent extends PositionComponent
   double _idle = 0;
   final List<Effect> _hint = [];
 
+  late final List<int> _bags = [
+    for (var r = 0; r < engine.board.rows; r++)
+      for (var c = 0; c < engine.board.cols; c++) engine.bagAt(Pos(r, c)),
+  ];
+
   late final List<int> _nori = [
     for (final p in [
       for (var r = 0; r < engine.board.rows; r++)
@@ -125,14 +130,55 @@ class BoardComponent extends PositionComponent
         _beltArrow);
   }
 
+  static final _sackFill = Paint()..color = const Color(0xFFE9D3A8);
+  static final _sackShade = Paint()..color = const Color(0xFFD1B47F);
+  static final _sackEdge = Paint()
+    ..color = const Color(0xFF6B4F2A)
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 2.5;
+  static final _sackTie = Paint()
+    ..color = const Color(0xFFB5472F)
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 3
+    ..strokeCap = StrokeCap.round;
+  static final _sackDot = Paint()..color = const Color(0xFF6B4F2A);
+
+  /// A rice sack: round body, gathered neck with a red tie and one dot per
+  /// layer left.
+  void _drawBag(Canvas canvas, Rect r, int layers) {
+    final body = RRect.fromRectAndRadius(
+        Rect.fromLTWH(r.left + cell * 0.12, r.top + cell * 0.26, cell * 0.76,
+            cell * 0.64),
+        const Radius.circular(cell * 0.28));
+    final neck = Path()
+      ..moveTo(r.left + cell * 0.34, r.top + cell * 0.30)
+      ..lineTo(r.left + cell * 0.40, r.top + cell * 0.12)
+      ..lineTo(r.left + cell * 0.60, r.top + cell * 0.12)
+      ..lineTo(r.left + cell * 0.66, r.top + cell * 0.30)
+      ..close();
+    canvas.drawPath(neck, _sackShade);
+    canvas.drawPath(neck, _sackEdge);
+    canvas.drawRRect(body, _sackFill);
+    canvas.drawRRect(body, _sackEdge);
+    canvas.drawLine(Offset(r.left + cell * 0.36, r.top + cell * 0.27),
+        Offset(r.left + cell * 0.64, r.top + cell * 0.27), _sackTie);
+    for (var i = 0; i < layers; i++) {
+      canvas.drawCircle(
+          Offset(r.center.dx + (i - (layers - 1) / 2) * cell * 0.16,
+              r.top + cell * 0.66),
+          cell * 0.05,
+          _sackDot);
+    }
+  }
+
   @override
   void render(Canvas canvas) {
     if (TileArt.ready) {
       TileArt.frame(canvas, Offset.zero & Size(size.x, size.y), _frame);
     }
-    for (final p in board.positions) {
-      final rect = Rect.fromLTWH(p.col * cell, p.row * cell, cell, cell);
-      final dark = (p.row + p.col).isOdd;
+    void drawCell(int row, int col) {
+      final rect = Rect.fromLTWH(col * cell, row * cell, cell, cell);
+      final dark = (row + col).isOdd;
       if (TileArt.ready) {
         TileArt.cell(canvas, rect, dark: dark);
       } else {
@@ -141,6 +187,14 @@ class BoardComponent extends PositionComponent
           dark ? _cellB : _cellA,
         );
       }
+    }
+
+    for (final p in board.positions) {
+      drawCell(p.row, p.col);
+    }
+    // Bagged cells sit on a plain tile too; the sack is drawn over the pieces.
+    for (var i = 0; i < _bags.length; i++) {
+      if (_bags[i] > 0) drawCell(i ~/ board.cols, i % board.cols);
     }
     for (final c in engine.level.conveyors) {
       final cols = [
@@ -200,6 +254,14 @@ class BoardComponent extends PositionComponent
         canvas.drawRRect(rr, _noriPaint);
         canvas.drawRRect(rr, _noriEdge);
       }
+    }
+    for (var i = 0; i < _bags.length; i++) {
+      if (_bags[i] == 0) continue;
+      _drawBag(
+          canvas,
+          Rect.fromLTWH(
+              (i % board.cols) * cell, (i ~/ board.cols) * cell, cell, cell),
+          _bags[i]);
     }
     final s = _selected;
     if (s != null) {
@@ -390,6 +452,12 @@ class BoardComponent extends PositionComponent
           pending.clear();
         case NoriStep(:final layers):
           layers.forEach((p, n) => _nori[p.row * board.cols + p.col] = n);
+        case BagStep(:final hits):
+          for (final h in hits) {
+            _bags[h.pos.row * board.cols + h.pos.col] = h.layers;
+            _burst(_center(h.pos), h.layers == 0 ? _sackBurst : null);
+          }
+          await _wait(0.15);
         case IceStep(:final hits):
           for (final h in hits) {
             _views[h.pieceId]?.ice = h.layers;
@@ -484,6 +552,7 @@ class BoardComponent extends PositionComponent
   }
 
   static final _rice = Paint()..color = const Color(0xFFFFFDF5);
+  static final _sackBurst = Paint()..color = const Color(0xFFE9D3A8);
   static final _iceChip = Paint()..color = const Color(0xFFBFE8FA);
   static final _sesame = Paint()..color = const Color(0xFF3B2A20);
   final _rng = math.Random();

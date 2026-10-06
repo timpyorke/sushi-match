@@ -28,6 +28,9 @@ class GameEngine {
       : board = Board(level.rows, level.cols, level.playable),
         rng = Random(seed ?? level.seed),
         _nori = List.of(level.nori),
+        _bags = level.bags.isEmpty
+            ? List.filled(level.rows * level.cols, 0)
+            : List.of(level.bags),
         movesLeft = level.moves {
     board.lockedRows = {for (final c in level.conveyors) c.row};
     BoardFactory.fillInitial(board, level.pieces, rng, _makePiece,
@@ -40,6 +43,7 @@ class GameEngine {
         board = o.board.copy(),
         rng = Random(seed),
         _nori = List.of(o._nori),
+        _bags = List.of(o._bags),
         movesLeft = o.movesLeft,
         score = o.score,
         status = o.status,
@@ -62,6 +66,9 @@ class GameEngine {
   GameStatus status = GameStatus.playing;
 
   final List<int> _nori;
+
+  /// Rice bag layers per cell; a bagged cell blocks gravity until it breaks.
+  final List<int> _bags;
   int _nextId = 0;
 
   /// Origins of Wasabi Bombs that still owe their second blast.
@@ -80,6 +87,7 @@ class GameEngine {
               GoalType.score => score,
               GoalType.clearNori => g.count - _nori.where((n) => n > 0).length,
               GoalType.breakIce => g.count - _frozenCount,
+              GoalType.breakBag => g.count - _bags.where((n) => n > 0).length,
             },
           ),
       ];
@@ -92,6 +100,9 @@ class GameEngine {
         for (final p in board.positions)
           if (board[p]?.frozen ?? false) p,
       ].length;
+
+  /// Rice bag layers currently in [p] (0 when none).
+  int bagAt(Pos p) => board.inBounds(p) ? _bags[p.row * board.cols + p.col] : 0;
 
   /// Nori layers currently under [p] (0 when none).
   int noriAt(Pos p) =>
@@ -349,6 +360,13 @@ class GameEngine {
       }
     }
 
+    final cracks = <Pos>{};
+    for (final p in cleared) {
+      for (final d in const [Pos(0, 1), Pos(0, -1), Pos(1, 0), Pos(-1, 0)]) {
+        if (bagAt(p + d) > 0) cracks.add(p + d);
+      }
+    }
+
     final removed = <ClearedPiece>[];
     for (final p in cleared) {
       final piece = board[p]!;
@@ -381,6 +399,16 @@ class GameEngine {
       if (_nori[i] > 0) noriLeft[p] = --_nori[i];
     }
     if (noriLeft.isNotEmpty) steps.add(NoriStep(noriLeft));
+
+    if (cracks.isNotEmpty) {
+      final hits = <BagHit>[];
+      for (final q in cracks) {
+        final left = --_bags[q.row * board.cols + q.col];
+        if (left == 0) board.openCell(q);
+        hits.add(BagHit(q, left));
+      }
+      steps.add(BagStep(hits));
+    }
 
     if (cracked.isNotEmpty) {
       steps.add(IceStep([
@@ -497,38 +525,95 @@ class GameEngine {
   // ------------------------------------------------------ gravity/refill --
 
   List<BoardStep> _gravityAndRefill() {
+    final before = <int, Pos>{
+      for (final p in board.positions)
+        if (board[p] != null) board[p]!.id: p,
+    };
+    final fresh = <int, (PieceSnapshot, int)>{};
+    // A column splits into segments at rice bags (void cells stay transparent
+    // to falling pieces, bags do not). Only the topmost segment is fed from
+    // above; the others fill by pieces sliding in diagonally.
+    final segments = <List<Pos>>[];
+    final fed = <bool>[];
+    for (var c = 0; c < board.cols; c++) {
+      var current = <Pos>[];
+      var sealed = false;
+      void close() {
+        if (current.isNotEmpty) {
+          segments.add(current);
+          fed.add(!sealed);
+          sealed = true;
+        }
+        current = <Pos>[];
+      }
+
+      for (var r = 0; r < board.rows; r++) {
+        final p = Pos(r, c);
+        if (bagAt(p) > 0) {
+          close();
+          sealed = true;
+        } else if (board.isPlayable(p)) {
+          current.add(p);
+        }
+      }
+      close();
+    }
+
+    for (var round = 0; round < 100; round++) {
+      for (var s = 0; s < segments.length; s++) {
+        final cells = segments[s];
+        final stack = [
+          for (final p in cells)
+            if (board[p] != null) board[p]!,
+        ];
+        for (final p in cells) {
+          board[p] = null;
+        }
+        var w = cells.length - 1;
+        for (var i = stack.length - 1; i >= 0; i--, w--) {
+          board[cells[w]] = stack[i];
+        }
+        if (!fed[s]) continue;
+        final missing = w + 1;
+        final top = cells.first.row;
+        for (var i = 0; i < missing; i++) {
+          final piece =
+              _makePiece(level.pieces[rng.nextInt(level.pieces.length)]);
+          board[cells[i]] = piece;
+          fresh[piece.id] = (PieceSnapshot.of(piece), top - missing + i);
+        }
+      }
+      // Sealed segments whose top cell is empty pull a piece in from the
+      // neighbouring column one row up.
+      var slid = false;
+      for (var s = 0; s < segments.length; s++) {
+        if (fed[s]) continue;
+        final top = segments[s].first;
+        if (board[top] != null) continue;
+        final donors = [
+          for (final dc in const [-1, 1])
+            if (board[Pos(top.row - 1, top.col + dc)] != null)
+              Pos(top.row - 1, top.col + dc),
+        ];
+        if (donors.isEmpty) continue;
+        final from = donors[rng.nextInt(donors.length)];
+        board[top] = board[from];
+        board[from] = null;
+        slid = true;
+      }
+      if (!slid) break;
+    }
+
     final falls = <FallMove>[];
     final refills = <RefillPiece>[];
-    for (var c = 0; c < board.cols; c++) {
-      // Pieces fall straight down and skip over void cells.
-      // TODO(rice-bag): diagonal slides once solid blockers exist.
-      final cells = [
-        for (var r = 0; r < board.rows; r++)
-          if (board.isPlayable(Pos(r, c))) Pos(r, c),
-      ];
-      if (cells.isEmpty) continue;
-      final stack = <(Pos, Piece)>[
-        for (final p in cells)
-          if (board[p] != null) (p, board[p]!),
-      ];
-      for (final p in cells) {
-        board[p] = null;
-      }
-      var w = cells.length - 1;
-      for (var i = stack.length - 1; i >= 0; i--, w--) {
-        final (from, piece) = stack[i];
-        final to = cells[w];
-        board[to] = piece;
-        if (from != to) falls.add(FallMove(piece.id, from, to));
-      }
-      final missing = w + 1;
-      final top = cells.first.row;
-      for (var i = 0; i < missing; i++) {
-        final piece =
-            _makePiece(level.pieces[rng.nextInt(level.pieces.length)]);
-        board[cells[i]] = piece;
-        refills.add(
-            RefillPiece(PieceSnapshot.of(piece), cells[i], top - missing + i));
+    for (final p in board.positions) {
+      final piece = board[p];
+      if (piece == null) continue;
+      final f = fresh[piece.id];
+      if (f != null) {
+        refills.add(RefillPiece(f.$1, p, f.$2));
+      } else if (before[piece.id] != p) {
+        falls.add(FallMove(piece.id, before[piece.id]!, p));
       }
     }
     return [

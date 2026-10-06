@@ -66,6 +66,19 @@ class SushiMatchApp extends StatelessWidget {
 
 const int kLevelCount = 50;
 
+/// (id, emoji, l10n prefix) of the first unseen tip this level needs.
+(String, String, String)? _tipFor(LevelConfig level) {
+  final tips = [
+    if (level.conveyors.isNotEmpty) ('conveyor', '➡️🔒', 'tipConveyor'),
+    if (level.ice.any((n) => n > 0)) ('ice', '🧊', 'tipIce'),
+    if (level.bags.any((n) => n > 0)) ('bag', '🌾', 'tipBag'),
+  ];
+  for (final t in tips) {
+    if (!Tips.isSeen(t.$1)) return t;
+  }
+  return null;
+}
+
 String _levelAsset(int n) =>
     'assets/levels/level_${n.toString().padLeft(3, '0')}.json';
 
@@ -209,21 +222,18 @@ class _GameScreenState extends State<GameScreen> {
                     children: [
                       GameWidget(game: game),
                       PraiseBanner(game: game),
-                      if (game.level.conveyors.isNotEmpty)
-                        const TipOverlay(
-                            id: 'conveyor', emoji: '➡️🔒', text: 'tipConveyor'),
-                      // Never stack two tips: ice waits until the belt tip
-                      // has been dismissed.
-                      if (game.level.ice.any((n) => n > 0))
-                        ListenableBuilder(
-                          listenable: Tips.seen,
-                          builder: (context, _) =>
-                              game.level.conveyors.isNotEmpty &&
-                                      !Tips.isSeen('conveyor')
-                                  ? const SizedBox.shrink()
-                                  : const TipOverlay(
-                                      id: 'ice', emoji: '🧊', text: 'tipIce'),
-                        ),
+                      // One tip at a time: the first mechanic of this level
+                      // the player has not been told about yet.
+                      ListenableBuilder(
+                        listenable: Tips.seen,
+                        builder: (context, _) {
+                          final tip = _tipFor(game.level);
+                          return tip == null
+                              ? const SizedBox.shrink()
+                              : TipOverlay(
+                                  id: tip.$1, emoji: tip.$2, text: tip.$3);
+                        },
+                      ),
                       ResultOverlay(
                         game: game,
                         onLevels: () => Navigator.of(context).pop(),

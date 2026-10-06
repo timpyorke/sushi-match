@@ -122,6 +122,20 @@ final class IceStep extends BoardStep {
   final List<IceHit> hits;
 }
 
+class BagHit {
+  const BagHit(this.pos, this.layers);
+  final Pos pos;
+
+  /// Layers left after the hit (0 = the bag is gone and the cell opens up).
+  final int layers;
+}
+
+/// Rice bags cracked by a clear next to them.
+final class BagStep extends BoardStep {
+  const BagStep(this.hits);
+  final List<BagHit> hits;
+}
+
 /// A conveyor row sliding one cell; the end piece wraps to the far side.
 final class ConveyorStep extends BoardStep {
   const ConveyorStep(this.moves);

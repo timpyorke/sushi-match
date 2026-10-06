@@ -26,6 +26,7 @@ LevelConfig _variant(LevelConfig l, int moves, double factor) => LevelConfig(
       playable: l.playable,
       nori: l.nori,
       ice: l.ice,
+      bags: l.bags,
       pieces: l.pieces,
       moves: moves,
       goals: [for (final g in l.goals) _scaled(g, factor)],
@@ -34,12 +35,17 @@ LevelConfig _variant(LevelConfig l, int moves, double factor) => LevelConfig(
       conveyors: l.conveyors,
     );
 
+/// Collect and score goals scale with difficulty; blocker goals are fixed by
+/// the layout.
+bool _scalable(LevelGoal g) =>
+    g.type == GoalType.collect || g.type == GoalType.score;
+
 LevelGoal _scaled(LevelGoal g, double f) => switch (g.type) {
       GoalType.collect =>
         LevelGoal.collect(g.piece!, max(8, (g.count * f).round())),
       GoalType.score =>
         LevelGoal.score(max(1500, (g.count * f / 100).round() * 100)),
-      GoalType.clearNori || GoalType.breakIce => g,
+      _ => g,
     };
 
 int _quantile(List<int> sorted, double q) =>
@@ -84,8 +90,7 @@ void main(List<String> args) {
     // never beyond x1.5 so early levels stay friendly) until the bot wins at
     // the target rate. Levels with nori keep their layout and tune moves.
     final scheduled = (20 + (base.id - 1) * 0.5).round();
-    final fixedGoals = base.goals.every(
-        (g) => g.type == GoalType.clearNori || g.type == GoalType.breakIce);
+    final fixedGoals = base.goals.every((g) => !_scalable(g));
     var moves = scheduled;
     var factor = 1.0;
     List<int> run() {
@@ -155,8 +160,7 @@ void main(List<String> args) {
       var out = text.replaceFirst(RegExp(r'"moves":\s*\d+'), '"moves": $moves');
       final counts = [
         for (final g in tuned.goals)
-          if (g.type != GoalType.clearNori && g.type != GoalType.breakIce)
-            g.count,
+          if (_scalable(g)) g.count,
       ];
       var k = 0;
       out = out.replaceAllMapped(

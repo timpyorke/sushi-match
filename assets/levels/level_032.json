@@ -6,19 +6,20 @@
     "rows": 9
   },
   "layout": [
-    "XX.....XX",
-    "X.......X",
     ".........",
     ".........",
+    "..B...B..",
     ".........",
+    "....B....",
     ".........",
+    "..B...B..",
     ".........",
-    "X.......X",
-    "XX.....XX"
+    "........."
   ],
   "legend": {
     ".": "cell",
-    "X": "void"
+    "X": "void",
+    "B": "bag:1"
   },
   "pieces": [
     "salmon",
@@ -28,19 +29,17 @@
     "ebi",
     "kappa"
   ],
-  "moves": 36,
+  "moves": 32,
   "goals": [
     {
-      "type": "score",
-      "count": 8500
-    }
-  ],
-  "stars": [8800, 11300, 14600],
-  "conveyors": [
+      "type": "break_bag"
+    },
     {
-      "row": 4,
-      "dir": "right"
+      "type": "collect",
+      "piece": "salmon",
+      "count": 45
     }
   ],
+  "stars": [7600, 11100, 14700],
   "seed": 323456
 }
