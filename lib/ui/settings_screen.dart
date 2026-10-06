@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../core/progress.dart';
 import '../core/settings.dart';
+import 'l10n.dart';
 import 'ui_art.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -11,15 +12,15 @@ class SettingsScreen extends StatelessWidget {
     final ok = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Reset progress?'),
-        content: const Text('All levels will be locked again.'),
+        title: Text(L10n.t('resetTitle')),
+        content: Text(L10n.t('resetBody')),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel')),
+              child: Text(L10n.t('cancel'))),
           TextButton(
               onPressed: () => Navigator.pop(context, true),
-              child: const Text('Reset')),
+              child: Text(L10n.t('reset'))),
         ],
       ),
     );
@@ -28,13 +29,20 @@ class SettingsScreen extends StatelessWidget {
     if (context.mounted) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
-        ..showSnackBar(const SnackBar(content: Text('Progress reset')));
+        ..showSnackBar(SnackBar(content: Text(L10n.t('progressReset'))));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).textTheme;
+    return ValueListenableBuilder<String>(
+      valueListenable: Settings.language,
+      builder: (context, _, __) => _page(context, t),
+    );
+  }
+
+  Widget _page(BuildContext context, TextTheme t) {
     return Scaffold(
       body: DecoratedBox(
         decoration: const BoxDecoration(
@@ -55,7 +63,7 @@ class SettingsScreen extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12),
-                child: Text('Settings',
+                child: Text(L10n.t('settings'),
                     style:
                         t.headlineLarge?.copyWith(fontWeight: FontWeight.bold)),
               ),
@@ -69,14 +77,36 @@ class SettingsScreen extends StatelessWidget {
                     ValueListenableBuilder<bool>(
                       valueListenable: Settings.haptics,
                       builder: (_, on, __) => SwitchListTile(
-                        title: const Text('Vibration'),
+                        title: Text(L10n.t('vibration')),
                         value: on,
                         onChanged: Settings.setHaptics,
                       ),
                     ),
+                    ValueListenableBuilder<bool>(
+                      valueListenable: Settings.colorblind,
+                      builder: (_, on, __) => SwitchListTile(
+                        title: Text(L10n.t('colorblind')),
+                        value: on,
+                        onChanged: Settings.setColorblind,
+                      ),
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.language),
+                      title: Text(L10n.t('language')),
+                      trailing: SegmentedButton<String>(
+                        showSelectedIcon: false,
+                        segments: [
+                          for (final e in L10n.languages.entries)
+                            ButtonSegment(value: e.key, label: Text(e.value)),
+                        ],
+                        selected: {Settings.language.value},
+                        onSelectionChanged: (v) =>
+                            Settings.setLanguage(v.first),
+                      ),
+                    ),
                     ListTile(
                       leading: const Icon(Icons.restart_alt),
-                      title: const Text('Reset progress'),
+                      title: Text(L10n.t('resetProgress')),
                       onTap: () => _confirmReset(context),
                     ),
                   ],

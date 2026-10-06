@@ -1,25 +1,49 @@
 {
   "id": 14,
   "version": 1,
-  "board": { "cols": 9, "rows": 9 },
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
   "layout": [
     "XX.....XX",
-    "X.......X",
+    "XN.....NX",
     "...XXX...",
+    "MN.XXX.NM",
+    "MN.XXX.NM",
+    "MN.XXX.NM",
     "...XXX...",
-    "...XXX...",
-    "...XXX...",
-    "...XXX...",
-    "X.......X",
+    "XN.....NX",
     "XX.....XX"
   ],
-  "legend": { ".": "cell", "X": "void" },
-  "pieces": ["salmon", "maguro", "tamago", "ebi", "kappa"],
-  "moves": 26,
-  "goals": [
-    { "type": "collect", "piece": "kappa", "count": 30 },
-    { "type": "collect", "piece": "tamago", "count": 24 }
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "N": "nori:1",
+    "M": "nori:2"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "tamago",
+    "ebi",
+    "kappa"
   ],
-  "stars": [5000, 7500, 10000],
+  "moves": 28,
+  "goals": [
+    {
+      "type": "clear_nori"
+    },
+    {
+      "type": "collect",
+      "piece": "kappa",
+      "count": 20
+    }
+  ],
+  "stars": [
+    5000,
+    7500,
+    10000
+  ],
   "seed": 141419
 }

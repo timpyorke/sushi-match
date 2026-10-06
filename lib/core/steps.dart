@@ -98,6 +98,14 @@ final class RefillStep extends BoardStep {
   final List<RefillPiece> pieces;
 }
 
+/// Nori layers left on the cells a clear just hit.
+final class NoriStep extends BoardStep {
+  const NoriStep(this.layers);
+
+  /// cell -> layers remaining (0 = sheet gone).
+  final Map<Pos, int> layers;
+}
+
 final class ShuffleStep extends BoardStep {
   const ShuffleStep(this.positions);
 

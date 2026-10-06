@@ -1,6 +1,6 @@
 import 'piece.dart';
 
-enum GoalType { collect, score }
+enum GoalType { collect, score, clearNori }
 
 class LevelGoal {
   const LevelGoal.collect(PieceKind this.piece, this.count)
@@ -9,19 +9,29 @@ class LevelGoal {
       : type = GoalType.score,
         piece = null;
 
+  /// Clear every nori sheet; [count] is the number of sheeted cells.
+  const LevelGoal.clearNori(this.count)
+      : type = GoalType.clearNori,
+        piece = null;
+
   final GoalType type;
   final PieceKind? piece;
   final int count;
 
-  factory LevelGoal.fromJson(Map<String, dynamic> j) {
+  factory LevelGoal.fromJson(Map<String, dynamic> j, {int noriCells = 0}) {
     switch (j['type']) {
       case 'collect':
         return LevelGoal.collect(
             PieceKind.values.byName(j['piece'] as String), j['count'] as int);
       case 'score':
         return LevelGoal.score(j['count'] as int);
+      case 'clear_nori':
+        if (noriCells == 0) {
+          throw const FormatException('clear_nori needs nori cells in layout');
+        }
+        return LevelGoal.clearNori(noriCells);
       default:
-        // clear_nori / deliver / break arrive together with their blockers.
+        // deliver / break arrive together with their blockers.
         throw UnsupportedError(
             'Goal type "${j['type']}" is not implemented yet');
     }
@@ -34,6 +44,7 @@ class LevelConfig {
     required this.rows,
     required this.cols,
     required this.playable,
+    required this.nori,
     required this.pieces,
     required this.moves,
     required this.goals,
@@ -47,14 +58,18 @@ class LevelConfig {
 
   /// Row-major mask; false = void cell.
   final List<bool> playable;
+
+  /// Row-major nori layers under each cell (0 = none).
+  final List<int> nori;
   final List<PieceKind> pieces;
   final int moves;
   final List<LevelGoal> goals;
   final List<int> stars;
   final int seed;
 
-  /// Parses the GDD level schema. Legend values other than "void" are
-  /// treated as plain cells for now (nori, ice, ... come later).
+  /// Parses the GDD level schema. `nori` / `nori:N` legend values put N
+  /// layers under a cell; other values besides "void" are plain cells for now
+  /// (ice, ... come later).
   factory LevelConfig.fromJson(Map<String, dynamic> j) {
     final board = j['board'] as Map<String, dynamic>;
     final rows = board['rows'] as int;
@@ -66,14 +81,22 @@ class LevelConfig {
     if (layout.length != rows || layout.any((l) => l.length != cols)) {
       throw FormatException('layout does not match board ${cols}x$rows');
     }
+    final cellsOf = [
+      for (final line in layout)
+        for (final ch in line.split('')) legend[ch] ?? 'cell',
+    ];
+    final nori = [
+      for (final v in cellsOf)
+        v.startsWith('nori')
+            ? (v.contains(':') ? int.parse(v.split(':')[1]) : 1)
+            : 0,
+    ];
     return LevelConfig(
       id: j['id'] as int,
       rows: rows,
       cols: cols,
-      playable: [
-        for (final line in layout)
-          for (final ch in line.split('')) (legend[ch] ?? 'cell') != 'void',
-      ],
+      playable: [for (final v in cellsOf) v != 'void'],
+      nori: nori,
       pieces: [
         for (final p in j['pieces'] as List)
           PieceKind.values.byName(p as String),
@@ -81,7 +104,8 @@ class LevelConfig {
       moves: j['moves'] as int,
       goals: [
         for (final g in j['goals'] as List)
-          LevelGoal.fromJson(g as Map<String, dynamic>),
+          LevelGoal.fromJson(g as Map<String, dynamic>,
+              noriCells: nori.where((n) => n > 0).length),
       ],
       stars: (j['stars'] as List? ?? const []).cast<int>(),
       seed: j['seed'] as int? ?? DateTime.now().millisecondsSinceEpoch,

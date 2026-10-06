@@ -12,6 +12,7 @@ import 'package:sushi_match/core/steps.dart';
 import 'helpers.dart';
 
 void main() {
+  noriAndBoosterTests();
   void expectStableBoard(GameEngine e) {
     final ids = <int>{};
     for (final p in e.board.positions) {
@@ -135,5 +136,85 @@ void main() {
     expect(steps.whereType<SpecialActivateStep>(), isNotEmpty);
     expect(e.movesLeft, 0);
     expect((steps.last as TurnEndStep).movesLeft, 0);
+  });
+}
+
+LevelConfig _noriLevel() => LevelConfig.fromJson({
+      'id': 1,
+      'board': {'cols': 7, 'rows': 7},
+      'layout': [
+        '.......',
+        '.......',
+        '.......',
+        '...N...',
+        '.......',
+        '.......',
+        '.......',
+      ],
+      'legend': {'.': 'cell', 'N': 'nori:2'},
+      'pieces': ['salmon', 'maguro', 'tamago', 'ikura', 'kappa'],
+      'moves': 99,
+      'goals': [
+        {'type': 'clear_nori'},
+      ],
+      'seed': 1,
+    });
+
+void noriAndBoosterTests() {
+  group('nori', () {
+    test('parses layers and goal size', () {
+      final level = _noriLevel();
+      expect(level.nori.where((n) => n > 0), [2]);
+      expect(level.goals.single.type, GoalType.clearNori);
+      expect(level.goals.single.count, 1);
+    });
+
+    test('clearing the cell twice removes it and meets the goal', () {
+      final e = GameEngine(_noriLevel());
+      const cell = Pos(3, 3);
+      expect(e.noriAt(cell), 2);
+      e.useChopsticks(cell);
+      expect(e.noriAt(cell), 1);
+      expect(e.goals.single.done, isFalse);
+      e.useChopsticks(cell);
+      expect(e.noriAt(cell), 0);
+      expect(e.goals.single.done, isTrue);
+      expect(e.status, GameStatus.won);
+    });
+  });
+
+  group('boosters', () {
+    test('chopsticks and shuffle cost no move', () {
+      final e = GameEngine(testLevel(seed: 4, moves: 10));
+      e.useChopsticks(const Pos(2, 2));
+      expect(e.movesLeft, 10);
+      final steps = e.useShuffle();
+      expect(steps.first, isA<ShuffleStep>());
+      expect(e.movesLeft, 10);
+      expect(MoveFinder.findMove(e.board), isNotNull);
+    });
+
+    test('free swap swaps non-adjacent pieces without spending a move', () {
+      final e = GameEngine(testLevel(seed: 4, moves: 10));
+      const a = Pos(0, 1), b = Pos(5, 5);
+      final ida = e.board[a]!.id;
+      final steps = e.useFreeSwap(a, b);
+      expect(steps.first, isA<SwapStep>());
+      expect(e.movesLeft, 10);
+      expect(steps.last, isA<TurnEndStep>());
+      // The piece may have been cleared by a match, but if it still exists it
+      // must no longer sit at a.
+      expect(e.board[a]?.id, isNot(ida));
+    });
+
+    test('extra moves revive a lost level', () {
+      final e = GameEngine(testLevel(seed: 4, moves: 1));
+      final (a, b) = MoveFinder.allMoves(e.board).first;
+      e.trySwap(a, b);
+      expect(e.status, GameStatus.lost);
+      e.addMoves(5);
+      expect(e.status, GameStatus.playing);
+      expect(e.movesLeft, 5);
+    });
   });
 }

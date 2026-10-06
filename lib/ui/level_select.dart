@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../core/piece.dart';
 import '../game/piece_painter.dart';
+import 'l10n.dart';
+import 'lives_ui.dart';
 import 'ui_art.dart';
 
 /// Level picker laid out as a tidy serpentine belt: straight rows joined by
@@ -66,7 +68,8 @@ class _LevelSelectViewState extends State<LevelSelectView> {
     if (n > widget.cleared + 1) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
-        ..showSnackBar(SnackBar(content: Text('Clear level ${n - 1} first')));
+        ..showSnackBar(
+            SnackBar(content: Text(L10n.t('clearFirst', {'n': n - 1}))));
       return;
     }
     widget.onSelect(n);
@@ -77,21 +80,27 @@ class _LevelSelectViewState extends State<LevelSelectView> {
     final t = Theme.of(context).textTheme;
     return Column(
       children: [
-        if (widget.onSettings != null)
-          Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 12),
-              child: RoundIconButton(
-                  icon: Icons.settings, onPressed: widget.onSettings!),
+        Row(
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(left: 12, top: 8),
+              child: WalletBar(),
             ),
-          ),
+            const Spacer(),
+            if (widget.onSettings != null)
+              Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: RoundIconButton(
+                    icon: Icons.settings, onPressed: widget.onSettings!),
+              ),
+          ],
+        ),
         Padding(
           padding: const EdgeInsets.only(top: 8, bottom: 4),
           child: Text('Sushi Match',
               style: t.headlineLarge?.copyWith(fontWeight: FontWeight.bold)),
         ),
-        Text('Pick a plate', style: t.titleMedium),
+        Text(L10n.t('pickPlate'), style: t.titleMedium),
         Expanded(
           child: LayoutBuilder(builder: (context, box) {
             _focusCurrent(box.maxHeight);

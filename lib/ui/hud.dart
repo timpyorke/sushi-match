@@ -4,6 +4,9 @@ import '../core/game_engine.dart';
 import '../core/level.dart';
 import '../game/piece_painter.dart';
 import '../game/sushi_game.dart';
+import '../services/wallet.dart';
+import 'l10n.dart';
+import 'lives_ui.dart';
 import 'ui_art.dart';
 
 class HudBar extends StatelessWidget {
@@ -20,8 +23,8 @@ class HudBar extends StatelessWidget {
           spacing: 8,
           runSpacing: 8,
           children: [
-            _Chip(label: 'Moves', value: '${s.movesLeft}'),
-            _Chip(label: 'Score', value: '${s.score}'),
+            _Chip(label: L10n.t('moves'), value: '${s.movesLeft}'),
+            _Chip(label: L10n.t('score'), value: '${s.score}'),
             for (final g in s.goals)
               _Chip(
                 label: _goalLabel(g.goal),
@@ -38,8 +41,9 @@ class HudBar extends StatelessWidget {
   }
 
   static String _goalLabel(LevelGoal g) => switch (g.type) {
-        GoalType.collect => g.piece!.name,
-        GoalType.score => 'Target',
+        GoalType.collect => L10n.t(g.piece!.name),
+        GoalType.score => L10n.t('target'),
+        GoalType.clearNori => L10n.t('nori'),
       };
 }
 
@@ -99,6 +103,12 @@ class ResultOverlay extends StatelessWidget {
   final VoidCallback? onNext;
   final VoidCallback onLevels;
 
+  /// Replaying costs a life only when the last run was lost, but starting
+  /// any run needs one in the bank.
+  Future<void> _again(BuildContext context) async {
+    if (await ensureLife(context)) game.restart();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<HudState>(
@@ -120,7 +130,7 @@ class ResultOverlay extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(won ? 'Oishii! 🍣' : 'Out of moves',
+                      Text(L10n.t(won ? 'win' : 'lose'),
                           style: Theme.of(context)
                               .textTheme
                               .headlineSmall
@@ -140,24 +150,41 @@ class ResultOverlay extends StatelessWidget {
                         ),
                       ],
                       const SizedBox(height: 8),
-                      Text('Score ${s.score}'),
+                      Text(L10n.t('scoreN', {'n': s.score})),
+                      if (won && s.reward > 0)
+                        Text(L10n.t('reward', {'n': s.reward})),
                       const SizedBox(height: 16),
+                      if (!won) ...[
+                        FilledButton(
+                          onPressed: Wallet.canUse(Booster.extraMoves)
+                              ? game.buyExtraMoves
+                              : null,
+                          child: Text(L10n.t('extraMoves', {
+                            'm': Wallet.extraMovesAmount,
+                            'n': Wallet.count(Booster.extraMoves) > 0
+                                ? 0
+                                : Wallet.cost[Booster.extraMoves]!,
+                          })),
+                        ),
+                        const SizedBox(height: 8),
+                      ],
                       if (won && onNext != null) ...[
                         FilledButton(
-                            onPressed: onNext, child: const Text('Next level')),
+                            onPressed: onNext,
+                            child: Text(L10n.t('nextLevel'))),
                         const SizedBox(height: 8),
                       ],
                       won && onNext != null
                           ? OutlinedButton(
-                              onPressed: game.restart,
-                              child: const Text('Play again'))
+                              onPressed: () => _again(context),
+                              child: Text(L10n.t('playAgain')))
                           : FilledButton(
-                              onPressed: game.restart,
-                              child: Text(won ? 'Play again' : 'Retry')),
+                              onPressed: () => _again(context),
+                              child: Text(L10n.t(won ? 'playAgain' : 'retry'))),
                       const SizedBox(height: 8),
                       OutlinedButton(
                           onPressed: onLevels,
-                          child: const Text('Level select')),
+                          child: Text(L10n.t('levelSelect'))),
                     ],
                   ),
                 ),
@@ -209,6 +236,117 @@ class PraiseBanner extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+/// Booster buttons under the board. Shows stock, or the coin price when the
+/// stock is empty, plus a one-line hint while a booster is armed.
+class BoosterBar extends StatelessWidget {
+  const BoosterBar({super.key, required this.game});
+  final SushiGame game;
+
+  static const _items = [
+    (Booster.chopsticks, '🥢', 'chopsticks'),
+    (Booster.freeSwap, '🔄', 'freeSwap'),
+    (Booster.shuffle, '🔀', 'shuffle'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable:
+          Listenable.merge([game.armed, Wallet.stock, Wallet.coins, game.hud]),
+      builder: (context, _) {
+        final armed = game.armed.value;
+        final playing = game.hud.value.status == GameStatus.playing;
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(12, 4, 12, 8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (armed != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Text(
+                    L10n.t(armed == Booster.chopsticks
+                        ? 'hintChopsticks'
+                        : 'hintFreeSwap'),
+                    style: const TextStyle(
+                        color: UiArt.ink, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  for (final (b, icon, key) in _items)
+                    _BoosterButton(
+                      icon: icon,
+                      label: L10n.t(key),
+                      stock: Wallet.count(b),
+                      price: Wallet.cost[b]!,
+                      active: armed == b,
+                      enabled: playing && Wallet.canUse(b),
+                      onTap: () => game.tapBooster(b),
+                    ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _BoosterButton extends StatelessWidget {
+  const _BoosterButton(
+      {required this.icon,
+      required this.label,
+      required this.stock,
+      required this.price,
+      required this.active,
+      required this.enabled,
+      required this.onTap});
+  final String icon;
+  final String label;
+  final int stock;
+  final int price;
+  final bool active;
+  final bool enabled;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Opacity(
+      opacity: enabled ? 1 : 0.45,
+      child: GestureDetector(
+        onTap: enabled ? onTap : null,
+        child: Container(
+          width: 92,
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          decoration: UiArt.plankDecoration().copyWith(
+            boxShadow: active
+                ? const [BoxShadow(color: Color(0xCCFFD54F), blurRadius: 12)]
+                : null,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(icon, style: const TextStyle(fontSize: 22)),
+              Text(label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: UiArt.ink, fontSize: 11)),
+              Text(stock > 0 ? '×$stock' : '🪙 $price',
+                  style: const TextStyle(
+                      color: UiArt.ink,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold)),
+            ],
+          ),
+        ),
       ),
     );
   }

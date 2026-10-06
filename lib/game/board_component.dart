@@ -5,7 +5,9 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/events.dart';
+import 'package:flame/particles.dart';
 import 'package:flutter/animation.dart' show Curve, Curves;
+import 'package:flutter/foundation.dart' show ValueNotifier;
 import 'package:flutter/services.dart' show HapticFeedback;
 
 import '../core/board.dart';
@@ -13,7 +15,9 @@ import '../core/game_engine.dart';
 import '../core/move_finder.dart';
 import '../core/pos.dart';
 import '../core/settings.dart';
+import '../core/piece.dart';
 import '../core/steps.dart';
+import '../services/wallet.dart';
 import 'piece_component.dart';
 
 /// View for the board. Owns no rules: it forwards input to [GameEngine]
@@ -24,6 +28,8 @@ class BoardComponent extends PositionComponent
     required this.engine,
     required this.onTurnFinished,
     required this.onPraise,
+    required this.armed,
+    required this.onSpendBooster,
   }) : super(
           size: Vector2(engine.board.cols * cell, engine.board.rows * cell),
         );
@@ -38,6 +44,12 @@ class BoardComponent extends PositionComponent
   /// Called with the chef's cheer when a turn chained into a combo.
   final void Function(String) onPraise;
 
+  /// Booster waiting for a tap; cleared once it fires.
+  final ValueNotifier<Booster?> armed;
+
+  /// Pays for a booster (stock or coins); false means it can't be used.
+  final bool Function(Booster) onSpendBooster;
+
   final _views = <int, PieceComponent>{};
   final _at = <Pos, PieceComponent>{};
   late final ClipComponent _layer;
@@ -49,10 +61,23 @@ class BoardComponent extends PositionComponent
   double _idle = 0;
   final List<Effect> _hint = [];
 
+  late final List<int> _nori = [
+    for (final p in [
+      for (var r = 0; r < engine.board.rows; r++)
+        for (var c = 0; c < engine.board.cols; c++) Pos(r, c),
+    ])
+      engine.noriAt(p),
+  ];
+
   Board get board => engine.board;
 
   static final _cellA = Paint()..color = const Color(0xFFEBD5AE);
   static final _cellB = Paint()..color = const Color(0xFFE2C796);
+  static final _noriPaint = Paint()..color = const Color(0xCC1F3A24);
+  static final _noriEdge = Paint()
+    ..color = const Color(0xFF6BAA75)
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 2.5;
   static final _selPaint = Paint()..color = const Color(0x88FFFFFF);
 
   @override
@@ -82,6 +107,18 @@ class BoardComponent extends PositionComponent
         (p.row + p.col).isEven ? _cellA : _cellB,
       );
     }
+    for (var i = 0; i < _nori.length; i++) {
+      final layers = _nori[i];
+      if (layers == 0) continue;
+      final rect = Rect.fromLTWH(
+          (i % board.cols) * cell, (i ~/ board.cols) * cell, cell, cell);
+      for (var l = 0; l < layers; l++) {
+        final rr = RRect.fromRectAndRadius(
+            rect.deflate(3.0 + l * 5), const Radius.circular(8));
+        canvas.drawRRect(rr, _noriPaint);
+        canvas.drawRRect(rr, _noriEdge);
+      }
+    }
     final s = _selected;
     if (s != null) {
       canvas.drawRRect(
@@ -102,6 +139,21 @@ class BoardComponent extends PositionComponent
     _resetIdle();
     if (_busy || p == null) return;
     final s = _selected;
+    final booster = armed.value;
+    if (booster == Booster.chopsticks) {
+      _runBooster(booster!, () => engine.useChopsticks(p));
+      return;
+    }
+    if (booster == Booster.freeSwap) {
+      if (s == null) {
+        _selected = p;
+      } else if (s == p) {
+        _selected = null;
+      } else {
+        _runBooster(booster!, () => engine.useFreeSwap(s, p));
+      }
+      return;
+    }
     if (s != null && s.isAdjacentTo(p)) {
       _selected = null;
       _attempt(s, p);
@@ -153,6 +205,24 @@ class BoardComponent extends PositionComponent
     }
   }
 
+  Future<void> _runBooster(Booster b, List<BoardStep> Function() run) async {
+    if (_busy || engine.status != GameStatus.playing) return;
+    if (!onSpendBooster(b)) return;
+    _busy = true;
+    _clearHint();
+    armed.value = null;
+    _selected = null;
+    try {
+      await _play(run());
+    } finally {
+      _busy = false;
+      _resetIdle();
+      onTurnFinished();
+    }
+  }
+
+  void useShuffle() => _runBooster(Booster.shuffle, engine.useShuffle);
+
   // ------------------------------------------------------------ playback --
 
   /// Chef's cheer by cascade depth (GDD: Oishii! → Sugoi! → Omakase!).
@@ -184,9 +254,16 @@ class BoardComponent extends PositionComponent
         case InvalidSwapStep(:final a, :final b):
           await _swapViews(a, b);
           await _swapViews(a, b);
-        case SpecialActivateStep(:final affected):
+        case SpecialActivateStep(
+            :final affected,
+            :final type,
+            :final comboWith
+          ):
           for (final p in affected) {
             _flash(p);
+          }
+          if (type == SpecialType.wasabi || comboWith == SpecialType.wasabi) {
+            _shake();
           }
           await _wait(0.12);
         case TransformStep(:final changes):
@@ -198,6 +275,7 @@ class BoardComponent extends PositionComponent
             final v = _views.remove(c.pieceId);
             if (v == null) continue;
             if (identical(_at[c.pos], v)) _at.remove(c.pos);
+            _burst(v.position);
             pops.add(_pop(v));
           }
           _haptic(created.isEmpty
@@ -217,21 +295,19 @@ class BoardComponent extends PositionComponent
             final v = _views[m.pieceId];
             if (v == null) continue;
             _at[m.to] = v;
-            pending.add(_moveTo(
-                v, _center(m.to), _fallTime(m.to.row - m.from.row),
-                curve: Curves.easeIn));
+            pending.add(_land(v, _center(m.to), m.to.row - m.from.row));
           }
         case RefillStep(:final pieces):
           for (final r in pieces) {
             final start =
                 Vector2(_center(r.to).x, r.startRow * cell + cell / 2);
             final v = _spawnView(r.piece, r.to, from: start);
-            pending.add(_moveTo(
-                v, _center(r.to), _fallTime(r.to.row - r.startRow),
-                curve: Curves.easeIn));
+            pending.add(_land(v, _center(r.to), r.to.row - r.startRow));
           }
           await Future.wait(pending);
           pending.clear();
+        case NoriStep(:final layers):
+          layers.forEach((p, n) => _nori[p.row * board.cols + p.col] = n);
         case ShuffleStep(:final positions):
           _at.clear();
           final moves = <Future<void>>[];
@@ -295,7 +371,55 @@ class BoardComponent extends PositionComponent
     return done.future;
   }
 
+  /// Fall to [to], then squash on impact.
+  Future<void> _land(PieceComponent v, Vector2 to, int rows) async {
+    await _moveTo(v, to, _fallTime(rows), curve: Curves.easeIn);
+    if (!v.isMounted) return;
+    v.add(SequenceEffect([
+      ScaleEffect.to(Vector2(1.14, 0.84), EffectController(duration: 0.05)),
+      ScaleEffect.to(Vector2.all(1),
+          EffectController(duration: 0.12, curve: Curves.easeOutBack)),
+    ]));
+  }
+
+  static final _rice = Paint()..color = const Color(0xFFFFFDF5);
+  static final _sesame = Paint()..color = const Color(0xFF3B2A20);
+  final _rng = math.Random();
+
+  /// Rice and sesame grains flying off a cleared piece.
+  void _burst(Vector2 at) {
+    _layer.add(ParticleSystemComponent(
+      position: at.clone(),
+      particle: Particle.generate(
+        count: 7,
+        lifespan: 0.55,
+        generator: (i) => AcceleratedParticle(
+          acceleration: Vector2(0, 360),
+          speed: Vector2(
+              (_rng.nextDouble() - 0.5) * 240, -60 - _rng.nextDouble() * 170),
+          child: CircleParticle(
+            radius: i.isEven ? 2.8 : 2.0,
+            paint: i.isEven ? _rice : _sesame,
+          ),
+        ),
+      ),
+    ));
+  }
+
+  /// Light screen shake for Wasabi blasts.
+  void _shake() {
+    const a = 4.0;
+    add(SequenceEffect([
+      MoveEffect.by(Vector2(a, 0), EffectController(duration: 0.04)),
+      MoveEffect.by(Vector2(-2 * a, 0), EffectController(duration: 0.08)),
+      MoveEffect.by(Vector2(a, 0), EffectController(duration: 0.04)),
+    ]));
+  }
+
   Future<void> _pop(PieceComponent v) {
+    for (final e in v.children.whereType<Effect>().toList()) {
+      e.removeFromParent();
+    }
     final done = Completer<void>();
     v.add(ScaleEffect.to(
       Vector2.zero(),

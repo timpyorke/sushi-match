@@ -27,6 +27,7 @@ class GameEngine {
   GameEngine(this.level, {int? seed})
       : board = Board(level.rows, level.cols, level.playable),
         rng = Random(seed ?? level.seed),
+        _nori = List.of(level.nori),
         movesLeft = level.moves {
     BoardFactory.fillInitial(board, level.pieces, rng, _makePiece);
   }
@@ -40,6 +41,7 @@ class GameEngine {
   int score = 0;
   GameStatus status = GameStatus.playing;
 
+  final List<int> _nori;
   int _nextId = 0;
 
   /// Origins of Wasabi Bombs that still owe their second blast.
@@ -53,6 +55,7 @@ class GameEngine {
             switch (g.type) {
               GoalType.collect => _collected[g.piece] ?? 0,
               GoalType.score => score,
+              GoalType.clearNori => g.count - _nori.where((n) => n > 0).length,
             },
           ),
       ];
@@ -60,6 +63,10 @@ class GameEngine {
   int get stars => status != GameStatus.won
       ? 0
       : max(1, level.stars.where((s) => score >= s).length);
+
+  /// Nori layers currently under [p] (0 when none).
+  int noriAt(Pos p) =>
+      board.inBounds(p) ? _nori[p.row * board.cols + p.col] : 0;
 
   // ---------------------------------------------------------------- turn --
 
@@ -99,6 +106,53 @@ class GameEngine {
     return steps;
   }
 
+  // ------------------------------------------------------------ boosters --
+
+  /// Chopsticks: destroy one piece. Costs no move.
+  List<BoardStep> useChopsticks(Pos p) {
+    if (status != GameStatus.playing || board[p] == null) return const [];
+    _aftershocks.clear();
+    return [
+      ..._clear(seed: {p}, cascade: 1),
+      ..._gravityAndRefill(),
+      ..._cascade(MatchFinder.find(board), startAt: 2),
+      ..._endTurn(spendMove: false),
+    ];
+  }
+
+  /// Free swap: swap any two pieces, matching or not. Costs no move.
+  List<BoardStep> useFreeSwap(Pos a, Pos b) {
+    if (status != GameStatus.playing ||
+        a == b ||
+        board[a] == null ||
+        board[b] == null) {
+      return const [];
+    }
+    _aftershocks.clear();
+    board.swap(a, b);
+    return [
+      SwapStep(a, b),
+      ..._cascade(MatchFinder.find(board, preferred: {a, b}), startAt: 1),
+      ..._endTurn(spendMove: false),
+    ];
+  }
+
+  /// Shuffle booster: reshuffle the whole board. Costs no move.
+  List<BoardStep> useShuffle() {
+    if (status != GameStatus.playing) return const [];
+    return [
+      ShuffleStep(BoardFactory.shuffle(board, rng)),
+      TurnEndStep(movesLeft: movesLeft, score: score, status: status),
+    ];
+  }
+
+  /// Extra moves; also revives a level that was just lost.
+  void addMoves(int n) {
+    if (status == GameStatus.won) return;
+    movesLeft += n;
+    if (status == GameStatus.lost && movesLeft > 0) status = GameStatus.playing;
+  }
+
   List<BoardStep> _cascade(List<MatchGroup> groups, {required int startAt}) {
     final steps = <BoardStep>[];
     var depth = startAt;
@@ -132,9 +186,9 @@ class GameEngine {
     return steps;
   }
 
-  List<BoardStep> _endTurn() {
+  List<BoardStep> _endTurn({bool spendMove = true}) {
     // TODO(conveyor): shift conveyor rows here, before the move is counted.
-    movesLeft--;
+    if (spendMove) movesLeft--;
     final won = goals.every((g) => g.done);
     if (won) {
       status = GameStatus.won;
@@ -238,6 +292,13 @@ class GameEngine {
     final gained = removed.length * _pointsPerPiece * cascade;
     score += gained;
     steps.add(ClearStep(removed, created, gained, cascade));
+
+    final noriLeft = <Pos, int>{};
+    for (final p in cleared) {
+      final i = p.row * board.cols + p.col;
+      if (_nori[i] > 0) noriLeft[p] = --_nori[i];
+    }
+    if (noriLeft.isNotEmpty) steps.add(NoriStep(noriLeft));
     return steps;
   }
 

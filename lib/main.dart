@@ -10,8 +10,10 @@ import 'core/progress.dart';
 import 'core/settings.dart';
 import 'game/piece_painter.dart';
 import 'game/sushi_game.dart';
+import 'services/wallet.dart';
 import 'ui/hud.dart';
 import 'ui/level_select.dart';
+import 'ui/lives_ui.dart';
 import 'ui/settings_screen.dart';
 import 'ui/ui_art.dart';
 
@@ -21,6 +23,7 @@ void main() async {
   await _enterImmersive();
   await PiecePainter.loadSprites();
   await Settings.load();
+  await Wallet.load();
 
   // Bars come back after an edge swipe, the keyboard or a system dialog.
   // Hide them again after a short delay.
@@ -100,6 +103,7 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
               _refresh();
             },
             onSelect: (n) async {
+              if (!await ensureLife(context) || !context.mounted) return;
               await Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => GameScreen(levelNumber: n)),
               );
@@ -177,17 +181,24 @@ class _GameScreenState extends State<GameScreen> {
                         game: game,
                         onLevels: () => Navigator.of(context).pop(),
                         onNext: widget.levelNumber < kLevelCount
-                            ? () => Navigator.of(context).pushReplacement(
+                            ? () async {
+                                if (!await ensureLife(context) ||
+                                    !context.mounted) {
+                                  return;
+                                }
+                                Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                     builder: (_) => GameScreen(
                                         levelNumber: widget.levelNumber + 1),
                                   ),
-                                )
+                                );
+                              }
                             : null,
                       ),
                     ],
                   ),
                 ),
+                BoosterBar(game: game),
               ],
             );
           },

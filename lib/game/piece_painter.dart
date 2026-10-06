@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/services.dart';
 
 import '../core/piece.dart';
+import '../core/settings.dart';
 
 /// Grey-box art: every kind differs by colour AND shape (colour-blind safe,
 /// per GDD). Swap for the sprite atlas later without touching game logic.
@@ -130,6 +131,7 @@ abstract final class PiecePainter {
         _sprite(canvas, Rect.fromLTWH(0, 0, s, s), kind);
         _special(canvas, s, body, c, special);
       }
+      _symbol(canvas, s, kind);
       return;
     }
 
@@ -191,6 +193,51 @@ abstract final class PiecePainter {
     canvas.drawCircle(Offset(c.dx + s * 0.12, ey), s * 0.045, _eye);
 
     _special(canvas, s, body, c, special);
+    _symbol(canvas, s, kind);
+  }
+
+  static final _symbolFill = Paint()..color = const Color(0xFFFFFFFF);
+
+  /// Colour-blind mode: a distinct white glyph in the corner of each kind.
+  static void _symbol(Canvas canvas, double s, PieceKind kind) {
+    if (!Settings.colorblind.value) return;
+    final r = s * 0.13;
+    final c = Offset(s * 0.22, s * 0.22);
+    final path = Path();
+    switch (kind) {
+      case PieceKind.salmon:
+        path.addOval(Rect.fromCircle(center: c, radius: r));
+      case PieceKind.maguro:
+        path.addRect(Rect.fromCircle(center: c, radius: r * 0.9));
+      case PieceKind.tamago:
+        path
+          ..moveTo(c.dx, c.dy - r)
+          ..lineTo(c.dx + r, c.dy + r * 0.8)
+          ..lineTo(c.dx - r, c.dy + r * 0.8)
+          ..close();
+      case PieceKind.ikura:
+        path
+          ..moveTo(c.dx, c.dy - r * 1.1)
+          ..lineTo(c.dx + r * 1.1, c.dy)
+          ..lineTo(c.dx, c.dy + r * 1.1)
+          ..lineTo(c.dx - r * 1.1, c.dy)
+          ..close();
+      case PieceKind.ebi:
+        for (var i = 0; i < 10; i++) {
+          final a = -math.pi / 2 + i * math.pi / 5;
+          final rr = i.isEven ? r * 1.15 : r * 0.5;
+          final pt = c + Offset(math.cos(a), math.sin(a)) * rr;
+          i == 0 ? path.moveTo(pt.dx, pt.dy) : path.lineTo(pt.dx, pt.dy);
+        }
+        path.close();
+      case PieceKind.kappa:
+        final t = r * 0.38;
+        path
+          ..addRect(Rect.fromCenter(center: c, width: r * 2, height: t * 2))
+          ..addRect(Rect.fromCenter(center: c, width: t * 2, height: r * 2));
+    }
+    canvas.drawPath(path, _symbolFill);
+    canvas.drawPath(path, _outline);
   }
 
   static void _special(

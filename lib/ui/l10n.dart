@@ -1,0 +1,103 @@
+import '../core/settings.dart';
+
+/// Minimal two-language string table (GDD: Thai + English from launch).
+/// `{name}` placeholders are filled from [args].
+abstract final class L10n {
+  static const languages = {'en': 'English', 'th': 'ไทย'};
+
+  static String t(String key, [Map<String, Object> args = const {}]) {
+    final table = _strings[Settings.language.value] ?? _strings['en']!;
+    var s = table[key] ?? _strings['en']![key] ?? key;
+    args.forEach((k, v) => s = s.replaceAll('{$k}', '$v'));
+    return s;
+  }
+
+  static const _strings = <String, Map<String, String>>{
+    'en': {
+      'pickPlate': 'Pick a plate',
+      'clearFirst': 'Clear level {n} first',
+      'settings': 'Settings',
+      'vibration': 'Vibration',
+      'colorblind': 'Colour-blind mode',
+      'language': 'Language',
+      'resetProgress': 'Reset progress',
+      'resetTitle': 'Reset progress?',
+      'resetBody': 'All levels will be locked again.',
+      'cancel': 'Cancel',
+      'reset': 'Reset',
+      'progressReset': 'Progress reset',
+      'moves': 'Moves',
+      'score': 'Score',
+      'target': 'Target',
+      'nori': 'Nori',
+      'salmon': 'Salmon',
+      'maguro': 'Maguro',
+      'tamago': 'Tamago',
+      'ikura': 'Ikura',
+      'ebi': 'Ebi',
+      'kappa': 'Kappa',
+      'win': 'Oishii! 🍣',
+      'lose': 'Out of moves',
+      'scoreN': 'Score {n}',
+      'reward': '+{n} coins',
+      'nextLevel': 'Next level',
+      'playAgain': 'Play again',
+      'retry': 'Retry',
+      'levelSelect': 'Level select',
+      'outOfLives': 'Out of lives',
+      'nextLifeIn': 'Next life in {t}',
+      'refill': 'Refill ({n} coins)',
+      'wait': 'Wait',
+      'notEnoughCoins': 'Not enough coins',
+      'chopsticks': 'Chopsticks',
+      'freeSwap': 'Free swap',
+      'shuffle': 'Shuffle',
+      'extraMoves': '+{m} moves ({n} coins)',
+      'hintChopsticks': 'Tap a piece to remove it',
+      'hintFreeSwap': 'Pick two pieces to swap',
+    },
+    'th': {
+      'pickPlate': 'เลือกจานเลย',
+      'clearFirst': 'ผ่านด่าน {n} ก่อนนะ',
+      'settings': 'ตั้งค่า',
+      'vibration': 'การสั่น',
+      'colorblind': 'โหมดตาบอดสี',
+      'language': 'ภาษา',
+      'resetProgress': 'รีเซ็ตความคืบหน้า',
+      'resetTitle': 'รีเซ็ตความคืบหน้า?',
+      'resetBody': 'ทุกด่านจะถูกล็อกอีกครั้ง',
+      'cancel': 'ยกเลิก',
+      'reset': 'รีเซ็ต',
+      'progressReset': 'รีเซ็ตแล้ว',
+      'moves': 'ตาเดิน',
+      'score': 'คะแนน',
+      'target': 'เป้าหมาย',
+      'nori': 'สาหร่าย',
+      'salmon': 'แซลมอน',
+      'maguro': 'มากุโระ',
+      'tamago': 'ทามาโกะ',
+      'ikura': 'อิคุระ',
+      'ebi': 'เอบิ',
+      'kappa': 'คัปปะ',
+      'win': 'อร่อยมาก! 🍣',
+      'lose': 'หมดตาเดินแล้ว',
+      'scoreN': 'คะแนน {n}',
+      'reward': '+{n} เหรียญ',
+      'nextLevel': 'ด่านถัดไป',
+      'playAgain': 'เล่นอีกครั้ง',
+      'retry': 'ลองใหม่',
+      'levelSelect': 'เลือกด่าน',
+      'outOfLives': 'ชีวิตหมดแล้ว',
+      'nextLifeIn': 'ชีวิตถัดไปใน {t}',
+      'refill': 'เติมชีวิต ({n} เหรียญ)',
+      'wait': 'รอก่อน',
+      'notEnoughCoins': 'เหรียญไม่พอ',
+      'chopsticks': 'ตะเกียบ',
+      'freeSwap': 'สลับอิสระ',
+      'shuffle': 'สับกระดาน',
+      'extraMoves': '+{m} ตา ({n} เหรียญ)',
+      'hintChopsticks': 'แตะชิ้นที่จะทำลาย',
+      'hintFreeSwap': 'เลือก 2 ชิ้นเพื่อสลับ',
+    },
+  };
+}

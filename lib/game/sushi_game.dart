@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 
 import '../core/game_engine.dart';
 import '../core/level.dart';
+import '../services/wallet.dart';
 import 'board_component.dart';
 
 /// What the Flutter HUD needs; refreshed after every turn.
@@ -16,6 +17,7 @@ class HudState {
     required this.goals,
     required this.status,
     required this.stars,
+    this.reward = 0,
   });
 
   final int movesLeft;
@@ -23,6 +25,9 @@ class HudState {
   final List<GoalProgress> goals;
   final GameStatus status;
   final int stars;
+
+  /// Coins granted for this win (0 until won).
+  final int reward;
 }
 
 class SushiGame extends FlameGame {
@@ -42,6 +47,13 @@ class SushiGame extends FlameGame {
   final praise = ValueNotifier<({String text, int n})?>(null);
   int _praiseCount = 0;
 
+  /// Booster waiting for a tap on the board (chopsticks / free swap).
+  final armed = ValueNotifier<Booster?>(null);
+
+  bool _rewarded = false;
+  bool _lifeCharged = false;
+  int _reward = 0;
+
   final LevelConfig level;
   GameEngine _engine;
   BoardComponent? _board;
@@ -57,18 +69,66 @@ class SushiGame extends FlameGame {
     _board?.removeFromParent();
     _engine = GameEngine(level, seed: _seed(level));
     praise.value = null;
+    armed.value = null;
+    _rewarded = false;
+    _lifeCharged = false;
+    _reward = 0;
     _mountBoard();
     _sync();
   }
 
   void _mountBoard() {
     final b = BoardComponent(
-        engine: _engine, onTurnFinished: _sync, onPraise: _praise);
+      engine: _engine,
+      onTurnFinished: _sync,
+      onPraise: _praise,
+      armed: armed,
+      onSpendBooster: Wallet.consume,
+    );
     _board = b;
     add(b);
   }
 
-  void _sync() => hud.value = _snapshot();
+  void _sync() {
+    if (_engine.status == GameStatus.won && !_rewarded) {
+      _rewarded = true;
+      _reward = 10 * _engine.stars;
+      Wallet.earn(_reward);
+    } else if (_engine.status == GameStatus.lost && !_lifeCharged) {
+      _lifeCharged = true;
+      Wallet.loseLife();
+    }
+    hud.value = _snapshot();
+  }
+
+  /// Booster button pressed. Shuffle fires at once; the others arm the
+  /// board and fire on the next tap(s).
+  void tapBooster(Booster b) {
+    if (_engine.status != GameStatus.playing) return;
+    switch (b) {
+      case Booster.shuffle:
+        _board?.useShuffle();
+      case Booster.chopsticks || Booster.freeSwap:
+        armed.value = armed.value == b || !Wallet.canUse(b) ? null : b;
+      case Booster.extraMoves:
+        break;
+    }
+  }
+
+  /// Buys +5 moves, e.g. from the "out of moves" screen. Gives the life back.
+  bool buyExtraMoves() {
+    if (_engine.status == GameStatus.won ||
+        !Wallet.consume(Booster.extraMoves)) {
+      return false;
+    }
+    _engine.addMoves(Wallet.extraMovesAmount);
+    if (_lifeCharged) {
+      Wallet.refundLife();
+      _lifeCharged = false;
+    }
+    _sync();
+    return true;
+  }
 
   void _praise(String text) => praise.value = (text: text, n: ++_praiseCount);
 
@@ -78,5 +138,6 @@ class SushiGame extends FlameGame {
         goals: _engine.goals,
         status: _engine.status,
         stars: _engine.stars,
+        reward: _reward,
       );
 }
