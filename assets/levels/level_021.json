@@ -28,23 +28,19 @@
     "ebi",
     "kappa"
   ],
-  "moves": 28,
+  "moves": 30,
   "goals": [
     {
       "type": "collect",
       "piece": "salmon",
-      "count": 30
+      "count": 45
     },
     {
       "type": "score",
-      "count": 7000
+      "count": 10500
     }
   ],
-  "stars": [
-    7000,
-    9500,
-    12000
-  ],
+  "stars": [10700, 13900, 16600],
   "seed": 212143,
   "conveyors": [
     {

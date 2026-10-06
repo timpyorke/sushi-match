@@ -29,6 +29,11 @@ class ShopDef {
 /// Stars earned from levels are spent here on new restaurants and their
 /// decorations. Spent stars are derived from what is owned, so there is no
 /// counter to drift out of sync.
+///
+/// Pacing (a mid-skill bot averages ~2.2 stars a level): the first 15 levels
+/// pay roughly 30 stars, so the second restaurant (24) plus the first one's
+/// decoration (16) cannot both be afforded on the first pass. Replaying for
+/// 3 stars closes the gap.
 abstract final class Restaurant {
   static const shops = [
     ShopDef('tsukiji', '🐟', 1, 15, 0, [
@@ -36,10 +41,10 @@ abstract final class Restaurant {
       DecorDef('table', '🪑', 5),
       DecorDef('sign', '🪧', 8),
     ]),
-    ShopDef('osaka', '🍢', 16, 30, 12, [
-      DecorDef('lantern', '🏮', 4),
-      DecorDef('table', '🪑', 6),
-      DecorDef('sign', '🪧', 10),
+    ShopDef('osaka', '🍢', 16, 30, 24, [
+      DecorDef('lantern', '🏮', 5),
+      DecorDef('table', '🪑', 8),
+      DecorDef('sign', '🪧', 12),
     ]),
   ];
 

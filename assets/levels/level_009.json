@@ -17,10 +17,10 @@
   "pieces": ["salmon", "maguro", "tamago", "ikura", "kappa"],
   "moves": 24,
   "goals": [
-    { "type": "collect", "piece": "tamago", "count": 25 },
-    { "type": "collect", "piece": "kappa", "count": 25 },
-    { "type": "collect", "piece": "ikura", "count": 25 }
+    { "type": "collect", "piece": "tamago", "count": 38 },
+    { "type": "collect", "piece": "kappa", "count": 38 },
+    { "type": "collect", "piece": "ikura", "count": 38 }
   ],
-  "stars": [4500, 7200, 9000],
+  "stars": [7400, 11200, 15100],
   "seed": 90917
 }

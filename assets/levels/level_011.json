@@ -28,7 +28,7 @@
     "ikura",
     "kappa"
   ],
-  "moves": 24,
+  "moves": 25,
   "goals": [
     {
       "type": "clear_nori"
@@ -39,10 +39,6 @@
       "count": 18
     }
   ],
-  "stars": [
-    4500,
-    7000,
-    9500
-  ],
+  "stars": [7200, 12000, 15600],
   "seed": 111113
 }

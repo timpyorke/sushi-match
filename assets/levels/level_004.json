@@ -13,10 +13,10 @@
   ],
   "legend": { ".": "cell", "X": "void" },
   "pieces": ["salmon", "maguro", "tamago", "ikura", "kappa"],
-  "moves": 20,
+  "moves": 22,
   "goals": [
-    { "type": "score", "count": 2500 }
+    { "type": "score", "count": 3400 }
   ],
-  "stars": [2500, 2800, 3100],
+  "stars": [4000, 4800, 6600],
   "seed": 40427
 }

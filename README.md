@@ -39,3 +39,10 @@ Nori/ice/rice bag + their goals, conveyor (end-of-turn hook in
 `GameEngine._endTurn`), Wasabi double blast, bonus round, juice (squash,
 particles, haptics, sfx), level select + JSON loader for many levels,
 balancing bot using `MoveFinder.allMoves` + seeds.
+
+## Balancing
+`dart run tool/balance.dart [runs] [level …]` plays every level with a random
+and a greedy bot and prints win rate and star spread.
+`dart run tool/tune.dart [runs] [--write]` re-fits each level's moves, goal
+counts and star thresholds to the difficulty curve (see the header of the
+file). Re-run it after changing the engine or adding levels.

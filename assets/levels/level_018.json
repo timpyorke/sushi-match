@@ -15,12 +15,12 @@
   ],
   "legend": { ".": "cell", "X": "void" },
   "pieces": ["salmon", "maguro", "tamago", "ikura", "ebi", "kappa"],
-  "moves": 28,
+  "moves": 29,
   "goals": [
-    { "type": "collect", "piece": "maguro", "count": 30 },
-    { "type": "collect", "piece": "tamago", "count": 30 },
-    { "type": "collect", "piece": "salmon", "count": 20 }
+    { "type": "collect", "piece": "maguro", "count": 33 },
+    { "type": "collect", "piece": "tamago", "count": 33 },
+    { "type": "collect", "piece": "salmon", "count": 22 }
   ],
-  "stars": [6500, 10000, 13000],
+  "stars": [6600, 9100, 11800],
   "seed": 181837
 }

@@ -14,10 +14,10 @@
   ],
   "legend": { ".": "cell", "X": "void" },
   "pieces": ["salmon", "maguro", "tamago", "ebi", "kappa"],
-  "moves": 20,
+  "moves": 23,
   "goals": [
-    { "type": "collect", "piece": "ebi", "count": 25 }
+    { "type": "collect", "piece": "ebi", "count": 38 }
   ],
-  "stars": [3000, 4800, 7000],
+  "stars": [6600, 8800, 11900],
   "seed": 60613
 }

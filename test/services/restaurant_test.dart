@@ -33,7 +33,7 @@ void main() {
   test('second restaurant gates its levels until bought', () async {
     expect(Restaurant.maxPlayableLevel, 15);
     expect(await Restaurant.buyShop(osaka), isFalse);
-    for (var i = 1; i <= 4; i++) {
+    for (var i = 1; i <= 8; i++) {
       await Restaurant.recordStars(i, 3);
     }
     expect(await Restaurant.buyShop(osaka), isTrue);
