@@ -1,30 +1,39 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:sushi_match/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  narrowTest();
+  testWidgets('only level 1 is open on a fresh install',
+      (WidgetTester tester) async {
+    SharedPreferences.setMockInitialValues({});
     await tester.pumpWidget(const SushiMatchApp());
-
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('Pick a plate'), findsOneWidget);
+    expect(find.byIcon(Icons.lock), findsNWidgets(9));
+  });
+
+  testWidgets('clearing a level unlocks the next', (WidgetTester tester) async {
+    SharedPreferences.setMockInitialValues({'cleared_level': 3});
+    await tester.pumpWidget(const SushiMatchApp());
+    await tester.pump();
+
+    expect(find.byIcon(Icons.lock), findsNWidgets(6));
+    expect(find.text('3 ★'), findsOneWidget);
+  });
+}
+
+void narrowTest() {
+  testWidgets('no overflow on a narrow phone', (WidgetTester tester) async {
+    SharedPreferences.setMockInitialValues({});
+    tester.view.physicalSize = const Size(320, 640);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(const SushiMatchApp());
+    await tester.pump();
+    expect(tester.takeException(), isNull);
   });
 }

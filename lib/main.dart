@@ -4,9 +4,12 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'core/game_engine.dart';
 import 'core/level.dart';
+import 'core/progress.dart';
 import 'game/sushi_game.dart';
 import 'ui/hud.dart';
+import 'ui/level_select.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,13 +42,67 @@ class SushiMatchApp extends StatelessWidget {
         colorSchemeSeed: const Color(0xFFB71C2C),
         useMaterial3: true,
       ),
-      home: const GameScreen(),
+      home: const LevelSelectScreen(),
+    );
+  }
+}
+
+const int kLevelCount = 10;
+
+String _levelAsset(int n) =>
+    'assets/levels/level_${n.toString().padLeft(3, '0')}.json';
+
+class LevelSelectScreen extends StatefulWidget {
+  const LevelSelectScreen({super.key});
+
+  @override
+  State<LevelSelectScreen> createState() => _LevelSelectScreenState();
+}
+
+class _LevelSelectScreenState extends State<LevelSelectScreen> {
+  int _cleared = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _refresh();
+  }
+
+  Future<void> _refresh() async {
+    final c = await Progress.cleared();
+    if (mounted) setState(() => _cleared = c);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: DecoratedBox(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/bg.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: SafeArea(
+          child: LevelSelectView(
+            levelCount: kLevelCount,
+            cleared: _cleared,
+            onSelect: (n) async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => GameScreen(levelNumber: n)),
+              );
+              _refresh();
+            },
+          ),
+        ),
+      ),
     );
   }
 }
 
 class GameScreen extends StatefulWidget {
-  const GameScreen({super.key});
+  const GameScreen({super.key, this.levelNumber = 1});
+  final int levelNumber;
 
   @override
   State<GameScreen> createState() => _GameScreenState();
@@ -55,9 +112,15 @@ class _GameScreenState extends State<GameScreen> {
   late final Future<SushiGame> _game = _load();
 
   Future<SushiGame> _load() async {
-    final raw = await rootBundle.loadString('assets/levels/level_001.json');
+    final raw = await rootBundle.loadString(_levelAsset(widget.levelNumber));
     final level = LevelConfig.fromJson(jsonDecode(raw) as Map<String, dynamic>);
-    return SushiGame(level: level);
+    final game = SushiGame(level: level);
+    game.hud.addListener(() {
+      if (game.hud.value.status == GameStatus.won) {
+        Progress.markCleared(widget.levelNumber);
+      }
+    });
+    return game;
   }
 
   @override
@@ -84,13 +147,31 @@ class _GameScreenState extends State<GameScreen> {
             }
             return Column(
               children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ),
                 HudBar(game: game),
                 Expanded(
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
                       GameWidget(game: game),
-                      ResultOverlay(game: game),
+                      ResultOverlay(
+                        game: game,
+                        onLevels: () => Navigator.of(context).pop(),
+                        onNext: widget.levelNumber < kLevelCount
+                            ? () => Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (_) => GameScreen(
+                                        levelNumber: widget.levelNumber + 1),
+                                  ),
+                                )
+                            : null,
+                      ),
                     ],
                   ),
                 ),

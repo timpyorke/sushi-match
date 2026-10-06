@@ -44,7 +44,10 @@ class HudBar extends StatelessWidget {
 
 class _Chip extends StatelessWidget {
   const _Chip(
-      {required this.label, required this.value, this.color, this.done = false});
+      {required this.label,
+      required this.value,
+      this.color,
+      this.done = false});
   final String label;
   final String value;
   final Color? color;
@@ -73,8 +76,13 @@ class _Chip extends StatelessWidget {
 }
 
 class ResultOverlay extends StatelessWidget {
-  const ResultOverlay({super.key, required this.game});
+  const ResultOverlay(
+      {super.key, required this.game, this.onNext, required this.onLevels});
   final SushiGame game;
+
+  /// Null when there is no next level.
+  final VoidCallback? onNext;
+  final VoidCallback onLevels;
 
   @override
   Widget build(BuildContext context) {
@@ -103,9 +111,21 @@ class ResultOverlay extends StatelessWidget {
                     const SizedBox(height: 8),
                     Text('Score ${s.score}'),
                     const SizedBox(height: 16),
-                    FilledButton(
-                        onPressed: game.restart,
-                        child: Text(won ? 'Play again' : 'Retry')),
+                    if (won && onNext != null) ...[
+                      FilledButton(
+                          onPressed: onNext, child: const Text('Next level')),
+                      const SizedBox(height: 8),
+                    ],
+                    won && onNext != null
+                        ? OutlinedButton(
+                            onPressed: game.restart,
+                            child: const Text('Play again'))
+                        : FilledButton(
+                            onPressed: game.restart,
+                            child: Text(won ? 'Play again' : 'Retry')),
+                    const SizedBox(height: 8),
+                    OutlinedButton(
+                        onPressed: onLevels, child: const Text('Level select')),
                   ],
                 ),
               ),
