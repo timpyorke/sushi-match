@@ -56,8 +56,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    final cleared = ref.watch(progressProvider);
-    final maxPlayable = ref.watch(restaurantProvider).maxPlayableLevel;
+    final testMode = ref.watch(settingsProvider.select((s) => s.testMode));
+    final cleared =
+        testMode ? widget.levelCount : ref.watch(progressProvider);
+    final maxPlayable = testMode
+        ? widget.levelCount
+        : ref.watch(restaurantProvider).maxPlayableLevel;
     // Rebuild on a language change; L10n reads it statically.
     ref.watch(settingsProvider.select((s) => s.language));
     // Past the last level (or the last unlocked restaurant) replay the latest.

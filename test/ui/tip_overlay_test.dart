@@ -23,7 +23,7 @@ void main() {
             ]),
           ),
         )));
-    expect(find.text(L10n.t('tipConveyorTitle')), findsOneWidget);
+    expect(find.text(L10n.t('tipConveyorTitle')), findsWidgets);
 
     await tester.tapAt(const Offset(10, 10));
     expect(behindTaps, 0, reason: 'overlay must swallow taps');

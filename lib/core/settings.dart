@@ -11,6 +11,7 @@ class SettingsState {
     this.sound = true,
     this.music = true,
     this.language = 'en',
+    this.testMode = false,
   });
 
   final bool haptics;
@@ -20,16 +21,21 @@ class SettingsState {
   /// 'en' or 'th'.
   final String language;
 
+  /// Dev aid: every level, restaurant and life is unlocked.
+  final bool testMode;
+
   SettingsState copyWith(
           {bool? haptics,
           bool? sound,
           bool? music,
-          String? language}) =>
+          String? language,
+          bool? testMode}) =>
       SettingsState(
         haptics: haptics ?? this.haptics,
         sound: sound ?? this.sound,
         music: music ?? this.music,
         language: language ?? this.language,
+        testMode: testMode ?? this.testMode,
       );
 }
 
@@ -44,6 +50,7 @@ class SettingsNotifier extends Notifier<SettingsState> {
   static const _sound = 'sound';
   static const _music = 'music';
   static const _language = 'language';
+  static const _testMode = 'test_mode';
 
   @override
   SettingsState build() {
@@ -53,6 +60,7 @@ class SettingsNotifier extends Notifier<SettingsState> {
       sound: s.get<bool>(_sound) ?? true,
       music: s.get<bool>(_music) ?? true,
       language: s.get<String>(_language) ?? 'en',
+      testMode: s.get<bool>(_testMode) ?? false,
     );
     _mirror(loaded);
     return loaded;
@@ -73,6 +81,8 @@ class SettingsNotifier extends Notifier<SettingsState> {
   void setHaptics(bool on) => _set(state.copyWith(haptics: on), _haptics, on);
   void setSound(bool on) => _set(state.copyWith(sound: on), _sound, on);
   void setMusic(bool on) => _set(state.copyWith(music: on), _music, on);
+  void setTestMode(bool on) =>
+      _set(state.copyWith(testMode: on), _testMode, on);
   void setLanguage(String code) =>
       _set(state.copyWith(language: code), _language, code);
 }

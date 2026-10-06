@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -105,6 +106,13 @@ class SettingsScreen extends ConsumerWidget {
                             notifier.setLanguage(v.first),
                       ),
                     ),
+                    if (!kReleaseMode)
+                      SwitchListTile(
+                        title: Text(L10n.t('testMode')),
+                        subtitle: Text(L10n.t('testModeHint')),
+                        value: settings.testMode,
+                        onChanged: notifier.setTestMode,
+                      ),
                     ListTile(
                       leading: const Icon(Icons.restart_alt),
                       title: Text(L10n.t('resetProgress')),

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/settings.dart';
 import '../services/store.dart';
 import '../services/wallet.dart';
 import 'game_dialog.dart';
@@ -18,6 +19,7 @@ String _mmss(Duration d) {
 /// True when the player has a life to spend. Otherwise offers to refill one
 /// with coins (rewarded ads would slot in here later) and re-checks.
 Future<bool> ensureLife(BuildContext context, WidgetRef ref) async {
+  if (ref.read(settingsProvider).testMode) return true;
   final wallet = ref.read(walletProvider.notifier);
   wallet.tick();
   if (ref.read(walletProvider).lives > 0) return true;

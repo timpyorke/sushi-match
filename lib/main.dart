@@ -163,9 +163,10 @@ class LevelSelectScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cleared = ref.watch(progressProvider);
+    final testMode = ref.watch(settingsProvider.select((s) => s.testMode));
+    final cleared = testMode ? kLevelCount : ref.watch(progressProvider);
     final restaurant = ref.watch(restaurantProvider);
-    final maxPlayable = restaurant.maxPlayableLevel;
+    final maxPlayable = testMode ? kLevelCount : restaurant.maxPlayableLevel;
     // Rebuild on a language change; L10n reads it statically.
     ref.watch(settingsProvider.select((s) => s.language));
     return Scaffold(
@@ -350,10 +351,11 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                             game: game,
                             onLevels: () => Navigator.of(context).pop(),
                             onNext: widget.levelNumber < kLevelCount &&
-                                    widget.levelNumber <
-                                        ref
-                                            .read(restaurantProvider)
-                                            .maxPlayableLevel
+                                    (ref.read(settingsProvider).testMode ||
+                                        widget.levelNumber <
+                                            ref
+                                                .read(restaurantProvider)
+                                                .maxPlayableLevel)
                                 ? () async {
                                     if (!await ensureLife(context, ref) ||
                                         !context.mounted) {
