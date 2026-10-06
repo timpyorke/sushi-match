@@ -11,7 +11,9 @@ import 'core/settings.dart';
 import 'game/piece_painter.dart';
 import 'game/sushi_game.dart';
 import 'services/audio.dart';
+import 'services/daily_reward.dart';
 import 'services/wallet.dart';
+import 'ui/daily_reward_dialog.dart';
 import 'ui/customer_order.dart';
 import 'ui/hud.dart';
 import 'services/restaurant.dart';
@@ -23,6 +25,7 @@ import 'ui/tip_overlay.dart';
 import 'ui/l10n.dart';
 import 'ui/lives_ui.dart';
 import 'ui/settings_screen.dart';
+import 'ui/starter_picker.dart';
 import 'ui/ui_art.dart';
 
 void main() async {
@@ -32,6 +35,7 @@ void main() async {
   await PiecePainter.loadSprites();
   await Settings.load();
   await Wallet.load();
+  await DailyReward.load();
   await Restaurant.load();
   await Tips.load();
   await Audio.init();
@@ -113,6 +117,9 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
   void initState() {
     super.initState();
     _refresh();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) maybeShowDailyReward(context);
+    });
   }
 
   Future<void> _refresh() async {
@@ -161,8 +168,12 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
             },
             onSelect: (n) async {
               if (!await ensureLife(context) || !context.mounted) return;
+              final starters = await pickStarters(context);
+              if (starters == null || !context.mounted) return;
               await Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => GameScreen(levelNumber: n)),
+                MaterialPageRoute(
+                    builder: (_) =>
+                        GameScreen(levelNumber: n, starters: starters)),
               );
               _refresh();
             },
@@ -174,8 +185,9 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
 }
 
 class GameScreen extends StatefulWidget {
-  const GameScreen({super.key, this.levelNumber = 1});
+  const GameScreen({super.key, this.levelNumber = 1, this.starters = const []});
   final int levelNumber;
+  final List<Booster> starters;
 
   @override
   State<GameScreen> createState() => _GameScreenState();
@@ -184,10 +196,23 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   late final Future<SushiGame> _game = _load();
 
+  @override
+  void initState() {
+    super.initState();
+    Audio.startMusic(Restaurant.shopOfLevel(widget.levelNumber)?.id);
+  }
+
+  @override
+  void dispose() {
+    // Back on the level map the first restaurant's tune plays.
+    Audio.startMusic('tsukiji');
+    super.dispose();
+  }
+
   Future<SushiGame> _load() async {
     final raw = await rootBundle.loadString(_levelAsset(widget.levelNumber));
     final level = LevelConfig.fromJson(jsonDecode(raw) as Map<String, dynamic>);
-    final game = SushiGame(level: level);
+    final game = SushiGame(level: level, starters: widget.starters);
     game.hud.addListener(() {
       if (game.hud.value.status == GameStatus.won) {
         Progress.markCleared(widget.levelNumber);
@@ -264,10 +289,15 @@ class _GameScreenState extends State<GameScreen> {
                                     !context.mounted) {
                                   return;
                                 }
+                                final starters = await pickStarters(context);
+                                if (starters == null || !context.mounted) {
+                                  return;
+                                }
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                     builder: (_) => GameScreen(
-                                        levelNumber: widget.levelNumber + 1),
+                                        levelNumber: widget.levelNumber + 1,
+                                        starters: starters),
                                   ),
                                 );
                               }

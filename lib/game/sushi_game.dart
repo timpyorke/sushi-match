@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 
 import '../core/game_engine.dart';
 import '../core/level.dart';
+import '../core/piece.dart';
 import '../services/audio.dart';
 import '../services/wallet.dart';
 import 'board_component.dart';
@@ -32,8 +33,9 @@ class HudState {
 }
 
 class SushiGame extends FlameGame {
-  SushiGame({required this.level})
+  SushiGame({required this.level, this.starters = const []})
       : _engine = GameEngine(level, seed: _seed(level)) {
+    _placeStarters();
     hud = ValueNotifier(_snapshot());
   }
 
@@ -56,6 +58,11 @@ class SushiGame extends FlameGame {
   int _reward = 0;
 
   final LevelConfig level;
+
+  /// Starter boosters picked before the level; each is spent from the wallet
+  /// when the board is first laid out.
+  final List<Booster> starters;
+
   GameEngine _engine;
   BoardComponent? _board;
   late final ValueNotifier<HudState> hud;
@@ -65,6 +72,18 @@ class SushiGame extends FlameGame {
 
   @override
   Future<void> onLoad() async => _mountBoard();
+
+  void _placeStarters() {
+    for (final b in starters) {
+      if (!b.isStarter || Wallet.count(b) <= 0) continue;
+      final type = b == Booster.starterKnife
+          ? (_engine.rng.nextBool()
+              ? SpecialType.knifeRow
+              : SpecialType.knifeCol)
+          : SpecialType.wasabi;
+      if (_engine.placeStarter(type)) Wallet.consume(b);
+    }
+  }
 
   void restart() {
     _board?.removeFromParent();
@@ -113,7 +132,7 @@ class SushiGame extends FlameGame {
         _board?.useShuffle();
       case Booster.chopsticks || Booster.freeSwap:
         armed.value = armed.value == b || !Wallet.canUse(b) ? null : b;
-      case Booster.extraMoves:
+      case Booster.extraMoves || Booster.starterKnife || Booster.starterWasabi:
         break;
     }
   }

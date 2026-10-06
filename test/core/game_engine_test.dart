@@ -37,6 +37,17 @@ void main() {
     }
   });
 
+  test('a starter booster turns one plain piece into the special', () {
+    final e = GameEngine(testLevel(), seed: 1);
+    expect(e.placeStarter(SpecialType.wasabi), isTrue);
+    final specials = [
+      for (final p in e.board.positions)
+        if (e.board[p]!.isSpecial) e.board[p]!.special
+    ];
+    expect(specials, [SpecialType.wasabi]);
+    expect(mf.MatchFinder.find(e.board), isEmpty);
+  });
+
   test('same seed gives the same board', () {
     final a = GameEngine(testLevel(seed: 7)).board;
     final b = GameEngine(testLevel(seed: 7)).board;

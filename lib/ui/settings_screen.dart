@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/progress.dart';
+import '../services/daily_reward.dart';
 import '../services/restaurant.dart';
 import '../services/tips.dart';
 import '../core/settings.dart';
@@ -30,6 +31,7 @@ class SettingsScreen extends StatelessWidget {
     await Progress.reset();
     await Restaurant.reset();
     await Tips.reset();
+    await DailyReward.reset();
     if (context.mounted) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()

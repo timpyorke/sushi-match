@@ -1,7 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum Booster { extraMoves, chopsticks, freeSwap, shuffle }
+enum Booster {
+  extraMoves,
+  chopsticks,
+  freeSwap,
+  shuffle,
+
+  /// Pre-level boosters: a special piece is placed on the board at the start.
+  starterKnife,
+  starterWasabi;
+
+  bool get isStarter => this == starterKnife || this == starterWasabi;
+}
 
 /// Lives, coins and booster stock. Lives regenerate lazily: the clock only
 /// matters when someone looks, so no background timer is needed.
@@ -18,6 +29,8 @@ abstract final class Wallet {
     Booster.chopsticks: 15,
     Booster.freeSwap: 15,
     Booster.shuffle: 10,
+    Booster.starterKnife: 25,
+    Booster.starterWasabi: 25,
   };
 
   /// Shop bundle: buying this many at once is [bundleDiscount] cheaper.

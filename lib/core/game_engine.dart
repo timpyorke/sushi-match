@@ -297,6 +297,25 @@ class GameEngine {
     ];
   }
 
+  /// Starter booster: turns one random plain piece into [type] before the
+  /// first move. Returns false when no piece qualifies.
+  bool placeStarter(SpecialType type) {
+    final cells = [
+      for (final p in board.positions)
+        if (board[p] case final piece?
+            when !piece.isSpecial &&
+                !piece.ingredient &&
+                !piece.frozen &&
+                !piece.burning &&
+                piece.timer == 0 &&
+                !board.lockedCells.contains(p))
+          p
+    ];
+    if (cells.isEmpty) return false;
+    board[cells[rng.nextInt(cells.length)]]!.special = type;
+    return true;
+  }
+
   /// Extra moves; also revives a level that was just lost.
   void addMoves(int n) {
     if (status == GameStatus.won) return;

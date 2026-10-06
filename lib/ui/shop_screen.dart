@@ -15,6 +15,8 @@ class BoosterShopScreen extends StatelessWidget {
     (Booster.chopsticks, '🥢', 'chopsticks', 'descChopsticks'),
     (Booster.freeSwap, '🔄', 'freeSwap', 'descFreeSwap'),
     (Booster.shuffle, '🔀', 'shuffle', 'descShuffle'),
+    (Booster.starterKnife, '🔪', 'starterKnife', 'descStarterKnife'),
+    (Booster.starterWasabi, '🟢', 'starterWasabi', 'descStarterWasabi'),
   ];
 
   @override
