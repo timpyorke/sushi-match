@@ -83,6 +83,11 @@ abstract final class L10n {
       'decor_lantern': 'Paper lantern',
       'decor_table': 'Wooden table',
       'decor_sign': 'Shop sign',
+      'gotIt': 'Got it!',
+      'tipConveyorTitle': 'Conveyor belts',
+      'tipConveyorBody': 'Rows with arrows slide one step after every move. '
+          'They are locked, so you cannot swap them by hand. '
+          'Plan ahead: matches the belt makes by itself earn nothing.',
     },
     'th': {
       'pickPlate': 'เลือกจานเลย',
@@ -154,6 +159,11 @@ abstract final class L10n {
       'decor_lantern': 'โคมไฟกระดาษ',
       'decor_table': 'โต๊ะไม้',
       'decor_sign': 'ป้ายร้าน',
+      'gotIt': 'เข้าใจแล้ว!',
+      'tipConveyorTitle': 'สายพานซูชิ',
+      'tipConveyorBody': 'แถวที่มีลูกศรจะเลื่อนไป 1 ช่องทุกครั้งที่เดิน '
+          'และถูกล็อกไว้ สลับด้วยมือไม่ได้ '
+          'วางแผนล่วงหน้านะ ชิ้นที่สายพานจับคู่เองไม่ได้คะแนน',
     },
   };
 }

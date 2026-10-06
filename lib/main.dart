@@ -14,8 +14,10 @@ import 'services/wallet.dart';
 import 'ui/customer_order.dart';
 import 'ui/hud.dart';
 import 'services/restaurant.dart';
+import 'services/tips.dart';
 import 'ui/level_select.dart';
 import 'ui/restaurant_screen.dart';
+import 'ui/tip_overlay.dart';
 import 'ui/l10n.dart';
 import 'ui/lives_ui.dart';
 import 'ui/settings_screen.dart';
@@ -29,6 +31,7 @@ void main() async {
   await Settings.load();
   await Wallet.load();
   await Restaurant.load();
+  await Tips.load();
 
   // Bars come back after an edge swipe, the keyboard or a system dialog.
   // Hide them again after a short delay.
@@ -206,6 +209,9 @@ class _GameScreenState extends State<GameScreen> {
                     children: [
                       GameWidget(game: game),
                       PraiseBanner(game: game),
+                      if (game.level.conveyors.isNotEmpty)
+                        const TipOverlay(
+                            id: 'conveyor', emoji: '➡️🔒', text: 'tipConveyor'),
                       ResultOverlay(
                         game: game,
                         onLevels: () => Navigator.of(context).pop(),
