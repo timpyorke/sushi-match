@@ -100,6 +100,25 @@ class BoardComponent extends PositionComponent
     position = (gameSize - size * s) / 2;
   }
 
+  static final _lockStroke = Paint()
+    ..color = const Color(0xFFFFF1D6)
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 2.4;
+
+  void _drawLock(Canvas canvas, Offset c) {
+    canvas.drawArc(
+        Rect.fromCenter(center: c.translate(0, -3), width: 9, height: 12),
+        math.pi,
+        math.pi,
+        false,
+        _lockStroke);
+    canvas.drawRRect(
+        RRect.fromRectAndRadius(
+            Rect.fromCenter(center: c.translate(0, 2), width: 14, height: 10),
+            const Radius.circular(2.5)),
+        _beltArrow);
+  }
+
   @override
   void render(Canvas canvas) {
     for (final p in board.positions) {
@@ -121,6 +140,9 @@ class BoardComponent extends PositionComponent
       canvas.drawRRect(
           RRect.fromRectAndRadius(band.deflate(1), const Radius.circular(8)),
           _beltPaint);
+      // Padlocks at both ends: the belt's pieces can't be swapped by hand.
+      _drawLock(canvas, Offset(cols.first * cell + 15, y + cell - 14));
+      _drawLock(canvas, Offset((cols.last + 1) * cell - 15, y + cell - 14));
       for (final col in cols) {
         final cx = col * cell + cell / 2, cy = y + cell - 9;
         final d = c.dir * 6.0;
