@@ -12,8 +12,8 @@ import 'dart:io';
 
 import 'dart:math';
 
-import 'package:sushi_match/core/game_engine.dart';
-import 'package:sushi_match/core/level.dart';
+import 'package:sushi_trio/core/game_engine.dart';
+import 'package:sushi_trio/core/level.dart';
 
 import 'bots.dart';
 

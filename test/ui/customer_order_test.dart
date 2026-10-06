@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sushi_match/core/level.dart';
-import 'package:sushi_match/core/piece.dart';
-import 'package:sushi_match/ui/l10n.dart';
-import 'package:sushi_match/ui/customer_order.dart';
+import 'package:sushi_trio/core/level.dart';
+import 'package:sushi_trio/core/piece.dart';
+import 'package:sushi_trio/ui/l10n.dart';
+import 'package:sushi_trio/ui/customer_order.dart';
 
 void main() {
   final goals = [

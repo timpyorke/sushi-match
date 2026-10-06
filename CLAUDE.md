@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Sushi Match: a sushi-themed match-3 built with Flutter + Flame (portrait, Android/iOS). `GDD.md` is the design doc; `plan.md` (Thai) is the checklist of what is still undone relative to the GDD. CI (`.github/workflows`) runs `flutter analyze` and `flutter test`.
+Sushi Trio: a sushi-themed match-3 built with Flutter + Flame (portrait, Android/iOS). `GDD.md` is the design doc; `plan.md` (Thai) is the checklist of what is still undone relative to the GDD. CI (`.github/workflows`) runs `flutter analyze` and `flutter test`.
 
 ## Commands
 

@@ -51,19 +51,19 @@ void main() async {
     }
   });
   runApp(UncontrolledProviderScope(
-      container: container, child: const SushiMatchApp()));
+      container: container, child: const SushiTrioApp()));
 }
 
 Future<void> _enterImmersive() =>
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
-class SushiMatchApp extends StatelessWidget {
-  const SushiMatchApp({super.key});
+class SushiTrioApp extends StatelessWidget {
+  const SushiTrioApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Sushi Match',
+      title: 'Sushi Trio',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorSchemeSeed: const Color(0xFFB71C2C),

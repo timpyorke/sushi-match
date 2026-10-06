@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sushi_match/core/match_finder.dart' as mf;
-import 'package:sushi_match/core/piece.dart';
-import 'package:sushi_match/core/pos.dart';
+import 'package:sushi_trio/core/match_finder.dart' as mf;
+import 'package:sushi_trio/core/piece.dart';
+import 'package:sushi_trio/core/pos.dart';
 
 import 'helpers.dart';
 

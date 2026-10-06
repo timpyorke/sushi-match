@@ -1,13 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sushi_match/core/game_engine.dart';
-import 'package:sushi_match/core/level.dart';
-import 'package:sushi_match/core/match_finder.dart' as mf;
-import 'package:sushi_match/core/move_finder.dart';
-import 'package:sushi_match/core/piece.dart';
-import 'package:sushi_match/core/pos.dart';
-import 'package:sushi_match/core/steps.dart';
+import 'package:sushi_trio/core/game_engine.dart';
+import 'package:sushi_trio/core/level.dart';
+import 'package:sushi_trio/core/match_finder.dart' as mf;
+import 'package:sushi_trio/core/move_finder.dart';
+import 'package:sushi_trio/core/piece.dart';
+import 'package:sushi_trio/core/pos.dart';
+import 'package:sushi_trio/core/steps.dart';
 
 import 'helpers.dart';
 

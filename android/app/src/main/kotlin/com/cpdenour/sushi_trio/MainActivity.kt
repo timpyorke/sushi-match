@@ -1,4 +1,4 @@
-package com.cpdenour.sushi_match
+package com.cpdenour.sushi_trio
 
 import io.flutter.embedding.android.FlutterActivity
 

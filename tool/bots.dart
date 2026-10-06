@@ -1,11 +1,11 @@
 // Simple bots shared by tool/balance.dart and tool/tune.dart.
 import 'dart:math';
 
-import 'package:sushi_match/core/game_engine.dart';
-import 'package:sushi_match/core/level.dart';
-import 'package:sushi_match/core/match_finder.dart';
-import 'package:sushi_match/core/move_finder.dart';
-import 'package:sushi_match/core/pos.dart';
+import 'package:sushi_trio/core/game_engine.dart';
+import 'package:sushi_trio/core/level.dart';
+import 'package:sushi_trio/core/match_finder.dart';
+import 'package:sushi_trio/core/move_finder.dart';
+import 'package:sushi_trio/core/pos.dart';
 
 typedef Move = (Pos, Pos);
 

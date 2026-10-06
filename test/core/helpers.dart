@@ -1,7 +1,7 @@
-import 'package:sushi_match/core/board.dart';
-import 'package:sushi_match/core/level.dart';
-import 'package:sushi_match/core/piece.dart';
-import 'package:sushi_match/core/pos.dart';
+import 'package:sushi_trio/core/board.dart';
+import 'package:sushi_trio/core/level.dart';
+import 'package:sushi_trio/core/piece.dart';
+import 'package:sushi_trio/core/pos.dart';
 
 /// s=salmon m=maguro t=tamago i=ikura e=ebi k=kappa u=unagi h=hotate a=ika o=tako X=void .=empty
 Board boardFrom(List<String> rows) {

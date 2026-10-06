@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sushi_match/services/daily_reward.dart';
-import 'package:sushi_match/services/store.dart';
-import 'package:sushi_match/services/wallet.dart';
+import 'package:sushi_trio/services/daily_reward.dart';
+import 'package:sushi_trio/services/store.dart';
+import 'package:sushi_trio/services/wallet.dart';
 
 import '../helpers/riverpod.dart';
 

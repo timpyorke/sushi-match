@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sushi_match/main.dart';
-import 'package:sushi_match/ui/ui_art.dart';
+import 'package:sushi_trio/main.dart';
+import 'package:sushi_trio/ui/ui_art.dart';
 
 import '../helpers/riverpod.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sushi_match/game/sushi_game.dart';
-import 'package:sushi_match/services/store.dart';
-import 'package:sushi_match/services/wallet.dart';
+import 'package:sushi_trio/game/sushi_game.dart';
+import 'package:sushi_trio/services/store.dart';
+import 'package:sushi_trio/services/wallet.dart';
 
 import '../core/helpers.dart';
 import '../helpers/riverpod.dart';

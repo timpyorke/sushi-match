@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sushi_match/services/store.dart';
-import 'package:sushi_match/ui/l10n.dart';
+import 'package:sushi_trio/services/store.dart';
+import 'package:sushi_trio/ui/l10n.dart';
 
 /// A container backed by an in-memory store (pass the same [store] to a
 /// second container to simulate an app restart).

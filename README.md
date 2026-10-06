@@ -1,4 +1,4 @@
-# Sushi Match — prototype (Phase 1: grey box)
+# Sushi Trio — prototype (Phase 1: grey box)
 
 Flutter + Flame match-3. Game rules live in pure Dart (`lib/core`) and return
 a list of `BoardStep`s; Flame (`lib/game`) only animates them.
@@ -6,7 +6,7 @@ a list of `BoardStep`s; Flame (`lib/game`) only animates them.
 ## Run
 
 ```bash
-flutter create --org com.timpyorke --project-name sushi_match --platforms android,ios .
+flutter create --org com.timpyorke --project-name sushi_trio --platforms android,ios .
 flutter pub get
 flutter test          # core rules, no device needed
 flutter run

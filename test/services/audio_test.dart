@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sushi_match/services/audio.dart';
+import 'package:sushi_trio/services/audio.dart';
 
 void main() {
   test('match pitch climbs with cascade depth and tops out', () {
