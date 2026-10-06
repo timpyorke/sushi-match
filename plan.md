@@ -5,21 +5,21 @@
 ## 1. ค้างจากงานเสียง
 
 - [ ] ฟังเสียงจริงบนเครื่อง/simulator: ตอนนี้ยังไม่เคยฟัง ตรวจได้แค่ว่าไฟล์ถูกต้องและ test ผ่าน
-- [ ] แก้ `IPHONEOS_DEPLOYMENT_TARGET` จาก 13.0 เป็น 15.0 ใน `ios/Runner.xcodeproj/project.pbxproj` (ตอนนี้ build บน simulator ไม่ผ่าน และเป็นปัญหาที่มีอยู่ก่อนแล้ว)
+- [x] แก้ `IPHONEOS_DEPLOYMENT_TARGET` จาก 13.0 เป็น 15.0 ใน `ios/Runner.xcodeproj/project.pbxproj` (ตอนนี้ build บน simulator ไม่ผ่าน และเป็นปัญหาที่มีอยู่ก่อนแล้ว)
 - [ ] ปรับระดับเสียง: ความดัง SFX กับ BGM ยังเป็นค่าเดา (`_sfxVolume`, `_bgmVolume` ใน `lib/services/audio.dart`)
-- [ ] BGM ร้านละ 1 เพลง ตาม GDD (ตอนนี้ทุกร้านใช้ `bgm.wav` เพลงเดียว)
+- [x] BGM ร้านละ 1 เพลง ตาม GDD (`bgm_<shop>.wav` 4 เพลง สร้างด้วย `tool/gen_sounds.dart`)
 - [ ] เปลี่ยนเสียงชั่วคราวเป็นเสียงจริง โดยวางไฟล์ชื่อเดิมใน `assets/audio/` (ไฟล์ต้องเป็น `.wav` หรือแก้ `lib/services/audio.dart`)
-- [ ] เสียงปุ่มและเสียงเมนู (ตอนนี้มีแต่เสียงในเกมและตอนซื้อของ)
+- [x] เสียงปุ่มและเสียงเมนู (ตอนนี้มีแต่เสียงในเกมและตอนซื้อของ)
 
 ## 2. Gameplay ที่ GDD ระบุ
 
-- [ ] Starter booster ก่อนเริ่มด่าน (Starter Knife / Wasabi): วางชิ้นพิเศษบนกระดานตั้งแต่เริ่ม
-- [ ] ร้านที่ตกแต่งครบให้รางวัลเหรียญ + booster (ตอนนี้มีเฉพาะเหรียญ `completeCoins`; ยังไม่ให้ booster)
+- [x] Starter booster ก่อนเริ่มด่าน (Starter Knife / Wasabi): วางชิ้นพิเศษบนกระดานตั้งแต่เริ่ม
+- [x] ร้านที่ตกแต่งครบให้รางวัลเหรียญ + booster (ตอนนี้มีเฉพาะเหรียญ `completeCoins`; ยังไม่ให้ booster)
 - [ ] ด่านเพิ่ม: ตอนนี้มี 60 ด่าน (4 ร้าน ร้านละ 15 ด่าน)
 
 ## 3. Daily และ live ops
 
-- [ ] Daily reward 7 วันวนรอบ (ของรางวัลวันที่ 7 ใหญ่สุด) ทำในเครื่องด้วย `shared_preferences` ได้
+- [x] Daily reward 7 วันวนรอบ (ของรางวัลวันที่ 7 ใหญ่สุด) ทำในเครื่องด้วย `shared_preferences` ได้
 - [ ] Daily challenge 1 ด่านต่อวัน ใช้ seed เดียวกันทุกคน + leaderboard (leaderboard ต้องมี backend)
 - [ ] Event รายสัปดาห์ (เช่น "Salmon Week") ตั้งค่าผ่าน Remote Config
 
@@ -39,11 +39,11 @@
 
 ## 6. เครื่องมือและโครงสร้างโปรเจกต์
 
-- [ ] CI: GitHub Actions รัน `flutter analyze` + `flutter test` ทุก PR (ยังไม่มี `.github/`)
+- [x] CI: GitHub Actions รัน `flutter analyze` + `flutter test` ทุก PR (ยังไม่มี `.github/`)
 - [ ] Deploy ผ่าน Fastlane
 - [ ] Level editor บนเว็บ (Flutter web) แก้ layout แล้ว export JSON
 - [ ] GDD ระบุ Riverpod + Hive ไว้ ตอนนี้ใช้ `ValueNotifier` + `shared_preferences` ตัดสินใจว่าจะย้ายหรือแก้ GDD ให้ตรงกับของจริง
-- [ ] Lint ที่ค้างอยู่: `lib/game/board_component.dart:144` ชื่อพารามิเตอร์ `gameSize` ไม่ตรงกับ `size` ของ method ที่ override
+- [x] Lint ที่ค้างอยู่: `lib/game/board_component.dart:144` ชื่อพารามิเตอร์ `gameSize` ไม่ตรงกับ `size` ของ method ที่ override
 
 ## 7. คำถามที่ยังต้องตัดสินใจ
 

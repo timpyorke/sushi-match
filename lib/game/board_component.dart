@@ -141,12 +141,13 @@ class BoardComponent extends PositionComponent
   }
 
   @override
-  void onGameResize(Vector2 gameSize) {
-    super.onGameResize(gameSize);
-    final s = math.min(gameSize.x * 0.96 / (size.x + 2 * _frame),
-        gameSize.y * 0.96 / (size.y + 2 * _frame));
+  void onGameResize(Vector2 size) {
+    super.onGameResize(size);
+    final board = this.size;
+    final s = math.min(size.x * 0.96 / (board.x + 2 * _frame),
+        size.y * 0.96 / (board.y + 2 * _frame));
     scale = Vector2.all(s);
-    position = (gameSize - size * s) / 2;
+    position = (size - board * s) / 2;
   }
 
   static final _lockStroke = Paint()
