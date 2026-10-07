@@ -33,7 +33,7 @@ class Customer {
 
   static const roster = [
     Customer('👵', 'cust0', sprite: '00-granny-sakura'),
-    Customer('👨‍💼', 'cust1'),
+    Customer('👨‍💼', 'cust1', sprite: '01-mr-tanaka'),
     Customer('👧', 'cust2'),
     Customer('🐱', 'cust3'),
     Customer('🧑‍🎤', 'cust4'),
