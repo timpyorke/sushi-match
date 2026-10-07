@@ -120,12 +120,10 @@ class SettingsScreen extends ConsumerWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               for (final e in L10n.languages.entries)
-                                RadioListTile<String>(
-                                  value: e.key,
-                                  title: Text(e.value),
-                                  dense: true,
-                                  contentPadding: const EdgeInsets.only(
-                                      left: 40, right: 16),
+                                _LanguageCard(
+                                  code: e.key,
+                                  name: e.value,
+                                  selected: e.key == settings.language,
                                 ),
                             ],
                           ),
@@ -187,6 +185,41 @@ class _VolumeTile extends StatelessWidget {
         semanticFormatterCallback: (v) => '${(v * 100).round()}%',
         onChanged: onChanged,
         onChangeEnd: onChangeEnd,
+      ),
+    );
+  }
+}
+
+/// One language choice on a wooden plank. Must sit under a [RadioGroup].
+class _LanguageCard extends StatelessWidget {
+  const _LanguageCard(
+      {required this.code, required this.name, required this.selected});
+
+  final String code;
+  final String name;
+  final bool selected;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context).textTheme;
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      decoration: UiArt.plankSpriteDecoration().copyWith(
+        boxShadow: selected
+            ? const [BoxShadow(color: Color(0xCCFFD54F), blurRadius: 10)]
+            : null,
+      ),
+      // A transparent Material keeps the tap ripple above the plank image.
+      child: Material(
+        type: MaterialType.transparency,
+        child: RadioListTile<String>(
+          value: code,
+          activeColor: UiArt.ink,
+          title: Text(name,
+              style: t.titleMedium
+                  ?.copyWith(color: UiArt.ink, fontWeight: FontWeight.bold)),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+        ),
       ),
     );
   }
