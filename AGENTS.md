@@ -1,6 +1,6 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Codex (Codex.ai/code) when working with code in this repository.
 
 Sushi Trio: a sushi-themed match-3 built with Flutter + Flame (portrait, Android/iOS). `GDD.md` is the design doc; `plan.md` (Thai) is the checklist of what is still undone relative to the GDD. CI (`.github/workflows`) runs `flutter analyze` and `flutter test`.
 
@@ -18,8 +18,6 @@ dart run tool/balance.dart [runs] [level …] [--planner] [--no-belts]  # bot wi
 dart run tool/tune.dart [runs] [--write]       # re-fit moves, goal counts, star thresholds in assets/levels
 dart run tool/gen_sounds.dart                  # regenerate placeholder WAVs in assets/audio/
 dart run tool/gen_levels.dart [--force] [level …]  # generate level files from the spec table
-dart run tool/gen_prompts.dart                 # regenerate GPT Image character prompts in docs/prompts/
-dart run tool/cut_sprites.dart [id …]          # cut character sheets (customers/<id>/source/) into 256px frames
 ```
 
 Re-run `tool/tune.dart` after changing the engine or adding levels. Real audio replaces placeholders by dropping a same-named file into `assets/audio/` (the game refers only to file names, see `lib/services/audio.dart`).

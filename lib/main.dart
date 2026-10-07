@@ -25,6 +25,7 @@ import 'ui/home_screen.dart';
 import 'ui/hud.dart';
 import 'services/restaurant.dart';
 import 'services/tips.dart';
+import 'ui/level_intro.dart';
 import 'ui/level_select.dart';
 import 'ui/restaurant_screen.dart';
 import 'ui/shop_screen.dart';
@@ -232,6 +233,10 @@ class GameScreen extends ConsumerStatefulWidget {
 class _GameScreenState extends ConsumerState<GameScreen> {
   late final Future<SushiGame> _game = _load();
 
+  /// The order bubble above the board, where the level intro lands.
+  final _orderKey = GlobalKey();
+  bool _introDone = false;
+
   @override
   void initState() {
     super.initState();
@@ -333,86 +338,106 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                 onPopInvokedWithResult: (didPop, _) {
                   if (!didPop) _leave(game);
                 },
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 12),
-                      child: Row(
-                        children: [
-                          RoundIconButton(
-                            icon: Icons.arrow_back,
-                            onPressed: () => _leave(game),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(child: HudBar(game: game)),
-                          RoundIconButton(
-                            icon: Icons.restart_alt,
-                            onPressed: () => _restart(game),
-                          ),
-                        ],
+                child: Stack(children: [
+                  Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 12),
+                        child: Row(
+                          children: [
+                            RoundIconButton(
+                              icon: Icons.arrow_back,
+                              onPressed: () => _leave(game),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(child: HudBar(game: game)),
+                            RoundIconButton(
+                              icon: Icons.restart_alt,
+                              onPressed: () => _restart(game),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          GameWidget(game: game),
-                          PraiseBanner(game: game),
-                          // One tip at a time: the first mechanic of this level
-                          // the player has not been told about yet.
-                          Consumer(
-                            builder: (context, ref, _) {
-                              final tip =
-                                  _tipFor(game.level, ref.watch(tipsProvider));
-                              return tip == null
-                                  ? const SizedBox.shrink()
-                                  : TipOverlay(
-                                      id: tip.$1, emoji: tip.$2, text: tip.$3);
-                            },
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(4, 4, 12, 0),
+                        child: ValueListenableBuilder<HudState>(
+                          valueListenable: game.hud,
+                          builder: (context, s, child) => Opacity(
+                            opacity: _introDone ? 1 : 0,
+                            child: OrderBubble(
+                                key: _orderKey,
+                                level: game.level,
+                                goals: s.goals),
                           ),
-                          ResultOverlay(
-                            game: game,
-                            onLevels: () => Navigator.of(context).pop(),
-                            onNext: widget.levelNumber < kLevelCount &&
-                                    (ref.read(settingsProvider).testMode ||
-                                        widget.levelNumber <
-                                            ref
-                                                .read(restaurantProvider)
-                                                .maxPlayableLevel)
-                                ? () async {
-                                    if (!await ensureLife(context, ref) ||
-                                        !context.mounted) {
-                                      return;
+                        ),
+                      ),
+                      Expanded(
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            GameWidget(game: game),
+                            PraiseBanner(game: game),
+                            // One tip at a time: the first mechanic of this level
+                            // the player has not been told about yet.
+                            Consumer(
+                              builder: (context, ref, _) {
+                                final tip = _tipFor(
+                                    game.level, ref.watch(tipsProvider));
+                                return tip == null
+                                    ? const SizedBox.shrink()
+                                    : TipOverlay(
+                                        id: tip.$1,
+                                        emoji: tip.$2,
+                                        text: tip.$3);
+                              },
+                            ),
+                            ResultOverlay(
+                              game: game,
+                              onLevels: () => Navigator.of(context).pop(),
+                              onNext: widget.levelNumber < kLevelCount &&
+                                      (ref.read(settingsProvider).testMode ||
+                                          widget.levelNumber <
+                                              ref
+                                                  .read(restaurantProvider)
+                                                  .maxPlayableLevel)
+                                  ? () async {
+                                      if (!await ensureLife(context, ref) ||
+                                          !context.mounted) {
+                                        return;
+                                      }
+                                      final starters =
+                                          await pickStarters(context, ref);
+                                      if (starters == null ||
+                                          !context.mounted) {
+                                        return;
+                                      }
+                                      Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                          builder: (_) => GameScreen(
+                                              levelNumber:
+                                                  widget.levelNumber + 1,
+                                              starters: starters),
+                                        ),
+                                      );
                                     }
-                                    final starters =
-                                        await pickStarters(context, ref);
-                                    if (starters == null || !context.mounted) {
-                                      return;
-                                    }
-                                    Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                        builder: (_) => GameScreen(
-                                            levelNumber: widget.levelNumber + 1,
-                                            starters: starters),
-                                      ),
-                                    );
-                                  }
-                                : null,
-                          ),
-                        ],
+                                  : null,
+                            ),
+                          ],
+                        ),
+                      ),
+                      BoosterBar(game: game),
+                    ],
+                  ),
+                  if (!_introDone)
+                    Positioned.fill(
+                      child: LevelIntro(
+                        level: game.level,
+                        goals: game.hud.value.goals,
+                        target: _orderKey,
+                        onDone: () => setState(() => _introDone = true),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(12, 4, 12, 0),
-                      child: ValueListenableBuilder<HudState>(
-                        valueListenable: game.hud,
-                        builder: (context, s, child) =>
-                            OrderBubble(level: game.level, goals: s.goals),
-                      ),
-                    ),
-                    BoosterBar(game: game),
-                  ],
-                ));
+                ]));
           },
         ),
       ),

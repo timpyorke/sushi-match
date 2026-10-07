@@ -4,8 +4,8 @@ import 'package:flutter/services.dart' show rootBundle;
 
 /// Board tile sprites (assets/sprites/tiles/*.png, each pre-cropped to its tile).
 ///
-/// cell_light/cell_dark: checkerboard cells. frame_strip: wave band + outer
-/// rim of the board frame. belt_straight/belt_corner/belt_cap/arrow: conveyor.
+/// cell_light/cell_dark: checkerboard cells. belt_straight/belt_corner/
+/// belt_cap/arrow: conveyor.
 ///
 /// Until [load] finishes (and in tests that never call it) [ready] is false
 /// and the board falls back to flat colours.
@@ -15,7 +15,6 @@ abstract final class TileArt {
   static const _names = [
     'cell_light',
     'cell_dark',
-    'frame_strip',
     'belt_straight',
     'belt_corner',
     'belt_cap',
@@ -94,70 +93,4 @@ abstract final class TileArt {
   /// Direction arrow; [dir] is +1 for right, -1 for left.
   static void arrow(Canvas canvas, Rect dst, int dir) =>
       _draw(canvas, 'arrow', dst, flipX: dir < 0);
-
-  /// Frame of thickness [t] around [board]. The strip is drawn once per side
-  /// and cut at 45° so the band runs round the corners.
-  static void frame(Canvas canvas, Rect board, double t) {
-    final b = board;
-    final bars = <(List<Offset>, Offset, double, double)>[
-      // (mitre polygon, centre, rotation, length)
-      (
-        [
-          Offset(b.left - t, b.bottom + t),
-          Offset(b.right + t, b.bottom + t),
-          Offset(b.right, b.bottom),
-          Offset(b.left, b.bottom),
-        ],
-        Offset(b.center.dx, b.bottom + t / 2),
-        0,
-        b.width + 2 * t,
-      ),
-      (
-        [
-          Offset(b.left - t, b.top - t),
-          Offset(b.right + t, b.top - t),
-          Offset(b.right, b.top),
-          Offset(b.left, b.top),
-        ],
-        Offset(b.center.dx, b.top - t / 2),
-        3.141592653589793,
-        b.width + 2 * t,
-      ),
-      (
-        [
-          Offset(b.right + t, b.top - t),
-          Offset(b.right + t, b.bottom + t),
-          Offset(b.right, b.bottom),
-          Offset(b.right, b.top),
-        ],
-        Offset(b.right + t / 2, b.center.dy),
-        -1.5707963267948966,
-        b.height + 2 * t,
-      ),
-      (
-        [
-          Offset(b.left - t, b.top - t),
-          Offset(b.left - t, b.bottom + t),
-          Offset(b.left, b.bottom),
-          Offset(b.left, b.top),
-        ],
-        Offset(b.left - t / 2, b.center.dy),
-        1.5707963267948966,
-        b.height + 2 * t,
-      ),
-    ];
-    final strip = _img['frame_strip']!;
-    for (final (poly, centre, angle, length) in bars) {
-      canvas.save();
-      canvas.clipPath(Path()..addPolygon(poly, true));
-      canvas.translate(centre.dx, centre.dy);
-      canvas.rotate(angle);
-      canvas.drawImageRect(
-          strip,
-          Rect.fromLTWH(0, 0, strip.width.toDouble(), strip.height.toDouble()),
-          Rect.fromCenter(center: Offset.zero, width: length, height: t),
-          _paint);
-      canvas.restore();
-    }
-  }
 }
