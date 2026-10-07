@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 import '../core/game_engine.dart';
 import '../core/level.dart';
@@ -7,16 +8,29 @@ import '../game/piece_painter.dart';
 import 'l10n.dart';
 import 'ui_art.dart';
 
+/// Animations every customer sprite has (see `docs/prompts/README.md`).
+enum CustomerAnim { idle, talk, happy, sad, walk }
+
 /// A diner who places the level's goals as a food order.
 class Customer {
-  const Customer(this.emoji, this.nameKey);
+  const Customer(this.emoji, this.nameKey, {this.sprite});
   final String emoji;
   final String nameKey;
 
+  /// Folder under `assets/sprites/customers/`; null until the art exists,
+  /// in which case [emoji] stands in.
+  final String? sprite;
+
+  /// Frames per animation.
+  static const frameCount = 4;
+
   String get name => L10n.t(nameKey);
 
+  String frame(CustomerAnim anim, int i) =>
+      'assets/sprites/customers/$sprite/${anim.name}_$i.png';
+
   static const roster = [
-    Customer('👵', 'cust0'),
+    Customer('👵', 'cust0', sprite: '00-granny-sakura'),
     Customer('👨‍💼', 'cust1'),
     Customer('👧', 'cust2'),
     Customer('🐱', 'cust3'),
@@ -27,6 +41,106 @@ class Customer {
   /// Customers take turns across levels so every plate has a face.
   static Customer forLevel(int levelId) =>
       roster[(levelId - 1) % roster.length];
+}
+
+/// A customer playing [anim] on a loop, after [intro] plays [introLoops]
+/// times if given. Falls back to the emoji when the customer has no sprite.
+class CustomerSprite extends StatefulWidget {
+  const CustomerSprite({
+    super.key,
+    required this.customer,
+    this.anim = CustomerAnim.idle,
+    this.intro,
+    this.introLoops = 2,
+    this.size = 64,
+    this.fps = 6,
+  });
+  final Customer customer;
+  final CustomerAnim anim;
+  final CustomerAnim? intro;
+  final int introLoops;
+  final double size;
+  final double fps;
+
+  @override
+  State<CustomerSprite> createState() => _CustomerSpriteState();
+}
+
+class _CustomerSpriteState extends State<CustomerSprite>
+    with SingleTickerProviderStateMixin {
+  Ticker? _ticker;
+
+  /// Frames shown since the ticker started, and the count at which the
+  /// current animation began.
+  int _ticks = 0, _start = 0;
+
+  int get _introFrames =>
+      widget.intro == null ? 0 : widget.introLoops * Customer.frameCount;
+
+  void _tick(Duration elapsed) {
+    final i = elapsed.inMicroseconds * widget.fps ~/ 1000000;
+    if (i != _ticks) setState(() => _ticks = i);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.customer.sprite != null) {
+      _ticker = createTicker(_tick)..start();
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Decode every frame up front so the loop doesn't flicker.
+    if (widget.customer.sprite == null) return;
+    for (final anim in {widget.intro, widget.anim}.nonNulls) {
+      for (var i = 0; i < Customer.frameCount; i++) {
+        precacheImage(AssetImage(widget.customer.frame(anim, i)), context);
+      }
+    }
+  }
+
+  @override
+  void didUpdateWidget(CustomerSprite old) {
+    super.didUpdateWidget(old);
+    if (old.anim != widget.anim || old.customer != widget.customer) {
+      _start = _ticks - _introFrames; // skip the intro on a mood change
+    }
+  }
+
+  @override
+  void dispose() {
+    _ticker?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = widget.customer;
+    if (c.sprite == null) {
+      return SizedBox.square(
+        dimension: widget.size,
+        child: Center(
+            child:
+                Text(c.emoji, style: TextStyle(fontSize: widget.size * 0.5))),
+      );
+    }
+    final intro = widget.intro;
+    final n = _ticks - _start;
+    final (anim, i) = intro != null && n < _introFrames
+        ? (intro, n % Customer.frameCount)
+        : (widget.anim, (n - _introFrames) % Customer.frameCount);
+    return Image.asset(
+      c.frame(anim, i),
+      width: widget.size,
+      height: widget.size,
+      gaplessPlayback: true,
+      filterQuality: FilterQuality.medium,
+      semanticLabel: c.name,
+    );
+  }
 }
 
 /// "I'd like 20 Salmon and 15 Tamago, please!" built from the level goals.
@@ -95,8 +209,7 @@ class GoalCount extends StatelessWidget {
           Text('$shown/${g.count}',
               style: t.labelMedium
                   ?.copyWith(fontWeight: FontWeight.bold, color: UiArt.ink)),
-          if (done)
-            const Icon(Icons.check, size: 14, color: Color(0xFF2E7D32)),
+          if (done) const Icon(Icons.check, size: 14, color: Color(0xFF2E7D32)),
         ],
       ),
     );
@@ -131,7 +244,8 @@ class OrderBubble extends StatelessWidget {
       decoration: UiArt.plankDecoration(),
       child: Row(
         children: [
-          Text(customer.emoji, style: const TextStyle(fontSize: 30)),
+          CustomerSprite(
+              customer: customer, intro: CustomerAnim.talk, size: 64),
           const SizedBox(width: 8),
           Expanded(
             child: Column(

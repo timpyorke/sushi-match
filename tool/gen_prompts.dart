@@ -1001,16 +1001,20 @@ String _readme() {
         'the face and outfit stay the same in every frame.')
     ..writeln('- Every sheet is a **2×2 grid of 4 frames, 512×512 each**, '
         'read left→right, top→bottom (f1 f2 / f3 f4).')
-    ..writeln('- Cut each sheet into frames and shrink them to 256px, the '
-        'same size as the sushi sprites:')
+    ..writeln('- Save the master and sheets in '
+        '`assets/sprites/customers/<id>/source/` as `<id>_master.png` and '
+        '`<anim>_sheet.png`, then cut them into 256px frames, the same size '
+        'as the sushi sprites:')
     ..writeln()
     ..writeln('```bash')
-    ..writeln('magick idle_sheet.png -crop 2x2@ +repage -resize 256x256 '
-        'idle_%d.png')
+    ..writeln('dart run tool/cut_sprites.dart <id>')
     ..writeln('```')
     ..writeln()
-    ..writeln('- Save them as `assets/sprites/customers/<id>/<anim>_<n>.png`'
-        ' (for example `00-granny-sakura/idle_0.png`); the boss cat goes in '
+    ..writeln('- The frames land next to `source/` as `<anim>_<n>.png` (for '
+        'example `00-granny-sakura/idle_0.png`), keeping the art\'s '
+        'proportions, lined up on the feet and without any faint aura. Add '
+        'the folder to `pubspec.yaml` and set `sprite:` on the customer in '
+        '`lib/ui/customer_order.dart`. The boss cat goes in '
         '`assets/sprites/obstacles/` instead.')
     ..writeln('- If the frames of a sheet don\'t match each other, use the '
         'parts sheet at the end of each file and animate in code instead.')

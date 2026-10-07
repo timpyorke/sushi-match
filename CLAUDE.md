@@ -19,6 +19,7 @@ dart run tool/tune.dart [runs] [--write]       # re-fit moves, goal counts, star
 dart run tool/gen_sounds.dart                  # regenerate placeholder WAVs in assets/audio/
 dart run tool/gen_levels.dart [--force] [level …]  # generate level files from the spec table
 dart run tool/gen_prompts.dart                 # regenerate GPT Image character prompts in docs/prompts/
+dart run tool/cut_sprites.dart [id …]          # cut character sheets (customers/<id>/source/) into 256px frames
 ```
 
 Re-run `tool/tune.dart` after changing the engine or adding levels. Real audio replaces placeholders by dropping a same-named file into `assets/audio/` (the game refers only to file names, see `lib/services/audio.dart`).

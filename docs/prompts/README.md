@@ -14,13 +14,13 @@ dart run tool/gen_prompts.dart
 - **Step 1.** Generate the master reference a few times and keep the best one as `<id>_master.png` (`<id>` is the character file name, such as `00-granny-sakura`).
 - **Step 2.** Generate each animation sheet with the **Edit** endpoint (image → image), passing the master as the input image so the face and outfit stay the same in every frame.
 - Every sheet is a **2×2 grid of 4 frames, 512×512 each**, read left→right, top→bottom (f1 f2 / f3 f4).
-- Cut each sheet into frames and shrink them to 256px, the same size as the sushi sprites:
+- Save the master and sheets in `assets/sprites/customers/<id>/source/` as `<id>_master.png` and `<anim>_sheet.png`, then cut them into 256px frames, the same size as the sushi sprites:
 
 ```bash
-magick idle_sheet.png -crop 2x2@ +repage -resize 256x256 idle_%d.png
+dart run tool/cut_sprites.dart <id>
 ```
 
-- Save them as `assets/sprites/customers/<id>/<anim>_<n>.png` (for example `00-granny-sakura/idle_0.png`); the boss cat goes in `assets/sprites/obstacles/` instead.
+- The frames land next to `source/` as `<anim>_<n>.png` (for example `00-granny-sakura/idle_0.png`), keeping the art's proportions, lined up on the feet and without any faint aura. Add the folder to `pubspec.yaml` and set `sprite:` on the customer in `lib/ui/customer_order.dart`. The boss cat goes in `assets/sprites/obstacles/` instead.
 - If the frames of a sheet don't match each other, use the parts sheet at the end of each file and animate in code instead.
 
 Customers get idle, talk, happy, sad and walk, plus one signature move. The boss cat gets the board animations from `docs/Charecter.md`: idle, prowl, eat, hit and flee.
