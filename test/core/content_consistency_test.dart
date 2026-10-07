@@ -17,15 +17,22 @@ void main() {
       next = s.lastLevel + 1;
     }
     expect(Restaurant.totalLevels, next - 1);
-    expect(Restaurant.shops.first.unlockCost, 0);
   });
 
-  test('every restaurant has map art, music, text and decor', () {
+  test('every furniture piece has a name in every language', () {
+    for (final f in Restaurant.furniture) {
+      for (final lang in L10n.languages.keys) {
+        L10n.language = lang;
+        expect(L10n.t(f.nameKey), isNot(f.nameKey), reason: '$lang ${f.id}');
+      }
+    }
+  });
+
+  test('every restaurant has map art, music and text', () {
     for (final s in Restaurant.shops) {
       expect(kMapRegions, contains(s.id), reason: '${s.id} map region');
       expect(Audio.tracks, contains(Audio.trackFor(s.id)),
           reason: '${s.id} music');
-      expect(s.decor, isNotEmpty, reason: s.id);
       for (final lang in L10n.languages.keys) {
         L10n.language = lang;
         for (final key in [s.nameKey, 'zone_${s.id}']) {

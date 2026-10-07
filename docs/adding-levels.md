@@ -48,12 +48,12 @@ checks, which fail until each exists:
   mirrored so the route snakes. The scroll area, banner and route all grow
   with the shop list, and levels are spread evenly along the band's route.
 - `shop_<id>` and `zone_<id>` in both languages in `lib/ui/l10n.dart`.
-- A palette in `_palettes` in `lib/ui/restaurant_screen.dart` (falls back to
-  Tsukiji's if missing).
 - Music: add `assets/audio/bgm_<id>.wav`, list it in `Audio.tracks`, or alias
   it to an existing track in `Audio._alias` until it exists.
-- Unlock cost: keep cumulative unlock costs around 90% of the stars available
-  so far (3 stars × levels before it); decor costs are the optional sink.
+
+Regions open by clearing levels; stars are spent only on furniture for the
+player's single restaurant (`Restaurant.furniture`). When the game grows a
+lot, consider adding furniture so the star sink keeps up (~2 stars × levels).
 
 ## Conventions the generator follows (keep for hand-made levels)
 

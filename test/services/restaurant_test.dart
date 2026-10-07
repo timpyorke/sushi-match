@@ -7,77 +7,95 @@ import 'package:sushi_trio/services/wallet.dart';
 import '../helpers/riverpod.dart';
 
 void main() {
-  final tsukiji = Restaurant.shops[0];
-  final osaka = Restaurant.shops[1];
+  final lantern = Restaurant.furniture[0];
+  final stool = Restaurant.furniture[1];
+  var now = DateTime(2026, 1, 1, 9);
   late ProviderContainer c;
-  late RestaurantNotifier shops;
+  late RestaurantNotifier shop;
   RestaurantState state() => c.read(restaurantProvider);
 
   setUp(() {
-    c = testContainer();
-    shops = c.read(restaurantProvider.notifier);
+    now = DateTime(2026, 1, 1, 9);
+    c = testContainer(clock: () => now);
+    shop = c.read(restaurantProvider.notifier);
   });
 
   test('stars keep the best result per level and add up', () {
-    expect(shops.recordStars(1, 2), 2);
-    expect(shops.recordStars(1, 1), 0);
-    expect(shops.recordStars(1, 3), 1);
-    shops.recordStars(2, 1);
+    expect(shop.recordStars(1, 2), 2);
+    expect(shop.recordStars(1, 1), 0);
+    expect(shop.recordStars(1, 3), 1);
+    shop.recordStars(2, 1);
     expect(state().earned, 4);
     expect(state().available, 4);
   });
 
-  test('buying needs stars and spends them', () {
-    expect(shops.buyDecor(tsukiji, tsukiji.decor[0]), isFalse);
-    shops.recordStars(1, 3);
-    expect(shops.buyDecor(tsukiji, tsukiji.decor[0]), isTrue);
+  test('buying furniture needs stars and spends them', () {
+    expect(shop.buyFurniture(lantern), isFalse);
+    shop.recordStars(1, lantern.cost);
+    expect(shop.buyFurniture(lantern), isTrue);
     expect(state().available, 0);
-    expect(shops.buyDecor(tsukiji, tsukiji.decor[0]), isFalse);
+    expect(shop.buyFurniture(lantern), isFalse);
   });
 
-  test('second restaurant gates its levels until bought', () {
-    expect(state().maxPlayableLevel, 15);
-    expect(shops.buyShop(osaka), isFalse);
-    for (var i = 1; i <= 8; i++) {
-      shops.recordStars(i, 3);
-    }
-    expect(shops.buyShop(osaka), isTrue);
-    expect(state().maxPlayableLevel, 30);
-    expect(state().available, 0);
+  test('customers fill the till by the hour, up to a cap', () {
+    shop.recordStars(1, 3);
+    shop.buyFurniture(lantern);
+    expect(shop.till(), 0);
+    now = now.add(const Duration(hours: 2));
+    expect(shop.till(), lantern.coinsPerHour * 2);
+    now = now.add(const Duration(days: 3));
+    expect(shop.till(), lantern.coinsPerHour * Restaurant.tillHours);
   });
 
-  test('finishing a restaurant pays coins and a Chopsticks, once', () {
-    for (var i = 1; i <= 6; i++) {
-      shops.recordStars(i, 3);
-    }
+  test('collecting moves the till into the wallet and empties it', () {
+    shop.recordStars(1, 3);
+    shop.buyFurniture(lantern);
+    now = now.add(const Duration(hours: 1));
     final coins = c.read(walletProvider).coins;
-    for (final d in tsukiji.decor) {
-      expect(shops.buyDecor(tsukiji, d), isTrue);
-    }
-    expect(state().shopComplete(tsukiji), isTrue);
-    final wallet = c.read(walletProvider);
-    expect(wallet.coins, coins + Restaurant.completeCoins);
-    expect(wallet.count(Booster.chopsticks), 1);
+    expect(shop.collect(), lantern.coinsPerHour);
+    expect(c.read(walletProvider).coins, coins + lantern.coinsPerHour);
+    expect(shop.till(), 0);
+    expect(shop.collect(), 0);
   });
 
-  test('purchases and stars survive a restart; reset clears them', () {
+  test('buying more keeps what the till earned at the old rate', () {
+    for (var i = 1; i <= 3; i++) {
+      shop.recordStars(i, 3);
+    }
+    shop.buyFurniture(lantern);
+    now = now.add(const Duration(hours: 1));
+    shop.buyFurniture(stool);
+    now = now.add(const Duration(hours: 1));
+    expect(shop.till(),
+        lantern.coinsPerHour + lantern.coinsPerHour + stool.coinsPerHour);
+  });
+
+  test('furniture, till and stars survive a restart; reset clears them', () {
     final store = MemoryStore();
-    final first = testContainer(store: store);
+    final first = testContainer(store: store, clock: () => now);
     first.read(restaurantProvider.notifier)
       ..recordStars(1, 3)
-      ..buyDecor(tsukiji, tsukiji.decor[0]);
+      ..buyFurniture(lantern);
+    now = now.add(const Duration(hours: 1));
 
-    final second = testContainer(store: store);
-    expect(
-        second.read(restaurantProvider).decorOwned(tsukiji, tsukiji.decor[0]),
-        isTrue);
+    final second = testContainer(store: store, clock: () => now);
+    expect(second.read(restaurantProvider).isOwned(lantern), isTrue);
     expect(second.read(restaurantProvider).earned, 3);
+    expect(
+        second.read(restaurantProvider.notifier).till(), lantern.coinsPerHour);
 
     second.read(restaurantProvider.notifier).reset();
     expect(second.read(restaurantProvider).earned, 0);
-    expect(
-        second.read(restaurantProvider).decorOwned(tsukiji, tsukiji.decor[0]),
-        isFalse);
+    expect(second.read(restaurantProvider).isOwned(lantern), isFalse);
     expect(testContainer(store: store).read(restaurantProvider).earned, 0);
+  });
+
+  test('purchases from the old per-region restaurants are refunded', () {
+    final store = MemoryStore()
+      ..put('stars_1', 3)
+      ..put('restaurant_owned', ['shop:osaka', 'decor:tsukiji:lantern']);
+    final s = testContainer(store: store).read(restaurantProvider);
+    expect(s.owned, isEmpty);
+    expect(s.available, 3);
   });
 }
