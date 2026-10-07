@@ -183,7 +183,6 @@ class LevelSelectScreen extends ConsumerWidget {
     final testMode = ref.watch(settingsProvider.select((s) => s.testMode));
     final cleared = testMode ? kLevelCount : ref.watch(progressProvider);
     final restaurant = ref.watch(restaurantProvider);
-    final maxPlayable = testMode ? kLevelCount : restaurant.maxPlayableLevel;
     // Rebuild on a language change; L10n reads it statically.
     ref.watch(settingsProvider.select((s) => s.language));
     return Scaffold(
@@ -199,16 +198,6 @@ class LevelSelectScreen extends ConsumerWidget {
             levelCount: kLevelCount,
             cleared: cleared,
             stars: restaurant.best,
-            maxPlayable: maxPlayable,
-            onShopLocked: (n) {
-              final shop = Restaurant.shopOfLevel(n);
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(SnackBar(
-                    content: Text(L10n.t('shopLockedHint', {
-                  'name': shop == null ? '' : L10n.t(shop.nameKey),
-                }))));
-            },
             onBack: () => Navigator.of(context).maybePop(),
             onRestaurant: () => _openRestaurant(context),
             onShop: () => _openShop(context),
@@ -394,12 +383,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                             ResultOverlay(
                               game: game,
                               onLevels: () => Navigator.of(context).pop(),
-                              onNext: widget.levelNumber < kLevelCount &&
-                                      (ref.read(settingsProvider).testMode ||
-                                          widget.levelNumber <
-                                              ref
-                                                  .read(restaurantProvider)
-                                                  .maxPlayableLevel)
+                              onNext: widget.levelNumber < kLevelCount
                                   ? () async {
                                       if (!await ensureLife(context, ref) ||
                                           !context.mounted) {

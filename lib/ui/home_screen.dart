@@ -1,12 +1,9 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/progress.dart';
 import '../core/settings.dart';
 import '../services/audio.dart';
-import '../services/restaurant.dart';
 import 'daily_reward_dialog.dart';
 import 'event_banner.dart';
 import 'event_dialog.dart';
@@ -62,15 +59,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   Widget build(BuildContext context) {
     final testMode = ref.watch(settingsProvider.select((s) => s.testMode));
     final cleared = testMode ? widget.levelCount : ref.watch(progressProvider);
-    final maxPlayable = testMode
-        ? widget.levelCount
-        : ref.watch(restaurantProvider).maxPlayableLevel;
     // Rebuild on a language change; L10n reads it statically.
     ref.watch(settingsProvider.select((s) => s.language));
-    // Past the last level (or the last unlocked restaurant) replay the latest.
-    final next = (cleared + 1)
-        .clamp(1, math.min(widget.levelCount, maxPlayable))
-        .toInt();
+    // Past the last level replay the latest.
+    final next = (cleared + 1).clamp(1, widget.levelCount).toInt();
     final t = Theme.of(context).textTheme;
     return Scaffold(
       body: DecoratedBox(

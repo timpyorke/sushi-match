@@ -17,8 +17,6 @@ class LevelSelectView extends StatefulWidget {
       required this.cleared,
       this.stars = const {},
       required this.onSelect,
-      this.maxPlayable,
-      required this.onShopLocked,
       this.onRestaurant,
       this.onShop,
       this.onSettings,
@@ -35,14 +33,8 @@ class LevelSelectView extends StatefulWidget {
   /// Best stars (1-3) per level number.
   final Map<int, int> stars;
   final ValueChanged<int> onSelect;
-
-  /// Highest level whose restaurant is unlocked; null means no limit.
-  final int? maxPlayable;
   final VoidCallback? onRestaurant;
   final VoidCallback? onShop;
-
-  /// Called when a level behind a locked restaurant is tapped.
-  final ValueChanged<int> onShopLocked;
   final VoidCallback? onSettings;
 
   @override
@@ -52,13 +44,7 @@ class LevelSelectView extends StatefulWidget {
 class _LevelSelectViewState extends State<LevelSelectView> {
   late final _layout = MapLayout(Restaurant.shops, widget.levelCount);
 
-  bool _shopLocked(int n) => n > (widget.maxPlayable ?? widget.levelCount);
-
   void _tap(int n) {
-    if (_shopLocked(n)) {
-      widget.onShopLocked(n);
-      return;
-    }
     if (n > widget.cleared + 1) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
@@ -124,7 +110,8 @@ class _LevelSelectViewState extends State<LevelSelectView> {
             layout: _layout,
             cleared: widget.cleared,
             stars: widget.stars,
-            lockedShop: (s) => _shopLocked(_layout.shops[s].firstLevel),
+            // A region stays dimmed until the player reaches its first level.
+            lockedShop: (s) => _layout.shops[s].firstLevel > widget.cleared + 1,
             onTap: _tap,
           ),
         ),

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -5,117 +7,77 @@ import '../core/settings.dart';
 import 'store.dart';
 import 'wallet.dart';
 
-class DecorDef {
-  const DecorDef(this.id, this.emoji, this.cost);
+/// A piece of furniture for the player's restaurant: bought once with stars,
+/// it draws more customers, who pay [coinsPerHour] into the till.
+class FurnitureDef {
+  const FurnitureDef(this.id, this.emoji, this.cost, this.coinsPerHour);
   final String id;
   final String emoji;
   final int cost;
+  final int coinsPerHour;
 
-  String get nameKey => 'decor_$id';
+  String get nameKey => 'furn_$id';
 }
 
-/// One restaurant: a block of levels, bought with stars, then decorated.
+/// One region of the level map: a block of levels with its own name, map
+/// band and music. Regions open by clearing levels, not by buying.
 class ShopDef {
-  const ShopDef(this.id, this.emoji, this.firstLevel, this.lastLevel,
-      this.unlockCost, this.decor);
+  const ShopDef(this.id, this.emoji, this.firstLevel, this.lastLevel);
   final String id;
   final String emoji;
   final int firstLevel;
   final int lastLevel;
-  final int unlockCost;
-  final List<DecorDef> decor;
 
   String get nameKey => 'shop_$id';
 }
 
-/// Restaurant definitions and constants.
+/// Map regions, the furniture catalogue and the till's constants.
 ///
-/// Pacing (a mid-skill bot averages ~2.2 stars a level): the first 15 levels
-/// pay roughly 30 stars, so the second restaurant (24) plus the first one's
-/// decoration (16) cannot both be afforded on the first pass. Replaying for
-/// 3 stars closes the gap. Unlock costs after Hokkaido stay near 40 so that
-/// buying every restaurant in turn (without decor) needs ~90% of the
-/// stars available so far; decor is the optional star sink.
+/// Pacing (a mid-skill bot averages ~2.2 stars a level, ~450 over 205
+/// levels): the furniture costs 400 stars in all, so a player furnishes the
+/// whole restaurant near the end of the map, sooner by replaying for 3 stars.
 abstract final class Restaurant {
   static const shops = [
-    ShopDef('tsukiji', '🐟', 1, 15, 0, [
-      DecorDef('lantern', '🏮', 3),
-      DecorDef('table', '🪑', 5),
-      DecorDef('sign', '🪧', 8),
-    ]),
-    ShopDef('osaka', '🍢', 16, 30, 24, [
-      DecorDef('lantern', '🏮', 5),
-      DecorDef('table', '🪑', 8),
-      DecorDef('sign', '🪧', 12),
-    ]),
-    ShopDef('kyoto', '⛩️', 31, 45, 40, [
-      DecorDef('lantern', '🏮', 7),
-      DecorDef('table', '🪑', 10),
-      DecorDef('sign', '🪧', 14),
-    ]),
-    ShopDef('hokkaido', '🦀', 46, 60, 60, [
-      DecorDef('lantern', '🏮', 8),
-      DecorDef('table', '🪑', 12),
-      DecorDef('sign', '🪧', 16),
-    ]),
-    ShopDef('fukuoka', '🍜', 61, 75, 38, [
-      DecorDef('lantern', '🏮', 9),
-      DecorDef('table', '🪑', 13),
-      DecorDef('sign', '🪧', 18),
-    ]),
-    ShopDef('okinawa', '🌺', 76, 90, 40, [
-      DecorDef('lantern', '🏮', 10),
-      DecorDef('table', '🪑', 15),
-      DecorDef('sign', '🪧', 20),
-    ]),
-    ShopDef('omakase', '👑', 91, 100, 42, [
-      DecorDef('lantern', '🏮', 12),
-      DecorDef('table', '🪑', 17),
-      DecorDef('sign', '🪧', 24),
-    ]),
-    ShopDef('nagoya', '🍤', 101, 115, 36, [
-      DecorDef('lantern', '🏮', 12),
-      DecorDef('table', '🪑', 18),
-      DecorDef('sign', '🪧', 25),
-    ]),
-    ShopDef('hiroshima', '🦪', 116, 130, 40, [
-      DecorDef('lantern', '🏮', 13),
-      DecorDef('table', '🪑', 19),
-      DecorDef('sign', '🪧', 26),
-    ]),
-    ShopDef('kanazawa', '🍱', 131, 145, 42, [
-      DecorDef('lantern', '🏮', 14),
-      DecorDef('table', '🪑', 20),
-      DecorDef('sign', '🪧', 27),
-    ]),
-    ShopDef('sendai', '🍖', 146, 160, 42, [
-      DecorDef('lantern', '🏮', 15),
-      DecorDef('table', '🪑', 21),
-      DecorDef('sign', '🪧', 28),
-    ]),
-    ShopDef('kobe', '⚓', 161, 175, 44, [
-      DecorDef('lantern', '🏮', 16),
-      DecorDef('table', '🪑', 22),
-      DecorDef('sign', '🪧', 30),
-    ]),
-    ShopDef('nara', '🦌', 176, 190, 44, [
-      DecorDef('lantern', '🏮', 17),
-      DecorDef('table', '🪑', 23),
-      DecorDef('sign', '🪧', 31),
-    ]),
-    ShopDef('ginza', '🌟', 191, 205, 46, [
-      DecorDef('lantern', '🏮', 18),
-      DecorDef('table', '🪑', 25),
-      DecorDef('sign', '🪧', 34),
-    ]),
+    ShopDef('tsukiji', '🐟', 1, 15),
+    ShopDef('osaka', '🍢', 16, 30),
+    ShopDef('kyoto', '⛩️', 31, 45),
+    ShopDef('hokkaido', '🦀', 46, 60),
+    ShopDef('fukuoka', '🍜', 61, 75),
+    ShopDef('okinawa', '🌺', 76, 90),
+    ShopDef('omakase', '👑', 91, 100),
+    ShopDef('nagoya', '🍤', 101, 115),
+    ShopDef('hiroshima', '🦪', 116, 130),
+    ShopDef('kanazawa', '🍱', 131, 145),
+    ShopDef('sendai', '🍖', 146, 160),
+    ShopDef('kobe', '⚓', 161, 175),
+    ShopDef('nara', '🦌', 176, 190),
+    ShopDef('ginza', '🌟', 191, 205),
   ];
 
-  /// Number of levels in the game: the end of the last restaurant. To add
+  /// Cheapest first; the scene places each by id.
+  static const furniture = [
+    FurnitureDef('lantern', '🏮', 2, 2),
+    FurnitureDef('stool', '🪑', 4, 2),
+    FurnitureDef('noren', '🎏', 7, 3),
+    FurnitureDef('sign', '🪧', 10, 3),
+    FurnitureDef('plant', '🪴', 15, 4),
+    FurnitureDef('luckycat', '🐱', 20, 4),
+    FurnitureDef('aquarium', '🐠', 28, 5),
+    FurnitureDef('conveyor', '🍣', 38, 5),
+    FurnitureDef('kadomatsu', '🎍', 50, 6),
+    FurnitureDef('taiko', '🥁', 62, 6),
+    FurnitureDef('sake', '🍶', 74, 8),
+    FurnitureDef('trophy', '🏆', 90, 10),
+  ];
+
+  /// The till stops filling after this long, so coming back pays off but
+  /// staying away does not pay more.
+  static const tillHours = 6;
+
+  /// Number of levels in the game: the end of the last region. To add
   /// levels, extend the last shop or append a new one (see
   /// docs/adding-levels.md).
   static int get totalLevels => shops.last.lastLevel;
-
-  static const completeCoins = 100;
 
   static ShopDef? shopOfLevel(int level) {
     for (final s in shops) {
@@ -125,68 +87,95 @@ abstract final class Restaurant {
   }
 }
 
-/// Stars earned from levels are spent on new restaurants and their
-/// decorations. Spent stars are derived from what is owned, so there is no
-/// counter to drift out of sync.
+/// Stars earned from levels buy furniture; furniture brings customers whose
+/// coins collect in the till. Spent stars are derived from what is owned,
+/// and the till is computed from the clock when asked (like lives), so
+/// there is no counter to drift out of sync and no background timer.
 @immutable
 class RestaurantState {
-  const RestaurantState({this.best = const {}, this.owned = const {}});
+  const RestaurantState(
+      {this.best = const {},
+      this.owned = const {},
+      this.banked = 0,
+      this.since});
 
   /// Best star count per level.
   final Map<int, int> best;
 
-  /// 'shop:<id>' and 'decor:<shop>:<decor>' entries.
+  /// Ids of the furniture bought.
   final Set<String> owned;
+
+  /// Till coins earned at an earlier, lower rate (before the last purchase).
+  final int banked;
+
+  /// When the till last started filling at the current rate; null before
+  /// the first piece of furniture.
+  final DateTime? since;
 
   int get earned => best.values.fold(0, (a, b) => a + b);
 
-  int get spent {
-    var total = 0;
-    for (final s in Restaurant.shops) {
-      if (shopUnlocked(s)) total += s.unlockCost;
-      for (final d in s.decor) {
-        if (decorOwned(s, d)) total += d.cost;
-      }
-    }
-    return total;
-  }
+  int get spent =>
+      Restaurant.furniture.where(isOwned).fold(0, (total, f) => total + f.cost);
 
   int get available => earned - spent;
 
   int bestStars(int level) => best[level] ?? 0;
 
-  bool shopUnlocked(ShopDef s) =>
-      s.unlockCost == 0 || owned.contains('shop:${s.id}');
+  bool isOwned(FurnitureDef f) => owned.contains(f.id);
 
-  bool decorOwned(ShopDef s, DecorDef d) =>
-      owned.contains('decor:${s.id}:${d.id}');
+  bool get fullyFurnished => Restaurant.furniture.every(isOwned);
 
-  bool shopComplete(ShopDef s) => s.decor.every((d) => decorOwned(s, d));
+  /// What the customers pay per hour with the furniture bought so far.
+  int get coinsPerHour => Restaurant.furniture
+      .where(isOwned)
+      .fold(0, (total, f) => total + f.coinsPerHour);
 
-  /// Highest level the player may enter: the end of the last shop reached
-  /// without skipping a locked one.
-  int get maxPlayableLevel {
-    var last = 0;
-    for (final s in Restaurant.shops) {
-      if (!shopUnlocked(s)) break;
-      last = s.lastLevel;
-    }
-    return last;
+  int get tillCap => coinsPerHour * Restaurant.tillHours;
+
+  /// Coins waiting in the till at [now].
+  int till(DateTime now) {
+    final from = since;
+    if (from == null) return banked;
+    final secs = math.max(0, now.difference(from).inSeconds);
+    return math.min(tillCap, banked + secs * coinsPerHour ~/ 3600);
   }
+
+  RestaurantState copyWith(
+          {Map<int, int>? best,
+          Set<String>? owned,
+          int? banked,
+          DateTime? since}) =>
+      RestaurantState(
+        best: best ?? this.best,
+        owned: owned ?? this.owned,
+        banked: banked ?? this.banked,
+        since: since ?? this.since,
+      );
 }
 
 class RestaurantNotifier extends Notifier<RestaurantState> {
   static const _ownedKey = 'restaurant_owned';
+  static const _bankedKey = 'restaurant_banked';
+  static const _sinceKey = 'restaurant_since';
+
+  DateTime _now() => ref.read(clockProvider)();
 
   @override
   RestaurantState build() {
     final s = ref.read(storeProvider);
+    final ids = {for (final f in Restaurant.furniture) f.id};
+    final ms = s.get<int>(_sinceKey);
     return RestaurantState(
       best: {
         for (final k in s.keys.where((k) => k.startsWith('stars_')))
           int.parse(k.substring(6)): s.get<int>(k) ?? 0,
       },
-      owned: (s.getStringList(_ownedKey) ?? const []).toSet(),
+      // Saves from the old one-restaurant-per-region design hold
+      // 'shop:…'/'decor:…' entries; dropping them refunds their stars.
+      owned:
+          (s.getStringList(_ownedKey) ?? const []).where(ids.contains).toSet(),
+      banked: s.get<int>(_bankedKey) ?? 0,
+      since: ms == null ? null : DateTime.fromMillisecondsSinceEpoch(ms),
     );
   }
 
@@ -194,41 +183,43 @@ class RestaurantNotifier extends Notifier<RestaurantState> {
   int recordStars(int level, int stars) {
     final before = state.bestStars(level);
     if (stars <= before) return 0;
-    state = RestaurantState(
-        best: {...state.best, level: stars}, owned: state.owned);
+    state = state.copyWith(best: {...state.best, level: stars});
     ref.read(storeProvider).put('stars_$level', stars);
     return stars - before;
   }
 
-  void _own(String id) {
-    state = RestaurantState(best: state.best, owned: {...state.owned, id});
-    ref.read(storeProvider).put(_ownedKey, state.owned.toList());
-  }
+  int till() => state.till(_now());
 
-  bool buyShop(ShopDef s) {
-    final free = ref.read(settingsProvider).testMode;
-    if (state.shopUnlocked(s) || (!free && state.available < s.unlockCost)) {
+  /// Returns true when the purchase happened. The till keeps what it earned
+  /// at the old rate and fills faster from now on.
+  bool buyFurniture(FurnitureDef f) {
+    if (state.isOwned(f) ||
+        (!ref.read(settingsProvider).testMode && state.available < f.cost)) {
       return false;
     }
-    _own('shop:${s.id}');
+    final now = _now();
+    _set(state.copyWith(
+        owned: {...state.owned, f.id}, banked: state.till(now), since: now));
     return true;
   }
 
-  /// Returns true when the purchase happened. Finishing the last decoration
-  /// of a shop pays out coins plus a free Chopsticks.
-  bool buyDecor(ShopDef s, DecorDef d) {
-    if (!state.shopUnlocked(s) ||
-        state.decorOwned(s, d) ||
-        (!ref.read(settingsProvider).testMode && state.available < d.cost)) {
-      return false;
-    }
-    _own('decor:${s.id}:${d.id}');
-    if (state.shopComplete(s)) {
-      final wallet = ref.read(walletProvider.notifier);
-      wallet.earn(Restaurant.completeCoins);
-      wallet.grant(Booster.chopsticks, 1);
-    }
-    return true;
+  /// Moves the till's coins into the wallet. Returns how many.
+  int collect() {
+    final now = _now();
+    final coins = state.till(now);
+    if (coins <= 0) return 0;
+    ref.read(walletProvider.notifier).earn(coins);
+    _set(state.copyWith(banked: 0, since: now));
+    return coins;
+  }
+
+  void _set(RestaurantState next) {
+    state = next;
+    final s = ref.read(storeProvider);
+    s.put(_ownedKey, next.owned.toList());
+    s.put(_bankedKey, next.banked);
+    final since = next.since;
+    if (since != null) s.put(_sinceKey, since.millisecondsSinceEpoch);
   }
 
   void reset() {
@@ -237,6 +228,8 @@ class RestaurantNotifier extends Notifier<RestaurantState> {
       s.remove(k);
     }
     s.remove(_ownedKey);
+    s.remove(_bankedKey);
+    s.remove(_sinceKey);
     state = const RestaurantState();
   }
 }
