@@ -1,0 +1,68 @@
+{
+  "id": 175,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    "A.....B..",
+    ".........",
+    "..DDDDD..",
+    "..D...D..",
+    "..D...D..",
+    "..D...DE.",
+    "..DDDDD..",
+    ".........",
+    "..H.J...."
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "A": "portal_out:2",
+    "B": "portal_out:1",
+    "D": "nori:2",
+    "E": "cat:2",
+    "H": "portal_in:1",
+    "J": "portal_in:2"
+  },
+  "pieces": [
+    "salmon",
+    "unagi",
+    "tamago",
+    "ika",
+    "hotate",
+    "kappa"
+  ],
+  "moves": 29,
+  "goals": [
+    {
+      "type": "clear_nori"
+    },
+    {
+      "type": "shoo_cats"
+    },
+    {
+      "type": "collect",
+      "piece": "unagi",
+      "count": 66
+    },
+    {
+      "type": "collect",
+      "piece": "hotate",
+      "count": 66
+    }
+  ],
+  "stars": [15300, 19500, 23800],
+  "conveyors": [
+    {
+      "row": 3,
+      "dir": "right"
+    },
+    {
+      "row": 5,
+      "dir": "left"
+    }
+  ],
+  "seed": 623975
+}

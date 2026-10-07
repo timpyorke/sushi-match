@@ -1,0 +1,45 @@
+{
+  "id": 147,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    "XX.....XX",
+    "X.......X",
+    "....F....",
+    ".........",
+    ".F.......",
+    ".......F.",
+    ".........",
+    "X.......X",
+    "XX.....XX"
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "F": "fire"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "tako",
+    "ikura",
+    "ebi",
+    "kappa"
+  ],
+  "moves": 50,
+  "goals": [
+    {
+      "type": "put_out"
+    },
+    {
+      "type": "collect",
+      "piece": "salmon",
+      "count": 60
+    }
+  ],
+  "stars": [10600, 14800, 20700],
+  "seed": 620139
+}

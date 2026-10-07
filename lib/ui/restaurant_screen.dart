@@ -167,6 +167,20 @@ const _palettes = {
       Color(0xFFFFF6DF), Color(0xFFD9B98A)),
   'omakase': _Palette(Color(0xFF3A2A3F), Color(0xFFC9A66B), Color(0xFF8E1B2D),
       Color(0xFFF6E3B0), Color(0xFF3B2A22)),
+  'nagoya': _Palette(Color(0xFFF7DDA8), Color(0xFFE7C78E), Color(0xFFD9822B),
+      Color(0xFFFFF4DA), Color(0xFFA0703F)),
+  'hiroshima': _Palette(Color(0xFFBFDCEB), Color(0xFFD9D2BC), Color(0xFF2F6F93),
+      Color(0xFFF2F6F8), Color(0xFF7F6A55)),
+  'kanazawa': _Palette(Color(0xFFF3E6B5), Color(0xFFE3D2A2), Color(0xFFB8901C),
+      Color(0xFFFFF8E1), Color(0xFF7A5B33)),
+  'sendai': _Palette(Color(0xFF3B2F55), Color(0xFFCFB590), Color(0xFF6E3F9C),
+      Color(0xFFFFEBC4), Color(0xFF5C4232)),
+  'kobe': _Palette(Color(0xFFB9D3EE), Color(0xFFDCD3BE), Color(0xFF1F4E8C),
+      Color(0xFFFFFFFF), Color(0xFF8A6F55)),
+  'nara': _Palette(Color(0xFFD5EBC4), Color(0xFFD9C9A2), Color(0xFF4F8A35),
+      Color(0xFFF7F0D8), Color(0xFF8B6A44)),
+  'ginza': _Palette(Color(0xFF22252E), Color(0xFFC7C3B8), Color(0xFF9A1F2F),
+      Color(0xFFE9E6DF), Color(0xFF2E2A27)),
 };
 
 /// A little street stall that fills up as decorations are bought. Empty

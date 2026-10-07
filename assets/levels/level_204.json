@@ -1,0 +1,50 @@
+{
+  "id": 204,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    "XX.....XX",
+    "XX.....XX",
+    "XX.....XX",
+    "XX.....XX",
+    "....T.A..",
+    "...B.....",
+    ".........",
+    ".........",
+    "........."
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "A": "cat:2",
+    "B": "bomb:12",
+    "T": "mat"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "unagi",
+    "hotate",
+    "ika",
+    "tako"
+  ],
+  "moves": 50,
+  "goals": [
+    {
+      "type": "clear_mats"
+    },
+    {
+      "type": "shoo_cats"
+    },
+    {
+      "type": "collect",
+      "piece": "salmon",
+      "count": 62
+    }
+  ],
+  "stars": [10300, 14200, 17500],
+  "seed": 627948
+}

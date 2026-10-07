@@ -1,0 +1,50 @@
+{
+  "id": 188,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    ".........",
+    ".........",
+    "..A...A..",
+    ".........",
+    "....T....",
+    ".........",
+    "..A...A..",
+    ".........",
+    "........."
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "A": "bag:2",
+    "T": "mat"
+  },
+  "pieces": [
+    "maguro",
+    "tako",
+    "tamago",
+    "ikura",
+    "hotate",
+    "ika"
+  ],
+  "moves": 44,
+  "goals": [
+    {
+      "type": "clear_mats"
+    },
+    {
+      "type": "break_bag"
+    },
+    {
+      "type": "collect",
+      "piece": "tamago",
+      "count": 66
+    }
+  ],
+  "stars": [10100, 15200, 19500],
+  "gravity": "right",
+  "seed": 625756
+}

@@ -1,0 +1,46 @@
+{
+  "id": 164,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    "XXX...XXX",
+    "XX.....XX",
+    "X...N...X",
+    "....N....",
+    "..NNNNN..",
+    "....N....",
+    "X...N...X",
+    "XX.....XX",
+    "XXX...XXX"
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "N": "nori:1"
+  },
+  "pieces": [
+    "salmon",
+    "unagi",
+    "tamago",
+    "ika",
+    "hotate",
+    "kappa"
+  ],
+  "moves": 50,
+  "goals": [
+    {
+      "type": "clear_nori"
+    },
+    {
+      "type": "collect",
+      "piece": "hotate",
+      "count": 61
+    }
+  ],
+  "stars": [10000, 13400, 15900],
+  "gravity": "up",
+  "seed": 622468
+}

@@ -1,0 +1,52 @@
+{
+  "id": 174,
+  "version": 1,
+  "board": {
+    "cols": 8,
+    "rows": 8
+  },
+  "layout": [
+    ".....A..",
+    "........",
+    "........",
+    "...BBB..",
+    "...BBB..",
+    "...BBB..",
+    "........",
+    "...D...."
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "A": "portal_out:1",
+    "B": "ice:2",
+    "D": "portal_in:1"
+  },
+  "pieces": [
+    "salmon",
+    "unagi",
+    "tamago",
+    "ika",
+    "hotate",
+    "kappa"
+  ],
+  "moves": 44,
+  "goals": [
+    {
+      "type": "break_ice"
+    },
+    {
+      "type": "collect",
+      "piece": "ika",
+      "count": 66
+    }
+  ],
+  "stars": [11000, 15700, 20300],
+  "conveyors": [
+    {
+      "row": 2,
+      "dir": "left"
+    }
+  ],
+  "seed": 623838
+}

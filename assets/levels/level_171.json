@@ -1,0 +1,46 @@
+{
+  "id": 171,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    "XXX...XXX",
+    "XX.....XX",
+    "X.......X",
+    ".........",
+    ".......F.",
+    ".........",
+    "X...F...X",
+    "XX.....XX",
+    "XXX...XXX"
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "F": "fire"
+  },
+  "pieces": [
+    "salmon",
+    "unagi",
+    "tamago",
+    "ika",
+    "hotate",
+    "kappa"
+  ],
+  "moves": 50,
+  "goals": [
+    {
+      "type": "put_out"
+    },
+    {
+      "type": "collect",
+      "piece": "tamago",
+      "count": 45
+    }
+  ],
+  "stars": [9300, 13900, 18100],
+  "gravity": "right",
+  "seed": 623427
+}

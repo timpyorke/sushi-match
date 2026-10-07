@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print
 // Sets each level's `moves`, goal counts and `stars` so a greedy bot hits a difficulty
 // curve: win rate falls from 98% (level 1) to 68% (level 20), then to ~52% by
-// level 100; the share of
+// level 100 and ~50% by level 200; the share of
 // plays reaching 3 stars falls from 50% to 15%. Moves follow a fixed schedule
 // and goal counts are scaled to fit. Humans out-plan the bot, so
 // real players will find levels a little easier than the targets.
@@ -81,9 +81,16 @@ void main(List<String> args) {
     // Past level 21 the curve flattens (68% -> 60%); every 5th level is a
     // hard one and every 15th a boss (GDD sawtooth).
     final late = base.id > 21 ? ((base.id - 21) / 29).clamp(0.0, 1.0) : 0.0;
-    // Levels 51-100 keep easing from 58% to 52%; the finale (100) is a boss.
+    // Levels 51-100 keep easing from 58% to 52%; level 100 is a boss.
     final deep = base.id > 50 ? ((base.id - 50) / 50).clamp(0.0, 1.0) : 0.0;
-    final dip = base.id % 15 == 0 || base.id == 100
+    // Past 100 the curve eases on to 50% by 200 and stays there. Those
+    // restaurants start at 101, so bosses sit 15 apart from there (115, 130
+    // ... 190, 205 ...). There is no final level; the game keeps growing.
+    final far = base.id > 100 ? ((base.id - 100) / 100).clamp(0.0, 1.0) : 0.0;
+    final boss = base.id > 100
+        ? (base.id - 100) % 15 == 0
+        : base.id % 15 == 0 || base.id == 100;
+    final dip = boss
         ? 0.18
         : base.id % 5 == 0
             ? 0.12
@@ -91,7 +98,10 @@ void main(List<String> args) {
     final targetWin = base.id == 21
         ? 0.66
         : base.id > 21
-            ? _lerp(0.66, 0.58, late) - _lerp(0, 0.06, deep) - dip
+            ? _lerp(0.66, 0.58, late) -
+                _lerp(0, 0.06, deep) -
+                _lerp(0, 0.02, far) -
+                dip
             : _lerp(0.98, 0.68, t);
     final target3 =
         base.id > 20 ? _lerp(0.15, 0.10, late) : _lerp(0.50, 0.15, t);

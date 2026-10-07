@@ -1,0 +1,55 @@
+{
+  "id": 191,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    ".........",
+    ".........",
+    "..AAAAA..",
+    "..ABBBA..",
+    "..ABBBA..",
+    "..ABBBA..",
+    "..AAAAA..",
+    ".........",
+    "........."
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "A": "nori:2",
+    "B": "ice:2"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "unagi",
+    "hotate",
+    "ika",
+    "tako"
+  ],
+  "moves": 43,
+  "goals": [
+    {
+      "type": "clear_nori"
+    },
+    {
+      "type": "break_ice"
+    },
+    {
+      "type": "collect",
+      "piece": "unagi",
+      "count": 66
+    }
+  ],
+  "stars": [11800, 15500, 18600],
+  "conveyors": [
+    {
+      "row": 3,
+      "dir": "right"
+    }
+  ],
+  "seed": 626167
+}

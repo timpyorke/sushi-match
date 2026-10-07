@@ -73,6 +73,41 @@ abstract final class Restaurant {
       DecorDef('table', '🪑', 17),
       DecorDef('sign', '🪧', 24),
     ]),
+    ShopDef('nagoya', '🍤', 101, 115, 36, [
+      DecorDef('lantern', '🏮', 12),
+      DecorDef('table', '🪑', 18),
+      DecorDef('sign', '🪧', 25),
+    ]),
+    ShopDef('hiroshima', '🦪', 116, 130, 40, [
+      DecorDef('lantern', '🏮', 13),
+      DecorDef('table', '🪑', 19),
+      DecorDef('sign', '🪧', 26),
+    ]),
+    ShopDef('kanazawa', '🍱', 131, 145, 42, [
+      DecorDef('lantern', '🏮', 14),
+      DecorDef('table', '🪑', 20),
+      DecorDef('sign', '🪧', 27),
+    ]),
+    ShopDef('sendai', '🍖', 146, 160, 42, [
+      DecorDef('lantern', '🏮', 15),
+      DecorDef('table', '🪑', 21),
+      DecorDef('sign', '🪧', 28),
+    ]),
+    ShopDef('kobe', '⚓', 161, 175, 44, [
+      DecorDef('lantern', '🏮', 16),
+      DecorDef('table', '🪑', 22),
+      DecorDef('sign', '🪧', 30),
+    ]),
+    ShopDef('nara', '🦌', 176, 190, 44, [
+      DecorDef('lantern', '🏮', 17),
+      DecorDef('table', '🪑', 23),
+      DecorDef('sign', '🪧', 31),
+    ]),
+    ShopDef('ginza', '🌟', 191, 205, 46, [
+      DecorDef('lantern', '🏮', 18),
+      DecorDef('table', '🪑', 25),
+      DecorDef('sign', '🪧', 34),
+    ]),
   ];
 
   /// Number of levels in the game: the end of the last restaurant. To add

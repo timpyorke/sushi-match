@@ -1,0 +1,49 @@
+{
+  "id": 105,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    "XX.....XX",
+    "X.......X",
+    "..IIIIIA.",
+    "..I...I..",
+    "..I...I..",
+    "..I...I..",
+    "..IIIII..",
+    "X.......X",
+    "XX.....XX"
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "A": "cat:1",
+    "I": "ice:1"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "tamago",
+    "ika",
+    "ebi",
+    "kappa"
+  ],
+  "moves": 43,
+  "goals": [
+    {
+      "type": "break_ice"
+    },
+    {
+      "type": "shoo_cats"
+    },
+    {
+      "type": "collect",
+      "piece": "ika",
+      "count": 60
+    }
+  ],
+  "stars": [9300, 12800, 15800],
+  "seed": 614385
+}

@@ -1,0 +1,50 @@
+{
+  "id": 184,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    "XX.....XX",
+    "X.......X",
+    ".........",
+    ".........",
+    "....T....",
+    "...F.....",
+    ".......F.",
+    "X.......X",
+    "XX.....XX"
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "T": "mat",
+    "F": "fire"
+  },
+  "pieces": [
+    "maguro",
+    "tako",
+    "tamago",
+    "ikura",
+    "hotate",
+    "ika"
+  ],
+  "moves": 50,
+  "goals": [
+    {
+      "type": "clear_mats"
+    },
+    {
+      "type": "put_out"
+    },
+    {
+      "type": "collect",
+      "piece": "ikura",
+      "count": 64
+    }
+  ],
+  "stars": [10600, 15800, 20700],
+  "gravity": "left",
+  "seed": 625208
+}

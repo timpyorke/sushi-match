@@ -1,0 +1,50 @@
+{
+  "id": 196,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    "XX.....XX",
+    "XX.....XX",
+    "XXNNNNNXX",
+    "XXN...NXX",
+    "..N.A.N..",
+    "..N...N..",
+    "..NNNNN..",
+    ".........",
+    "........."
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "A": "bag:3",
+    "N": "nori:1"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "unagi",
+    "hotate",
+    "ika",
+    "tako"
+  ],
+  "moves": 50,
+  "goals": [
+    {
+      "type": "clear_nori"
+    },
+    {
+      "type": "break_bag"
+    },
+    {
+      "type": "collect",
+      "piece": "unagi",
+      "count": 61
+    }
+  ],
+  "stars": [9000, 13200, 17100],
+  "gravity": "left",
+  "seed": 626852
+}

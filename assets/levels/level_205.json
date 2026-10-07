@@ -1,0 +1,76 @@
+{
+  "id": 205,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    "A.....B..",
+    ".........",
+    "..DEEED..",
+    "..EHHHE..",
+    "..EHHHE..",
+    "..EHHHEF.",
+    ".FDEEED..",
+    ".........",
+    "..J.L...."
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "A": "portal_out:2",
+    "B": "portal_out:1",
+    "D": "bag:2",
+    "E": "nori:2",
+    "H": "ice:2",
+    "J": "portal_in:1",
+    "L": "portal_in:2",
+    "F": "fire"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "unagi",
+    "hotate",
+    "ika",
+    "tako"
+  ],
+  "moves": 34,
+  "goals": [
+    {
+      "type": "clear_nori"
+    },
+    {
+      "type": "break_ice"
+    },
+    {
+      "type": "break_bag"
+    },
+    {
+      "type": "put_out"
+    },
+    {
+      "type": "collect",
+      "piece": "ika",
+      "count": 66
+    },
+    {
+      "type": "collect",
+      "piece": "tako",
+      "count": 66
+    }
+  ],
+  "stars": [14800, 20000, 24000],
+  "conveyors": [
+    {
+      "row": 3,
+      "dir": "right"
+    },
+    {
+      "row": 5,
+      "dir": "left"
+    }
+  ],
+  "seed": 628085
+}

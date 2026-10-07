@@ -1,6 +1,6 @@
 # Adding levels and restaurants
 
-The game has **100 levels in 7 restaurants**. Everything that depends on the
+The game has **205 levels in 14 restaurants**. Everything that depends on the
 level count is derived from `Restaurant.shops` (`lib/services/restaurant.dart`),
 so growing the game is data, not code.
 
@@ -12,9 +12,16 @@ so growing the game is data, not code.
 | Hokkaido | 46–60 | Locks, bombs, portals, gravity |
 | Fukuoka | 61–75 | Two mechanics at once |
 | Okinawa | 76–90 | Sideways gravity, portals, bombs |
-| Omakase | 91–100 | Finale: 3–4 mechanics, boss at 100 |
+| Omakase | 91–100 | 3–4 mechanics, boss at 100 |
+| Nagoya | 101–115 | Squid (ika) joins; new shapes (square8, tee9, cup9); recap |
+| Hiroshima | 116–130 | Thick blockers: 2–3 layers of ice, nori, bags |
+| Kanazawa | 131–145 | Octopus (tako) joins; deliveries and locks |
+| Sendai | 146–160 | Cats, fire and bombs |
+| Kobe | 161–175 | Gravity, portals, conveyors |
+| Nara | 176–190 | Bamboo mats plus 2–3 other blockers |
+| Ginza | 191–205 | Every mechanic, boss at 205 |
 
-Difficulty is a sawtooth: every 5th level is harder, every 15th (and 100) a boss.
+Difficulty is a sawtooth: every 5th level is harder, every 15th (and 100) a boss. Past 100 the bosses close each 15-level restaurant (115, 130 … 190, 205 …). There is no final level: the game keeps growing.
 
 ## A. Add levels to the end
 
@@ -54,4 +61,4 @@ checks, which fail until each exists:
   border; portal entries on the bottom row, exits on the top row, gravity down.
 - Collect goals must use kinds listed in `pieces`.
 - Sprites exist for the first kinds of `PieceKind`; levels 76+ use `hotate`,
-  91+ use `unagi`.
+  91+ use `unagi`, 101+ `ika`, 131+ `tako`.

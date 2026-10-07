@@ -1,0 +1,51 @@
+{
+  "id": 143,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    "XXX...XXX",
+    "XX.....XX",
+    "X.AAAAABX",
+    "..A...A..",
+    "..A...A..",
+    ".BA...A..",
+    "X.AAAAA.X",
+    "XX.....XX",
+    "XXX...XXX"
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "A": "ice:2",
+    "B": "key:ikura"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "tako",
+    "ikura",
+    "ebi",
+    "kappa"
+  ],
+  "moves": 53,
+  "goals": [
+    {
+      "type": "break_ice"
+    },
+    {
+      "type": "collect",
+      "piece": "tako",
+      "count": 35
+    },
+    {
+      "type": "score",
+      "count": 10400
+    }
+  ],
+  "stars": [10800, 12900, 15200],
+  "gravity": "left",
+  "seed": 619591
+}

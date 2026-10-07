@@ -1,0 +1,50 @@
+{
+  "id": 193,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    "XXX...XXX",
+    "XX.....XX",
+    "X.A...A.X",
+    "......B..",
+    "....T....",
+    "....B....",
+    "X.A...A.X",
+    "XX.....XX",
+    "XXX...XXX"
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "A": "bag:2",
+    "B": "key:ika",
+    "T": "mat"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "unagi",
+    "hotate",
+    "ika",
+    "tako"
+  ],
+  "moves": 50,
+  "goals": [
+    {
+      "type": "clear_mats"
+    },
+    {
+      "type": "break_bag"
+    },
+    {
+      "type": "collect",
+      "piece": "hotate",
+      "count": 58
+    }
+  ],
+  "stars": [8900, 12200, 15900],
+  "seed": 626441
+}

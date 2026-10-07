@@ -1,0 +1,45 @@
+{
+  "id": 181,
+  "version": 1,
+  "board": {
+    "cols": 8,
+    "rows": 8
+  },
+  "layout": [
+    "........",
+    "........",
+    "..T...T.",
+    "...A....",
+    "........",
+    "..A.....",
+    "..T...T.",
+    "........"
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "A": "key:ika",
+    "T": "mat"
+  },
+  "pieces": [
+    "maguro",
+    "tako",
+    "tamago",
+    "ikura",
+    "hotate",
+    "ika"
+  ],
+  "moves": 50,
+  "goals": [
+    {
+      "type": "clear_mats"
+    },
+    {
+      "type": "collect",
+      "piece": "tamago",
+      "count": 64
+    }
+  ],
+  "stars": [10600, 15500, 19000],
+  "seed": 624797
+}

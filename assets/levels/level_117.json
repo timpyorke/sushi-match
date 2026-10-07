@@ -1,0 +1,45 @@
+{
+  "id": 117,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    "XX.....XX",
+    "X.......X",
+    "..AAAAA..",
+    "..A...A..",
+    "..A...A..",
+    "..A...A..",
+    "..AAAAA..",
+    "X.......X",
+    "XX.....XX"
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "A": "nori:2"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "tamago",
+    "ika",
+    "ebi",
+    "kappa"
+  ],
+  "moves": 45,
+  "goals": [
+    {
+      "type": "clear_nori"
+    },
+    {
+      "type": "collect",
+      "piece": "ika",
+      "count": 60
+    }
+  ],
+  "stars": [10000, 14900, 18700],
+  "seed": 616029
+}

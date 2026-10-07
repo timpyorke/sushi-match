@@ -1,0 +1,46 @@
+{
+  "id": 173,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    ".........",
+    ".........",
+    "..A...A..",
+    ".........",
+    ".........",
+    "XX.....XX",
+    "XXA...AXX",
+    "XX.....XX",
+    "XX.....XX"
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "A": "bag:2"
+  },
+  "pieces": [
+    "salmon",
+    "unagi",
+    "tamago",
+    "ika",
+    "hotate",
+    "kappa"
+  ],
+  "moves": 50,
+  "goals": [
+    {
+      "type": "break_bag"
+    },
+    {
+      "type": "collect",
+      "piece": "hotate",
+      "count": 63
+    }
+  ],
+  "stars": [10200, 14900, 18200],
+  "gravity": "up",
+  "seed": 623701
+}

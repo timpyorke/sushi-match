@@ -53,6 +53,13 @@ abstract final class Audio {
     'fukuoka': 'osaka',
     'okinawa': 'tsukiji',
     'omakase': 'kyoto',
+    'nagoya': 'osaka',
+    'hiroshima': 'tsukiji',
+    'kanazawa': 'kyoto',
+    'sendai': 'hokkaido',
+    'kobe': 'osaka',
+    'nara': 'kyoto',
+    'ginza': 'tsukiji',
   };
 
   /// The track a restaurant plays.

@@ -1,0 +1,44 @@
+{
+  "id": 156,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    ".........",
+    ".........",
+    ".FNNNNN..",
+    "..N...N..",
+    "..NF..N..",
+    "XXN...NXX",
+    "XXNNNNNXX",
+    "XX.....XX",
+    "XX.....XX"
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "N": "nori:1",
+    "F": "fire"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "tako",
+    "ikura",
+    "ebi",
+    "kappa"
+  ],
+  "moves": 50,
+  "goals": [
+    {
+      "type": "clear_nori"
+    },
+    {
+      "type": "put_out"
+    }
+  ],
+  "stars": [11000, 19700, 24600],
+  "seed": 621372
+}

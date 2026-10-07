@@ -77,6 +77,48 @@ const kMapRegions = {
       bottom: Color(0xFF9A6A12),
       land: Color(0xFFD9C08A),
       deco: {'m': 'c', 'f': 'c'}),
+  'nagoya': MapRegion(
+      kanji: '名古屋',
+      top: Color(0xFFE0A030),
+      bottom: Color(0xFFA86E10),
+      land: Color(0xFFD8CF8E),
+      deco: {'m': 'c'}),
+  'hiroshima': MapRegion(
+      kanji: '広島',
+      top: Color(0xFF3F8FB5),
+      bottom: Color(0xFF235E7F),
+      land: Color(0xFFB9D49A),
+      deco: {'c': 'f'}),
+  'kanazawa': MapRegion(
+      kanji: '金沢',
+      top: Color(0xFFC9A227),
+      bottom: Color(0xFF8C6D0F),
+      land: Color(0xFFCFE0B0),
+      deco: {'m': 'f'}),
+  'sendai': MapRegion(
+      kanji: '仙台',
+      top: Color(0xFF7A4FA8),
+      bottom: Color(0xFF4E2D75),
+      land: Color(0xFFC4D3A6),
+      deco: {'c': 'f', 'f': 'm'}),
+  'kobe': MapRegion(
+      kanji: '神戸',
+      top: Color(0xFF2F6DB5),
+      bottom: Color(0xFF1B467F),
+      land: Color(0xFFD6CDA8),
+      deco: {'m': 'c', 'f': 'c'}),
+  'nara': MapRegion(
+      kanji: '奈良',
+      top: Color(0xFF6FA84F),
+      bottom: Color(0xFF437A2C),
+      land: Color(0xFFA9CF86),
+      deco: {'c': 'f', 'm': 'f'}),
+  'ginza': MapRegion(
+      kanji: '銀座',
+      top: Color(0xFFB0B7C3),
+      bottom: Color(0xFF6E7685),
+      land: Color(0xFFD8D2C4),
+      deco: {'m': 'c', 'f': 'c'}),
 };
 
 /// Fallback for a restaurant added without a region entry yet, so a missing

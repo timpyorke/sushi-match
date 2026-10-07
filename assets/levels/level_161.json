@@ -1,0 +1,47 @@
+{
+  "id": 161,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    "........."
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void"
+  },
+  "pieces": [
+    "salmon",
+    "unagi",
+    "tamago",
+    "ika",
+    "hotate",
+    "kappa"
+  ],
+  "moves": 44,
+  "goals": [
+    {
+      "type": "collect",
+      "piece": "hotate",
+      "count": 60
+    },
+    {
+      "type": "collect",
+      "piece": "ika",
+      "count": 60
+    }
+  ],
+  "stars": [11500, 16600, 21000],
+  "gravity": "left",
+  "seed": 622057
+}

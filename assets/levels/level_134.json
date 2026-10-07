@@ -1,0 +1,46 @@
+{
+  "id": 134,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    "XXX...XXX",
+    "XX.....XX",
+    "X.NNNNN.X",
+    "..N...NA.",
+    "..N...N..",
+    "..N.A.N..",
+    "X.NNNNN.X",
+    "XX.....XX",
+    "XXX...XXX"
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "A": "key:ikura",
+    "N": "nori:1"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "tako",
+    "ikura",
+    "ebi",
+    "kappa"
+  ],
+  "moves": 50,
+  "goals": [
+    {
+      "type": "clear_nori"
+    },
+    {
+      "type": "collect",
+      "piece": "tako",
+      "count": 60
+    }
+  ],
+  "stars": [8800, 13100, 15900],
+  "seed": 618358
+}

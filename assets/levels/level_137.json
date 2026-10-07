@@ -1,0 +1,50 @@
+{
+  "id": 137,
+  "version": 1,
+  "board": {
+    "cols": 8,
+    "rows": 8
+  },
+  "layout": [
+    "........",
+    "........",
+    "........",
+    "........",
+    "........",
+    "........",
+    "........",
+    "........"
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "tako",
+    "ikura",
+    "ebi",
+    "kappa"
+  ],
+  "moves": 48,
+  "goals": [
+    {
+      "type": "deliver",
+      "count": 3
+    },
+    {
+      "type": "collect",
+      "piece": "ikura",
+      "count": 24
+    }
+  ],
+  "stars": [10100, 15700, 20300],
+  "conveyors": [
+    {
+      "row": 3,
+      "dir": "right"
+    }
+  ],
+  "seed": 618769
+}

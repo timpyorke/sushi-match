@@ -30,7 +30,7 @@ Three layers, with dependencies pointing downward only:
 - **`lib/game/`: the Flame view.** `BoardComponent` only *plays back* the engine's steps as animations; it must not decide rules. `SushiGame` exposes HUD state to Flutter.
 - **`lib/ui/` and `lib/main.dart`: Flutter UI** (HUD, level select, shop, restaurant, settings, dialogs). `l10n.dart` is a hand-rolled localisation (`L10n.language`).
 
-Levels are JSON in `assets/levels/level_NNN.json` (100 levels in 7 restaurants; see `docs/adding-levels.md` to add more; levels 61+ come from `tool/gen_levels.dart`). `tool/balance.dart`, `tune.dart` and `bots.dart` load and play them headlessly using the core engine.
+Levels are JSON in `assets/levels/level_NNN.json` (205 levels in 14 restaurants; see `docs/adding-levels.md` to add more; levels 61+ come from `tool/gen_levels.dart`). `tool/balance.dart`, `tune.dart` and `bots.dart` load and play them headlessly using the core engine.
 
 ### State and persistence
 

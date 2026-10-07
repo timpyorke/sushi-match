@@ -1,0 +1,46 @@
+{
+  "id": 141,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    "XX.....XX",
+    "X.......X",
+    "..AB..A..",
+    ".........",
+    ".........",
+    "...B.....",
+    "..A...A..",
+    "X.......X",
+    "XX.....XX"
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "A": "bag:2",
+    "B": "key:tako"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "tako",
+    "ikura",
+    "ebi",
+    "kappa"
+  ],
+  "moves": 49,
+  "goals": [
+    {
+      "type": "break_bag"
+    },
+    {
+      "type": "collect",
+      "piece": "maguro",
+      "count": 66
+    }
+  ],
+  "stars": [11400, 15300, 17700],
+  "seed": 619317
+}

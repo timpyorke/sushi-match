@@ -1,0 +1,58 @@
+{
+  "id": 195,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    "A.....B..",
+    ".........",
+    ".........",
+    ".D...F.D.",
+    ".D.....D.",
+    ".D.....D.",
+    ".......F.",
+    ".........",
+    "..E.H...."
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "A": "portal_out:2",
+    "B": "portal_out:1",
+    "D": "ice:2",
+    "E": "portal_in:1",
+    "H": "portal_in:2",
+    "F": "fire"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "unagi",
+    "hotate",
+    "ika",
+    "tako"
+  ],
+  "moves": 44,
+  "goals": [
+    {
+      "type": "break_ice"
+    },
+    {
+      "type": "put_out"
+    },
+    {
+      "type": "collect",
+      "piece": "maguro",
+      "count": 66
+    },
+    {
+      "type": "collect",
+      "piece": "ika",
+      "count": 66
+    }
+  ],
+  "stars": [16700, 24300, 30200],
+  "seed": 626715
+}

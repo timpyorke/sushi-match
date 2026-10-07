@@ -1,0 +1,51 @@
+{
+  "id": 135,
+  "version": 1,
+  "board": {
+    "cols": 8,
+    "rows": 8
+  },
+  "layout": [
+    "........",
+    "........",
+    "........",
+    "....A...",
+    "........",
+    ".....A..",
+    "........",
+    "........"
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "A": "key:maguro"
+  },
+  "pieces": [
+    "salmon",
+    "maguro",
+    "tako",
+    "ikura",
+    "ebi",
+    "kappa"
+  ],
+  "moves": 40,
+  "goals": [
+    {
+      "type": "deliver",
+      "count": 4
+    },
+    {
+      "type": "collect",
+      "piece": "tako",
+      "count": 30
+    }
+  ],
+  "stars": [7900, 11200, 14300],
+  "conveyors": [
+    {
+      "row": 4,
+      "dir": "right"
+    }
+  ],
+  "seed": 618495
+}

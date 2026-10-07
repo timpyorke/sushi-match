@@ -1,0 +1,55 @@
+{
+  "id": 180,
+  "version": 1,
+  "board": {
+    "cols": 9,
+    "rows": 9
+  },
+  "layout": [
+    ".........",
+    ".........",
+    "......A..",
+    ".........",
+    "....T....",
+    ".........",
+    "..A......",
+    ".........",
+    "........."
+  ],
+  "legend": {
+    ".": "cell",
+    "X": "void",
+    "A": "cat:1",
+    "T": "mat"
+  },
+  "pieces": [
+    "maguro",
+    "tako",
+    "tamago",
+    "ikura",
+    "hotate",
+    "ika"
+  ],
+  "moves": 37,
+  "goals": [
+    {
+      "type": "clear_mats"
+    },
+    {
+      "type": "shoo_cats"
+    },
+    {
+      "type": "collect",
+      "piece": "ika",
+      "count": 66
+    }
+  ],
+  "stars": [10800, 15300, 18500],
+  "conveyors": [
+    {
+      "row": 2,
+      "dir": "right"
+    }
+  ],
+  "seed": 624660
+}
