@@ -33,6 +33,13 @@ abstract final class PiecePainter {
     ..style = PaintingStyle.stroke
     ..strokeWidth = 2;
 
+  static final _fills = {
+    for (final e in colors.entries) e.key: Paint()..color = e.value,
+  };
+
+  /// Shared by every sprite draw (one Paint per frame per piece adds up).
+  static final _spritePaint = Paint()..filterQuality = FilterQuality.medium;
+
   static final _sprites = <PieceKind, Image>{};
   static final _powerSprites = <SpecialType, Image>{};
 
@@ -59,9 +66,15 @@ abstract final class PiecePainter {
     }
   }
 
+  /// Decoded width of piece sprites. The source art is 256px but a cell is at
+  /// most ~160 physical px on screen; the smaller texture saves memory and
+  /// bandwidth on low-end GPUs.
+  static const _spriteSize = 160;
+
   static Future<Image> _decode(String asset) async {
     final data = await rootBundle.load(asset);
-    final codec = await instantiateImageCodec(data.buffer.asUint8List());
+    final codec = await instantiateImageCodec(data.buffer.asUint8List(),
+        targetWidth: _spriteSize);
     return (await codec.getNextFrame()).image;
   }
 
@@ -78,7 +91,7 @@ abstract final class PiecePainter {
         src,
         Rect.fromCenter(
             center: Offset.zero, width: dst.width, height: dst.height),
-        Paint()..filterQuality = FilterQuality.medium);
+        _spritePaint);
     canvas.restore();
   }
 
@@ -87,13 +100,8 @@ abstract final class PiecePainter {
   /// Knife art points up-left; rotate it to lie along the row/column it clears.
   static void _specialSprite(
       Canvas canvas, double s, PieceKind kind, SpecialType type) {
-    canvas.drawCircle(
-      Offset(s / 2, s / 2),
-      s * 0.36,
-      Paint()
-        ..color = colors[kind]!.withValues(alpha: 0.85)
-        ..maskFilter = MaskFilter.blur(BlurStyle.normal, s * 0.12),
-    );
+    glow(canvas, Offset(s / 2, s / 2), s * 0.36,
+        colors[kind]!.withValues(alpha: 0.85), 1 / 3);
     final rotation = switch (type) {
       SpecialType.knifeRow => -math.pi / 4,
       SpecialType.knifeCol => math.pi / 4,
@@ -110,7 +118,43 @@ abstract final class PiecePainter {
         img,
         Rect.fromLTWH(0, 0, img.width.toDouble(), img.height.toDouble()),
         dst,
-        Paint()..filterQuality = FilterQuality.medium);
+        _spritePaint);
+  }
+
+  static final _glows = <(int, double), Image>{};
+
+  /// Radius of the disc baked into a glow image, in pixels.
+  static const _glowBake = 48.0;
+
+  /// Draws a soft disc of radius [r] at [c], blurred by [blur] × [r].
+  ///
+  /// A live `MaskFilter.blur` costs a Gaussian pass on the GPU every frame;
+  /// here each colour/blur pair is blurred once into an image and then just
+  /// stretched into place.
+  static void glow(
+      Canvas canvas, Offset c, double r, Color color, double blur) {
+    final img = _glows[(color.toARGB32(), blur)] ??= _bakeGlow(color, blur);
+    canvas.drawImageRect(
+        img,
+        Rect.fromLTWH(0, 0, img.width.toDouble(), img.height.toDouble()),
+        Rect.fromCircle(center: c, radius: r * (1 + 3 * blur)),
+        _spritePaint);
+  }
+
+  static Image _bakeGlow(Color color, double blur) {
+    final half = _glowBake * (1 + 3 * blur);
+    final recorder = PictureRecorder();
+    Canvas(recorder).drawCircle(
+        Offset(half, half),
+        _glowBake,
+        Paint()
+          ..color = color
+          ..maskFilter = MaskFilter.blur(BlurStyle.normal, _glowBake * blur));
+    final picture = recorder.endRecording();
+    final side = (2 * half).ceil();
+    final img = picture.toImageSync(side, side);
+    picture.dispose();
+    return img;
   }
 
   /// Delivery ingredient: a smiling rice ball on a golden glow.
@@ -120,13 +164,8 @@ abstract final class PiecePainter {
       ..lineTo(s * 0.82, s * 0.78)
       ..lineTo(s * 0.18, s * 0.78)
       ..close();
-    canvas.drawCircle(
-      Offset(s / 2, s / 2),
-      s * 0.44,
-      Paint()
-        ..color = const Color(0xCCFFD54F)
-        ..maskFilter = MaskFilter.blur(BlurStyle.normal, s * 0.1),
-    );
+    glow(canvas, Offset(s / 2, s / 2), s * 0.44, const Color(0xCCFFD54F),
+        0.1 / 0.44);
     final round = Paint()
       ..style = PaintingStyle.stroke
       ..strokeJoin = StrokeJoin.round
@@ -148,13 +187,8 @@ abstract final class PiecePainter {
     final c = body.center;
 
     if (special != null) {
-      canvas.drawCircle(
-        c,
-        s * 0.5,
-        Paint()
-          ..color = const Color(0x99FFF59D)
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
-      );
+      // Blur of 6 at the 64px cell the art was tuned for.
+      glow(canvas, c, s * 0.5, const Color(0x99FFF59D), 6 / 32);
     }
 
     if (kind == null) {
@@ -178,7 +212,7 @@ abstract final class PiecePainter {
       }
     }
 
-    final fill = Paint()..color = colors[kind]!;
+    final fill = _fills[kind]!;
     switch (kind) {
       case PieceKind.salmon:
         final rr = RRect.fromRectAndRadius(body, Radius.circular(s * 0.18));

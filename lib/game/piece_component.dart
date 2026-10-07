@@ -87,13 +87,12 @@ class PieceComponent extends PositionComponent {
 
   static final _flameOuter = Paint()..color = const Color(0xFFFF6A1F);
   static final _flameInner = Paint()..color = const Color(0xFFFFD54F);
-  static final _flameGlow = Paint()
-    ..color = const Color(0x66FF6A1F)
-    ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
 
   void _drawFlame(Canvas canvas) {
     final s = size.x;
-    canvas.drawCircle(Offset(s / 2, s * 0.45), s * 0.46, _flameGlow);
+    // Blur of 6 at the 64px cell the art was tuned for.
+    PiecePainter.glow(canvas, Offset(s / 2, s * 0.45), s * 0.46,
+        const Color(0x66FF6A1F), 6 / (64 * 0.46));
     for (var i = 0; i < 3; i++) {
       final cx = s * (0.28 + 0.22 * i);
       final h = s * (0.34 + 0.08 * math.sin(_t * 9 + i * 2.1));

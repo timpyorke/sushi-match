@@ -74,12 +74,40 @@ abstract final class Audio {
   static bool _ready = false;
   static bool _musicWanted = false;
 
+  /// One pool of pre-built players per effect. `FlameAudio.play` builds a
+  /// fresh platform player per call, which stalls frames on Android when a
+  /// cascade fires several sounds in a row.
+  static final _pools = <Sfx, AudioPool>{};
+
+  /// Sounds that overlap in a cascade get a bigger pool.
+  static const _busy = {
+    Sfx.match1,
+    Sfx.match2,
+    Sfx.match3,
+    Sfx.match4,
+    Sfx.match5,
+    Sfx.match6,
+    Sfx.crack,
+    Sfx.special,
+    Sfx.boom,
+  };
+
+  /// The same effect fired again within this window is dropped: stacked
+  /// copies only sound louder and cost a player each.
+  static const _minGapMs = 40;
+  static final _clock = Stopwatch()..start();
+  static final _lastPlayed = <Sfx, int>{};
+
   static Future<void> init() async {
     try {
       await FlameAudio.audioCache.loadAll([
         for (final s in Sfx.values) '${s.file}.wav',
         for (final t in tracks) _file(t),
       ]);
+      for (final s in Sfx.values) {
+        _pools[s] = await FlameAudio.createPool('${s.file}.wav',
+            maxPlayers: _busy.contains(s) ? 3 : 2);
+      }
       // Pauses the music when the app goes to the background.
       FlameAudio.bgm.initialize();
       _ready = true;
@@ -101,7 +129,13 @@ abstract final class Audio {
 
   static void play(Sfx sfx) {
     if (!_ready || !_soundOn) return;
-    _safe(() => FlameAudio.play('${sfx.file}.wav', volume: _sfxVolume));
+    final now = _clock.elapsedMilliseconds;
+    final last = _lastPlayed[sfx];
+    if (last != null && now - last < _minGapMs) return;
+    _lastPlayed[sfx] = now;
+    final pool = _pools[sfx];
+    if (pool == null) return;
+    _safe(() => pool.start(volume: _sfxVolume));
   }
 
   /// Starts the looping BGM (if enabled in settings); [stopMusic] ends it.
