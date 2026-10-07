@@ -22,7 +22,7 @@
 - [x] Daily reward 7 วันวนรอบ (ของรางวัลวันที่ 7 ใหญ่สุด) ทำในเครื่องด้วย `shared_preferences` ได้
 - [ ] Daily challenge 1 ด่านต่อวัน ใช้ seed เดียวกันทุกคน + leaderboard (leaderboard ต้องมี backend)
 - [x] Event รายสัปดาห์ (เช่น "Salmon Week"): หมุนเวียนทุกสัปดาห์จาก `assets/events/events.json` (`lib/core/event.dart`, `lib/services/events.dart`)
-- [ ] ย้ายตาราง event ไปตั้งค่าผ่าน Remote Config (เขียน `EventConfigSource` ตัวใหม่ แล้ว override `eventScheduleProvider`)
+- [x] ย้ายตาราง event ไปตั้งค่าผ่าน Remote Config (เขียน `EventConfigSource` ตัวใหม่ แล้ว override `eventScheduleProvider`)
 
 ## 4. Monetization (ต้องมีบัญชี AdMob และ store ก่อน)
 
@@ -35,7 +35,7 @@
 ## 5. Analytics และ backend
 
 - [ ] Firebase Analytics: `level_start`, `level_win`, `level_fail` (level_id, moves_left, goal_progress, attempt_no), `booster_used`, `ad_rewarded_shown`, `ad_rewarded_completed`, `iap_purchase`, `tutorial_step`, `shuffle_triggered`, `session_start`
-- [ ] Firebase Remote Config สำหรับ tuning ความยากโดยไม่ต้องออกอัปเดต
+- [x] Firebase Remote Config สำหรับ tuning ความยากโดยไม่ต้องออกอัปเดต
 - [ ] Sync progress ขึ้น Firestore (v2)
 
 ## 6. เครื่องมือและโครงสร้างโปรเจกต์
