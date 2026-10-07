@@ -11,7 +11,18 @@ import 'l10n.dart';
 import 'ui_art.dart';
 
 /// Animations every customer sprite has (see `docs/prompts/README.md`).
-enum CustomerAnim { idle, talk, happy, sad, walk }
+enum CustomerAnim {
+  idle(4),
+  talk(6),
+  happy(6),
+  sad(4),
+  walk(6);
+
+  const CustomerAnim(this.fps);
+
+  /// Playback speed; the calm loops run slower so the diner doesn't fidget.
+  final double fps;
+}
 
 /// A diner who places the level's goals as a food order.
 class Customer {
@@ -38,6 +49,8 @@ class Customer {
     Customer('🐱', 'cust3', sprite: '03-lucky-cat'),
     Customer('🧑‍🎤', 'cust4', sprite: '04-yuki'),
     Customer('👴', 'cust5', sprite: '05-grandpa-taro'),
+    Customer('💪', 'cust6', sprite: '06-ryo'),
+    Customer('👩‍🦰', 'cust7', sprite: '07-auntie-kiku'),
   ];
 
   /// Customers take turns across levels so every plate has a face.
@@ -55,14 +68,16 @@ class CustomerSprite extends StatefulWidget {
     this.intro,
     this.introLoops = 2,
     this.size = 64,
-    this.fps = 6,
+    this.fps,
   });
   final Customer customer;
   final CustomerAnim anim;
   final CustomerAnim? intro;
   final int introLoops;
   final double size;
-  final double fps;
+
+  /// Overrides every animation's own [CustomerAnim.fps].
+  final double? fps;
 
   @override
   State<CustomerSprite> createState() => _CustomerSpriteState();
@@ -72,16 +87,34 @@ class _CustomerSpriteState extends State<CustomerSprite>
     with SingleTickerProviderStateMixin {
   Ticker? _ticker;
 
-  /// Frames shown since the ticker started, and the count at which the
-  /// current animation began.
-  int _ticks = 0, _start = 0;
+  /// Time since the ticker started, and when the current animation began.
+  Duration _now = Duration.zero, _start = Duration.zero;
 
-  int get _introFrames =>
-      widget.intro == null ? 0 : widget.introLoops * Customer.frameCount;
+  /// Set when a mood change cuts the intro short.
+  bool _skipIntro = false;
+
+  double _fps(CustomerAnim anim) => widget.fps ?? anim.fps;
+
+  int _frames(Duration d, CustomerAnim anim) =>
+      d.inMicroseconds * _fps(anim) ~/ 1000000;
+
+  /// The animation and frame to show at [_now].
+  (CustomerAnim, int) get _frame {
+    var t = _now - _start;
+    final intro = widget.intro;
+    if (intro != null && !_skipIntro) {
+      final n = _frames(t, intro);
+      final introFrames = widget.introLoops * Customer.frameCount;
+      if (n < introFrames) return (intro, n % Customer.frameCount);
+      t -= Duration(microseconds: introFrames * 1000000 ~/ _fps(intro));
+    }
+    return (widget.anim, _frames(t, widget.anim) % Customer.frameCount);
+  }
 
   void _tick(Duration elapsed) {
-    final i = elapsed.inMicroseconds * widget.fps ~/ 1000000;
-    if (i != _ticks) setState(() => _ticks = i);
+    final before = _frame;
+    _now = elapsed;
+    if (_frame != before) setState(() {});
   }
 
   @override
@@ -108,7 +141,9 @@ class _CustomerSpriteState extends State<CustomerSprite>
   void didUpdateWidget(CustomerSprite old) {
     super.didUpdateWidget(old);
     if (old.anim != widget.anim || old.customer != widget.customer) {
-      _start = _ticks - _introFrames; // skip the intro on a mood change
+      // Restart on the new animation, skipping the intro.
+      _start = _now;
+      _skipIntro = true;
     }
   }
 
@@ -129,11 +164,7 @@ class _CustomerSpriteState extends State<CustomerSprite>
                 Text(c.emoji, style: TextStyle(fontSize: widget.size * 0.5))),
       );
     }
-    final intro = widget.intro;
-    final n = _ticks - _start;
-    final (anim, i) = intro != null && n < _introFrames
-        ? (intro, n % Customer.frameCount)
-        : (widget.anim, (n - _introFrames) % Customer.frameCount);
+    final (anim, i) = _frame;
     return Image.asset(
       c.frame(anim, i),
       width: widget.size,

@@ -43,7 +43,8 @@ void main() {
 
   test('every level gets a customer', () {
     expect(Customer.forLevel(1).emoji, isNotEmpty);
-    expect(Customer.forLevel(7).nameKey, Customer.forLevel(1).nameKey);
+    final n = Customer.roster.length;
+    expect(Customer.forLevel(n + 1).nameKey, Customer.forLevel(1).nameKey);
   });
 
   test('every customer sprite has its frames bundled', () {
@@ -72,7 +73,10 @@ void main() {
     expect(shownFrame(tester), granny.frame(CustomerAnim.talk, 0));
     await tester.pump(const Duration(milliseconds: 520)); // 6 fps → frame 3
     expect(shownFrame(tester), granny.frame(CustomerAnim.talk, 3));
-    await tester.pump(const Duration(milliseconds: 340)); // frame 5
+    // The intro ends at 667 ms, then idle runs at its slower 4 fps.
+    await tester.pump(const Duration(milliseconds: 340)); // 860 ms
+    expect(shownFrame(tester), granny.frame(CustomerAnim.idle, 0));
+    await tester.pump(const Duration(milliseconds: 200)); // 1060 ms
     expect(shownFrame(tester), granny.frame(CustomerAnim.idle, 1));
   });
 
