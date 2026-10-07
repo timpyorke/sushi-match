@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -228,26 +230,54 @@ class _PiecePainter extends CustomPainter {
   bool shouldRepaint(_PiecePainter old) => old.kind != kind;
 }
 
-/// Customer avatar with a speech bubble stating the order. With [goals] it
-/// also shows a live count for each one.
+/// The customer standing beside a speech bubble that states the order. With
+/// [goals] the bubble also shows a live count for each one.
 class OrderBubble extends StatelessWidget {
-  const OrderBubble({super.key, required this.level, this.goals});
+  const OrderBubble({
+    super.key,
+    required this.level,
+    this.goals,
+    this.anim = CustomerAnim.idle,
+    this.spriteSize = defaultSpriteSize,
+    this.shownChars,
+  });
   final LevelConfig level;
   final List<GoalProgress>? goals;
+  final CustomerAnim anim;
+  final double spriteSize;
+
+  /// How much of the order has been "spoken" so far, for a typewriter
+  /// effect; null shows all of it. The rest is laid out but invisible so the
+  /// bubble keeps its size while the text appears.
+  final int? shownChars;
+
+  static const defaultSpriteSize = 112.0;
 
   @override
   Widget build(BuildContext context) {
     final customer = Customer.forLevel(level.id);
     final t = Theme.of(context).textTheme;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: UiArt.plankDecoration(),
-      child: Row(
-        children: [
-          CustomerSprite(
-              customer: customer, intro: CustomerAnim.talk, size: 64),
-          const SizedBox(width: 8),
-          Expanded(
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        CustomerSprite(customer: customer, anim: anim, size: spriteSize),
+        Expanded(
+          child: Container(
+            constraints: BoxConstraints(minHeight: spriteSize * 0.6),
+            margin: EdgeInsets.only(bottom: spriteSize * 0.2),
+            padding: const EdgeInsets.fromLTRB(10, 6, 12, 8),
+            decoration: ShapeDecoration(
+              color: Colors.white,
+              shape: SpeechBubbleBorder(
+                  side: BorderSide(
+                      color: UiArt.ink.withValues(alpha: 0.55), width: 1.5)),
+              shadows: const [
+                BoxShadow(
+                    color: Color(0x33000000),
+                    blurRadius: 4,
+                    offset: Offset(0, 2)),
+              ],
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -255,10 +285,8 @@ class OrderBubble extends StatelessWidget {
                 Text(customer.name,
                     style: t.labelSmall?.copyWith(
                         color: UiArt.ink, fontWeight: FontWeight.bold)),
-                Text(orderText(level.goals),
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: t.bodySmall?.copyWith(color: UiArt.ink)),
+                _orderLine(orderText(level.goals),
+                    t.bodySmall?.copyWith(color: UiArt.ink)),
                 if (goals != null && goals!.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
@@ -269,8 +297,83 @@ class OrderBubble extends StatelessWidget {
               ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
+
+  Widget _orderLine(String text, TextStyle? style) {
+    final n = shownChars;
+    if (n == null) {
+      return Text(text,
+          maxLines: 3, overflow: TextOverflow.ellipsis, style: style);
+    }
+    final chars = text.characters;
+    return Text.rich(
+      TextSpan(children: [
+        TextSpan(text: chars.take(n).toString()),
+        TextSpan(
+            text: chars.skip(n).toString(),
+            style: const TextStyle(color: Colors.transparent)),
+      ]),
+      maxLines: 3,
+      overflow: TextOverflow.ellipsis,
+      style: style,
+    );
+  }
+}
+
+/// Rounded box with a tail on the left pointing at the speaker, [tailY]
+/// down from the top.
+class SpeechBubbleBorder extends ShapeBorder {
+  const SpeechBubbleBorder({
+    this.side = BorderSide.none,
+    this.radius = 14,
+    this.tail = 10,
+    this.tailY = 26,
+  });
+  final BorderSide side;
+  final double radius;
+  final double tail;
+  final double tailY;
+
+  @override
+  EdgeInsetsGeometry get dimensions => EdgeInsets.only(left: tail);
+
+  @override
+  Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
+    final body =
+        Rect.fromLTRB(rect.left + tail, rect.top, rect.right, rect.bottom);
+    final half = tail * 0.8;
+    final lo = body.top + radius + half;
+    final y =
+        min(max(rect.top + tailY, lo), max(lo, body.bottom - radius - half));
+    return Path.combine(
+      PathOperation.union,
+      Path()..addRRect(RRect.fromRectAndRadius(body, Radius.circular(radius))),
+      Path()
+        ..moveTo(body.left + radius, y - half)
+        ..lineTo(rect.left, y)
+        ..lineTo(body.left + radius, y + half)
+        ..close(),
+    );
+  }
+
+  @override
+  Path getInnerPath(Rect rect, {TextDirection? textDirection}) =>
+      getOuterPath(rect.deflate(side.width), textDirection: textDirection);
+
+  @override
+  void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {
+    if (side.style == BorderStyle.none) return;
+    canvas.drawPath(getOuterPath(rect.deflate(side.width / 2)),
+        side.toPaint()..strokeJoin = StrokeJoin.round);
+  }
+
+  @override
+  ShapeBorder scale(double t) => SpeechBubbleBorder(
+      side: side.scale(t),
+      radius: radius * t,
+      tail: tail * t,
+      tailY: tailY * t);
 }
