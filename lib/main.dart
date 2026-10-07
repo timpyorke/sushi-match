@@ -12,6 +12,7 @@ import 'core/progress.dart';
 import 'core/settings.dart';
 import 'game/piece_painter.dart';
 import 'game/sushi_game.dart';
+import 'services/analytics.dart';
 import 'services/audio.dart';
 import 'services/event_config.dart';
 import 'services/events.dart';
@@ -48,6 +49,8 @@ void main() async {
   final container = ProviderContainer(overrides: [
     storeProvider.overrideWithValue(await HiveStore.open()),
     eventScheduleProvider.overrideWithValue(await eventSource.load()),
+    if (remote != null)
+      analyticsProvider.overrideWithValue(Analytics(FirebaseAnalyticsSink())),
     levelTuningProvider.overrideWithValue(
         remote == null ? LevelTuning.none : await loadLevelTuning(remote)),
   ]);
@@ -256,7 +259,8 @@ class _GameScreenState extends ConsumerState<GameScreen> {
         wallet: ref.read(walletProvider.notifier),
         starters: widget.starters,
         eventKind: ref.read(eventProvider).active?.kind,
-        onEventGain: events.addCollected);
+        onEventGain: events.addCollected,
+        analytics: ref.read(analyticsProvider));
     game.hud.addListener(() {
       if (game.hud.value.status == GameStatus.won) {
         progress.markCleared(widget.levelNumber);

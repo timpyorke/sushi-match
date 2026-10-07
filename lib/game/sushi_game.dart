@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import '../core/game_engine.dart';
 import '../core/level.dart';
 import '../core/piece.dart';
+import '../services/analytics.dart';
 import '../services/audio.dart';
 import '../services/wallet.dart';
 import 'board_component.dart';
@@ -42,10 +43,12 @@ class SushiGame extends FlameGame {
       required this.wallet,
       this.starters = const [],
       this.eventKind,
-      this.onEventGain})
+      this.onEventGain,
+      this.analytics})
       : _engine = GameEngine(level, seed: _seed(level)) {
     _placeStarters();
     hud = ValueNotifier(_snapshot());
+    _logStart();
   }
 
   /// Build with `--dart-define=DETERMINISTIC_SEED=true` to replay each level's
@@ -81,6 +84,10 @@ class SushiGame extends FlameGame {
   final void Function(int n)? onEventGain;
   int _eventPaid = 0;
 
+  /// Receives level/booster events; null records nothing.
+  final Analytics? analytics;
+  int _attempt = 0;
+
   GameEngine _engine;
   BoardComponent? _board;
   late final ValueNotifier<HudState> hud;
@@ -113,6 +120,7 @@ class SushiGame extends FlameGame {
     _reward = 0;
     _eventPaid = 0;
     _mountBoard();
+    _logStart();
     _sync();
   }
 
@@ -122,7 +130,9 @@ class SushiGame extends FlameGame {
       onTurnFinished: _sync,
       onPraise: _praise,
       armed: armed,
-      onSpendBooster: wallet.consume,
+      onSpendBooster: _spendBooster,
+      onShuffle: () => analytics
+          ?.log(AnalyticsEvent.shuffleTriggered, {'level_id': level.id}),
     );
     _board = b;
     add(b);
@@ -134,13 +144,44 @@ class SushiGame extends FlameGame {
       _reward = 10 * _engine.stars;
       wallet.earn(_reward);
       Audio.play(Sfx.win);
+      _logEnd(AnalyticsEvent.levelWin);
     } else if (_engine.status == GameStatus.lost && !_lifeCharged) {
       _lifeCharged = true;
       wallet.loseLife();
       Audio.play(Sfx.lose);
+      _logEnd(AnalyticsEvent.levelFail);
     }
     if (_engine.status != GameStatus.playing) _payEvent();
     hud.value = _snapshot();
+  }
+
+  void _logStart() {
+    final a = analytics;
+    if (a == null) return;
+    _attempt = a.nextAttempt(level.id);
+    a.log(AnalyticsEvent.levelStart,
+        {'level_id': level.id, 'attempt_no': _attempt});
+  }
+
+  void _logEnd(String event) {
+    var goal = 0, done = 0;
+    for (final g in _engine.goals) {
+      goal += g.goal.count;
+      done += g.current.clamp(0, g.goal.count);
+    }
+    analytics?.log(event, {
+      'level_id': level.id,
+      'moves_left': _engine.movesLeft,
+      'goal_progress': goal == 0 ? 100 : done * 100 ~/ goal,
+      'attempt_no': _attempt,
+    });
+  }
+
+  bool _spendBooster(Booster b) {
+    if (!wallet.consume(b)) return false;
+    analytics?.log(
+        AnalyticsEvent.boosterUsed, {'booster': b.name, 'level_id': level.id});
+    return true;
   }
 
   int get _eventTotal {

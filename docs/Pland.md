@@ -1,6 +1,6 @@
 # Sushi Trio — สิ่งที่ยังไม่ได้ทำ
 
-อ้างอิงจาก `GDD.md` เทียบกับโค้ดล่าสุด (60 ด่าน, อุปสรรค, booster, ร้านค้า, restaurant meta, เสียงชั่วคราว ทำเสร็จแล้ว)
+อ้างอิงจาก `GDD.md` เทียบกับโค้ดล่าสุด (100 ด่าน, อุปสรรค, booster, ร้านค้า, restaurant meta, เสียงชั่วคราว ทำเสร็จแล้ว)
 
 ## 1. ค้างจากงานเสียง
 
@@ -15,7 +15,7 @@
 
 - [x] Starter booster ก่อนเริ่มด่าน (Starter Knife / Wasabi): วางชิ้นพิเศษบนกระดานตั้งแต่เริ่ม
 - [x] ร้านที่ตกแต่งครบให้รางวัลเหรียญ + booster (ตอนนี้มีเฉพาะเหรียญ `completeCoins`; ยังไม่ให้ booster)
-- [ ] ด่านเพิ่ม: ตอนนี้มี 60 ด่าน (4 ร้าน ร้านละ 15 ด่าน)
+- [x] ด่านเพิ่ม: ตอนนี้มี 100 ด่าน (7 ร้าน) ด่าน 61+ สร้างด้วย `tool/gen_levels.dart`
 
 ## 3. Daily และ live ops
 
@@ -34,7 +34,8 @@
 
 ## 5. Analytics และ backend
 
-- [ ] Firebase Analytics: `level_start`, `level_win`, `level_fail` (level_id, moves_left, goal_progress, attempt_no), `booster_used`, `ad_rewarded_shown`, `ad_rewarded_completed`, `iap_purchase`, `tutorial_step`, `shuffle_triggered`, `session_start`
+- [x] Firebase Analytics ในเกม: `level_start`, `level_win`, `level_fail` (level_id, moves_left, goal_progress, attempt_no), `booster_used`, `shuffle_triggered` (`lib/services/analytics.dart`; `session_start` SDK ส่งให้เอง)
+- [ ] Analytics ที่ยังไม่มีฟีเจอร์รองรับ: `ad_rewarded_shown`, `ad_rewarded_completed`, `iap_purchase`, `tutorial_step`
 - [x] Firebase Remote Config สำหรับ tuning ความยากโดยไม่ต้องออกอัปเดต
 - [ ] Sync progress ขึ้น Firestore (v2)
 

@@ -62,7 +62,7 @@ abstract final class Audio {
 
   static String _track = 'tsukiji';
   static const _sfxVolume = 0.7;
-  static const _bgmVolume = 0.35;
+  static const _bgmVolume = 0.5;
 
   static bool _ready = false;
   static bool _musicWanted = false;

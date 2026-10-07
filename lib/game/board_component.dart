@@ -36,6 +36,7 @@ class BoardComponent extends PositionComponent
     required this.onPraise,
     required this.armed,
     required this.onSpendBooster,
+    this.onShuffle,
   }) : super(
           size: Vector2(engine.board.cols * cell, engine.board.rows * cell),
         );
@@ -58,6 +59,9 @@ class BoardComponent extends PositionComponent
 
   /// Pays for a booster (stock or coins); false means it can't be used.
   final bool Function(Booster) onSpendBooster;
+
+  /// Called when a turn ended with the board reshuffled for lack of moves.
+  final void Function()? onShuffle;
 
   final _views = <int, PieceComponent>{};
   final _at = <Pos, PieceComponent>{};
@@ -442,6 +446,7 @@ class BoardComponent extends PositionComponent
     _clearHint();
     try {
       final steps = engine.trySwap(a, b);
+      if (steps.any((s) => s is ShuffleStep)) onShuffle?.call();
       final cheer = _praiseFor(steps);
       if (cheer != null) onPraise(cheer);
       await _play(steps);
