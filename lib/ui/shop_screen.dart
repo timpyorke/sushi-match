@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../services/audio.dart';
 import '../services/wallet.dart';
+import 'coin_shop_screen.dart';
 import 'l10n.dart';
 import 'ui_art.dart';
 
@@ -41,7 +42,7 @@ class BoosterShopScreen extends StatelessWidget {
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   const Spacer(),
-                  const _CoinPill(),
+                  const CoinPill(),
                 ],
               ),
               Padding(
@@ -57,21 +58,37 @@ class BoosterShopScreen extends StatelessWidget {
   }
 }
 
-/// Coin balance on a plank.
-class _CoinPill extends ConsumerWidget {
-  const _CoinPill();
+/// Coin balance on a plank; tapping it opens the coin store.
+class CoinPill extends ConsumerWidget {
+  const CoinPill({super.key, this.tappable = true});
+
+  /// False on the coin store itself.
+  final bool tappable;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final coins = ref.watch(walletProvider.select((w) => w.coins));
-    return Container(
+    final pill = Container(
       margin: const EdgeInsets.only(right: 12, top: 8),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: UiArt.plankDecoration(),
-      child: CoinAmount(coins,
-          size: 20,
-          style:
-              const TextStyle(color: UiArt.ink, fontWeight: FontWeight.bold)),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CoinAmount(coins,
+              size: 20,
+              style: const TextStyle(
+                  color: UiArt.ink, fontWeight: FontWeight.bold)),
+          if (tappable)
+            const Icon(Icons.add_circle, size: 20, color: UiArt.ink),
+        ],
+      ),
+    );
+    if (!tappable) return pill;
+    return GestureDetector(
+      onTap: () => Navigator.of(context).push(
+          MaterialPageRoute<void>(builder: (_) => const CoinShopScreen())),
+      child: pill,
     );
   }
 }
@@ -123,7 +140,7 @@ Future<void> showBoosterShopSheet(BuildContext context) {
                           color: UiArt.ink, fontWeight: FontWeight.bold)),
                   const Spacer(),
                   const Padding(
-                      padding: EdgeInsets.only(bottom: 8), child: _CoinPill()),
+                      padding: EdgeInsets.only(bottom: 8), child: CoinPill()),
                   IconButton(
                       icon: const Icon(Icons.close, color: UiArt.ink),
                       onPressed: () => Navigator.of(context).pop()),

@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/settings.dart';
 import '../services/store.dart';
 import '../services/wallet.dart';
+import 'coin_shop_screen.dart';
 import 'game_dialog.dart';
 import 'l10n.dart';
 import 'ui_art.dart';
@@ -97,7 +98,10 @@ class _NoLivesState extends ConsumerState<_NoLives> {
 
 /// Hearts and coins strip for the level-select screen.
 class WalletBar extends ConsumerStatefulWidget {
-  const WalletBar({super.key});
+  const WalletBar({super.key, this.coinShop = false});
+
+  /// Makes the coin pill open the coin store when tapped.
+  final bool coinShop;
 
   @override
   ConsumerState<WalletBar> createState() => _WalletBarState();
@@ -135,7 +139,21 @@ class _WalletBarState extends ConsumerState<WalletBar> {
             '${left == null ? '' : '  ${_mmss(left)}'}',
             style: _pillStyle)),
         const SizedBox(width: 8),
-        _pill(CoinAmount(wallet.coins, size: 20, style: _pillStyle)),
+        if (widget.coinShop)
+          GestureDetector(
+            onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                builder: (_) => const CoinShopScreen())),
+            child: _pill(Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CoinAmount(wallet.coins, size: 20, style: _pillStyle),
+                const SizedBox(width: 4),
+                const Icon(Icons.add_circle, size: 20, color: UiArt.ink),
+              ],
+            )),
+          )
+        else
+          _pill(CoinAmount(wallet.coins, size: 20, style: _pillStyle)),
       ],
     );
   }

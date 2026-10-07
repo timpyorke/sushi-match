@@ -61,8 +61,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final testMode = ref.watch(settingsProvider.select((s) => s.testMode));
-    final cleared =
-        testMode ? widget.levelCount : ref.watch(progressProvider);
+    final cleared = testMode ? widget.levelCount : ref.watch(progressProvider);
     final maxPlayable = testMode
         ? widget.levelCount
         : ref.watch(restaurantProvider).maxPlayableLevel;
@@ -92,7 +91,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         alignment: Alignment.centerLeft,
-                        child: WalletBar(),
+                        child: WalletBar(coinShop: true),
                       ),
                     ),
                   ),
