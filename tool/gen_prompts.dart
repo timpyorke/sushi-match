@@ -1008,6 +1008,9 @@ String _readme() {
     ..writeln('dart run tool/gen_prompts.dart')
     ..writeln('```')
     ..writeln()
+    ..writeln('Prompts for the board tiles and the level map are in '
+        '[tiles/README.md](tiles/README.md).')
+    ..writeln()
     ..writeln('## How to use')
     ..writeln()
     ..writeln('- Model `gpt-image-1` with `size: 1024x1024`, `background: '

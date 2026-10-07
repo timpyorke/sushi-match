@@ -19,6 +19,7 @@ dart run tool/tune.dart [runs] [--write]       # re-fit moves, goal counts, star
 dart run tool/gen_sounds.dart                  # regenerate placeholder WAVs in assets/audio/
 dart run tool/gen_levels.dart [--force] [level …]  # generate level files from the spec table
 dart run tool/gen_prompts.dart                 # regenerate GPT Image character prompts in docs/prompts/
+dart run tool/gen_tile_prompts.dart            # regenerate GPT Image board-tile and level-map prompts in docs/prompts/tiles/
 dart run tool/cut_sprites.dart [id …]          # cut character sheets (customers/<id>/source/) into 256px frames
 ```
 
