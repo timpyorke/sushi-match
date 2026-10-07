@@ -20,6 +20,7 @@ dart run tool/gen_sounds.dart                  # regenerate placeholder WAVs in 
 dart run tool/gen_levels.dart [--force] [level …]  # generate level files from the spec table
 dart run tool/gen_prompts.dart                 # regenerate GPT Image character prompts in docs/prompts/
 dart run tool/gen_tile_prompts.dart            # regenerate GPT Image board-tile and level-map prompts in docs/prompts/tiles/
+dart run tool/gen_icon_prompts.dart            # regenerate GPT Image prompts for the icons that replace UI emoji in docs/prompts/icons/
 dart run tool/cut_sprites.dart [id …]          # cut character sheets (customers/<id>/source/) into 256px frames
 ```
 
