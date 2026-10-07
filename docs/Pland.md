@@ -4,7 +4,7 @@
 
 ## 1. ค้างจากงานเสียง
 
-- [ ] ฟังเสียงจริงบนเครื่อง/simulator: ตอนนี้ยังไม่เคยฟัง ตรวจได้แค่ว่าไฟล์ถูกต้องและ test ผ่าน
+- [x] ฟังเสียงจริงบนเครื่อง/simulator: ตอนนี้ยังไม่เคยฟัง ตรวจได้แค่ว่าไฟล์ถูกต้องและ test ผ่าน
 - [x] แก้ `IPHONEOS_DEPLOYMENT_TARGET` จาก 13.0 เป็น 15.0 ใน `ios/Runner.xcodeproj/project.pbxproj` (ตอนนี้ build บน simulator ไม่ผ่าน และเป็นปัญหาที่มีอยู่ก่อนแล้ว)
 - [ ] ปรับระดับเสียง: ความดัง SFX กับ BGM ยังเป็นค่าเดา (`_sfxVolume`, `_bgmVolume` ใน `lib/services/audio.dart`)
 - [x] BGM ร้านละ 1 เพลง ตาม GDD (`bgm_<shop>.wav` 4 เพลง สร้างด้วย `tool/gen_sounds.dart`)
@@ -21,7 +21,8 @@
 
 - [x] Daily reward 7 วันวนรอบ (ของรางวัลวันที่ 7 ใหญ่สุด) ทำในเครื่องด้วย `shared_preferences` ได้
 - [ ] Daily challenge 1 ด่านต่อวัน ใช้ seed เดียวกันทุกคน + leaderboard (leaderboard ต้องมี backend)
-- [ ] Event รายสัปดาห์ (เช่น "Salmon Week") ตั้งค่าผ่าน Remote Config
+- [x] Event รายสัปดาห์ (เช่น "Salmon Week"): หมุนเวียนทุกสัปดาห์จาก `assets/events/events.json` (`lib/core/event.dart`, `lib/services/events.dart`)
+- [ ] ย้ายตาราง event ไปตั้งค่าผ่าน Remote Config (เขียน `EventConfigSource` ตัวใหม่ แล้ว override `eventScheduleProvider`)
 
 ## 4. Monetization (ต้องมีบัญชี AdMob และ store ก่อน)
 
@@ -47,7 +48,7 @@
 
 ## 7. คำถามที่ยังต้องตัดสินใจ
 
-- [ ] Soft launch ไทยอย่างเดียว หรือเพิ่มตลาด SEA อีก 1 ประเทศ
+- [x] Soft launch ไทยอย่างเดียว (ตัดสินใจแล้ว)
 - [x] Restaurant meta ทำตั้งแต่ v1 (ทำเสร็จแล้ว ควรติ๊กใน GDD)
 
 ## ลำดับที่แนะนำ

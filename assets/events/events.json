@@ -1,0 +1,233 @@
+{
+  "anchor": "2026-10-05",
+  "events": [
+    {
+      "id": "salmon",
+      "kind": "salmon",
+      "title": {
+        "en": "Salmon Week",
+        "th": "สัปดาห์แซลมอน"
+      },
+      "milestones": [
+        {
+          "target": 40,
+          "coins": 20
+        },
+        {
+          "target": 100,
+          "coins": 0,
+          "booster": "chopsticks",
+          "qty": 1
+        },
+        {
+          "target": 200,
+          "coins": 50,
+          "booster": "shuffle",
+          "qty": 1
+        },
+        {
+          "target": 350,
+          "coins": 0,
+          "booster": "starterKnife",
+          "qty": 1
+        },
+        {
+          "target": 500,
+          "coins": 150,
+          "booster": "extraMoves",
+          "qty": 2
+        }
+      ]
+    },
+    {
+      "id": "maguro",
+      "kind": "maguro",
+      "title": {
+        "en": "Maguro Week",
+        "th": "สัปดาห์มากุโระ"
+      },
+      "milestones": [
+        {
+          "target": 40,
+          "coins": 20
+        },
+        {
+          "target": 100,
+          "coins": 0,
+          "booster": "chopsticks",
+          "qty": 1
+        },
+        {
+          "target": 200,
+          "coins": 50,
+          "booster": "shuffle",
+          "qty": 1
+        },
+        {
+          "target": 350,
+          "coins": 0,
+          "booster": "starterKnife",
+          "qty": 1
+        },
+        {
+          "target": 500,
+          "coins": 150,
+          "booster": "extraMoves",
+          "qty": 2
+        }
+      ]
+    },
+    {
+      "id": "tamago",
+      "kind": "tamago",
+      "title": {
+        "en": "Tamago Week",
+        "th": "สัปดาห์ทามาโกะ"
+      },
+      "milestones": [
+        {
+          "target": 40,
+          "coins": 20
+        },
+        {
+          "target": 100,
+          "coins": 0,
+          "booster": "chopsticks",
+          "qty": 1
+        },
+        {
+          "target": 200,
+          "coins": 50,
+          "booster": "shuffle",
+          "qty": 1
+        },
+        {
+          "target": 350,
+          "coins": 0,
+          "booster": "starterKnife",
+          "qty": 1
+        },
+        {
+          "target": 500,
+          "coins": 150,
+          "booster": "extraMoves",
+          "qty": 2
+        }
+      ]
+    },
+    {
+      "id": "ebi",
+      "kind": "ebi",
+      "title": {
+        "en": "Ebi Week",
+        "th": "สัปดาห์กุ้ง"
+      },
+      "milestones": [
+        {
+          "target": 40,
+          "coins": 20
+        },
+        {
+          "target": 100,
+          "coins": 0,
+          "booster": "chopsticks",
+          "qty": 1
+        },
+        {
+          "target": 200,
+          "coins": 50,
+          "booster": "shuffle",
+          "qty": 1
+        },
+        {
+          "target": 350,
+          "coins": 0,
+          "booster": "starterKnife",
+          "qty": 1
+        },
+        {
+          "target": 500,
+          "coins": 150,
+          "booster": "extraMoves",
+          "qty": 2
+        }
+      ]
+    },
+    {
+      "id": "ikura",
+      "kind": "ikura",
+      "title": {
+        "en": "Ikura Week",
+        "th": "สัปดาห์ไข่ปลาอิคุระ"
+      },
+      "milestones": [
+        {
+          "target": 40,
+          "coins": 20
+        },
+        {
+          "target": 100,
+          "coins": 0,
+          "booster": "chopsticks",
+          "qty": 1
+        },
+        {
+          "target": 200,
+          "coins": 50,
+          "booster": "shuffle",
+          "qty": 1
+        },
+        {
+          "target": 350,
+          "coins": 0,
+          "booster": "starterKnife",
+          "qty": 1
+        },
+        {
+          "target": 500,
+          "coins": 150,
+          "booster": "extraMoves",
+          "qty": 2
+        }
+      ]
+    },
+    {
+      "id": "kappa",
+      "kind": "kappa",
+      "title": {
+        "en": "Kappa Week",
+        "th": "สัปดาห์แตงกวา"
+      },
+      "milestones": [
+        {
+          "target": 40,
+          "coins": 20
+        },
+        {
+          "target": 100,
+          "coins": 0,
+          "booster": "chopsticks",
+          "qty": 1
+        },
+        {
+          "target": 200,
+          "coins": 50,
+          "booster": "shuffle",
+          "qty": 1
+        },
+        {
+          "target": 350,
+          "coins": 0,
+          "booster": "starterKnife",
+          "qty": 1
+        },
+        {
+          "target": 500,
+          "coins": 150,
+          "booster": "extraMoves",
+          "qty": 2
+        }
+      ]
+    }
+  ]
+}

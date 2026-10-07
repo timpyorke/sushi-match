@@ -192,6 +192,8 @@ class ResultOverlay extends ConsumerWidget {
                       Text(L10n.t('scoreN', {'n': s.score})),
                       if (won && s.reward > 0)
                         Text(L10n.t('reward', {'n': s.reward})),
+                      if (s.eventGain > 0)
+                        Text(L10n.t('eventGain', {'n': s.eventGain})),
                       const SizedBox(height: 16),
                       if (!won) ...[
                         FilledButton(

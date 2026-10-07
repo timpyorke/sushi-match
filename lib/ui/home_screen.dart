@@ -8,6 +8,8 @@ import '../core/settings.dart';
 import '../services/audio.dart';
 import '../services/restaurant.dart';
 import 'daily_reward_dialog.dart';
+import 'event_banner.dart';
+import 'event_dialog.dart';
 import 'l10n.dart';
 import 'lives_ui.dart';
 import 'sushi_trio.dart';
@@ -43,8 +45,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) maybeShowDailyReward(context, ref);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+      await maybeShowDailyReward(context, ref);
+      if (mounted) await maybeShowEventStart(context, ref);
     });
   }
 
@@ -138,6 +142,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                 onTap: widget.onShop),
                           ],
                         ),
+                        const EventBanner(),
                       ],
                     ),
                   ),

@@ -12,6 +12,9 @@ import 'core/settings.dart';
 import 'game/piece_painter.dart';
 import 'game/sushi_game.dart';
 import 'services/audio.dart';
+import 'services/event_config.dart';
+import 'services/events.dart';
+import 'services/firebase_service.dart';
 import 'services/store.dart';
 import 'services/wallet.dart';
 import 'ui/customer_order.dart';
@@ -36,8 +39,14 @@ void main() async {
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await _enterImmersive();
   await PiecePainter.loadSprites();
-  final container = ProviderContainer(
-      overrides: [storeProvider.overrideWithValue(await HiveStore.open())]);
+  const bundledEvents = AssetEventSource();
+  final EventConfigSource eventSource = await initFirebase()
+      ? RemoteConfigEventSource(bundledEvents)
+      : bundledEvents;
+  final container = ProviderContainer(overrides: [
+    storeProvider.overrideWithValue(await HiveStore.open()),
+    eventScheduleProvider.overrideWithValue(await eventSource.load()),
+  ]);
   // Reading the settings applies them to the audio, language and painter.
   container.read(settingsProvider);
   await Audio.init();
@@ -234,10 +243,14 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     final level = LevelConfig.fromJson(jsonDecode(raw) as Map<String, dynamic>);
     final progress = ref.read(progressProvider.notifier);
     final restaurant = ref.read(restaurantProvider.notifier);
+    final events = ref.read(eventProvider.notifier);
+    events.refresh();
     final game = SushiGame(
         level: level,
         wallet: ref.read(walletProvider.notifier),
-        starters: widget.starters);
+        starters: widget.starters,
+        eventKind: ref.read(eventProvider).active?.kind,
+        onEventGain: events.addCollected);
     game.hud.addListener(() {
       if (game.hud.value.status == GameStatus.won) {
         progress.markCleared(widget.levelNumber);

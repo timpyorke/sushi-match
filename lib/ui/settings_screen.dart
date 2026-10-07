@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/progress.dart';
 import '../services/daily_reward.dart';
+import '../services/events.dart';
 import '../services/restaurant.dart';
 import '../services/tips.dart';
 import '../core/settings.dart';
@@ -36,6 +37,7 @@ class SettingsScreen extends ConsumerWidget {
     ref.read(restaurantProvider.notifier).reset();
     ref.read(tipsProvider.notifier).reset();
     ref.read(dailyProvider.notifier).reset();
+    ref.read(eventProvider.notifier).reset();
     if (context.mounted) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()

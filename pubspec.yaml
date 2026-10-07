@@ -40,6 +40,7 @@ flutter:
           weight: 700
   assets:
     - assets/levels/
+    - assets/events/
     - assets/ui/
     - assets/backgrounds/
     - assets/sprites/sushi/

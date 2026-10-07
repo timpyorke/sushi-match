@@ -20,6 +20,7 @@ class HudState {
     required this.status,
     required this.stars,
     this.reward = 0,
+    this.eventGain = 0,
   });
 
   final int movesLeft;
@@ -30,11 +31,18 @@ class HudState {
 
   /// Coins granted for this win (0 until won).
   final int reward;
+
+  /// Weekly-event pieces cleared in this run so far (0 with no event).
+  final int eventGain;
 }
 
 class SushiGame extends FlameGame {
   SushiGame(
-      {required this.level, required this.wallet, this.starters = const []})
+      {required this.level,
+      required this.wallet,
+      this.starters = const [],
+      this.eventKind,
+      this.onEventGain})
       : _engine = GameEngine(level, seed: _seed(level)) {
     _placeStarters();
     hud = ValueNotifier(_snapshot());
@@ -64,6 +72,14 @@ class SushiGame extends FlameGame {
   /// Starter boosters picked before the level; each is spent from the wallet
   /// when the board is first laid out.
   final List<Booster> starters;
+
+  /// Sushi the running weekly event counts; null when there is no event.
+  final PieceKind? eventKind;
+
+  /// Called with the event pieces cleared since the last call, once the run
+  /// ends (win or loss).
+  final void Function(int n)? onEventGain;
+  int _eventPaid = 0;
 
   GameEngine _engine;
   BoardComponent? _board;
@@ -95,6 +111,7 @@ class SushiGame extends FlameGame {
     _rewarded = false;
     _lifeCharged = false;
     _reward = 0;
+    _eventPaid = 0;
     _mountBoard();
     _sync();
   }
@@ -122,7 +139,22 @@ class SushiGame extends FlameGame {
       wallet.loseLife();
       Audio.play(Sfx.lose);
     }
+    if (_engine.status != GameStatus.playing) _payEvent();
     hud.value = _snapshot();
+  }
+
+  int get _eventTotal {
+    final k = eventKind;
+    return k == null ? 0 : _engine.collectedOf(k);
+  }
+
+  /// Hands the tally to the event once per finished run. Extra moves can
+  /// reopen a lost run, so only the part not yet paid goes out.
+  void _payEvent() {
+    final n = _eventTotal - _eventPaid;
+    if (n <= 0) return;
+    _eventPaid += n;
+    onEventGain?.call(n);
   }
 
   /// Booster button pressed. Shuffle fires at once; the others arm the
@@ -163,5 +195,6 @@ class SushiGame extends FlameGame {
         status: _engine.status,
         stars: _engine.stars,
         reward: _reward,
+        eventGain: _eventPaid,
       );
 }

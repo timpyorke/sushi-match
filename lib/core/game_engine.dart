@@ -153,6 +153,9 @@ class GameEngine {
   bool _credit = true;
   final Map<PieceKind, int> _collected = {};
 
+  /// Pieces of [kind] cleared so far (feeds the weekly event tally).
+  int collectedOf(PieceKind kind) => _collected[kind] ?? 0;
+
   List<GoalProgress> get goals => [
         for (final g in level.goals)
           GoalProgress(
