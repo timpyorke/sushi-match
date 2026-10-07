@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/event.dart';
+import '../core/level_tuning.dart';
 
 /// Where the event schedule comes from. The app ships [AssetEventSource]; a
 /// Remote Config source can replace it later without touching anything else.
@@ -23,3 +24,7 @@ class AssetEventSource implements EventConfigSource {
 /// by default.
 final eventScheduleProvider =
     Provider<EventSchedule>((ref) => EventSchedule.empty);
+
+/// Remote difficulty overrides. None by default; `main` overrides it from
+/// Remote Config.
+final levelTuningProvider = Provider<LevelTuning>((ref) => LevelTuning.none);

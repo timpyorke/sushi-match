@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 
 import 'core/game_engine.dart';
 import 'core/level.dart';
+import 'core/level_tuning.dart';
 import 'core/progress.dart';
 import 'core/settings.dart';
 import 'game/piece_painter.dart';
@@ -40,12 +41,15 @@ void main() async {
   await _enterImmersive();
   await PiecePainter.loadSprites();
   const bundledEvents = AssetEventSource();
-  final EventConfigSource eventSource = await initFirebase()
-      ? RemoteConfigEventSource(bundledEvents)
-      : bundledEvents;
+  final remote = await initFirebase() ? RemoteConfigFetch() : null;
+  final EventConfigSource eventSource = remote == null
+      ? bundledEvents
+      : RemoteConfigEventSource(bundledEvents, remote);
   final container = ProviderContainer(overrides: [
     storeProvider.overrideWithValue(await HiveStore.open()),
     eventScheduleProvider.overrideWithValue(await eventSource.load()),
+    levelTuningProvider.overrideWithValue(
+        remote == null ? LevelTuning.none : await loadLevelTuning(remote)),
   ]);
   // Reading the settings applies them to the audio, language and painter.
   container.read(settingsProvider);
@@ -159,8 +163,8 @@ class _Home extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) => HomeScreen(
         levelCount: kLevelCount,
         onPlay: (n) => startLevel(context, ref, n),
-        onLevels: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const LevelSelectScreen())),
+        onLevels: () => Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => const LevelSelectScreen())),
         onRestaurant: () => _openRestaurant(context),
         onShop: () => _openShop(context),
         onSettings: () => _openSettings(context),
@@ -240,7 +244,9 @@ class _GameScreenState extends ConsumerState<GameScreen> {
 
   Future<SushiGame> _load() async {
     final raw = await rootBundle.loadString(_levelAsset(widget.levelNumber));
-    final level = LevelConfig.fromJson(jsonDecode(raw) as Map<String, dynamic>);
+    final level = ref
+        .read(levelTuningProvider)
+        .apply(LevelConfig.fromJson(jsonDecode(raw) as Map<String, dynamic>));
     final progress = ref.read(progressProvider.notifier);
     final restaurant = ref.read(restaurantProvider.notifier);
     final events = ref.read(eventProvider.notifier);

@@ -227,6 +227,30 @@ class LevelConfig {
   final int seed;
   final List<Conveyor> conveyors;
 
+  /// Same level with a different move budget (remote difficulty tuning).
+  LevelConfig withMoves(int moves) => LevelConfig(
+        id: id,
+        rows: rows,
+        cols: cols,
+        playable: playable,
+        nori: nori,
+        ice: ice,
+        bags: bags,
+        mats: mats,
+        fire: fire,
+        cats: cats,
+        locks: locks,
+        timers: timers,
+        portals: portals,
+        gravity: gravity,
+        pieces: pieces,
+        moves: moves,
+        goals: goals,
+        stars: stars,
+        seed: seed,
+        conveyors: conveyors,
+      );
+
   /// Parses the GDD level schema. `nori` / `nori:N` legend values put N
   /// layers under a cell, `ice` / `ice:N` cage the piece that starts there in
   /// N layers of ice; `bag` / `bag:N` put an N-layer rice bag in the cell, `mat` a bamboo mat, `fire` a burning piece, `cat` / `cat:N` a cat with N lives, `key:<kind>` a swap lock, `bomb:N` a
