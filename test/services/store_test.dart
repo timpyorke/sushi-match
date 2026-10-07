@@ -42,7 +42,29 @@ void main() {
     final again = testContainer(store: store).read(settingsProvider);
     expect(again.language, 'th');
     expect(again.haptics, isFalse);
-    expect(again.sound, isTrue);
+    expect(again.soundVolume, 1);
+  });
+
+  test('volumes persist; old on/off switches become full or silent', () {
+    final store = MemoryStore();
+    testContainer(store: store).read(settingsProvider.notifier)
+      ..setSoundVolume(0.3)
+      ..setMusicVolume(0);
+    final again = testContainer(store: store).read(settingsProvider);
+    expect(again.soundVolume, 0.3);
+    expect(again.musicVolume, 0);
+
+    final legacy =
+        testContainer(store: MemoryStore({'sound': false, 'music': true}))
+            .read(settingsProvider);
+    expect(legacy.soundVolume, 0);
+    expect(legacy.musicVolume, 1);
+  });
+
+  test('an unknown saved language falls back to English', () {
+    final s = testContainer(store: MemoryStore({'language': 'xx'}))
+        .read(settingsProvider);
+    expect(s.language, 'en');
   });
 
   test('progress only moves forward and resets', () {

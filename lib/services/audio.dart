@@ -40,8 +40,8 @@ enum Sfx {
       ][(depth - 1).clamp(0, 5)];
 }
 
-/// Plays sounds and background music, honouring [Settings.sound] and
-/// [Settings.music]. Silent until [init] runs, so unit and widget tests (which
+/// Plays sounds and background music at the volumes chosen in the settings
+/// (see [configure]). Silent until [init] runs, so unit and widget tests (which
 /// have no audio plugin) need no setup.
 abstract final class Audio {
   /// One looping track per restaurant (assets/audio/bgm_<id>.wav).
@@ -117,25 +117,29 @@ abstract final class Audio {
     _syncMusic();
   }
 
-  static bool _soundOn = true;
-  static bool _musicOn = true;
+  /// Player volume for effects and music, 0 (off) to 1 (full mix level).
+  static double _soundLevel = 1;
+  static double _musicLevel = 1;
 
-  /// Called by the settings notifier whenever the sound/music toggles change.
-  static void configure({required bool sound, required bool music}) {
-    _soundOn = sound;
-    _musicOn = music;
+  /// Called by the settings notifier whenever a volume slider moves.
+  static void configure({required double sound, required double music}) {
+    _soundLevel = sound;
+    _musicLevel = music;
     _syncMusic();
+    if (_ready && FlameAudio.bgm.isPlaying) {
+      _safe(() => FlameAudio.bgm.audioPlayer.setVolume(_bgmVolume * music));
+    }
   }
 
   static void play(Sfx sfx) {
-    if (!_ready || !_soundOn) return;
+    if (!_ready || _soundLevel == 0) return;
     final now = _clock.elapsedMilliseconds;
     final last = _lastPlayed[sfx];
     if (last != null && now - last < _minGapMs) return;
     _lastPlayed[sfx] = now;
     final pool = _pools[sfx];
     if (pool == null) return;
-    _safe(() => pool.start(volume: _sfxVolume));
+    _safe(() => pool.start(volume: _sfxVolume * _soundLevel));
   }
 
   /// Starts the looping BGM (if enabled in settings); [stopMusic] ends it.
@@ -166,9 +170,9 @@ abstract final class Audio {
   static void _syncMusic() {
     if (!_ready) return;
     final bgm = FlameAudio.bgm;
-    if (_musicWanted && _musicOn) {
+    if (_musicWanted && _musicLevel > 0) {
       if (!bgm.isPlaying) {
-        _safe(() => bgm.play(_file(_track), volume: _bgmVolume));
+        _safe(() => bgm.play(_file(_track), volume: _bgmVolume * _musicLevel));
       }
     } else if (bgm.isPlaying) {
       _safe(bgm.stop);
