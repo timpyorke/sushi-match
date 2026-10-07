@@ -182,6 +182,11 @@ class ResultOverlay extends ConsumerWidget {
                         ),
                       ],
                       const SizedBox(height: 8),
+                      CustomerSprite(
+                        customer: Customer.forLevel(game.level.id),
+                        anim: won ? CustomerAnim.happy : CustomerAnim.sad,
+                        size: 112,
+                      ),
                       Text(
                         L10n.t(won ? 'custWin' : 'custLose', {
                           'name': Customer.forLevel(game.level.id).name,

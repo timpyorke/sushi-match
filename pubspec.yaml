@@ -24,6 +24,7 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^4.0.0
   flutter_launcher_icons: ^0.14.4
+  image: ^4.2.0
 
 flutter_launcher_icons:
   android: true
@@ -51,4 +52,5 @@ flutter:
     - assets/sprites/power/
     - assets/sprites/boosters/
     - assets/sprites/tiles/
+    - assets/sprites/customers/00-granny-sakura/
     - assets/audio/

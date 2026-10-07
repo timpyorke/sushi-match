@@ -45,8 +45,9 @@ class BoardComponent extends PositionComponent
   static const double cell = 64;
   static const double _hintDelay = 5;
 
-  /// Thickness of the wooden frame drawn round the board.
-  static const double _frame = 26;
+  /// Space kept round the board for the gravity arrows, which only show
+  /// when pieces don't fall down.
+  double get _margin => engine.level.gravity == Gravity.down ? 0 : 20;
 
   final GameEngine engine;
   final void Function() onTurnFinished;
@@ -148,8 +149,8 @@ class BoardComponent extends PositionComponent
   void onGameResize(Vector2 size) {
     super.onGameResize(size);
     final board = this.size;
-    final s = math.min(size.x * 0.96 / (board.x + 2 * _frame),
-        size.y * 0.96 / (board.y + 2 * _frame));
+    final s = math.min(size.x * 0.96 / (board.x + 2 * _margin),
+        size.y * 0.96 / (board.y + 2 * _margin));
     scale = Vector2.all(s);
     position = (size - board * s) / 2;
   }
@@ -186,9 +187,9 @@ class BoardComponent extends PositionComponent
     ..strokeCap = StrokeCap.round;
   static final _sackDot = Paint()..color = const Color(0xFF6B4F2A);
 
-  static final _gravityArrow = Paint()..color = const Color(0xCCFFF1D6);
+  static final _gravityArrow = Paint()..color = const Color(0xCC4A2E1B);
 
-  /// Little arrows on the frame show which way pieces fall (only drawn when
+  /// Little arrows beside the board show which way pieces fall (only drawn when
   /// it is not the usual "down").
   void _drawGravityArrows(Canvas canvas) {
     final g = engine.level.gravity;
@@ -198,10 +199,10 @@ class BoardComponent extends PositionComponent
     for (var i = 0; i < lines; i++) {
       final along = (i + 0.5) * cell;
       final (Offset c, double angle) = switch (g) {
-        Gravity.up => (Offset(along, -_frame / 2), -math.pi / 2),
-        Gravity.left => (Offset(-_frame / 2, along), math.pi),
-        Gravity.right => (Offset(w + _frame / 2, along), 0.0),
-        Gravity.down => (Offset(along, h + _frame / 2), math.pi / 2),
+        Gravity.up => (Offset(along, -_margin / 2), -math.pi / 2),
+        Gravity.left => (Offset(-_margin / 2, along), math.pi),
+        Gravity.right => (Offset(w + _margin / 2, along), 0.0),
+        Gravity.down => (Offset(along, h + _margin / 2), math.pi / 2),
       };
       canvas.save();
       canvas.translate(c.dx, c.dy);
@@ -310,9 +311,6 @@ class BoardComponent extends PositionComponent
   }
 
   void _paintBackground(Canvas canvas) {
-    if (TileArt.ready) {
-      TileArt.frame(canvas, Offset.zero & Size(size.x, size.y), _frame);
-    }
     void drawCell(int row, int col) {
       final rect = Rect.fromLTWH(col * cell, row * cell, cell, cell);
       final dark = (row + col).isOdd;

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sushi_trio/core/game_engine.dart';
@@ -42,5 +44,42 @@ void main() {
   test('every level gets a customer', () {
     expect(Customer.forLevel(1).emoji, isNotEmpty);
     expect(Customer.forLevel(7).nameKey, Customer.forLevel(1).nameKey);
+  });
+
+  test('every customer sprite has its frames bundled', () {
+    final pubspec = File('pubspec.yaml').readAsStringSync();
+    for (final c in Customer.roster.where((c) => c.sprite != null)) {
+      expect(pubspec, contains('assets/sprites/customers/${c.sprite}/'));
+      for (final anim in CustomerAnim.values) {
+        for (var i = 0; i < Customer.frameCount; i++) {
+          expect(File(c.frame(anim, i)).existsSync(), isTrue,
+              reason: c.frame(anim, i));
+        }
+      }
+    }
+  });
+
+  String shownFrame(WidgetTester tester) =>
+      ((tester.widget<Image>(find.byType(Image)).image) as AssetImage)
+          .assetName;
+
+  testWidgets('sprite plays the intro, then loops the animation',
+      (tester) async {
+    const granny = Customer('👵', 'cust0', sprite: '00-granny-sakura');
+    await tester.pumpWidget(const MaterialApp(
+        home: CustomerSprite(
+            customer: granny, intro: CustomerAnim.talk, introLoops: 1)));
+    expect(shownFrame(tester), granny.frame(CustomerAnim.talk, 0));
+    await tester.pump(const Duration(milliseconds: 520)); // 6 fps → frame 3
+    expect(shownFrame(tester), granny.frame(CustomerAnim.talk, 3));
+    await tester.pump(const Duration(milliseconds: 340)); // frame 5
+    expect(shownFrame(tester), granny.frame(CustomerAnim.idle, 1));
+  });
+
+  testWidgets('customers without art show their emoji', (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+        home: CustomerSprite(customer: Customer('🐱', 'cust3'))));
+    expect(find.text('🐱'), findsOneWidget);
+    expect(find.byType(Image), findsNothing);
   });
 }
