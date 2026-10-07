@@ -19,6 +19,7 @@ import 'services/events.dart';
 import 'services/firebase_service.dart';
 import 'services/store.dart';
 import 'services/wallet.dart';
+import 'ui/board_stage.dart';
 import 'ui/customer_order.dart';
 import 'ui/game_dialog.dart';
 import 'ui/home_screen.dart';
@@ -347,24 +348,27 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(4, 4, 12, 0),
-                        child: ValueListenableBuilder<HudState>(
-                          valueListenable: game.hud,
-                          builder: (context, s, child) => Opacity(
-                            opacity: _introDone ? 1 : 0,
-                            child: OrderBubble(
-                                key: _orderKey,
-                                level: game.level,
-                                goals: s.goals),
-                          ),
-                        ),
-                      ),
                       Expanded(
                         child: Stack(
                           fit: StackFit.expand,
                           children: [
-                            GameWidget(game: game),
+                            BoardStage(
+                              level: game.level,
+                              order: Padding(
+                                padding: const EdgeInsets.fromLTRB(4, 0, 12, 0),
+                                child: ValueListenableBuilder<HudState>(
+                                  valueListenable: game.hud,
+                                  builder: (context, s, child) => Opacity(
+                                    opacity: _introDone ? 1 : 0,
+                                    child: OrderBubble(
+                                        key: _orderKey,
+                                        level: game.level,
+                                        goals: s.goals),
+                                  ),
+                                ),
+                              ),
+                              board: GameWidget(game: game),
+                            ),
                             PraiseBanner(game: game),
                             // One tip at a time: the first mechanic of this level
                             // the player has not been told about yet.

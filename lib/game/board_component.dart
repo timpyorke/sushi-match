@@ -47,7 +47,7 @@ class BoardComponent extends PositionComponent
 
   /// Space kept round the board for the gravity arrows, which only show
   /// when pieces don't fall down.
-  double get _margin => engine.level.gravity == Gravity.down ? 0 : 20;
+  double get _margin => _marginFor(engine.level.gravity);
 
   final GameEngine engine;
   final void Function() onTurnFinished;
@@ -145,12 +145,24 @@ class BoardComponent extends PositionComponent
     }
   }
 
+  static double _marginFor(Gravity g) => g == Gravity.down ? 0 : 20;
+
+  /// Scale that fits a [cols] x [rows] board into a [width] x [height] area.
+  static double fitScale(
+          double width, double height, int cols, int rows, Gravity g) =>
+      math.min(width * 0.96 / (cols * cell + 2 * _marginFor(g)),
+          height * 0.96 / (rows * cell + 2 * _marginFor(g)));
+
+  /// Height of the smallest area the board fits into at scale [s].
+  static double areaFor(double s, int rows, Gravity g) =>
+      (rows * cell + 2 * _marginFor(g)) * s / 0.96;
+
   @override
   void onGameResize(Vector2 size) {
     super.onGameResize(size);
     final board = this.size;
-    final s = math.min(size.x * 0.96 / (board.x + 2 * _margin),
-        size.y * 0.96 / (board.y + 2 * _margin));
+    final s = fitScale(size.x, size.y, engine.board.cols, engine.board.rows,
+        engine.level.gravity);
     scale = Vector2.all(s);
     position = (size - board * s) / 2;
   }
