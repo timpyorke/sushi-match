@@ -9,13 +9,30 @@ import 'dart:io';
 const _outDir = 'docs/prompts';
 
 const _style =
-    'Cute kawaii mobile-game character sprite, flat 2D with soft cel '
-    'shading, thick smooth dark-brown outline (#4A2A1A), small glossy '
-    'highlights, warm Japanese-restaurant palette, chibi proportions (head '
-    'about half of total height), rosy round cheeks. Clean vector-like edges, '
-    'no texture noise, no text, no logo, no watermark, no ground shadow, no '
-    'glow, no aura, fully transparent background. Same art style as a glossy cartoon salmon-nigiri '
-    'game icon.';
+    'Japanese anime-style chibi (SD, super-deformed) mobile-game character '
+    'sprite, like a cosy slice-of-life anime game. Drawn by hand by a '
+    'professional 2D anime game illustrator: flat cel colours with one crisp '
+    'hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight '
+    'natural line-weight variation (thicker on the outer silhouette and under '
+    'shapes, thinner on inner details), one small flat white highlight per '
+    'shiny surface, limited warm Japanese-restaurant palette, chibi '
+    'proportions (head about half of total height). Big expressive anime eyes '
+    'with a flat-colour iris, one darker band at the top and two white '
+    'catch-lights, both eyes matching in size and shape (unless the eyes are '
+    'described otherwise below), tiny simple nose, small expressive mouth, '
+    'anime blush on the cheeks (soft pink ovals with fine diagonal lines). '
+    'Hair drawn as a few clean anime locks with one flat shine band. Simple '
+    'chibi hands with clearly separated fingers. Animals are anime mascot '
+    'characters with the same eyes and blush. Use anime emotion symbols '
+    '(sweat drops, sparkles, anger marks, ^^ eyes) only where a frame asks '
+    'for them. Few, deliberate details: every prop and accessory clearly '
+    'shaped and readable, nothing extra beyond the description. Avoid the '
+    'typical AI-art look: no airbrushed or soft gradient shading, no plastic '
+    'or 3D-render sheen, no over-smoothed skin, no random extra sparkles or '
+    'particles, no melted or merged details, no extra or fused fingers, no '
+    'blurry edges. No texture noise, no text, no logo, no watermark, no '
+    'ground shadow, no glow, no aura, fully transparent background. Outline '
+    'weight matches a cartoon salmon-nigiri game icon.';
 
 const _sameAsRef = 'Use the character in the reference image exactly: same '
     'face, hair, outfit, props, colours, outline and art style.';
@@ -160,7 +177,8 @@ const _characters = [
     ],
     sad: [
       'smile fading, neutral mouth.',
-      'eyebrows tilted up, small frown, eyes now open dots looking down.',
+      'eyebrows tilted up, small frown, eyes now open and glistening, looking '
+          'down.',
       'head droops, shoulders slump, one small tear at the eye corner.',
       'same sad pose, one hand resting on the cheek.',
     ],
@@ -912,7 +930,8 @@ String _parts(Character c) {
     'left arm, right arm',
     'left foot, right foot',
     ...c.props,
-    'three eye pairs: happy arcs, closed lines, sad dots with tilted brows',
+    'three anime eye pairs: happy ^^ arcs, closed lines, sad teary eyes with '
+        'tilted brows',
     'three mouths: soft smile, open "o", small frown',
   ].map((p) => '- $p').join('\n');
   return '$_sameAsRef\n\n'
@@ -981,8 +1000,8 @@ String _readme() {
         're-run instead of editing this one. -->')
     ..writeln()
     ..writeln('Ready-to-paste prompts for every character in '
-        '`docs/Charecter.md`, in the same style as '
-        '`assets/sprites/sushi/*.png`. To change the style or a character, '
+        '`docs/Charecter.md`, in a Japanese anime chibi style whose outline and '
+        'gloss match `assets/sprites/sushi/*.png`. To change the style or a character, '
         'edit `tool/gen_prompts.dart` and run:')
     ..writeln()
     ..writeln('```bash')
@@ -1041,6 +1060,15 @@ String _readme() {
     ..writeln('- [ ] All 4 frames in a sheet have the same size and ground '
         'line (except hops). If not, run it again and stress "exact same '
         'size and scale".')
+    ..writeln('- [ ] It reads as Japanese anime: big anime eyes with '
+        'catch-lights, crisp cel shading, blush lines, anime hair locks. If '
+        'it looks like a western cartoon, run it again.')
+    ..writeln('- [ ] It does not look AI-generated: hands have the right '
+        'fingers, both eyes match, props and accessories are clean and '
+        'complete (no melted straps, buttons or patterns), shading is flat cel '
+        'with no airbrushed gradients or plastic sheen, and there are no '
+        'stray sparkles or random details. Fix small slips by hand in an '
+        'image editor rather than re-rolling a sheet that is otherwise good.')
     ..writeln('- [ ] The character is recognisable at 64px from the '
         'silhouette alone.')
     ..writeln('- [ ] The colours match the hex codes listed in the '

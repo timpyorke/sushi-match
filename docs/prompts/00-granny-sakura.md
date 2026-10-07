@@ -13,7 +13,7 @@
 Text → image. Keep the best result as `00-granny-sakura_master.png`.
 
 ```text
-Cute kawaii mobile-game character sprite, flat 2D with soft cel shading, thick smooth dark-brown outline (#4A2A1A), small glossy highlights, warm Japanese-restaurant palette, chibi proportions (head about half of total height), rosy round cheeks. Clean vector-like edges, no texture noise, no text, no logo, no watermark, no ground shadow, no glow, no aura, fully transparent background. Same art style as a glossy cartoon salmon-nigiri game icon.
+Japanese anime-style chibi (SD, super-deformed) mobile-game character sprite, like a cosy slice-of-life anime game. Drawn by hand by a professional 2D anime game illustrator: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on the outer silhouette and under shapes, thinner on inner details), one small flat white highlight per shiny surface, limited warm Japanese-restaurant palette, chibi proportions (head about half of total height). Big expressive anime eyes with a flat-colour iris, one darker band at the top and two white catch-lights, both eyes matching in size and shape (unless the eyes are described otherwise below), tiny simple nose, small expressive mouth, anime blush on the cheeks (soft pink ovals with fine diagonal lines). Hair drawn as a few clean anime locks with one flat shine band. Simple chibi hands with clearly separated fingers. Animals are anime mascot characters with the same eyes and blush. Use anime emotion symbols (sweat drops, sparkles, anger marks, ^^ eyes) only where a frame asks for them. Few, deliberate details: every prop and accessory clearly shaped and readable, nothing extra beyond the description. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no over-smoothed skin, no random extra sparkles or particles, no melted or merged details, no extra or fused fingers, no blurry edges. No texture noise, no text, no logo, no watermark, no ground shadow, no glow, no aura, fully transparent background. Outline weight matches a cartoon salmon-nigiri game icon.
 
 Character: Granny Sakura, a kind, small, elderly Japanese grandmother. White hair rolled into a round bun with a pink sakura-flower kanzashi hairpin. Eyes drawn as curved smiling lines (closed happy arcs), gentle smile, tiny wrinkles at the eye corners, pink cheeks. Pale pink kimono (#F8C8D4) with a small white sakura pattern, darker rose obi (#D9708A), white tabi socks and wooden geta sandals. Gentle, patient and warm, but fussy about freshness.
 
@@ -25,7 +25,7 @@ Single full-body character, front three-quarter view facing slightly left, sligh
 For the order bubble and small UI spots.
 
 ```text
-Cute kawaii mobile-game character sprite, flat 2D with soft cel shading, thick smooth dark-brown outline (#4A2A1A), small glossy highlights, warm Japanese-restaurant palette, chibi proportions (head about half of total height), rosy round cheeks. Clean vector-like edges, no texture noise, no text, no logo, no watermark, no ground shadow, no glow, no aura, fully transparent background. Same art style as a glossy cartoon salmon-nigiri game icon.
+Japanese anime-style chibi (SD, super-deformed) mobile-game character sprite, like a cosy slice-of-life anime game. Drawn by hand by a professional 2D anime game illustrator: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on the outer silhouette and under shapes, thinner on inner details), one small flat white highlight per shiny surface, limited warm Japanese-restaurant palette, chibi proportions (head about half of total height). Big expressive anime eyes with a flat-colour iris, one darker band at the top and two white catch-lights, both eyes matching in size and shape (unless the eyes are described otherwise below), tiny simple nose, small expressive mouth, anime blush on the cheeks (soft pink ovals with fine diagonal lines). Hair drawn as a few clean anime locks with one flat shine band. Simple chibi hands with clearly separated fingers. Animals are anime mascot characters with the same eyes and blush. Use anime emotion symbols (sweat drops, sparkles, anger marks, ^^ eyes) only where a frame asks for them. Few, deliberate details: every prop and accessory clearly shaped and readable, nothing extra beyond the description. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no over-smoothed skin, no random extra sparkles or particles, no melted or merged details, no extra or fused fingers, no blurry edges. No texture noise, no text, no logo, no watermark, no ground shadow, no glow, no aura, fully transparent background. Outline weight matches a cartoon salmon-nigiri game icon.
 
 Character: Granny Sakura, a kind, small, elderly Japanese grandmother. White hair rolled into a round bun with a pink sakura-flower kanzashi hairpin. Eyes drawn as curved smiling lines (closed happy arcs), gentle smile, tiny wrinkles at the eye corners, pink cheeks. Pale pink kimono (#F8C8D4) with a small white sakura pattern, darker rose obi (#D9708A), white tabi socks and wooden geta sandals.
 
@@ -87,7 +87,7 @@ Sprite sheet: 2x2 grid of 4 equal 512x512 cells, one frame per cell, no borders,
 
 Sad reaction, front three-quarter view, still cute and gentle (disappointed, not crying hard):
 f1 (top-left): smile fading, neutral mouth.
-f2 (top-right): eyebrows tilted up, small frown, eyes now open dots looking down.
+f2 (top-right): eyebrows tilted up, small frown, eyes now open and glistening, looking down.
 f3 (bottom-left): head droops, shoulders slump, one small tear at the eye corner.
 f4 (bottom-right): same sad pose, one hand resting on the cheek.
 ```
@@ -133,6 +133,6 @@ Character parts sheet for 2D cut-out animation, front view, every part at the sa
 - left arm, right arm
 - left foot, right foot
 - hairpin flower alone
-- three eye pairs: happy arcs, closed lines, sad dots with tilted brows
+- three anime eye pairs: happy ^^ arcs, closed lines, sad teary eyes with tilted brows
 - three mouths: soft smile, open "o", small frown
 ```

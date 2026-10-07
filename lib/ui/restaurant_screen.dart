@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/settings.dart';
 import '../services/audio.dart';
 import '../services/restaurant.dart';
+import 'customer_order.dart';
 import 'l10n.dart';
 import 'lives_ui.dart';
 import 'ui_art.dart';
@@ -350,9 +351,6 @@ class _Customers extends StatefulWidget {
 
 class _CustomersState extends State<_Customers>
     with SingleTickerProviderStateMixin {
-  // Same faces as the level customers (cust0..cust5).
-  static const _faces = ['👵', '👨', '🧒', '🐱', '👧', '👴'];
-
   late final AnimationController _visit;
   var _face = 0;
 
@@ -362,7 +360,7 @@ class _CustomersState extends State<_Customers>
     _visit = AnimationController(vsync: this, duration: _period())
       ..addStatusListener((s) {
         if (s != AnimationStatus.completed) return;
-        setState(() => _face = (_face + 1) % _faces.length);
+        setState(() => _face = (_face + 1) % Customer.roster.length);
         _visit
           ..duration = _period()
           ..forward(from: 0);
@@ -404,10 +402,15 @@ class _CustomersState extends State<_Customers>
             clipBehavior: Clip.none,
             children: [
               Positioned(
-                left: x * w - 20,
-                top: _laneY * h - 22 - bob,
-                child:
-                    Text(_faces[_face], style: const TextStyle(fontSize: 36)),
+                left: x * w - 32,
+                top: _laneY * h - 48 - bob,
+                child: CustomerSprite(
+                  key: ValueKey(_face),
+                  customer: Customer.roster[_face],
+                  anim: walking ? CustomerAnim.walk : CustomerAnim.idle,
+                  size: 64,
+                  fps: 8,
+                ),
               ),
               if (pay > 0 && pay < 1)
                 Positioned(
