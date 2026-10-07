@@ -8,6 +8,8 @@ Ready-to-paste prompts for every character in `docs/Charecter.md`, in a Japanese
 dart run tool/gen_prompts.dart
 ```
 
+Prompts for the board tiles and the level map are in [tiles/README.md](tiles/README.md).
+
 ## How to use
 
 - Model `gpt-image-1` with `size: 1024x1024`, `background: transparent`, `output_format: png` and `quality: high`.
