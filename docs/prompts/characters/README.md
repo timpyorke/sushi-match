@@ -8,7 +8,7 @@ Ready-to-paste prompts for every character in `docs/Charecter.md`, in a Japanese
 dart run tool/gen_prompts.dart
 ```
 
-Prompts for the board tiles and the level map are in [tiles/README.md](tiles/README.md).
+Prompts for the board tiles and the level map are in [tiles/README.md](tiles/README.md), the icons that replace the emoji in [icons/README.md](icons/README.md).
 
 ## How to use
 

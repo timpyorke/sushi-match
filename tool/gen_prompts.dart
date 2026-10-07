@@ -1009,7 +1009,8 @@ String _readme() {
     ..writeln('```')
     ..writeln()
     ..writeln('Prompts for the board tiles and the level map are in '
-        '[tiles/README.md](tiles/README.md).')
+        '[tiles/README.md](tiles/README.md), the icons that replace the '
+        'emoji in [icons/README.md](icons/README.md).')
     ..writeln()
     ..writeln('## How to use')
     ..writeln()

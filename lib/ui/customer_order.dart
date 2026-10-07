@@ -51,6 +51,11 @@ class Customer {
     Customer('👴', 'cust5', sprite: '05-grandpa-taro'),
     Customer('💪', 'cust6', sprite: '06-ryo'),
     Customer('👩‍🦰', 'cust7', sprite: '07-auntie-kiku'),
+    Customer('🔔', 'cust8', sprite: '08-masa'),
+    Customer('🐙', 'cust9', sprite: '09-taco-neesan'),
+    Customer('🥁', 'cust10', sprite: '10-oto'),
+    Customer('👜', 'cust11', sprite: '11-aunt-hana'),
+    Customer('👘', 'cust12', sprite: '12-ume'),
   ];
 
   /// Customers take turns across levels so every plate has a face.

@@ -1,4 +1,4 @@
-# Adding levels and restaurants
+# Levels
 
 The game has **205 levels in 14 restaurants**. Everything that depends on the
 level count is derived from `Restaurant.shops` (`lib/services/restaurant.dart`),
