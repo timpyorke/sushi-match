@@ -49,16 +49,7 @@ class PlankSubtitle extends StatelessWidget {
     return Container(
       constraints: const BoxConstraints(minHeight: 40),
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 6),
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/ui/plank.png'),
-          fit: BoxFit.fill,
-          // 829x230 sprite: scale shrinks it to ~138x38 logical units and
-          // centerSlice is expressed in those units.
-          scale: 6,
-          centerSlice: Rect.fromLTRB(16, 16, 122, 22),
-        ),
-      ),
+      decoration: UiArt.plankSpriteDecoration(),
       child: DefaultTextStyle.merge(
         style: (t.titleMedium ?? const TextStyle())
             .copyWith(color: UiArt.ink, fontWeight: FontWeight.bold),
@@ -89,6 +80,19 @@ abstract final class UiArt {
           // centerSlice is expressed in those logical units.
           scale: 4,
           centerSlice: Rect.fromLTRB(55, 42.5, 241.5, 95),
+        ),
+      );
+
+  /// Wooden plank sprite stretched as a nine-patch so the rounded ends stay
+  /// undistorted.
+  static BoxDecoration plankSpriteDecoration() => const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/ui/plank.png'),
+          fit: BoxFit.fill,
+          // 829x230 sprite: scale shrinks it to ~138x38 logical units and
+          // centerSlice is expressed in those units.
+          scale: 6,
+          centerSlice: Rect.fromLTRB(16, 16, 122, 22),
         ),
       );
 

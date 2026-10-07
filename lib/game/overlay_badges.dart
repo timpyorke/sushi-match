@@ -15,11 +15,19 @@ class KeyLockBadge extends PositionComponent {
             position: position,
             size: Vector2.all(cellSize),
             anchor: Anchor.center,
-            priority: 5);
+            priority: 5) {
+    final tint = PiecePainter.colors[kind]!;
+    _frame = Paint()
+      ..color = tint.withValues(alpha: 0.9)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3;
+    _body = Paint()..color = tint;
+  }
 
   final PieceKind kind;
 
-  static final _body = Paint();
+  late final Paint _frame;
+  late final Paint _body;
   static final _shackle = Paint()
     ..color = const Color(0xFFFFF1D6)
     ..style = PaintingStyle.stroke
@@ -33,14 +41,10 @@ class KeyLockBadge extends PositionComponent {
   void render(Canvas canvas) {
     final s = size.x;
     // A faint tinted frame marks the whole locked cell.
-    final tint = PiecePainter.colors[kind]!;
     canvas.drawRRect(
         RRect.fromRectAndRadius(
             Rect.fromLTWH(0, 0, s, s).deflate(2), Radius.circular(s * 0.16)),
-        Paint()
-          ..color = tint.withValues(alpha: 0.9)
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 3);
+        _frame);
     final c = Offset(s * 0.2, s * 0.22);
     canvas.drawArc(
         Rect.fromCenter(center: c.translate(0, -4), width: 11, height: 14),
@@ -51,7 +55,7 @@ class KeyLockBadge extends PositionComponent {
     final rr = RRect.fromRectAndRadius(
         Rect.fromCenter(center: c.translate(0, 3), width: 17, height: 13),
         const Radius.circular(3));
-    canvas.drawRRect(rr, _body..color = tint);
+    canvas.drawRRect(rr, _body);
     canvas.drawRRect(rr, _edge);
   }
 }
@@ -68,9 +72,28 @@ class PortalBadge extends PositionComponent {
             position: position,
             size: Vector2.all(cellSize),
             anchor: Anchor.center,
-            priority: entry ? 1 : 6);
+            priority: entry ? 1 : 6) {
+    final hue = _hues[tint % _hues.length];
+    _swirl = Paint()
+      ..color = hue
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3;
+    _ring = Paint()
+      ..color = hue
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3.5;
+    _spin = Paint()
+      ..color = hue
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.5;
+  }
 
   final bool entry;
+
+  static final _vortex = Paint()..color = const Color(0xFF1B1430);
+  late final Paint _swirl;
+  late final Paint _ring;
+  late final Paint _spin;
 
   /// Which pair this belongs to, for colour.
   final int tint;
@@ -92,38 +115,24 @@ class PortalBadge extends PositionComponent {
   void render(Canvas canvas) {
     final s = size.x;
     final c = Offset(s / 2, s / 2);
-    final hue = _hues[tint % _hues.length];
     if (entry) {
-      canvas.drawCircle(c, s * 0.4, Paint()..color = const Color(0xFF1B1430));
+      canvas.drawCircle(c, s * 0.4, _vortex);
       for (var i = 0; i < 3; i++) {
         final r = s * (0.12 + 0.09 * i);
-        canvas.drawArc(
-            Rect.fromCircle(center: c, radius: r),
-            _t * (2 + i) + i,
-            math.pi * 1.4,
-            false,
-            Paint()
-              ..color = hue
-              ..style = PaintingStyle.stroke
-              ..strokeWidth = 3);
+        canvas.drawArc(Rect.fromCircle(center: c, radius: r), _t * (2 + i) + i,
+            math.pi * 1.4, false, _swirl);
       }
       return;
     }
     canvas.drawRRect(
         RRect.fromRectAndRadius(
             Rect.fromLTWH(0, 0, s, s).deflate(2), Radius.circular(s * 0.18)),
-        Paint()
-          ..color = hue
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 3.5);
+        _ring);
     canvas.drawArc(
         Rect.fromCircle(center: Offset(s * 0.8, s * 0.2), radius: s * 0.1),
         _t * 4,
         math.pi * 1.5,
         false,
-        Paint()
-          ..color = hue
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 2.5);
+        _spin);
   }
 }

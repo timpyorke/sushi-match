@@ -272,8 +272,44 @@ class BoardComponent extends PositionComponent
     }
   }
 
+  /// The static layer under the pieces (frame, cells, belts, nori, sacks),
+  /// recorded once and replayed each frame. Re-recorded only when
+  /// [_bgDirty] is set by a step that changes it, or once the tile art lands.
+  Picture? _bg;
+  bool _bgDirty = true;
+  bool _bgArt = false;
+
   @override
   void render(Canvas canvas) {
+    if (_bg == null || _bgDirty || _bgArt != TileArt.ready) {
+      _bg?.dispose();
+      final recorder = PictureRecorder();
+      _paintBackground(Canvas(recorder));
+      _bg = recorder.endRecording();
+      _bgArt = TileArt.ready;
+      _bgDirty = false;
+    }
+    canvas.drawPicture(_bg!);
+    final s = _selected;
+    if (s != null) {
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromLTWH(s.col * cell, s.row * cell, cell, cell).deflate(1.5),
+          const Radius.circular(8),
+        ),
+        _selPaint,
+      );
+    }
+  }
+
+  @override
+  void onRemove() {
+    _bg?.dispose();
+    _bg = null;
+    super.onRemove();
+  }
+
+  void _paintBackground(Canvas canvas) {
     if (TileArt.ready) {
       TileArt.frame(canvas, Offset.zero & Size(size.x, size.y), _frame);
     }
@@ -369,16 +405,6 @@ class BoardComponent extends PositionComponent
       } else {
         _drawBag(canvas, rect, _bags[i]);
       }
-    }
-    final s = _selected;
-    if (s != null) {
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(
-          Rect.fromLTWH(s.col * cell, s.row * cell, cell, cell).deflate(1.5),
-          const Radius.circular(8),
-        ),
-        _selPaint,
-      );
     }
   }
 
@@ -513,9 +539,7 @@ class BoardComponent extends PositionComponent
             :final type,
             :final comboWith
           ):
-          for (final p in affected) {
-            _flash(p);
-          }
+          _flash(affected);
           if (type == SpecialType.wasabi || comboWith == SpecialType.wasabi) {
             _shake();
             Audio.play(Sfx.boom);
@@ -528,12 +552,15 @@ class BoardComponent extends PositionComponent
           await _wait(0.25);
         case ClearStep(:final cleared, :final created, :final cascade):
           Audio.play(Sfx.forCascade(cascade));
+          // Fewer grains once the board is busy: deep cascades and big
+          // blasts would otherwise spawn hundreds of particles at once.
+          final grains = cascade >= 2 || cleared.length > 12 ? 4 : 7;
           final pops = <Future<void>>[];
           for (final c in cleared) {
             final v = _views.remove(c.pieceId);
             if (v == null) continue;
             if (identical(_at[c.pos], v)) _at.remove(c.pos);
-            _burst(v.position);
+            _burst(v.position, count: grains);
             pops.add(_pop(v));
           }
           _haptic(created.isEmpty
@@ -564,14 +591,16 @@ class BoardComponent extends PositionComponent
           pending.clear();
         case NoriStep(:final layers):
           layers.forEach((p, n) => _nori[p.row * board.cols + p.col] = n);
+          _bgDirty = true;
         case BagStep(:final hits):
           Audio.play(Sfx.crack);
           for (final h in hits) {
             final i = h.pos.row * board.cols + h.pos.col;
             _bags[i] = h.layers;
             if (h.layers == 0) _isMat[i] = false;
-            _burst(_center(h.pos), h.layers == 0 ? _sackBurst : null);
+            _burst(_center(h.pos), paint: h.layers == 0 ? _sackBurst : null);
           }
+          _bgDirty = true;
           await _wait(0.15);
         case DeliverStep(:final delivered):
           Audio.play(Sfx.chime);
@@ -580,7 +609,7 @@ class BoardComponent extends PositionComponent
             final v = _views.remove(d.pieceId);
             if (v == null) continue;
             if (identical(_at[d.pos], v)) _at.remove(d.pos);
-            _burst(v.position, _goldChip);
+            _burst(v.position, paint: _goldChip);
             pops.add(_pop(v));
           }
           _haptic(HapticFeedback.mediumImpact);
@@ -590,7 +619,7 @@ class BoardComponent extends PositionComponent
           for (final p in cells) {
             final badge = _keys.remove(p);
             if (badge == null) continue;
-            _burst(_center(p), Paint()..color = PiecePainter.colors[kind]!);
+            _burst(_center(p), paint: _kindChips[kind]);
             badge.add(ScaleEffect.to(Vector2.zero(),
                 EffectController(duration: 0.25, curve: Curves.easeIn),
                 onComplete: badge.removeFromParent));
@@ -604,7 +633,7 @@ class BoardComponent extends PositionComponent
             final v = _views.remove(d.pieceId);
             if (v == null) continue;
             if (identical(_at[d.pos], v)) _at.remove(d.pos);
-            _burst(v.position, _emberChip);
+            _burst(v.position, paint: _emberChip);
             pops.add(_pop(v));
           }
           if (exploded.isNotEmpty) {
@@ -616,7 +645,7 @@ class BoardComponent extends PositionComponent
           await _wait(0.12);
         case IgniteStep(:final pos, :final pieceId):
           _views[pieceId]?.burning = true;
-          _burst(_center(pos), _emberChip);
+          _burst(_center(pos), paint: _emberChip);
           await _wait(0.18);
         case CatHitStep(:final hits):
           Audio.play(Sfx.meow);
@@ -659,13 +688,14 @@ class BoardComponent extends PositionComponent
           final i = pos.row * board.cols + pos.col;
           _bags[i] = 1;
           _isMat[i] = true;
-          _burst(_center(pos), _matChip);
+          _bgDirty = true;
+          _burst(_center(pos), paint: _matChip);
           await _wait(0.1);
         case IceStep(:final hits):
           Audio.play(Sfx.crack);
           for (final h in hits) {
             _views[h.pieceId]?.ice = h.layers;
-            if (h.layers == 0) _burst(_center(h.pos), _iceChip);
+            if (h.layers == 0) _burst(_center(h.pos), paint: _iceChip);
           }
           await _wait(0.12);
         case ConveyorStep(:final moves):
@@ -769,14 +799,26 @@ class BoardComponent extends PositionComponent
   static final _sackBurst = Paint()..color = const Color(0xFFE9D3A8);
   static final _iceChip = Paint()..color = const Color(0xFFBFE8FA);
   static final _sesame = Paint()..color = const Color(0xFF3B2A20);
+  static final _kindChips = {
+    for (final e in PiecePainter.colors.entries)
+      e.key: Paint()..color = e.value,
+  };
   final _rng = math.Random();
 
+  /// Cap on grain bursts alive at once; extra ones in a big combo are
+  /// dropped (the pop animation still plays).
+  static const _maxBursts = 18;
+  int _liveBursts = 0;
+
   /// Rice and sesame grains flying off a cleared piece.
-  void _burst(Vector2 at, [Paint? paint]) {
-    _layer.add(ParticleSystemComponent(
+  void _burst(Vector2 at, {Paint? paint, int count = 7}) {
+    if (_liveBursts >= _maxBursts) return;
+    _liveBursts++;
+    _layer.add(_Burst(
+      onGone: () => _liveBursts--,
       position: at.clone(),
       particle: Particle.generate(
-        count: 7,
+        count: count,
         lifespan: 0.55,
         generator: (i) => AcceleratedParticle(
           acceleration: Vector2(0, 360),
@@ -817,15 +859,12 @@ class BoardComponent extends PositionComponent
     return done.future;
   }
 
-  void _flash(Pos p) {
-    final r = RectangleComponent(
-      position: Vector2(p.col * cell, p.row * cell),
-      size: Vector2.all(cell),
-      paint: Paint()..color = const Color(0xAAFFFFFF),
-    );
-    r.add(OpacityEffect.fadeOut(EffectController(duration: 0.3),
-        onComplete: r.removeFromParent));
-    _layer.add(r);
+  /// White flash over every cell a special hits, as one component.
+  void _flash(Iterable<Pos> cells) {
+    _layer.add(_Flash([
+      for (final p in cells)
+        Rect.fromLTWH(p.col * cell, p.row * cell, cell, cell)
+    ]));
   }
 
   // ---------------------------------------------------------------- hint --
@@ -865,5 +904,45 @@ class BoardComponent extends PositionComponent
       if (target is PositionComponent) target.scale = Vector2.all(1);
     }
     _hint.clear();
+  }
+}
+
+/// A grain burst that reports when it is gone, for [BoardComponent]'s cap.
+class _Burst extends ParticleSystemComponent {
+  _Burst({required this.onGone, super.position, super.particle});
+
+  final void Function() onGone;
+
+  @override
+  void onRemove() {
+    onGone();
+    super.onRemove();
+  }
+}
+
+/// Fading white rectangles over the cells a special hit.
+class _Flash extends Component {
+  _Flash(this.rects);
+
+  final List<Rect> rects;
+  final _paint = Paint();
+  double _t = 0;
+
+  static const _life = 0.3;
+  static const _alpha = 0xAA / 0xFF;
+
+  @override
+  void update(double dt) {
+    _t += dt;
+    if (_t >= _life) removeFromParent();
+  }
+
+  @override
+  void render(Canvas canvas) {
+    _paint.color = const Color(0xFFFFFFFF)
+        .withValues(alpha: _alpha * (1 - _t / _life).clamp(0.0, 1.0));
+    for (final r in rects) {
+      canvas.drawRect(r, _paint);
+    }
   }
 }
