@@ -7,8 +7,8 @@
 - [x] ฟังเสียงจริงบนเครื่อง/simulator: ตอนนี้ยังไม่เคยฟัง ตรวจได้แค่ว่าไฟล์ถูกต้องและ test ผ่าน
 - [x] แก้ `IPHONEOS_DEPLOYMENT_TARGET` จาก 13.0 เป็น 15.0 ใน `ios/Runner.xcodeproj/project.pbxproj` (ตอนนี้ build บน simulator ไม่ผ่าน และเป็นปัญหาที่มีอยู่ก่อนแล้ว)
 - [ ] ปรับระดับเสียง: ความดัง SFX กับ BGM ยังเป็นค่าเดา (`_sfxVolume`, `_bgmVolume` ใน `lib/services/audio.dart`)
-- [x] BGM ร้านละ 1 เพลง ตาม GDD (`bgm_<shop>.wav` 4 เพลง สร้างด้วย `tool/gen_sounds.dart`)
-- [ ] เปลี่ยนเสียงชั่วคราวเป็นเสียงจริง โดยวางไฟล์ชื่อเดิมใน `assets/audio/` (ไฟล์ต้องเป็น `.wav` หรือแก้ `lib/services/audio.dart`)
+- [x] BGM ร้านละ 1 เพลง ตาม GDD (`bgm_<shop>.m4a` 4 เพลง สร้างด้วย `tool/gen_sounds.dart` + `tool/to_m4a.sh`)
+- [ ] เปลี่ยนเสียงชั่วคราวเป็นเสียงจริง โดยวางไฟล์ชื่อเดิมใน `assets/audio/` (ไฟล์ต้องเป็น `.m4a` หรือแก้ `lib/services/audio.dart`)
 - [x] เสียงปุ่มและเสียงเมนู (ตอนนี้มีแต่เสียงในเกมและตอนซื้อของ)
 
 ## 2. Gameplay ที่ GDD ระบุ

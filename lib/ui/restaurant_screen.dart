@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../gen/assets.gen.dart';
 import '../core/settings.dart';
 import '../services/audio.dart';
 import '../services/restaurant.dart';
@@ -68,9 +69,9 @@ class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
     final till = ref.read(restaurantProvider.notifier).till();
     return Scaffold(
       body: DecoratedBox(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/backgrounds/bg.png'),
+            image: Assets.backgrounds.bg.provider(),
             fit: BoxFit.cover,
           ),
         ),
@@ -310,8 +311,7 @@ class _Slot extends StatelessWidget {
                 children: [
                   Opacity(
                     opacity: 0.5,
-                    child: Text(furniture.emoji,
-                        style: const TextStyle(fontSize: 22)),
+                    child: UiArt.furniture(furniture.id).sized(22),
                   ),
                   Row(
                     mainAxisSize: MainAxisSize.min,
@@ -330,7 +330,7 @@ class _Slot extends StatelessWidget {
             scale: owned ? 1 : 0,
             duration: const Duration(milliseconds: 450),
             curve: Curves.elasticOut,
-            child: Text(furniture.emoji, style: const TextStyle(fontSize: 44)),
+            child: UiArt.furniture(furniture.id).sized(44),
           ),
         ],
       ),
@@ -418,8 +418,7 @@ class _CustomersState extends State<_Customers>
                   top: _laneY * h - 40 - pay * 36,
                   child: Opacity(
                     opacity: 1 - pay,
-                    child:
-                        const Image(image: UiArt.coin, width: 22, height: 22),
+                    child: UiArt.sized(UiArt.coin, 22),
                   ),
                 ),
             ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../gen/assets.gen.dart';
 import '../services/audio.dart';
 import '../services/wallet.dart';
 
@@ -62,37 +63,101 @@ class PlankSubtitle extends StatelessWidget {
 
 /// Sprites under assets/ui/.
 abstract final class UiArt {
-  static const panel = AssetImage('assets/ui/panel.png');
-  static const heart = AssetImage('assets/ui/heart.png');
-  static const buttonRound = AssetImage('assets/ui/button_round.png');
-  static const star = AssetImage('assets/ui/star.png');
-  static const coin = AssetImage('assets/ui/coin.png');
+  static final panel = Assets.ui.panel.provider();
+  static final heart = Assets.ui.heart.provider();
+  static final buttonRound = Assets.ui.buttonRound.provider();
+  static final star = Assets.ui.star.provider();
+  static final coin = Assets.ui.coin.provider();
+  static final gift = Assets.ui.gift.provider();
+  static final heartBroken = Assets.ui.heartBroken.provider();
+  static final check = Assets.ui.check.provider();
+
+  /// Obstacle icon by id; the ids are the ones the game data uses.
+  static AssetGenImage obstacle(String id) => switch (id) {
+        'bag' => Assets.ui.obstacles.bag,
+        'bomb' => Assets.ui.obstacles.bomb,
+        'cat' => Assets.ui.obstacles.cat,
+        'conveyor' => Assets.ui.obstacles.conveyor,
+        'deliver' => Assets.ui.obstacles.deliver,
+        'fire' => Assets.ui.obstacles.fire,
+        'gravity' => Assets.ui.obstacles.gravity,
+        'ice' => Assets.ui.obstacles.ice,
+        'key' => Assets.ui.obstacles.key,
+        'mat' => Assets.ui.obstacles.mat,
+        'nori' => Assets.ui.obstacles.nori,
+        'portal' => Assets.ui.obstacles.portal,
+        _ => throw ArgumentError.value(id, 'id', 'no obstacle icon'),
+      };
+
+  /// Shop icon by id; the ids are the ones the game data uses.
+  static AssetGenImage shop(String id) => switch (id) {
+        'tsukiji' => Assets.ui.shops.tsukiji,
+        'osaka' => Assets.ui.shops.osaka,
+        'kyoto' => Assets.ui.shops.kyoto,
+        'hokkaido' => Assets.ui.shops.hokkaido,
+        'fukuoka' => Assets.ui.shops.fukuoka,
+        'okinawa' => Assets.ui.shops.okinawa,
+        'omakase' => Assets.ui.shops.omakase,
+        'nagoya' => Assets.ui.shops.nagoya,
+        'hiroshima' => Assets.ui.shops.hiroshima,
+        'kanazawa' => Assets.ui.shops.kanazawa,
+        'sendai' => Assets.ui.shops.sendai,
+        'kobe' => Assets.ui.shops.kobe,
+        'nara' => Assets.ui.shops.nara,
+        'ginza' => Assets.ui.shops.ginza,
+        _ => throw ArgumentError.value(id, 'id', 'no shop icon'),
+      };
+
+  /// Furniture icon by id; the ids are the ones the game data uses.
+  static AssetGenImage furniture(String id) => switch (id) {
+        'lantern' => Assets.sprites.furniture.lantern,
+        'stool' => Assets.sprites.furniture.stool,
+        'noren' => Assets.sprites.furniture.noren,
+        'sign' => Assets.sprites.furniture.sign,
+        'plant' => Assets.sprites.furniture.plant,
+        'luckycat' => Assets.sprites.furniture.luckycat,
+        'aquarium' => Assets.sprites.furniture.aquarium,
+        'conveyor' => Assets.sprites.furniture.conveyor,
+        'kadomatsu' => Assets.sprites.furniture.kadomatsu,
+        'taiko' => Assets.sprites.furniture.taiko,
+        'sake' => Assets.sprites.furniture.sake,
+        'trophy' => Assets.sprites.furniture.trophy,
+        _ => throw ArgumentError.value(id, 'id', 'no furniture icon'),
+      };
+
+  /// A square sprite decoded near its display size (3x, like [BoosterIcon]):
+  /// the sources are 192-292px but icons are drawn at 16-44.
+  static Widget sized(ImageProvider image, double size) => Image(
+        image: ResizeImage(image, width: (size * 3).round()),
+        width: size,
+        height: size,
+      );
 
   static const ink = Color(0xFF4A2E1B);
   static const paper = Color(0xFFFBF1DC);
 
   /// Wooden board with wave corners; stretches without distorting the frame.
-  static BoxDecoration panelDecoration() => const BoxDecoration(
+  static BoxDecoration panelDecoration() => BoxDecoration(
         image: DecorationImage(
           image: panel,
           fit: BoxFit.fill,
-          // Sprites are ~1200px wide: `scale` shrinks them to logical size and
+          // The sprite is 890px wide: `scale` shrinks it to logical size and
           // centerSlice is expressed in those logical units.
-          scale: 4,
-          centerSlice: Rect.fromLTRB(55, 42.5, 241.5, 95),
+          scale: 3,
+          centerSlice: const Rect.fromLTRB(55, 42.5, 241.5, 95),
         ),
       );
 
   /// Wooden plank sprite stretched as a nine-patch so the rounded ends stay
   /// undistorted.
-  static BoxDecoration plankSpriteDecoration() => const BoxDecoration(
+  static BoxDecoration plankSpriteDecoration() => BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/ui/plank.png'),
+          image: Assets.ui.plank.provider(),
           fit: BoxFit.fill,
           // 829x230 sprite: scale shrinks it to ~138x38 logical units and
           // centerSlice is expressed in those units.
           scale: 6,
-          centerSlice: Rect.fromLTRB(16, 16, 122, 22),
+          centerSlice: const Rect.fromLTRB(16, 16, 122, 22),
         ),
       );
 
@@ -109,27 +174,26 @@ abstract final class UiArt {
       );
 }
 
-/// Booster sprite from assets/sprites/boosters/ (the starter boosters use the power
-/// sprites in assets/sprites/power/).
+/// Booster sprite (the starter boosters use the power sprites).
 class BoosterIcon extends StatelessWidget {
   const BoosterIcon(this.booster, {super.key, this.size = 32});
   final Booster booster;
   final double size;
 
-  static const _sprites = {
-    Booster.extraMoves: 'sprites/boosters/hourglass',
-    Booster.chopsticks: 'sprites/boosters/chopsticks',
-    Booster.freeSwap: 'sprites/boosters/swap',
-    Booster.shuffle: 'sprites/boosters/shuffle',
-    Booster.starterKnife: 'sprites/power/knife',
-    Booster.starterWasabi: 'sprites/power/wasabi',
+  static final _sprites = {
+    Booster.extraMoves: Assets.sprites.boosters.hourglass,
+    Booster.chopsticks: Assets.sprites.boosters.chopsticks,
+    Booster.freeSwap: Assets.sprites.boosters.swap,
+    Booster.shuffle: Assets.sprites.boosters.shuffle,
+    Booster.starterKnife: Assets.sprites.power.knife,
+    Booster.starterWasabi: Assets.sprites.power.wasabi,
   };
 
   @override
   Widget build(BuildContext context) {
     final sprite = _sprites[booster];
     if (sprite == null) return SizedBox(width: size, height: size);
-    return Image.asset('assets/$sprite.png',
+    return sprite.image(
         width: size,
         height: size,
         // Sprites are 192-256px; decode near display size.
@@ -137,14 +201,14 @@ class BoosterIcon extends StatelessWidget {
   }
 }
 
-/// Shopping cart sprite (assets/ui/shopping.png).
+/// Shopping cart sprite.
 class ShopIcon extends StatelessWidget {
   const ShopIcon({super.key, this.size = 32});
   final double size;
 
   @override
-  Widget build(BuildContext context) => Image.asset('assets/ui/shopping.png',
-      width: size, height: size, cacheWidth: (size * 3).round());
+  Widget build(BuildContext context) => Assets.ui.shopping
+      .image(width: size, height: size, cacheWidth: (size * 3).round());
 }
 
 /// Gold star, greyed out when [lit] is false.
@@ -155,7 +219,7 @@ class StarIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final img = Image(image: UiArt.star, width: size, height: size);
+    final img = UiArt.sized(UiArt.star, size);
     if (lit) return img;
     return Opacity(
       opacity: 0.35,
@@ -190,7 +254,7 @@ class RoundIconButton extends StatelessWidget {
         width: 48,
         height: 48,
         margin: const EdgeInsets.fromLTRB(12, 8, 0, 0),
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           image: DecorationImage(image: UiArt.buttonRound, fit: BoxFit.fill),
         ),
         child: Icon(icon, color: Colors.white),
@@ -211,7 +275,7 @@ class HeartAmount extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Image(image: UiArt.heart, width: size, height: size),
+        UiArt.sized(UiArt.heart, size),
         const SizedBox(width: 4),
         Text(text, style: style),
       ],
@@ -231,10 +295,62 @@ class CoinAmount extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Image(image: UiArt.coin, width: size, height: size),
+        UiArt.sized(UiArt.coin, size),
         const SizedBox(width: 4),
         Text('$amount', style: style),
       ],
     );
   }
+}
+
+/// Reward amounts with the coin and booster sprites used elsewhere in the UI.
+class RewardAmount extends StatelessWidget {
+  const RewardAmount(
+      {super.key,
+      required this.coins,
+      this.booster,
+      this.qty = 0,
+      this.size = 16,
+      this.style});
+
+  final int coins;
+  final String? booster;
+  final int qty;
+  final double size;
+  final TextStyle? style;
+
+  @override
+  Widget build(BuildContext context) {
+    final kind = Booster.values.where((b) => b.name == booster).firstOrNull;
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: 6,
+      runSpacing: 2,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        if (coins > 0) CoinAmount(coins, size: size, style: style),
+        if (booster != null)
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (kind != null)
+                BoosterIcon(kind, size: size)
+              else
+                UiArt.sized(UiArt.gift, size),
+              const SizedBox(width: 4),
+              Text('×$qty', style: style),
+            ],
+          ),
+      ],
+    );
+  }
+}
+
+extension SizedAsset on AssetGenImage {
+  /// Square image of [size] decoded near that size; see [UiArt.sized].
+  Image sized(double size) => image(
+        width: size,
+        height: size,
+        cacheWidth: (size * 3).round(),
+      );
 }

@@ -66,7 +66,8 @@ class _NoLivesState extends ConsumerState<_NoLives> {
     }
     final left = wallet.nextLifeIn(ref.read(clockProvider)());
     return GameDialog(
-      title: '💔 ${L10n.t('outOfLives')}',
+      title: L10n.t('outOfLives'),
+      titleIcon: UiArt.sized(UiArt.heartBroken, 28),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

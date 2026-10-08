@@ -136,12 +136,11 @@ class RegionBanner extends StatelessWidget {
   const RegionBanner(
       {super.key,
       required this.shopId,
-      required this.emoji,
       required this.nameKey,
       required this.locked,
       required this.done,
       required this.total});
-  final String shopId, emoji, nameKey;
+  final String shopId, nameKey;
   final bool locked;
   final int done, total;
 
@@ -166,7 +165,7 @@ class RegionBanner extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Text(emoji, style: const TextStyle(fontSize: 24)),
+          UiArt.shop(shopId).sized(24),
           const SizedBox(width: 8),
           Expanded(
             child: Column(
@@ -292,7 +291,6 @@ class _TileMapViewState extends State<TileMapView> {
                     height: tile * 1.4,
                     child: RegionBanner(
                       shopId: layout.shops[s].id,
-                      emoji: layout.shops[s].emoji,
                       nameKey: layout.shops[s].nameKey,
                       locked: locked.contains(s),
                       done: (cleared - (layout.shops[s].firstLevel - 1)).clamp(

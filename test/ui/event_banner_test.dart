@@ -9,6 +9,7 @@ import 'package:sushi_trio/services/wallet.dart';
 import 'package:sushi_trio/ui/event_banner.dart';
 import 'package:sushi_trio/ui/event_dialog.dart';
 import 'package:sushi_trio/ui/l10n.dart';
+import 'package:sushi_trio/ui/ui_art.dart';
 
 const _raw = '''
 {"anchor": "2026-10-05", "events": [
@@ -52,6 +53,11 @@ void main() {
     await tester.tap(find.text('Claim'));
     await tester.pumpAndSettle();
     expect(c.read(walletProvider).coins, Wallet.startingCoins + 5);
-    expect(find.text('✅'), findsOneWidget);
+    expect(
+        find.byWidgetPredicate((w) =>
+            w is Image &&
+            w.image is ResizeImage &&
+            (w.image as ResizeImage).imageProvider == UiArt.check),
+        findsOneWidget);
   });
 }

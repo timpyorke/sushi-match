@@ -6,18 +6,6 @@ import 'game_dialog.dart';
 import 'l10n.dart';
 import 'ui_art.dart';
 
-const _boosterEmoji = {
-  'chopsticks': '🥢',
-  'shuffle': '🔀',
-  'starterKnife': '🔪',
-  'extraMoves': '➕',
-  'freeSwap': '🔄',
-  'starterWasabi': '🟢',
-};
-
-String _label(DailyPrize p) =>
-    '🪙${p.coins}${p.booster == null ? '' : ' ${_boosterEmoji[p.booster!.name]}×${p.qty}'}';
-
 /// Shows the 7-day calendar if today's reward is waiting.
 Future<void> maybeShowDailyReward(BuildContext context, WidgetRef ref) async {
   if (!ref.read(dailyProvider.notifier).canClaim) return;
@@ -44,7 +32,8 @@ class _DailyRewardDialogState extends ConsumerState<DailyRewardDialog> {
   @override
   Widget build(BuildContext context) {
     return GameDialog(
-      title: '🎁 ${L10n.t('dailyTitle')}',
+      title: L10n.t('dailyTitle'),
+      titleIcon: UiArt.sized(UiArt.gift, 28),
       width: 360,
       content: SizedBox(
         width: 280,
@@ -67,11 +56,9 @@ class _DailyRewardDialogState extends ConsumerState<DailyRewardDialog> {
             ? GameDialogButton(
                 primary: true,
                 onPressed: () => Navigator.pop(context),
-                child: const Icon(Icons.check))
+                child: UiArt.sized(UiArt.check, 24))
             : GameDialogButton(
-                primary: true,
-                onPressed: _claim,
-                label: L10n.t('dailyClaim')),
+                primary: true, onPressed: _claim, label: L10n.t('dailyClaim')),
       ],
     );
   }
@@ -89,7 +76,7 @@ class _DayCell extends StatelessWidget {
     return Container(
       // 280 wide content: three equal cells per row, day 7 spans the row.
       width: big ? 280 : 88,
-      height: big ? 64 : 56,
+      constraints: BoxConstraints(minHeight: big ? 64 : 72),
       alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
       decoration: BoxDecoration(
@@ -107,12 +94,19 @@ class _DayCell extends StatelessWidget {
             Text(L10n.t('dailyDay', {'n': day + 1}),
                 style: const TextStyle(fontSize: 11, color: UiArt.ink)),
             const SizedBox(height: 2),
-            Text(done ? '✅' : _label(DailyReward.prizes[day]),
-                textAlign: TextAlign.center,
+            if (done)
+              UiArt.sized(UiArt.check, 18)
+            else
+              RewardAmount(
+                coins: DailyReward.prizes[day].coins,
+                booster: DailyReward.prizes[day].booster?.name,
+                qty: DailyReward.prizes[day].qty,
+                size: big ? 18 : 14,
                 style: TextStyle(
                     fontSize: big ? 14 : 12,
                     fontWeight: FontWeight.bold,
-                    color: UiArt.ink)),
+                    color: UiArt.ink),
+              ),
           ],
         ),
       ),

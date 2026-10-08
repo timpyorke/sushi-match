@@ -67,7 +67,10 @@ class EventBanner extends ConsumerWidget {
               ),
             ),
             if (claimable > 0)
-              Badge(label: Text('$claimable'), child: const Text('🎁'))
+              Badge(
+                label: Text('$claimable'),
+                child: UiArt.sized(UiArt.gift, 24),
+              )
             else
               const Icon(Icons.chevron_right, color: UiArt.ink),
           ],

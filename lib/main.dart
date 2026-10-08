@@ -12,6 +12,8 @@ import 'core/progress.dart';
 import 'core/settings.dart';
 import 'game/piece_painter.dart';
 import 'game/sushi_game.dart';
+import 'gen/assets.gen.dart';
+import 'gen/fonts.gen.dart';
 import 'services/analytics.dart';
 import 'services/audio.dart';
 import 'services/event_config.dart';
@@ -43,7 +45,7 @@ void main() async {
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await _enterImmersive();
   await PiecePainter.loadSprites();
-  const bundledEvents = AssetEventSource();
+  final bundledEvents = AssetEventSource();
   final remote = await initFirebase() ? RemoteConfigFetch() : null;
   final EventConfigSource eventSource = remote == null
       ? bundledEvents
@@ -97,7 +99,7 @@ class _SushiTrioAppState extends State<SushiTrioApp> {
       theme: ThemeData(
         colorSchemeSeed: const Color(0xFFB71C2C),
         useMaterial3: true,
-        fontFamily: 'Mali',
+        fontFamily: FontFamily.mali,
       ),
       home: AnimatedSwitcher(
         duration: const Duration(milliseconds: 250),
@@ -114,25 +116,25 @@ class _SushiTrioAppState extends State<SushiTrioApp> {
 /// Levels in the game; grows by editing `Restaurant.shops`.
 final int kLevelCount = Restaurant.totalLevels;
 
-/// (id, emoji, l10n prefix) of the first unseen tip this level needs.
-(String, String, String)? _tipFor(LevelConfig level, Set<String> seen) {
+/// (id, l10n prefix) of the first unseen tip this level needs.
+(String, String)? _tipFor(LevelConfig level, Set<String> seen) {
   final tips = [
-    if (level.conveyors.isNotEmpty) ('conveyor', '➡️🔒', 'tipConveyor'),
-    if (level.ice.any((n) => n > 0)) ('ice', '🧊', 'tipIce'),
+    if (level.conveyors.isNotEmpty) ('conveyor', 'tipConveyor'),
+    if (level.ice.any((n) => n > 0)) ('ice', 'tipIce'),
     if (level.goals.any((g) => g.type == GoalType.deliver))
-      ('deliver', '🍙', 'tipDeliver'),
-    if (level.mats.any((m) => m)) ('mat', '🎋', 'tipMat'),
-    if (level.fire.any((f) => f)) ('fire', '🔥', 'tipFire'),
-    if (level.cats.isNotEmpty) ('cat', '🐱', 'tipCat'),
-    if (level.locks.any((k) => k != null)) ('key', '🔑', 'tipKey'),
-    if (level.timers.any((t) => t > 0)) ('bomb', '💣', 'tipBomb'),
-    if (level.portals.isNotEmpty) ('portal', '🌀', 'tipPortal'),
-    if (level.gravity != Gravity.down) ('gravity', '↔️', 'tipGravity'),
+      ('deliver', 'tipDeliver'),
+    if (level.mats.any((m) => m)) ('mat', 'tipMat'),
+    if (level.fire.any((f) => f)) ('fire', 'tipFire'),
+    if (level.cats.isNotEmpty) ('cat', 'tipCat'),
+    if (level.locks.any((k) => k != null)) ('key', 'tipKey'),
+    if (level.timers.any((t) => t > 0)) ('bomb', 'tipBomb'),
+    if (level.portals.isNotEmpty) ('portal', 'tipPortal'),
+    if (level.gravity != Gravity.down) ('gravity', 'tipGravity'),
     if ([
       for (var i = 0; i < level.bags.length; i++)
         if (level.bags[i] > 0 && !level.mats[i]) i,
     ].isNotEmpty)
-      ('bag', '🌾', 'tipBag'),
+      ('bag', 'tipBag'),
   ];
   for (final t in tips) {
     if (!seen.contains(t.$1)) return t;
@@ -188,9 +190,9 @@ class LevelSelectScreen extends ConsumerWidget {
     ref.watch(settingsProvider.select((s) => s.language));
     return Scaffold(
       body: DecoratedBox(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/backgrounds/bg.png'),
+            image: Assets.backgrounds.bg.provider(),
             fit: BoxFit.cover,
           ),
         ),
@@ -227,6 +229,14 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   final _orderKey = GlobalKey();
   bool _introDone = false;
 
+  /// Bumped each time the level's customer should play their signature.
+  int _signaturePlays = 0;
+
+  void _signature(SignatureCue cue, int levelId) {
+    if (Customer.forLevel(levelId).signature?.cue != cue || !mounted) return;
+    setState(() => _signaturePlays++);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -256,11 +266,29 @@ class _GameScreenState extends ConsumerState<GameScreen> {
         eventKind: ref.read(eventProvider).active?.kind,
         onEventGain: events.addCollected,
         analytics: ref.read(analyticsProvider));
+    var moves = game.hud.value.movesLeft;
+    var goalsDone = game.hud.value.goals.where((g) => g.done).length;
     game.hud.addListener(() {
-      if (game.hud.value.status == GameStatus.won) {
+      final s = game.hud.value;
+      if (s.status == GameStatus.won) {
         progress.markCleared(widget.levelNumber);
-        restaurant.recordStars(widget.levelNumber, game.hud.value.stars);
+        restaurant.recordStars(widget.levelNumber, s.stars);
       }
+      if (s.status != GameStatus.playing) return;
+      final done = s.goals.where((g) => g.done).length;
+      if (done > goalsDone) _signature(SignatureCue.goal, level.id);
+      goalsDone = done;
+      if (s.movesLeft != moves && s.movesLeft < moves) {
+        if (s.movesLeft <= 3) {
+          _signature(SignatureCue.lowMoves, level.id);
+        } else if (s.movesLeft % 6 == 0) {
+          _signature(SignatureCue.idle, level.id);
+        }
+      }
+      moves = s.movesLeft;
+    });
+    game.praise.addListener(() {
+      if (game.praise.value != null) _signature(SignatureCue.combo, level.id);
     });
     return game;
   }
@@ -305,9 +333,9 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: DecoratedBox(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/backgrounds/bg.png'),
+          image: Assets.backgrounds.bg.provider(),
           fit: BoxFit.cover,
         ),
       ),
@@ -363,7 +391,8 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                                     child: OrderBubble(
                                         key: _orderKey,
                                         level: game.level,
-                                        goals: s.goals),
+                                        goals: s.goals,
+                                        signaturePlays: _signaturePlays),
                                   ),
                                 ),
                               ),
@@ -380,8 +409,8 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                                     ? const SizedBox.shrink()
                                     : TipOverlay(
                                         id: tip.$1,
-                                        emoji: tip.$2,
-                                        text: tip.$3);
+                                        icon: UiArt.obstacle(tip.$1),
+                                        text: tip.$2);
                               },
                             ),
                             ResultOverlay(
@@ -422,7 +451,10 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                         level: game.level,
                         goals: game.hud.value.goals,
                         target: _orderKey,
-                        onDone: () => setState(() => _introDone = true),
+                        onDone: () {
+                          setState(() => _introDone = true);
+                          _signature(SignatureCue.start, game.level.id);
+                        },
                       ),
                     ),
                 ]));

@@ -9,12 +9,14 @@ class GameDialog extends StatelessWidget {
   const GameDialog({
     super.key,
     required this.title,
+    this.titleIcon,
     this.content,
     this.actions = const [],
     this.width = 320,
   });
 
   final String title;
+  final Widget? titleIcon;
   final Widget? content;
   final List<Widget> actions;
   final double width;
@@ -36,8 +38,19 @@ class GameDialog extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  OutlinedTitle(title,
-                      style: Theme.of(context).textTheme.headlineSmall),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (titleIcon != null) ...[
+                        titleIcon!,
+                        const SizedBox(width: 8),
+                      ],
+                      Flexible(
+                        child: OutlinedTitle(title,
+                            style: Theme.of(context).textTheme.headlineSmall),
+                      ),
+                    ],
+                  ),
                   if (content != null) ...[
                     const SizedBox(height: 12),
                     content!,

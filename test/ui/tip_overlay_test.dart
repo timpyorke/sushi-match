@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sushi_trio/services/store.dart';
 import 'package:sushi_trio/services/tips.dart';
+import 'package:sushi_trio/gen/assets.gen.dart';
 import 'package:sushi_trio/ui/l10n.dart';
 import 'package:sushi_trio/ui/tip_overlay.dart';
 
@@ -18,8 +19,10 @@ void main() {
           home: Scaffold(
             body: Stack(children: [
               GestureDetector(onTap: () => behindTaps++),
-              const TipOverlay(
-                  id: 'conveyor', emoji: '➡️', text: 'tipConveyor'),
+              TipOverlay(
+                  id: 'conveyor',
+                  icon: Assets.ui.obstacles.conveyor,
+                  text: 'tipConveyor'),
             ]),
           ),
         )));

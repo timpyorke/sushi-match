@@ -111,6 +111,7 @@ class BoardComponent extends PositionComponent
   @override
   Future<void> onLoad() async {
     await TileArt.load();
+    await CatArt.load();
     _layer = ClipComponent.rectangle(size: size);
     add(_layer);
     for (final p in board.positions) {
@@ -665,6 +666,7 @@ class BoardComponent extends PositionComponent
             if (cat == null) continue;
             cat.hp = h.hp;
             if (h.hp > 0) {
+              cat.play(CatAnim.hit);
               cat.add(SequenceEffect([
                 RotateEffect.by(0.25, EffectController(duration: 0.06)),
                 RotateEffect.by(-0.5, EffectController(duration: 0.12)),
@@ -674,6 +676,7 @@ class BoardComponent extends PositionComponent
             }
             // Out of lives: the cat bolts off the board.
             _cats.remove(h.catId);
+            cat.play(CatAnim.flee);
             final done = Completer<void>();
             cat.add(MoveByEffect(Vector2(cell * 2.5, -cell * 0.6),
                 EffectController(duration: 0.4, curve: Curves.easeIn),
@@ -688,7 +691,10 @@ class BoardComponent extends PositionComponent
           await _wait(0.1);
         case CatMoveStep(:final catId, :final to):
           final cat = _cats[catId];
-          if (cat != null) await _moveTo(cat, _center(to), 0.3);
+          if (cat == null) break;
+          cat.play(CatAnim.prowl);
+          await _moveTo(cat, _center(to), 0.3);
+          cat.play(CatAnim.eat);
         case MatSpreadStep(:final pos, :final pieceId):
           final v = _views.remove(pieceId);
           if (v != null) {

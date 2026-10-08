@@ -185,6 +185,14 @@ class ResultOverlay extends ConsumerWidget {
                       CustomerSprite(
                         customer: Customer.forLevel(game.level.id),
                         anim: won ? CustomerAnim.happy : CustomerAnim.sad,
+                        intro: won &&
+                                Customer.forLevel(game.level.id)
+                                        .signature
+                                        ?.cue ==
+                                    SignatureCue.served
+                            ? CustomerAnim.signature
+                            : null,
+                        introLoops: 1,
                         size: 112,
                       ),
                       Text(

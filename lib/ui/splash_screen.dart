@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../gen/assets.gen.dart';
 import '../core/piece.dart';
 import '../services/audio.dart';
 import 'l10n.dart';
@@ -66,9 +67,9 @@ class _SplashScreenState extends State<SplashScreen>
         behavior: HitTestBehavior.opaque,
         onTap: _finish,
         child: DecoratedBox(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/backgrounds/bg.png'),
+              image: Assets.backgrounds.bg.provider(),
               fit: BoxFit.cover,
             ),
           ),
