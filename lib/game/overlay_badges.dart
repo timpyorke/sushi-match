@@ -48,8 +48,10 @@ class KeyLockBadge extends PositionComponent {
         _frame);
     final c = Offset(s * 0.2, s * 0.22);
     if (ObstacleArt.ready) {
-      ObstacleArt.draw(canvas, ObstacleSprite.key,
-          Rect.fromCenter(center: c, width: s * 0.36, height: s * 0.36));
+      // The grey padlock takes the colour that opens it.
+      ObstacleArt.draw(canvas, ObstacleSprite.lock,
+          Rect.fromCenter(center: c, width: s * 0.36, height: s * 0.36),
+          tint: PiecePainter.colors[kind]);
       return;
     }
     canvas.drawArc(
@@ -123,24 +125,15 @@ class PortalBadge extends PositionComponent {
     final c = Offset(s / 2, s / 2);
     if (ObstacleArt.ready) {
       if (entry) {
-        ObstacleArt.draw(canvas, ObstacleSprite.portal,
+        ObstacleArt.draw(canvas, ObstacleSprite.portalIn,
             Rect.fromLTWH(0, 0, s, s).deflate(s * 0.04),
-            rot: _t * 1.5);
+            rot: _t * 1.5, tint: _hues[tint % _hues.length]);
         return;
       }
-      // Exit: the same gate, smaller and tinted ring-like, in the corner.
-      canvas.drawRRect(
-          RRect.fromRectAndRadius(
-              Rect.fromLTWH(0, 0, s, s).deflate(2), Radius.circular(s * 0.18)),
-          _ring);
-      ObstacleArt.draw(
-          canvas,
-          ObstacleSprite.portal,
-          Rect.fromCenter(
-              center: Offset(s * 0.8, s * 0.2),
-              width: s * 0.3,
-              height: s * 0.3),
-          rot: _t * 4);
+      // Exit: a bright ring around the cell it feeds.
+      ObstacleArt.draw(canvas, ObstacleSprite.portalOut,
+          Rect.fromLTWH(0, 0, s, s).deflate(s * 0.04),
+          rot: _t * 0.8, tint: _hues[tint % _hues.length]);
       return;
     }
     if (entry) {

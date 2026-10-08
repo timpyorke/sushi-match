@@ -156,37 +156,45 @@ class GameEngine {
   /// Pieces of [kind] cleared so far (feeds the weekly event tally).
   int collectedOf(PieceKind kind) => _collected[kind] ?? 0;
 
+  int _currentFor(LevelGoal g) => switch (g.type) {
+        GoalType.collect => _collected[g.piece] ?? 0,
+        GoalType.score => score,
+        GoalType.clearNori => g.count - _nori.where((n) => n > 0).length,
+        GoalType.breakIce => g.count - _frozenCount,
+        GoalType.breakBag => g.count - _bagCount,
+        GoalType.deliver => _delivered,
+        GoalType.clearMats => g.count - _matCount,
+        GoalType.putOut => g.count - _burningCount,
+        GoalType.shooCats => g.count - _cats.length,
+      };
+
   List<GoalProgress> get goals => [
-        for (final g in level.goals)
-          GoalProgress(
-            g,
-            switch (g.type) {
-              GoalType.collect => _collected[g.piece] ?? 0,
-              GoalType.score => score,
-              GoalType.clearNori => g.count - _nori.where((n) => n > 0).length,
-              GoalType.breakIce => g.count - _frozenCount,
-              GoalType.breakBag => g.count - _bagCount,
-              GoalType.deliver => _delivered,
-              GoalType.clearMats => g.count - _matCount,
-              GoalType.putOut => g.count - _burningCount,
-              GoalType.shooCats => g.count - _cats.length,
-            },
-          ),
+        for (final g in level.goals) GoalProgress(g, _currentFor(g)),
       ];
 
   int get stars => status != GameStatus.won
       ? 0
       : max(1, level.stars.where((s) => score >= s).length);
 
-  int get _frozenCount => [
-        for (final p in board.positions)
-          if (board[p]?.frozen ?? false) p,
-      ].length;
+  /// Whether every goal is met. Cheaper than building [goals] each time.
+  bool get _allGoalsDone =>
+      level.goals.every((g) => _currentFor(g) >= g.count);
 
-  int get _burningCount => [
-        for (final p in board.positions)
-          if (board[p]?.burning ?? false) p,
-      ].length;
+  int get _frozenCount {
+    var n = 0;
+    for (final p in board.positions) {
+      if (board[p]?.frozen ?? false) n++;
+    }
+    return n;
+  }
+
+  int get _burningCount {
+    var n = 0;
+    for (final p in board.positions) {
+      if (board[p]?.burning ?? false) n++;
+    }
+    return n;
+  }
 
   /// Cats still prowling; the view reads this once at the start.
   List<Cat> get cats => List.unmodifiable(_cats);
@@ -361,7 +369,7 @@ class GameEngine {
 
   List<BoardStep> _endTurn({bool spendMove = true}) {
     final shifted = <BoardStep>[];
-    if (spendMove && !goals.every((g) => g.done)) {
+    if (spendMove && !_allGoalsDone) {
       shifted.addAll(_runConveyors());
       // Pieces the belt matches by itself are spoiled: they clear, but earn
       // no score or goal progress. The player must plan the shift, not
@@ -369,20 +377,20 @@ class GameEngine {
       _credit = false;
       shifted.addAll(_cascade(MatchFinder.find(board), startAt: 1));
       _credit = true;
-      if (!goals.every((g) => g.done)) shifted.addAll(_prowlCats());
-      if (!_fireOut && !goals.every((g) => g.done)) {
+      if (!_allGoalsDone) shifted.addAll(_prowlCats());
+      if (!_fireOut && !_allGoalsDone) {
         shifted.addAll(_spreadFire());
       }
-      if (!_matBroken && !goals.every((g) => g.done)) {
+      if (!_matBroken && !_allGoalsDone) {
         shifted.addAll(_spreadMats());
       }
-      if (!goals.every((g) => g.done)) shifted.addAll(_tickBombs());
+      if (!_allGoalsDone) shifted.addAll(_tickBombs());
     }
     _matBroken = false;
     _fireOut = false;
     _scared.clear();
     if (spendMove) movesLeft--;
-    final won = goals.every((g) => g.done);
+    final won = _allGoalsDone;
     if (won) {
       status = GameStatus.won;
     } else if (movesLeft <= 0 || _bombed) {

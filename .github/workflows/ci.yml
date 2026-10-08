@@ -15,5 +15,8 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
+      - run: dart run build_runner build --delete-conflicting-outputs
+      - name: Generated assets are up to date
+        run: git diff --exit-code lib/gen
       - run: flutter analyze
       - run: flutter test

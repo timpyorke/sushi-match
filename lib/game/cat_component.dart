@@ -52,32 +52,7 @@ abstract final class CatArt {
       }
       _frames[anim] = images;
     }
-    // The idle frames were drawn with the cat sitting up to 15px higher in
-    // some of them, which reads as hopping. Plant the feet on one line.
-    final idle = _frames[CatAnim.idle]!;
-    final bottoms = [for (final img in idle) await _bottom(img)];
-    _idleDrop = [
-      for (final b in bottoms) (bottoms.first - b) / idle.first.height
-    ];
   }
-
-  /// Lowest row with visible pixels.
-  static Future<int> _bottom(Image img) async {
-    final data = (await img.toByteData())!;
-    for (var y = img.height - 1; y >= 0; y--) {
-      for (var x = 0; x < img.width; x++) {
-        if (data.getUint8((y * img.width + x) * 4 + 3) > 20) return y;
-      }
-    }
-    return img.height - 1;
-  }
-
-  /// Per idle frame: how far to move it down (fraction of the frame height)
-  /// so every frame stands on the first one's baseline.
-  static List<double> _idleDrop = const [0, 0, 0, 0];
-
-  static double drop(CatAnim anim, int i) =>
-      anim == CatAnim.idle ? _idleDrop[i] : 0;
 
   static Image frame(CatAnim anim, int i) => _frames[anim]![i];
 }
@@ -161,7 +136,7 @@ class CatComponent extends PositionComponent {
       canvas.drawImageRect(
           img,
           Rect.fromLTWH(0, 0, img.width.toDouble(), img.height.toDouble()),
-          Rect.fromLTWH(0, hop + s * CatArt.drop(_anim, i), s, s),
+          Rect.fromLTWH(0, hop, s, s),
           _spritePaint);
       canvas.restore();
       _pips(canvas, s);

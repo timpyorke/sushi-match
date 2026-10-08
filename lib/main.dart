@@ -145,7 +145,8 @@ final int kLevelCount = Restaurant.totalLevels;
 String _levelAsset(int n) =>
     'assets/levels/level_${n.toString().padLeft(3, '0')}.json';
 
-/// Spends a life, lets the player pick starter boosters, then opens the level.
+/// Checks the player has a life, lets them pick starter boosters, then opens
+/// the level. The life is only spent on a loss (see `SushiGame._sync`).
 Future<void> startLevel(BuildContext context, WidgetRef ref, int n) async {
   if (!await ensureLife(context, ref) || !context.mounted) return;
   final starters = await pickStarters(context, ref);

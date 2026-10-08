@@ -1,0 +1,156 @@
+{
+  "tool": "built-in image_gen",
+  "promptSource": "docs/prompts/tiles/map-common.md",
+  "reference": "sea_sheet.png",
+  "tileSize": 256,
+  "sheets": [
+    {
+      "file": "sea_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nSetting: a cute illustrated world map of Japan for a sushi puzzle game, seen from above like a cosy anime RPG overworld.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Straight top-down view, flat, no perspective. Every item at the same scale with the same outline weight. Ground tiles fill their cell edge to edge, opaque, with no outline or border round the cell; the left edge matches the right edge and the top edge matches the bottom edge so each repeats seamlessly.\n\nSea:\nf1 (top-left) sea_a: calm sea #4FA3D1 with a few short white wave-curl strokes in a seigaiha spirit.\nf2 (top-right) sea_b: the same sea a little lighter #62B2DC with the strokes in other places, so it alternates with sea_a.\nf3 (bottom-left) sea_c: sea_a with one small white foam crest.\nf4 (bottom-right) sea_d: sea_a with the faint dark shadow of a little fish.\nOutput one square 1024x1024 fully opaque PNG sheet. Use perfectly uniform flat blue background fills within each quadrant; no gradients, no edge shadows, no vignettes. Keep all wave marks, foam and the fish silhouette well inside each quadrant, at least 8% away from its edges. The blue border of every individual tile is completely plain so opposite edges match seamlessly. Exactly four equal logical quadrants with no gutters or drawn separators.",
+      "tiles": [
+        {
+          "file": "sea_a.webp",
+          "png": "tiles_png/sea_a.png",
+          "cut": "ground"
+        },
+        {
+          "file": "sea_b.webp",
+          "png": "tiles_png/sea_b.png",
+          "cut": "ground"
+        },
+        {
+          "file": "sea_c.webp",
+          "png": "tiles_png/sea_c.png",
+          "cut": "ground"
+        },
+        {
+          "file": "sea_d.webp",
+          "png": "tiles_png/sea_d.png",
+          "cut": "ground"
+        }
+      ]
+    },
+    {
+      "file": "coast_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (sea_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: a cute illustrated world map of Japan for a sushi puzzle game, seen from above like a cosy anime RPG overworld.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Straight top-down view, flat, no perspective. Every item at the same scale with the same outline weight. Items that fill their cell are drawn exactly to the square cell so they line up with the board grid. Standalone items are centred with about 10% empty margin. Everything outside the items is fully transparent.\n\nCoastline:\nf1 (top-left) cliff: a coastline lip: a strip of warm brown earth cliff #8A6A45 with a darker under-shade and a thin line of white surf, across the bottom quarter of the cell from the left edge to the right edge; the top three quarters transparent.\nf2 (top-right) cliff_left: the same cliff strip ending in a rounded end on the left side.\nf3 (bottom-left) cliff_right: the same cliff strip ending in a rounded end on the right side.\nf4 (bottom-right) wave_crest: a single small curling white wave crest with a blue under-shade.\nEdit target: input image 1 is the coastline sheet to correct; input image 2 is a sea style reference only. Redraw the coastline assets with the same outlines, but fix ONLY the placement and coastline content according to the original specification. Precise atlas: 1024x1024 canvas, quadrants each 512x512. Top-left cliff occupies x=0..511, y=384..511 ONLY. Top-right cliff_left occupies x=512..1023, y=384..511 ONLY. Bottom-left cliff_right occupies x=0..511, y=896..1023 ONLY. The top 75% of each of these three quadrants must be entirely transparent. Coast strips are simple brown earth lips with one dark cel shadow and a narrow white surf line along the bottom, no green grass or plants, no solid blue rectangular sea strip. Side terminations match the original specification: straight cliff spans both horizontal edges, left cap is rounded only at its left end, right cap is rounded only at its right end. Bottom-right is only the centered white curling wave crest on alpha, contained within x=563..973 and y=563..973. No sprite overlaps any quadrant boundary. No text or labels. Maintain real alpha transparency.",
+      "tiles": [
+        {
+          "file": "cliff.webp",
+          "png": "tiles_png/cliff.png",
+          "cut": "cell"
+        },
+        {
+          "file": "cliff_left.webp",
+          "png": "tiles_png/cliff_left.png",
+          "cut": "cell"
+        },
+        {
+          "file": "cliff_right.webp",
+          "png": "tiles_png/cliff_right.png",
+          "cut": "cell"
+        },
+        {
+          "file": "wave_crest.webp",
+          "png": "tiles_png/wave_crest.png",
+          "cut": "prop"
+        }
+      ]
+    },
+    {
+      "file": "nodes_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (sea_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: a cute illustrated world map of Japan for a sushi puzzle game, seen from above like a cosy anime RPG overworld.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Top-down three-quarter view, seen from above at about 45 degrees. Every item at the same scale with the same outline weight. Standalone items are centred with about 10% empty margin. Everything outside the items is fully transparent.\n\nLevel nodes:\nf1 (top-left) plate: an empty round sushi plate: white ceramic with a red #B71C2C rim and a small blue wave pattern.\nf2 (top-right) plate_locked: the same plate in grey stone colours with a chunky padlock in the middle.\nf3 (bottom-left) plate_current: the same white plate inside a thick ring of warm gold #FFD54F rays drawn as flat triangles, marking the next level.\nf4 (bottom-right) number_tag: a blank pill-shaped tag, wider than tall, white with a thick red #B71C2C border; empty, the game prints the number.\nOutput a square 1024x1024 PNG sprite sheet with genuine alpha transparency. Use the reference only for the intended style and palette; replace the sea with the four requested items. Exact four equal logical quadrants; one item per quadrant, no neighbouring item may cross its quadrant boundary. Crisp flat cel colours with one hard-edged shadow tone and dark-brown outlines; no gradients. Leave all unspecified areas fully transparent.",
+      "tiles": [
+        {
+          "file": "plate.webp",
+          "png": "tiles_png/plate.png",
+          "cut": "prop"
+        },
+        {
+          "file": "plate_locked.webp",
+          "png": "tiles_png/plate_locked.png",
+          "cut": "prop"
+        },
+        {
+          "file": "plate_current.webp",
+          "png": "tiles_png/plate_current.png",
+          "cut": "prop"
+        },
+        {
+          "file": "number_tag.webp",
+          "png": "tiles_png/number_tag.png",
+          "cut": "prop"
+        }
+      ]
+    },
+    {
+      "file": "route_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (sea_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: a cute illustrated world map of Japan for a sushi puzzle game, seen from above like a cosy anime RPG overworld.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Top-down three-quarter view, seen from above at about 45 degrees. Every item at the same scale with the same outline weight. Items that fill their cell are drawn exactly to the square cell so they line up with the board grid. Standalone items are centred with about 10% empty margin. Everything outside the items is fully transparent.\n\nRoute and locked regions:\nf1 (top-left) route_dot: a small flat oval stepping stone, pale grey with a soft shade.\nf2 (top-right) route_done: the same stepping stone in red lacquer #B71C2C with a white highlight.\nf3 (bottom-left) marker: a cute map pin shaped like a small white sushi-chef hat with a red band, showing where the player is.\nf4 (bottom-right) fog: puffy white and light grey anime clouds filling the cell edge to edge, laid over regions that are still locked.\nOutput a square 1024x1024 PNG sprite sheet with genuine alpha transparency. Use the reference only for the intended style and palette; replace the sea with the four requested items. Exact four equal logical quadrants; one item per quadrant, no neighbouring item may cross its quadrant boundary. Crisp flat cel colours with one hard-edged shadow tone and dark-brown outlines; no gradients. Leave all unspecified areas fully transparent.",
+      "tiles": [
+        {
+          "file": "route_dot.webp",
+          "png": "tiles_png/route_dot.png",
+          "cut": "prop"
+        },
+        {
+          "file": "route_done.webp",
+          "png": "tiles_png/route_done.png",
+          "cut": "prop"
+        },
+        {
+          "file": "marker.webp",
+          "png": "tiles_png/marker.png",
+          "cut": "prop"
+        },
+        {
+          "file": "fog.webp",
+          "png": "tiles_png/fog.png",
+          "cut": "cell"
+        }
+      ]
+    },
+    {
+      "file": "stars_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (sea_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: a cute illustrated world map of Japan for a sushi puzzle game, seen from above like a cosy anime RPG overworld.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Front view. Every item at the same scale with the same outline weight. Standalone items are centred with about 10% empty margin. Everything outside the items is fully transparent.\n\nStars and flags:\nf1 (top-left) star_lit: a chunky five-point star in gold #FFD54F with an orange shade.\nf2 (top-right) star_dim: the same star empty: grey with a darker grey shade.\nf3 (bottom-left) flag_boss: a small red and white triangle pennant on a bamboo pole, for a region's boss level.\nf4 (bottom-right) cloud_lock: a big puffy cloud with a chunky padlock on its front.\nOutput a square 1024x1024 PNG sprite sheet with genuine alpha transparency. Use the reference only for the intended style and palette; replace the sea with the four requested items. Exact four equal logical quadrants; one item per quadrant, no neighbouring item may cross its quadrant boundary. Crisp flat cel colours with one hard-edged shadow tone and dark-brown outlines; no gradients. Leave all unspecified areas fully transparent.",
+      "tiles": [
+        {
+          "file": "star_lit.webp",
+          "png": "tiles_png/star_lit.png",
+          "cut": "prop"
+        },
+        {
+          "file": "star_dim.webp",
+          "png": "tiles_png/star_dim.png",
+          "cut": "prop"
+        },
+        {
+          "file": "flag_boss.webp",
+          "png": "tiles_png/flag_boss.png",
+          "cut": "prop"
+        },
+        {
+          "file": "cloud_lock.webp",
+          "png": "tiles_png/cloud_lock.png",
+          "cut": "prop"
+        }
+      ]
+    },
+    {
+      "file": "banner.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (sea_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: a cute illustrated world map of Japan for a sushi puzzle game, seen from above like a cosy anime RPG overworld.\n\nA wide empty signboard for a region name, front view: a horizontal wooden plank sign with a red lacquer #B71C2C border and gold corner caps, two short ropes at the top corners, and a large plain cream #F5E6C8 centre with nothing written on it. Centred with about 8% empty margin, fully transparent background.\nOutput a landscape 1536x1024 PNG with genuine alpha transparency. Only the single horizontal blank banner, no sprite grid, no lettering or symbols in its center. Give the cream center broad clean writing space. Crisp flat cel colours, one hard shadow tone, dark-brown outlines; no gradients.",
+      "tiles": [
+        {
+          "file": "banner.webp",
+          "png": "tiles_png/banner.png",
+          "cut": "prop"
+        }
+      ]
+    }
+  ],
+  "processing": {
+    "runtimeFormat": "lossless WebP",
+    "propFit": "trim alpha bounds; preserve aspect ratio; pad to 256x256",
+    "seaSeams": "match the plain opposite border strips before resize",
+    "coast": "crop the full strips, scale each to 512x128, and place in the bottom quarter of its 512x512 cell",
+    "banner": "trim the banner outline; exclude disconnected transparent background artifacts; fit inside 768x512 while preserving aspect ratio"
+  }
+}

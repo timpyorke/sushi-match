@@ -98,6 +98,8 @@ class SushiGame extends FlameGame {
   @override
   Future<void> onLoad() async => _mountBoard();
 
+  /// Starters are spent once, when the game is created. A restart gets a
+  /// plain board: the player already paid for the first attempt.
   void _placeStarters() {
     for (final b in starters) {
       if (!b.isStarter || wallet.count(b) <= 0) continue;
@@ -130,6 +132,7 @@ class SushiGame extends FlameGame {
       onTurnFinished: _sync,
       onPraise: _praise,
       armed: armed,
+      canSpendBooster: wallet.canUse,
       onSpendBooster: _spendBooster,
       onShuffle: () => analytics
           ?.log(AnalyticsEvent.shuffleTriggered, {'level_id': level.id}),

@@ -1,0 +1,233 @@
+{
+  "tool": "built-in image_gen",
+  "promptSource": "docs/prompts/tiles/board.md",
+  "reference": "cells_sheet.png",
+  "tileSize": 192,
+  "sheets": [
+    {
+      "file": "cells_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nSetting: the play board of a sushi-restaurant puzzle game, seen from straight above, like a lacquered wooden serving board inside a cosy anime sushi bar. Sushi pieces sit on top of these tiles, so every tile stays calm in the middle.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Straight top-down view, flat, no perspective. Every item at the same scale with the same outline weight. Items that fill their cell are drawn exactly to the square cell so they line up with the board grid. Everything outside the items is fully transparent.\n\nCells and board frame:\nf1 (top-left) cell_light: a square board cell filling the whole cell: pale hinoki-wood tile #F3D9A4 with a few soft wood-grain strokes, softly rounded corners and a thin darker rim, the middle plain.\nf2 (top-right) cell_dark: the same cell in a slightly darker honey wood #E2BC7E, same grain style and rim, so the two alternate as a checkerboard.\nf3 (bottom-left) frame_edge: a straight piece of the board frame: a dark red lacquer #8E2A22 rail with a thin gold #E0A84A inner trim running along the top edge of the cell from the left edge to the right edge, about 30% of the cell tall; the rest of the cell transparent.\nf4 (bottom-right) frame_corner: the matching outer corner of that frame: the same red lacquer rail with gold trim turning round the top-left corner of the cell, entering from the right edge and leaving through the bottom edge; the rest of the cell transparent.\nOutput one square 1024x1024 PNG sprite sheet with real alpha transparency. The four logical quadrants are exact, even if no visible grid is drawn. Frame rails end precisely at their quadrant boundaries; no inset canvas margins.",
+      "tiles": [
+        {
+          "file": "cell_light.webp",
+          "png": "tiles_png/cell_light.png",
+          "cut": "cell"
+        },
+        {
+          "file": "cell_dark.webp",
+          "png": "tiles_png/cell_dark.png",
+          "cut": "cell"
+        },
+        {
+          "file": "frame_edge.webp",
+          "png": "tiles_png/frame_edge.png",
+          "cut": "cell"
+        },
+        {
+          "file": "frame_corner.webp",
+          "png": "tiles_png/frame_corner.png",
+          "cut": "cell"
+        }
+      ]
+    },
+    {
+      "file": "conveyor_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (cells_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the play board of a sushi-restaurant puzzle game, seen from straight above, like a lacquered wooden serving board inside a cosy anime sushi bar. Sushi pieces sit on top of these tiles, so every tile stays calm in the middle.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Straight top-down view, flat, no perspective. Every item at the same scale with the same outline weight. Items that fill their cell are drawn exactly to the square cell so they line up with the board grid. Standalone items are centred with about 10% empty margin. Everything outside the items is fully transparent.\n\nConveyor belt:\nf1 (top-left) belt_straight: a straight conveyor belt running left to right across the whole cell: dark grey rubber belt with segment lines, gold rails on both sides, set into red lacquer; the belt touches the left and right cell edges so tiles join into one long belt.\nf2 (top-right) belt_corner: the same belt turning a 90-degree corner: it enters through the left edge and curves down to leave through the bottom edge, same width and rails.\nf3 (bottom-left) belt_cap: the rounded end of the belt: it enters through the left edge and ends in a rounded cap with the gold rail wrapping round it (the game mirrors it for the other end).\nf4 (bottom-right) arrow: a small chunky arrow pointing right, gold #E0A84A with a lighter top face, showing which way the belt moves.\nOutput a square 1024x1024 PNG sprite sheet with genuine alpha transparency. Treat the input strictly as a style and palette reference: replace all four items. Use crisp flat colour fills and one discrete cel shadow, no continuous gradients. Place exactly the listed four items in the specified quadrants, with no cross-cell overlap. Full-cell parts align to quadrant edges.",
+      "tiles": [
+        {
+          "file": "belt_straight.webp",
+          "png": "tiles_png/belt_straight.png",
+          "cut": "cell"
+        },
+        {
+          "file": "belt_corner.webp",
+          "png": "tiles_png/belt_corner.png",
+          "cut": "cell"
+        },
+        {
+          "file": "belt_cap.webp",
+          "png": "tiles_png/belt_cap.png",
+          "cut": "cell"
+        },
+        {
+          "file": "arrow.webp",
+          "png": "tiles_png/arrow.png",
+          "cut": "prop"
+        }
+      ]
+    },
+    {
+      "file": "nori_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (cells_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the play board of a sushi-restaurant puzzle game, seen from straight above, like a lacquered wooden serving board inside a cosy anime sushi bar. Sushi pieces sit on top of these tiles, so every tile stays calm in the middle.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Straight top-down view, flat, no perspective. Every item at the same scale with the same outline weight. Items that fill their cell are drawn exactly to the square cell so they line up with the board grid. Standalone items are centred with about 10% empty margin. Everything outside the items is fully transparent.\n\nNori layers:\nf1 (top-left) nori_1: one sheet of toasted nori seaweed covering the cell: deep green-black #1F3A24 with a few flat darker crinkle strokes, slightly wavy edges inset a little from the cell edge.\nf2 (top-right) nori_2: two nori sheets stacked, the top one turned a little so the corners of the lower one peek out; same size as nori_1.\nf3 (bottom-left) nori_3: three nori sheets stacked and tied with a thin pale kanpyo ribbon crossing one corner; the thickest version, same size.\nf4 (bottom-right) nori_bits: a few torn scraps of nori flying apart, for when a layer breaks.\n\nThe nori lies under a sushi piece: keep its middle simple.\nOutput a square 1024x1024 PNG sprite sheet with genuine alpha transparency. Treat the input strictly as a style and palette reference: replace all four items. Use crisp flat colour fills and one discrete cel shadow, no continuous gradients. Place exactly the listed four items in the specified quadrants, with no cross-cell overlap. Full-cell parts align to quadrant edges.",
+      "tiles": [
+        {
+          "file": "nori_1.webp",
+          "png": "tiles_png/nori_1.png",
+          "cut": "cell"
+        },
+        {
+          "file": "nori_2.webp",
+          "png": "tiles_png/nori_2.png",
+          "cut": "cell"
+        },
+        {
+          "file": "nori_3.webp",
+          "png": "tiles_png/nori_3.png",
+          "cut": "cell"
+        },
+        {
+          "file": "nori_bits.webp",
+          "png": "tiles_png/nori_bits.png",
+          "cut": "prop"
+        }
+      ]
+    },
+    {
+      "file": "ice_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (cells_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the play board of a sushi-restaurant puzzle game, seen from straight above, like a lacquered wooden serving board inside a cosy anime sushi bar. Sushi pieces sit on top of these tiles, so every tile stays calm in the middle.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Straight top-down view, flat, no perspective. Every item at the same scale with the same outline weight. Items that fill their cell are drawn exactly to the square cell so they line up with the board grid. Standalone items are centred with about 10% empty margin. Everything outside the items is fully transparent.\n\nIce layers:\nf1 (top-left) ice_1: a thin frame of pale blue ice #AEE1FA filling the cell edge to edge: a frosted rim about 15% of the cell wide with two or three white glints and one small crack, the centre fully transparent.\nf2 (top-right) ice_2: the same ice frame, thicker (rim about 22% of the cell), frost crystals in two corners and more cracks.\nf3 (bottom-left) ice_3: the thickest ice: rim about 28% of the cell, chunky frosted corners and a web of white cracks, still a transparent centre.\nf4 (bottom-right) ice_shards: a burst of four or five small ice shards and a puff of white frost, for when a layer breaks.\n\nGPT Image cannot draw see-through glass, so the ice is shown only by its solid rim, glints and cracks; the inside of each cell stays fully transparent.\nOutput a square 1024x1024 PNG sprite sheet with genuine alpha transparency. Treat the input strictly as a style and palette reference: replace all four items. Use crisp flat colour fills and one discrete cel shadow, no continuous gradients. Place exactly the listed four items in the specified quadrants, with no cross-cell overlap. Full-cell parts align to quadrant edges.",
+      "tiles": [
+        {
+          "file": "ice_1.webp",
+          "png": "tiles_png/ice_1.png",
+          "cut": "cell"
+        },
+        {
+          "file": "ice_2.webp",
+          "png": "tiles_png/ice_2.png",
+          "cut": "cell"
+        },
+        {
+          "file": "ice_3.webp",
+          "png": "tiles_png/ice_3.png",
+          "cut": "cell"
+        },
+        {
+          "file": "ice_shards.webp",
+          "png": "tiles_png/ice_shards.png",
+          "cut": "prop"
+        }
+      ]
+    },
+    {
+      "file": "sacks_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (cells_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the play board of a sushi-restaurant puzzle game, seen from straight above, like a lacquered wooden serving board inside a cosy anime sushi bar. Sushi pieces sit on top of these tiles, so every tile stays calm in the middle.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Straight top-down view, flat, no perspective. Every item at the same scale with the same outline weight. Items that fill their cell are drawn exactly to the square cell so they line up with the board grid. Standalone items are centred with about 10% empty margin. Everything outside the items is fully transparent.\n\nRice sacks:\nf1 (top-left) bag_1: a small round rice sack tied at the neck with a red #B5472F cord: cream burlap #E9D3A8 with a darker #D1B47F fold shadow and one brown dot printed on the front; centred, filling about 85% of the cell.\nf2 (top-right) bag_2: the same sack at the same size with two dots and a small patch sewn on one side.\nf3 (bottom-left) bag_3: the same sack at the same size with three dots, a second cord round its belly and an overstuffed, bulging look.\nf4 (bottom-right) rice_spill: a small burst of white rice grains and a torn scrap of burlap, for when a layer bursts.\nOutput a square 1024x1024 PNG sprite sheet with genuine alpha transparency. Treat the input strictly as a style and palette reference: replace all four items. Use crisp flat colour fills and one discrete cel shadow, no continuous gradients. Place exactly the listed four items in the specified quadrants, with no cross-cell overlap.",
+      "tiles": [
+        {
+          "file": "bag_1.webp",
+          "png": "tiles_png/bag_1.png",
+          "cut": "cell"
+        },
+        {
+          "file": "bag_2.webp",
+          "png": "tiles_png/bag_2.png",
+          "cut": "cell"
+        },
+        {
+          "file": "bag_3.webp",
+          "png": "tiles_png/bag_3.png",
+          "cut": "cell"
+        },
+        {
+          "file": "rice_spill.webp",
+          "png": "tiles_png/rice_spill.png",
+          "cut": "prop"
+        }
+      ]
+    },
+    {
+      "file": "grill_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (cells_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the play board of a sushi-restaurant puzzle game, seen from straight above, like a lacquered wooden serving board inside a cosy anime sushi bar. Sushi pieces sit on top of these tiles, so every tile stays calm in the middle.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Straight top-down view, flat, no perspective. Every item at the same scale with the same outline weight. Items that fill their cell are drawn exactly to the square cell so they line up with the board grid. Standalone items are centred with about 10% empty margin. Everything outside the items is fully transparent.\n\nBamboo mat and fire:\nf1 (top-left) mat: a square bamboo sushi-rolling mat (makisu) filling the cell: pale bamboo slats #CDB872 running top to bottom, tied with two thin green cords across.\nf2 (top-right) fire_1: cartoon flames rising from the bottom of the cell: orange #FF8A2A and yellow #FFD24A flame tongues with a red shadow tone, filling the bottom 60% of the cell; the top of the cell transparent.\nf3 (bottom-left) fire_2: the same flames in the next flicker frame: same size and base, the tips leaning the other way.\nf4 (bottom-right) smoke: a round puff of grey-white smoke with a little water splash, for when a fire is put out.\nOutput a square 1024x1024 PNG sprite sheet with genuine alpha transparency. Treat the input strictly as a style and palette reference: replace all four items. Use crisp flat colour fills and one discrete cel shadow, no continuous gradients. Place exactly the listed four items in the specified quadrants, with no cross-cell overlap.",
+      "tiles": [
+        {
+          "file": "mat.webp",
+          "png": "tiles_png/mat.png",
+          "cut": "cell"
+        },
+        {
+          "file": "fire_1.webp",
+          "png": "tiles_png/fire_1.png",
+          "cut": "cell"
+        },
+        {
+          "file": "fire_2.webp",
+          "png": "tiles_png/fire_2.png",
+          "cut": "cell"
+        },
+        {
+          "file": "smoke.webp",
+          "png": "tiles_png/smoke.png",
+          "cut": "prop"
+        }
+      ]
+    },
+    {
+      "file": "badges_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (cells_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the play board of a sushi-restaurant puzzle game, seen from straight above, like a lacquered wooden serving board inside a cosy anime sushi bar. Sushi pieces sit on top of these tiles, so every tile stays calm in the middle.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Straight top-down view, flat, no perspective. Every item at the same scale with the same outline weight. Items that fill their cell are drawn exactly to the square cell so they line up with the board grid. Standalone items are centred with about 10% empty margin. Everything outside the items is fully transparent.\n\nLocks, bombs and portals:\nf1 (top-left) lock: a chunky padlock drawn only in white #FFFFFF and light grey #D9D9D9 with the dark-brown outline.\nf2 (top-right) bomb: a round black #2B211C cartoon bomb with a short fuse and a small spark on top, and a large blank round cream label on its front where the game prints the countdown; no number.\nf3 (bottom-left) portal_in: a swirling vortex filling the cell edge to edge, drawn only in white and greys: spiral arms from light grey on the rim to dark grey in the centre. Pieces drop into it.\nf4 (bottom-right) portal_out: a ring portal filling the cell edge to edge, drawn only in white and light greys: a thick ring with small notches like a magic circle, the centre transparent. Pieces drop out of it.\nOutput a square 1024x1024 PNG sprite sheet with genuine alpha transparency. Treat the input strictly as a style and palette reference: replace all four items. Use crisp flat colour fills and one discrete cel shadow, no continuous gradients. Place exactly the listed four items in the specified quadrants, with no cross-cell overlap. Keep lock and both portal interiors strictly neutral white and grey for runtime tinting, with only their dark brown outlines. The exit portal center is entirely transparent.",
+      "tiles": [
+        {
+          "file": "lock.webp",
+          "png": "tiles_png/lock.png",
+          "cut": "prop"
+        },
+        {
+          "file": "bomb.webp",
+          "png": "tiles_png/bomb.png",
+          "cut": "prop"
+        },
+        {
+          "file": "portal_in.webp",
+          "png": "tiles_png/portal_in.png",
+          "cut": "cell"
+        },
+        {
+          "file": "portal_out.webp",
+          "png": "tiles_png/portal_out.png",
+          "cut": "cell"
+        }
+      ]
+    },
+    {
+      "file": "extras_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (cells_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the play board of a sushi-restaurant puzzle game, seen from straight above, like a lacquered wooden serving board inside a cosy anime sushi bar. Sushi pieces sit on top of these tiles, so every tile stays calm in the middle.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Straight top-down view, flat, no perspective. Every item at the same scale with the same outline weight. Items that fill their cell are drawn exactly to the square cell so they line up with the board grid. Standalone items are centred with about 10% empty margin. Everything outside the items is fully transparent.\n\nGravity arrow, delivery item and board effects:\nf1 (top-left) gravity_arrow: a short chunky arrow pointing down, dark wood brown #4A2E1B with a cream highlight (rotated in code).\nf2 (top-right) onigiri: a triangle rice ball with a nori band at the bottom and a tiny cute face (dot eyes, small smile, pink blush): the ingredient the player brings down to the bottom row.\nf3 (bottom-left) select: a selection ring for the tapped cell: a thick rounded square outline in warm gold #FFD54F with a small sparkle on each corner, filling the cell, the centre transparent.\nf4 (bottom-right) clear_burst: a star-shaped pop of flat cream and gold shapes, shown when a piece is cleared.\nOutput a square 1024x1024 PNG sprite sheet with genuine alpha transparency. Treat the input strictly as a style and palette reference: replace all four items. Use crisp flat colour fills and one discrete cel shadow, no continuous gradients. Place exactly the listed four items in the specified quadrants, with no cross-cell overlap.",
+      "tiles": [
+        {
+          "file": "gravity_arrow.webp",
+          "png": "tiles_png/gravity_arrow.png",
+          "cut": "prop"
+        },
+        {
+          "file": "onigiri.webp",
+          "png": "tiles_png/onigiri.png",
+          "cut": "prop"
+        },
+        {
+          "file": "select.webp",
+          "png": "tiles_png/select.png",
+          "cut": "cell"
+        },
+        {
+          "file": "clear_burst.webp",
+          "png": "tiles_png/clear_burst.png",
+          "cut": "prop"
+        }
+      ]
+    }
+  ],
+  "processing": {
+    "sheetSize": [
+      1024,
+      1024
+    ],
+    "tileSize": [
+      192,
+      192
+    ],
+    "propFit": "trim alpha bounds, retain aspect ratio, pad with transparency",
+    "runtimeFormat": "lossless WebP",
+    "pngCuts": "source/tiles_png",
+    "cropCleanup": {
+      "arrow": "exclude stray neighbouring fragment in the first 8 pixels of the quadrant",
+      "frame_corner": "exclude stray neighbouring fragment in the first 8 pixels of the quadrant"
+    }
+  }
+}

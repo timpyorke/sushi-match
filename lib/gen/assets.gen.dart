@@ -145,6 +145,9 @@ class $AssetsSpritesGen {
   $AssetsSpritesFurnitureGen get furniture =>
       const $AssetsSpritesFurnitureGen();
 
+  /// Directory path: assets/sprites/map
+  $AssetsSpritesMapGen get map => const $AssetsSpritesMapGen();
+
   /// Directory path: assets/sprites/obstacles
   $AssetsSpritesObstaclesGen get obstacles =>
       const $AssetsSpritesObstaclesGen();
@@ -382,6 +385,13 @@ class $AssetsSpritesFurnitureGen {
       ];
 }
 
+class $AssetsSpritesMapGen {
+  const $AssetsSpritesMapGen();
+
+  /// Directory path: assets/sprites/map/common
+  $AssetsSpritesMapCommonGen get common => const $AssetsSpritesMapCommonGen();
+}
+
 class $AssetsSpritesObstaclesGen {
   const $AssetsSpritesObstaclesGen();
 
@@ -466,6 +476,18 @@ class $AssetsSpritesTilesGen {
   AssetGenImage get arrow =>
       const AssetGenImage('assets/sprites/tiles/arrow.webp');
 
+  /// File path: assets/sprites/tiles/bag_1.webp
+  AssetGenImage get bag1 =>
+      const AssetGenImage('assets/sprites/tiles/bag_1.webp');
+
+  /// File path: assets/sprites/tiles/bag_2.webp
+  AssetGenImage get bag2 =>
+      const AssetGenImage('assets/sprites/tiles/bag_2.webp');
+
+  /// File path: assets/sprites/tiles/bag_3.webp
+  AssetGenImage get bag3 =>
+      const AssetGenImage('assets/sprites/tiles/bag_3.webp');
+
   /// File path: assets/sprites/tiles/belt_cap.webp
   AssetGenImage get beltCap =>
       const AssetGenImage('assets/sprites/tiles/belt_cap.webp');
@@ -478,6 +500,10 @@ class $AssetsSpritesTilesGen {
   AssetGenImage get beltStraight =>
       const AssetGenImage('assets/sprites/tiles/belt_straight.webp');
 
+  /// File path: assets/sprites/tiles/bomb.webp
+  AssetGenImage get bomb =>
+      const AssetGenImage('assets/sprites/tiles/bomb.webp');
+
   /// File path: assets/sprites/tiles/cell_dark.webp
   AssetGenImage get cellDark =>
       const AssetGenImage('assets/sprites/tiles/cell_dark.webp');
@@ -486,9 +512,133 @@ class $AssetsSpritesTilesGen {
   AssetGenImage get cellLight =>
       const AssetGenImage('assets/sprites/tiles/cell_light.webp');
 
+  /// File path: assets/sprites/tiles/clear_burst.webp
+  AssetGenImage get clearBurst =>
+      const AssetGenImage('assets/sprites/tiles/clear_burst.webp');
+
+  /// File path: assets/sprites/tiles/fire_1.webp
+  AssetGenImage get fire1 =>
+      const AssetGenImage('assets/sprites/tiles/fire_1.webp');
+
+  /// File path: assets/sprites/tiles/fire_2 lossless.webp
+  AssetGenImage get fire2Lossless =>
+      const AssetGenImage('assets/sprites/tiles/fire_2 lossless.webp');
+
+  /// File path: assets/sprites/tiles/fire_2.webp
+  AssetGenImage get fire2 =>
+      const AssetGenImage('assets/sprites/tiles/fire_2.webp');
+
+  /// File path: assets/sprites/tiles/frame_corner.webp
+  AssetGenImage get frameCorner =>
+      const AssetGenImage('assets/sprites/tiles/frame_corner.webp');
+
+  /// File path: assets/sprites/tiles/frame_edge.webp
+  AssetGenImage get frameEdge =>
+      const AssetGenImage('assets/sprites/tiles/frame_edge.webp');
+
+  /// File path: assets/sprites/tiles/gravity_arrow.webp
+  AssetGenImage get gravityArrow =>
+      const AssetGenImage('assets/sprites/tiles/gravity_arrow.webp');
+
+  /// File path: assets/sprites/tiles/ice_1.webp
+  AssetGenImage get ice1 =>
+      const AssetGenImage('assets/sprites/tiles/ice_1.webp');
+
+  /// File path: assets/sprites/tiles/ice_2.webp
+  AssetGenImage get ice2 =>
+      const AssetGenImage('assets/sprites/tiles/ice_2.webp');
+
+  /// File path: assets/sprites/tiles/ice_3.webp
+  AssetGenImage get ice3 =>
+      const AssetGenImage('assets/sprites/tiles/ice_3.webp');
+
+  /// File path: assets/sprites/tiles/ice_shards.webp
+  AssetGenImage get iceShards =>
+      const AssetGenImage('assets/sprites/tiles/ice_shards.webp');
+
+  /// File path: assets/sprites/tiles/lock.webp
+  AssetGenImage get lock =>
+      const AssetGenImage('assets/sprites/tiles/lock.webp');
+
+  /// File path: assets/sprites/tiles/mat.webp
+  AssetGenImage get mat => const AssetGenImage('assets/sprites/tiles/mat.webp');
+
+  /// File path: assets/sprites/tiles/nori_1.webp
+  AssetGenImage get nori1 =>
+      const AssetGenImage('assets/sprites/tiles/nori_1.webp');
+
+  /// File path: assets/sprites/tiles/nori_2.webp
+  AssetGenImage get nori2 =>
+      const AssetGenImage('assets/sprites/tiles/nori_2.webp');
+
+  /// File path: assets/sprites/tiles/nori_3.webp
+  AssetGenImage get nori3 =>
+      const AssetGenImage('assets/sprites/tiles/nori_3.webp');
+
+  /// File path: assets/sprites/tiles/nori_bits.webp
+  AssetGenImage get noriBits =>
+      const AssetGenImage('assets/sprites/tiles/nori_bits.webp');
+
+  /// File path: assets/sprites/tiles/onigiri.webp
+  AssetGenImage get onigiri =>
+      const AssetGenImage('assets/sprites/tiles/onigiri.webp');
+
+  /// File path: assets/sprites/tiles/portal_in.webp
+  AssetGenImage get portalIn =>
+      const AssetGenImage('assets/sprites/tiles/portal_in.webp');
+
+  /// File path: assets/sprites/tiles/portal_out.webp
+  AssetGenImage get portalOut =>
+      const AssetGenImage('assets/sprites/tiles/portal_out.webp');
+
+  /// File path: assets/sprites/tiles/rice_spill.webp
+  AssetGenImage get riceSpill =>
+      const AssetGenImage('assets/sprites/tiles/rice_spill.webp');
+
+  /// File path: assets/sprites/tiles/select.webp
+  AssetGenImage get select =>
+      const AssetGenImage('assets/sprites/tiles/select.webp');
+
+  /// File path: assets/sprites/tiles/smoke.webp
+  AssetGenImage get smoke =>
+      const AssetGenImage('assets/sprites/tiles/smoke.webp');
+
   /// List of all assets
-  List<AssetGenImage> get values =>
-      [arrow, beltCap, beltCorner, beltStraight, cellDark, cellLight];
+  List<AssetGenImage> get values => [
+        arrow,
+        bag1,
+        bag2,
+        bag3,
+        beltCap,
+        beltCorner,
+        beltStraight,
+        bomb,
+        cellDark,
+        cellLight,
+        clearBurst,
+        fire1,
+        fire2Lossless,
+        fire2,
+        frameCorner,
+        frameEdge,
+        gravityArrow,
+        ice1,
+        ice2,
+        ice3,
+        iceShards,
+        lock,
+        mat,
+        nori1,
+        nori2,
+        nori3,
+        noriBits,
+        onigiri,
+        portalIn,
+        portalOut,
+        riceSpill,
+        select,
+        smoke
+      ];
 }
 
 class $AssetsUiObstaclesGen {
@@ -2931,6 +3081,119 @@ class $AssetsSpritesCustomers17ChefKumaGen {
       ];
 }
 
+class $AssetsSpritesMapCommonGen {
+  const $AssetsSpritesMapCommonGen();
+
+  /// File path: assets/sprites/map/common/banner.webp
+  AssetGenImage get banner =>
+      const AssetGenImage('assets/sprites/map/common/banner.webp');
+
+  /// File path: assets/sprites/map/common/cliff.webp
+  AssetGenImage get cliff =>
+      const AssetGenImage('assets/sprites/map/common/cliff.webp');
+
+  /// File path: assets/sprites/map/common/cliff_left.webp
+  AssetGenImage get cliffLeft =>
+      const AssetGenImage('assets/sprites/map/common/cliff_left.webp');
+
+  /// File path: assets/sprites/map/common/cliff_right.webp
+  AssetGenImage get cliffRight =>
+      const AssetGenImage('assets/sprites/map/common/cliff_right.webp');
+
+  /// File path: assets/sprites/map/common/cloud_lock.webp
+  AssetGenImage get cloudLock =>
+      const AssetGenImage('assets/sprites/map/common/cloud_lock.webp');
+
+  /// File path: assets/sprites/map/common/flag_boss.webp
+  AssetGenImage get flagBoss =>
+      const AssetGenImage('assets/sprites/map/common/flag_boss.webp');
+
+  /// File path: assets/sprites/map/common/fog.webp
+  AssetGenImage get fog =>
+      const AssetGenImage('assets/sprites/map/common/fog.webp');
+
+  /// File path: assets/sprites/map/common/marker.webp
+  AssetGenImage get marker =>
+      const AssetGenImage('assets/sprites/map/common/marker.webp');
+
+  /// File path: assets/sprites/map/common/number_tag.webp
+  AssetGenImage get numberTag =>
+      const AssetGenImage('assets/sprites/map/common/number_tag.webp');
+
+  /// File path: assets/sprites/map/common/plate.webp
+  AssetGenImage get plate =>
+      const AssetGenImage('assets/sprites/map/common/plate.webp');
+
+  /// File path: assets/sprites/map/common/plate_current.webp
+  AssetGenImage get plateCurrent =>
+      const AssetGenImage('assets/sprites/map/common/plate_current.webp');
+
+  /// File path: assets/sprites/map/common/plate_locked.webp
+  AssetGenImage get plateLocked =>
+      const AssetGenImage('assets/sprites/map/common/plate_locked.webp');
+
+  /// File path: assets/sprites/map/common/route_done.webp
+  AssetGenImage get routeDone =>
+      const AssetGenImage('assets/sprites/map/common/route_done.webp');
+
+  /// File path: assets/sprites/map/common/route_dot.webp
+  AssetGenImage get routeDot =>
+      const AssetGenImage('assets/sprites/map/common/route_dot.webp');
+
+  /// File path: assets/sprites/map/common/sea_a.webp
+  AssetGenImage get seaA =>
+      const AssetGenImage('assets/sprites/map/common/sea_a.webp');
+
+  /// File path: assets/sprites/map/common/sea_b.webp
+  AssetGenImage get seaB =>
+      const AssetGenImage('assets/sprites/map/common/sea_b.webp');
+
+  /// File path: assets/sprites/map/common/sea_c.webp
+  AssetGenImage get seaC =>
+      const AssetGenImage('assets/sprites/map/common/sea_c.webp');
+
+  /// File path: assets/sprites/map/common/sea_d.webp
+  AssetGenImage get seaD =>
+      const AssetGenImage('assets/sprites/map/common/sea_d.webp');
+
+  /// File path: assets/sprites/map/common/star_dim.webp
+  AssetGenImage get starDim =>
+      const AssetGenImage('assets/sprites/map/common/star_dim.webp');
+
+  /// File path: assets/sprites/map/common/star_lit.webp
+  AssetGenImage get starLit =>
+      const AssetGenImage('assets/sprites/map/common/star_lit.webp');
+
+  /// File path: assets/sprites/map/common/wave_crest.webp
+  AssetGenImage get waveCrest =>
+      const AssetGenImage('assets/sprites/map/common/wave_crest.webp');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [
+        banner,
+        cliff,
+        cliffLeft,
+        cliffRight,
+        cloudLock,
+        flagBoss,
+        fog,
+        marker,
+        numberTag,
+        plate,
+        plateCurrent,
+        plateLocked,
+        routeDone,
+        routeDot,
+        seaA,
+        seaB,
+        seaC,
+        seaD,
+        starDim,
+        starLit,
+        waveCrest
+      ];
+}
+
 class $AssetsSpritesObstacles18BossCatJokerGen {
   const $AssetsSpritesObstacles18BossCatJokerGen();
 
@@ -2990,9 +3253,17 @@ class $AssetsSpritesObstacles18BossCatJokerGen {
   AssetGenImage get idle1 => const AssetGenImage(
       'assets/sprites/obstacles/18-boss-cat-joker/idle_1.webp');
 
+  /// File path: assets/sprites/obstacles/18-boss-cat-joker/idle_2 lossy.webp
+  AssetGenImage get idle2Lossy => const AssetGenImage(
+      'assets/sprites/obstacles/18-boss-cat-joker/idle_2 lossy.webp');
+
   /// File path: assets/sprites/obstacles/18-boss-cat-joker/idle_2.webp
   AssetGenImage get idle2 => const AssetGenImage(
       'assets/sprites/obstacles/18-boss-cat-joker/idle_2.webp');
+
+  /// File path: assets/sprites/obstacles/18-boss-cat-joker/idle_3 lossy.webp
+  AssetGenImage get idle3Lossy => const AssetGenImage(
+      'assets/sprites/obstacles/18-boss-cat-joker/idle_3 lossy.webp');
 
   /// File path: assets/sprites/obstacles/18-boss-cat-joker/idle_3.webp
   AssetGenImage get idle3 => const AssetGenImage(
@@ -3030,7 +3301,9 @@ class $AssetsSpritesObstacles18BossCatJokerGen {
         hit3,
         idle0,
         idle1,
+        idle2Lossy,
         idle2,
+        idle3Lossy,
         idle3,
         prowl0,
         prowl1,

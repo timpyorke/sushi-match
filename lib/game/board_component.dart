@@ -36,6 +36,7 @@ class BoardComponent extends PositionComponent
     required this.onTurnFinished,
     required this.onPraise,
     required this.armed,
+    required this.canSpendBooster,
     required this.onSpendBooster,
     this.onShuffle,
   }) : super(
@@ -60,6 +61,10 @@ class BoardComponent extends PositionComponent
   final ValueNotifier<Booster?> armed;
 
   /// Pays for a booster (stock or coins); false means it can't be used.
+  /// Whether the booster is affordable; checked before it is tried.
+  final bool Function(Booster) canSpendBooster;
+
+  /// Pays for the booster; called only once it actually did something.
   final bool Function(Booster) onSpendBooster;
 
   /// Called when a turn ended with the board reshuffled for lack of moves.
@@ -177,8 +182,8 @@ class BoardComponent extends PositionComponent
 
   void _drawLock(Canvas canvas, Offset c) {
     if (ObstacleArt.ready) {
-      ObstacleArt.draw(canvas, ObstacleSprite.key,
-          Rect.fromCenter(center: c, width: 22, height: 22));
+      ObstacleArt.draw(canvas, ObstacleSprite.lock,
+          Rect.fromCenter(center: c, width: 20, height: 20));
       return;
     }
     canvas.drawArc(
@@ -227,7 +232,8 @@ class BoardComponent extends PositionComponent
       if (ObstacleArt.ready) {
         ObstacleArt.draw(canvas, ObstacleSprite.gravity,
             Rect.fromCenter(center: c, width: 26, height: 26),
-            rot: angle);
+            // The sprite points down; `angle` is measured from pointing right.
+            rot: angle - math.pi / 2);
         continue;
       }
       canvas.save();
@@ -257,7 +263,7 @@ class BoardComponent extends PositionComponent
   /// A bamboo mat: slatted square tied with two green cords.
   void _drawMat(Canvas canvas, Rect r) {
     if (ObstacleArt.ready) {
-      ObstacleArt.draw(canvas, ObstacleSprite.mat, r.deflate(cell * 0.03));
+      ObstacleArt.draw(canvas, ObstacleSprite.mat, r.deflate(cell * 0.02));
       return;
     }
     final body = RRect.fromRectAndRadius(
@@ -279,14 +285,15 @@ class BoardComponent extends PositionComponent
   /// layer left.
   void _drawBag(Canvas canvas, Rect r, int layers) {
     if (ObstacleArt.ready) {
-      ObstacleArt.draw(canvas, ObstacleSprite.bag, r.deflate(cell * 0.03));
-      for (var i = 0; i < layers; i++) {
-        canvas.drawCircle(
-            Offset(r.center.dx + (i - (layers - 1) / 2) * cell * 0.16,
-                r.top + cell * 0.9),
-            cell * 0.05,
-            _sackDot);
-      }
+      // The sack's patches (and dots) show how many layers are left.
+      ObstacleArt.draw(
+          canvas,
+          [
+            ObstacleSprite.bag1,
+            ObstacleSprite.bag2,
+            ObstacleSprite.bag3
+          ][(layers - 1).clamp(0, 2)],
+          r.deflate(cell * 0.02));
       return;
     }
     final body = RRect.fromRectAndRadius(
@@ -333,7 +340,10 @@ class BoardComponent extends PositionComponent
     }
     canvas.drawPicture(_bg!);
     final s = _selected;
-    if (s != null) {
+    if (s != null && ObstacleArt.ready) {
+      ObstacleArt.draw(canvas, ObstacleSprite.select,
+          Rect.fromLTWH(s.col * cell, s.row * cell, cell, cell));
+    } else if (s != null) {
       canvas.drawRRect(
         RRect.fromRectAndRadius(
           Rect.fromLTWH(s.col * cell, s.row * cell, cell, cell).deflate(1.5),
@@ -429,11 +439,14 @@ class BoardComponent extends PositionComponent
       final rect = Rect.fromLTWH(
           (i % board.cols) * cell, (i ~/ board.cols) * cell, cell, cell);
       if (ObstacleArt.ready) {
-        // Stacked sheets, each one offset so the count reads at a glance.
-        for (var l = layers - 1; l >= 0; l--) {
-          ObstacleArt.draw(canvas, ObstacleSprite.nori,
-              rect.deflate(cell * 0.04).shift(Offset(-l * 3.0, -l * 3.0)));
-        }
+        ObstacleArt.draw(
+            canvas,
+            [
+              ObstacleSprite.nori1,
+              ObstacleSprite.nori2,
+              ObstacleSprite.nori3
+            ][(layers - 1).clamp(0, 2)],
+            rect.deflate(cell * 0.02));
         continue;
       }
       for (var l = 0; l < layers; l++) {
@@ -532,13 +545,18 @@ class BoardComponent extends PositionComponent
 
   Future<void> _runBooster(Booster b, List<BoardStep> Function() run) async {
     if (_busy || engine.status != GameStatus.playing) return;
-    if (!onSpendBooster(b)) return;
+    if (!canSpendBooster(b)) return;
+    // A rejected use (frozen piece, ingredient...) returns no steps and
+    // costs nothing.
+    final steps = run();
+    if (steps.isEmpty) return;
+    onSpendBooster(b);
     _busy = true;
     _clearHint();
     armed.value = null;
     _selected = null;
     try {
-      await _play(run());
+      await _play(steps);
     } finally {
       _busy = false;
       _resetIdle();

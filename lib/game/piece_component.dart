@@ -43,11 +43,13 @@ class PieceComponent extends PositionComponent {
 
   int _timer = 0;
   TextPainter? _timerText;
+  TextPainter? _darkText;
 
   /// Bomb countdown shown as a badge (0 = no bomb).
   int get timer => _timer;
   set timer(int v) {
     _timer = v;
+    _darkText = null;
     _timerText = v == 0
         ? null
         : (TextPainter(
@@ -77,7 +79,16 @@ class PieceComponent extends PositionComponent {
       // The sprite's belly is blank: the countdown is written on it.
       ObstacleArt.draw(canvas, ObstacleSprite.bomb,
           Rect.fromCircle(center: c, radius: r * 1.45));
-      text.paint(canvas, c - Offset(text.width / 2, text.height / 2 - 1));
+      final dark = _darkText ??= (TextPainter(
+          text: TextSpan(
+              text: '$_timer',
+              style: const TextStyle(
+                  color: Color(0xFF2B211C),
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold)),
+          textDirection: TextDirection.ltr)
+        ..layout());
+      dark.paint(canvas, c - Offset(dark.width / 2, dark.height / 2 - 1));
       return;
     }
     canvas.drawCircle(c, r, _bombFill);
@@ -99,15 +110,11 @@ class PieceComponent extends PositionComponent {
   void _drawFlame(Canvas canvas) {
     final s = size.x;
     if (ObstacleArt.ready) {
-      final sway = 1 + 0.06 * math.sin(_t * 9);
-      ObstacleArt.draw(
-          canvas,
-          ObstacleSprite.fire,
-          Rect.fromCenter(
-              center: Offset(s / 2, s * 0.5),
-              width: s * 0.62 * sway,
-              height: s * 0.7 * sway),
-          alpha: 0.92);
+      // Two flame frames cross-fading on a shared base.
+      final box = Rect.fromLTWH(0, 0, s, s).deflate(s * 0.02);
+      ObstacleArt.draw(canvas, ObstacleSprite.fire1, box, alpha: 0.95);
+      ObstacleArt.draw(canvas, ObstacleSprite.fire2, box,
+          alpha: 0.95 * (0.5 + 0.5 * math.sin(_t * 7)));
       return;
     }
     // Blur of 6 at the 64px cell the art was tuned for.
@@ -157,16 +164,15 @@ class PieceComponent extends PositionComponent {
     if (ice == 0) return;
     final s = size.x;
     if (ObstacleArt.ready) {
-      // See-through cube over the piece; more layers are more opaque.
-      ObstacleArt.draw(canvas, ObstacleSprite.ice,
-          Rect.fromLTWH(0, 0, s, s).deflate(s * 0.03),
-          alpha: 0.35 + 0.15 * ice.clamp(1, 3));
-      for (var i = 0; i < ice; i++) {
-        canvas.drawCircle(
-            Offset(s * (0.5 - 0.09 * (ice - 1) + 0.18 * i), s * 0.9),
-            s * 0.045,
-            _iceDot);
-      }
+      // Cracked-ice frame round the piece; thicker with more layers.
+      ObstacleArt.draw(
+          canvas,
+          [
+            ObstacleSprite.ice1,
+            ObstacleSprite.ice2,
+            ObstacleSprite.ice3
+          ][(ice - 1).clamp(0, 2)],
+          Rect.fromLTWH(0, 0, s, s).deflate(s * 0.02));
       return;
     }
     final rr = RRect.fromRectAndRadius(

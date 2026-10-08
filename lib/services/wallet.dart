@@ -186,19 +186,25 @@ class WalletNotifier extends Notifier<WalletState> {
     return true;
   }
 
+  /// Publishes [next] and writes only the keys that changed.
   void _set(WalletState next) {
+    final prev = state;
     state = next;
     final s = ref.read(storeProvider);
-    s.put('lives', next.lives);
-    s.put('coins', next.coins);
+    if (next.lives != prev.lives) s.put('lives', next.lives);
+    if (next.coins != prev.coins) s.put('coins', next.coins);
     final since = next.since;
-    if (since == null) {
-      s.remove('lives_since');
-    } else {
-      s.put('lives_since', since.millisecondsSinceEpoch);
+    if (since != prev.since) {
+      if (since == null) {
+        s.remove('lives_since');
+      } else {
+        s.put('lives_since', since.millisecondsSinceEpoch);
+      }
     }
     for (final b in Booster.values) {
-      s.put('booster_${b.name}', next.count(b));
+      if (next.count(b) != prev.count(b)) {
+        s.put('booster_${b.name}', next.count(b));
+      }
     }
   }
 }
