@@ -31,7 +31,7 @@ Re-run `tool/tune.dart` after changing the engine or adding levels. Real audio r
 
 Three layers, with dependencies pointing downward only:
 
-- **`lib/core/`: pure Dart, no Flutter/Flame imports.** All game rules live here. `GameEngine.trySwap()` returns a `List<BoardStep>` (`steps.dart`) describing what happened (swap, clear, gravity, refill, cascade, shuffle…). The engine is seeded, so levels are reproducible. `GameEngine.fork` clones state for lookahead (used by the planner bot, hints and the tools). `match_finder.dart` decides which special piece a match spawns; `move_finder.dart` powers hints and the no-moves shuffle. End-of-turn effects such as conveyors hook into `GameEngine._endTurn`.
+- **`lib/core/`: pure Dart, no Flutter/Flame imports.** All game rules live here. `GameEngine.trySwap()` returns a `List<BoardStep>` (`steps.dart`) describing what happened (swap, clear, gravity, refill, cascade, shuffle…). The engine is seeded, so levels are reproducible. `GameEngine.fork` clones state for lookahead (used by the planner bot, hints and the tools). `match_finder.dart` decides which special piece a match spawns; `move_finder.dart` powers hints and the no-moves shuffle. End-of-turn effects such as conveyors hook into `GameEngine._endTurn`. The engine is one library split into `part` files (`game_engine_clear.dart`, `_hazards`, `_specials`); falling and refilling live in `gravity.dart` (`GravitySettler`).
 - **`lib/game/`: the Flame view.** `BoardComponent` only *plays back* the engine's steps as animations; it must not decide rules. `SushiGame` exposes HUD state to Flutter.
 - **`lib/ui/` and `lib/main.dart`: Flutter UI** (HUD, level select, shop, restaurant, settings, dialogs). `l10n.dart` is a hand-rolled localisation (`L10n.language`).
 

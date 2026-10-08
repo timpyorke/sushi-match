@@ -5,6 +5,12 @@ class Pos {
   final int row;
   final int col;
 
+  /// The four orthogonal steps (right, left, down, up).
+  static const orthogonal = [Pos(0, 1), Pos(0, -1), Pos(1, 0), Pos(-1, 0)];
+
+  /// The four cells beside this one, in [orthogonal] order.
+  Iterable<Pos> get neighbours => orthogonal.map((d) => this + d);
+
   Pos operator +(Pos o) => Pos(row + o.row, col + o.col);
 
   Pos operator -(Pos o) => Pos(row - o.row, col - o.col);
