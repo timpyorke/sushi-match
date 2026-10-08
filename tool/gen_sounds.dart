@@ -144,7 +144,7 @@ Float64List _marimba(double freq, double dur, {double decay = 7}) {
   final b = _buf(dur);
   for (var i = 0; i < b.length; i++) {
     final t = i / _sr;
-    b[i] = _env(t, dur, 1, 0.001) *
+    b[i] = _env(t, dur, 1, 0.003) *
         (sin(2 * pi * freq * t) * exp(-decay * t) +
             0.45 * sin(2 * pi * freq * 4 * t) * exp(-decay * 5 * t) +
             0.15 * sin(2 * pi * freq * 9.2 * t) * exp(-decay * 12 * t)) /
@@ -185,6 +185,15 @@ Float64List _pluck(double freq, double dur, {double damp = 0.996}) {
   final line = Float64List(n);
   for (var i = 0; i < n; i++) {
     line[i] = _rng.nextDouble() * 2 - 1;
+  }
+  // Smooth the excitation so the attack is a soft pluck, not a burst of hiss.
+  for (var pass = 0; pass < 2; pass++) {
+    var prev = line[n - 1];
+    for (var i = 0; i < n; i++) {
+      final cur = line[i];
+      line[i] = (prev + cur) * 0.5;
+      prev = cur;
+    }
   }
   final b = _buf(dur);
   var p = 0;
@@ -246,7 +255,19 @@ Float64List _seq(List<(double freq, double at)> notes, double total,
   return out;
 }
 
-Uint8List _wav(Float64List samples, {double peak = 0.8}) {
+Uint8List _wav(Float64List samples, {double peak = 0.8, bool fade = true}) {
+  final dc = samples.fold<double>(0, (m, v) => m + v) / samples.length;
+  samples = Float64List.fromList([for (final v in samples) v - dc]);
+  if (fade) {
+    // 2 ms in, 8 ms out: no pops where a one-shot starts or stops.
+    final a = (0.002 * _sr).round(), z = (0.008 * _sr).round();
+    for (var i = 0; i < a; i++) {
+      samples[i] *= i / a;
+    }
+    for (var i = 0; i < z; i++) {
+      samples[samples.length - 1 - i] *= i / z;
+    }
+  }
   final top = samples.fold<double>(0, (m, v) => max(m, v.abs()));
   final k = top == 0 ? 1 : peak / top;
   final data = ByteData(44 + samples.length * 2);
@@ -284,11 +305,11 @@ Map<String, Float64List> _sfx() {
 
   // A soft whoosh of band-passed air for a swap.
   out['swap'] = () {
-    final air = _bp(_noise(0.14, decay: 14), 1800, 1.2);
+    final air = _lp(_bp(_noise(0.14, decay: 14), 1400, 1.0), 2800);
     return _mix2(air, _sweep(330, 520, 0.1, decay: 20), 0.4);
   }();
   out['invalid'] = () {
-    final b = _buf(0.26);
+    final b = _buf(0.32);
     _mix(b, _marimba(196, 0.12, decay: 14), 0);
     _mix(b, _marimba(165, 0.16, decay: 12), 0.11);
     return _lp(b, 1800);
@@ -300,7 +321,6 @@ Map<String, Float64List> _sfx() {
     final b = _buf(0.45);
     _mix(b, _marimba(_ladder[i], 0.45, decay: 8), 0);
     _mix(b, _bell(_ladder[i] * 2, 0.35, decay: 9), 0, 0.3);
-    _mix(b, _hp(_noise(0.03, decay: 90), 3000), 0, 0.12);
     out['match_${i + 1}'] = _room(b, mix: 0.1, tail: 0.1);
   }
 
@@ -322,12 +342,12 @@ Map<String, Float64List> _sfx() {
   // Ice crack: a bright snap, then a few little ticks.
   out['crack'] = () {
     final b = _buf(0.3);
-    _mix(b, _bp(_noise(0.1, decay: 35), 3500, 1.5), 0);
+    _mix(b, _bp(_noise(0.1, decay: 35), 2800, 1.5), 0, 0.8);
     _mix(b, _sweep(1400, 700, 0.06, decay: 50), 0, 0.4);
     for (final at in const [0.07, 0.12, 0.17]) {
-      _mix(b, _bp(_noise(0.03, decay: 100), 5000, 2), at, 0.35);
+      _mix(b, _bp(_noise(0.03, decay: 100), 3800, 2), at, 0.25);
     }
-    return b;
+    return _lp(b, 5000);
   }();
 
   out['chime'] = _room(
@@ -363,17 +383,16 @@ Map<String, Float64List> _sfx() {
   out['shuffle'] = () {
     final b = _buf(0.6);
     for (var i = 0; i < 7; i++) {
-      _mix(b, _bp(_noise(0.09, decay: 22), 2500 + 200.0 * (i % 3), 1),
+      _mix(b, _bp(_noise(0.09, decay: 22), 1500 + 150.0 * (i % 3), 1),
           i * 0.065, 0.7 + 0.05 * (i % 2));
     }
-    return b;
+    return _lp(b, 3500);
   }();
 
   // A small wooden knock.
   out['tap'] = () {
     final b = _buf(0.09);
     _mix(b, _marimba(520, 0.09, decay: 45), 0);
-    _mix(b, _hp(_noise(0.012, decay: 150), 2500), 0, 0.2);
     return b;
   }();
   out['coin'] = _room(
@@ -463,8 +482,8 @@ Float64List _bgm({required int bpm, double shift = 1, int variant = 0}) {
     _mix(beats, _thump(), i * bar, 0.5);
     _mix(beats, _thump(dur: 0.3), i * bar + 4 * eighth, 0.25);
     for (var s = 0; s < 8; s++) {
-      _mix(beats, _hp(_noise(0.05, decay: 60), 6000), i * bar + s * eighth,
-          s.isOdd ? 0.07 : 0.03);
+      _mix(beats, _lp(_hp(_noise(0.05, decay: 60), 5000), 9000), i * bar + s * eighth,
+          s.isOdd ? 0.04 : 0.02);
     }
     _mix(beats, _marimba(900 * shift, 0.1, decay: 30), i * bar + 6 * eighth,
         0.06);
@@ -488,7 +507,7 @@ void main() {
   };
   for (final e in tracks.entries) {
     File('${dir.path}/bgm_${e.key}.wav')
-        .writeAsBytesSync(_wav(e.value, peak: 0.6));
+        .writeAsBytesSync(_wav(e.value, peak: 0.6, fade: false));
   }
   for (final f in dir.listSync().whereType<File>().toList()
     ..sort((x, y) => x.path.compareTo(y.path))) {
