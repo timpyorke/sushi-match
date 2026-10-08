@@ -370,7 +370,7 @@ class _CustomersState extends State<_Customers>
   }
 
   Duration _period() => Duration(
-      milliseconds: (9000 - widget.rate * 80).clamp(4500, 9000).toInt());
+      milliseconds: (13000 - widget.rate * 80).clamp(7000, 13000).toInt());
 
   @override
   void dispose() {
@@ -397,7 +397,7 @@ class _CustomersState extends State<_Customers>
                 (1.1 - _payX) * Curves.easeIn.transform((v - 0.65) / 0.35);
           }
           final walking = v < 0.35 || v >= 0.65;
-          final bob = walking ? math.sin(v * math.pi * 24).abs() * 4 : 0.0;
+          final bob = walking ? math.sin(v * math.pi * 16).abs() * 4 : 0.0;
           final pay = ((v - 0.38) / 0.25).clamp(0.0, 1.0).toDouble();
           return Stack(
             clipBehavior: Clip.none,
@@ -405,12 +405,17 @@ class _CustomersState extends State<_Customers>
               Positioned(
                 left: x * w - 32,
                 top: _laneY * h - 48 - bob,
-                child: CustomerSprite(
-                  key: ValueKey(_face),
-                  customer: Customer.roster[_face],
-                  anim: walking ? CustomerAnim.walk : CustomerAnim.idle,
-                  size: 64,
-                  fps: 8,
+                // The walk sprites face left but the customer crosses the scene
+                // to the right, so they are mirrored while walking.
+                child: Transform.flip(
+                  flipX: walking,
+                  child: CustomerSprite(
+                    key: ValueKey(_face),
+                    customer: Customer.roster[_face],
+                    anim: walking ? CustomerAnim.walk : CustomerAnim.idle,
+                    size: 64,
+                    fps: 5,
+                  ),
                 ),
               ),
               if (pay > 0 && pay < 1)
