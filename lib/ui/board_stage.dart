@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import '../core/level.dart';
 import '../game/board_component.dart';
 
-/// The order bubble above the board, with the leftover height split evenly
-/// above the bubble, between it and the board, and under the board, so the
-/// customer sits halfway between the HUD and the board.
+/// The order bubble just above the board: the customer sits close to it, and
+/// the leftover height is split above the pair and under the board.
 ///
 /// [board] gets just the height the board needs at its fitted scale; a board
 /// that fills the height leaves no spare room and the bubble sits on top.
@@ -47,9 +46,11 @@ class _StageDelegate extends MultiChildLayoutDelegate {
     final boardH =
         BoardComponent.areaFor(s, level.rows, level.gravity).clamp(0.0, avail);
     layoutChild(_boardId, BoxConstraints.tight(Size(size.width, boardH)));
-    final gap = (avail - boardH) / 3;
+    final spare = avail - boardH;
+    final between = spare.clamp(0.0, 6.0);
+    final gap = (spare - between) / 2;
     positionChild(_orderId, Offset(0, gap));
-    positionChild(_boardId, Offset(0, gap + orderSize.height + gap));
+    positionChild(_boardId, Offset(0, gap + orderSize.height + between));
   }
 
   @override

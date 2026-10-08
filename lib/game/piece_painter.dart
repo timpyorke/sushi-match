@@ -224,7 +224,7 @@ abstract final class PiecePainter {
         return;
       }
       if (kind.index < spriteKinds) {
-        _sprite(canvas, Rect.fromLTWH(0, 0, s, s), kind);
+        _sprite(canvas, Rect.fromLTWH(0, 0, s, s).deflate(s * 0.06), kind);
         _special(canvas, s, body, c, special);
         return;
       }
