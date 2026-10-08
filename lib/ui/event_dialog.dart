@@ -8,23 +8,6 @@ import 'game_dialog.dart';
 import 'l10n.dart';
 import 'ui_art.dart';
 
-const _boosterEmoji = {
-  'chopsticks': '🥢',
-  'shuffle': '🔀',
-  'starterKnife': '🔪',
-  'extraMoves': '➕',
-  'freeSwap': '🔄',
-  'starterWasabi': '🟢',
-};
-
-String milestoneLabel(EventMilestone m) {
-  final parts = [
-    if (m.coins > 0) '🪙${m.coins}',
-    if (m.booster != null) '${_boosterEmoji[m.booster] ?? '🎁'}×${m.qty}',
-  ];
-  return parts.join(' ');
-}
-
 String timeLeftLabel(Duration d) {
   if (d.inHours >= 24) {
     return L10n.t('eventDays', {'d': d.inDays, 'h': d.inHours % 24});
@@ -62,6 +45,7 @@ class EventDialog extends ConsumerWidget {
     final left = timeLeftLabel(event.timeLeft(DateTime.now()));
     return GameDialog(
       title: event.title(L10n.language),
+      titleIcon: const Image(image: UiArt.gift, width: 28, height: 28),
       width: 360,
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -127,9 +111,15 @@ class _MilestoneRow extends StatelessWidget {
                 child: Text('${milestone.target}',
                     style: const TextStyle(
                         fontWeight: FontWeight.bold, color: UiArt.ink))),
-            Expanded(child: Text(milestoneLabel(milestone))),
+            Expanded(
+              child: RewardAmount(
+                coins: milestone.coins,
+                booster: milestone.booster,
+                qty: milestone.qty,
+              ),
+            ),
             if (claimed)
-              const Text('✅')
+              const Image(image: UiArt.check, width: 18, height: 18)
             else if (reached)
               FilledButton(
                   onPressed: onClaim, child: Text(L10n.t('eventClaim')))

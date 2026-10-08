@@ -114,25 +114,25 @@ class _SushiTrioAppState extends State<SushiTrioApp> {
 /// Levels in the game; grows by editing `Restaurant.shops`.
 final int kLevelCount = Restaurant.totalLevels;
 
-/// (id, emoji, l10n prefix) of the first unseen tip this level needs.
-(String, String, String)? _tipFor(LevelConfig level, Set<String> seen) {
+/// (id, l10n prefix) of the first unseen tip this level needs.
+(String, String)? _tipFor(LevelConfig level, Set<String> seen) {
   final tips = [
-    if (level.conveyors.isNotEmpty) ('conveyor', '➡️🔒', 'tipConveyor'),
-    if (level.ice.any((n) => n > 0)) ('ice', '🧊', 'tipIce'),
+    if (level.conveyors.isNotEmpty) ('conveyor', 'tipConveyor'),
+    if (level.ice.any((n) => n > 0)) ('ice', 'tipIce'),
     if (level.goals.any((g) => g.type == GoalType.deliver))
-      ('deliver', '🍙', 'tipDeliver'),
-    if (level.mats.any((m) => m)) ('mat', '🎋', 'tipMat'),
-    if (level.fire.any((f) => f)) ('fire', '🔥', 'tipFire'),
-    if (level.cats.isNotEmpty) ('cat', '🐱', 'tipCat'),
-    if (level.locks.any((k) => k != null)) ('key', '🔑', 'tipKey'),
-    if (level.timers.any((t) => t > 0)) ('bomb', '💣', 'tipBomb'),
-    if (level.portals.isNotEmpty) ('portal', '🌀', 'tipPortal'),
-    if (level.gravity != Gravity.down) ('gravity', '↔️', 'tipGravity'),
+      ('deliver', 'tipDeliver'),
+    if (level.mats.any((m) => m)) ('mat', 'tipMat'),
+    if (level.fire.any((f) => f)) ('fire', 'tipFire'),
+    if (level.cats.isNotEmpty) ('cat', 'tipCat'),
+    if (level.locks.any((k) => k != null)) ('key', 'tipKey'),
+    if (level.timers.any((t) => t > 0)) ('bomb', 'tipBomb'),
+    if (level.portals.isNotEmpty) ('portal', 'tipPortal'),
+    if (level.gravity != Gravity.down) ('gravity', 'tipGravity'),
     if ([
       for (var i = 0; i < level.bags.length; i++)
         if (level.bags[i] > 0 && !level.mats[i]) i,
     ].isNotEmpty)
-      ('bag', '🌾', 'tipBag'),
+      ('bag', 'tipBag'),
   ];
   for (final t in tips) {
     if (!seen.contains(t.$1)) return t;
@@ -407,8 +407,9 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                                     ? const SizedBox.shrink()
                                     : TipOverlay(
                                         id: tip.$1,
-                                        emoji: tip.$2,
-                                        text: tip.$3);
+                                        iconAsset:
+                                            'assets/ui/obstacles/${tip.$1}.png',
+                                        text: tip.$2);
                               },
                             ),
                             ResultOverlay(

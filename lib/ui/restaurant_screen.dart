@@ -310,8 +310,11 @@ class _Slot extends StatelessWidget {
                 children: [
                   Opacity(
                     opacity: 0.5,
-                    child: Text(furniture.emoji,
-                        style: const TextStyle(fontSize: 22)),
+                    child: Image.asset(
+                      'assets/sprites/furniture/${furniture.id}.png',
+                      width: 22,
+                      height: 22,
+                    ),
                   ),
                   Row(
                     mainAxisSize: MainAxisSize.min,
@@ -330,7 +333,11 @@ class _Slot extends StatelessWidget {
             scale: owned ? 1 : 0,
             duration: const Duration(milliseconds: 450),
             curve: Curves.elasticOut,
-            child: Text(furniture.emoji, style: const TextStyle(fontSize: 44)),
+            child: Image.asset(
+              'assets/sprites/furniture/${furniture.id}.png',
+              width: 44,
+              height: 44,
+            ),
           ),
         ],
       ),

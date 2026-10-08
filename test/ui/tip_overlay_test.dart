@@ -19,7 +19,9 @@ void main() {
             body: Stack(children: [
               GestureDetector(onTap: () => behindTaps++),
               const TipOverlay(
-                  id: 'conveyor', emoji: '➡️', text: 'tipConveyor'),
+                  id: 'conveyor',
+                  iconAsset: 'assets/ui/obstacles/conveyor.png',
+                  text: 'tipConveyor'),
             ]),
           ),
         )));

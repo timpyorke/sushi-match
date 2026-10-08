@@ -298,19 +298,25 @@ class GoalCount extends StatelessWidget {
   const GoalCount({super.key, required this.progress});
   final GoalProgress progress;
 
+  static Widget _obstacleIcon(String id) => Image.asset(
+        'assets/ui/obstacles/$id.png',
+        width: 16,
+        height: 16,
+      );
+
   static Widget _icon(LevelGoal g) => switch (g.type) {
         GoalType.collect => SizedBox(
             width: 20,
             height: 20,
             child: CustomPaint(painter: _PiecePainter(g.piece!))),
-        GoalType.score => const Text('⭐', style: TextStyle(fontSize: 16)),
-        GoalType.clearNori => const Text('🌿', style: TextStyle(fontSize: 16)),
-        GoalType.breakIce => const Text('🧊', style: TextStyle(fontSize: 16)),
-        GoalType.breakBag => const Text('🌾', style: TextStyle(fontSize: 16)),
-        GoalType.deliver => const Text('🍙', style: TextStyle(fontSize: 16)),
-        GoalType.clearMats => const Text('🎋', style: TextStyle(fontSize: 16)),
-        GoalType.putOut => const Text('🔥', style: TextStyle(fontSize: 16)),
-        GoalType.shooCats => const Text('🐱', style: TextStyle(fontSize: 16)),
+        GoalType.score => const Image(image: UiArt.star, width: 16, height: 16),
+        GoalType.clearNori => _obstacleIcon('nori'),
+        GoalType.breakIce => _obstacleIcon('ice'),
+        GoalType.breakBag => _obstacleIcon('bag'),
+        GoalType.deliver => _obstacleIcon('deliver'),
+        GoalType.clearMats => _obstacleIcon('mat'),
+        GoalType.putOut => _obstacleIcon('fire'),
+        GoalType.shooCats => _obstacleIcon('cat'),
       };
 
   @override

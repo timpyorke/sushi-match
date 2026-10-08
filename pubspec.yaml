@@ -47,10 +47,13 @@ flutter:
     - assets/levels/
     - assets/events/
     - assets/ui/
+    - assets/ui/obstacles/
+    - assets/ui/shops/
     - assets/backgrounds/
     - assets/sprites/sushi/
     - assets/sprites/power/
     - assets/sprites/boosters/
+    - assets/sprites/furniture/
     - assets/sprites/tiles/
     - assets/sprites/customers/00-granny-sakura/
     - assets/sprites/customers/01-mr-tanaka/

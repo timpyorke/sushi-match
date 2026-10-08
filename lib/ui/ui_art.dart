@@ -67,6 +67,9 @@ abstract final class UiArt {
   static const buttonRound = AssetImage('assets/ui/button_round.png');
   static const star = AssetImage('assets/ui/star.png');
   static const coin = AssetImage('assets/ui/coin.png');
+  static const gift = AssetImage('assets/ui/gift.png');
+  static const heartBroken = AssetImage('assets/ui/heart_broken.png');
+  static const check = AssetImage('assets/ui/check.png');
 
   static const ink = Color(0xFF4A2E1B);
   static const paper = Color(0xFFFBF1DC);
@@ -234,6 +237,49 @@ class CoinAmount extends StatelessWidget {
         Image(image: UiArt.coin, width: size, height: size),
         const SizedBox(width: 4),
         Text('$amount', style: style),
+      ],
+    );
+  }
+}
+
+/// Reward amounts with the coin and booster sprites used elsewhere in the UI.
+class RewardAmount extends StatelessWidget {
+  const RewardAmount(
+      {super.key,
+      required this.coins,
+      this.booster,
+      this.qty = 0,
+      this.size = 16,
+      this.style});
+
+  final int coins;
+  final String? booster;
+  final int qty;
+  final double size;
+  final TextStyle? style;
+
+  @override
+  Widget build(BuildContext context) {
+    final kind = Booster.values.where((b) => b.name == booster).firstOrNull;
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: 6,
+      runSpacing: 2,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        if (coins > 0) CoinAmount(coins, size: size, style: style),
+        if (booster != null)
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (kind != null)
+                BoosterIcon(kind, size: size)
+              else
+                Image(image: UiArt.gift, width: size, height: size),
+              const SizedBox(width: 4),
+              Text('×$qty', style: style),
+            ],
+          ),
       ],
     );
   }

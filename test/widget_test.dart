@@ -48,8 +48,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 500));
 
     expect(find.text('Claim'), findsOneWidget);
-    // The test font is wider than Mali, so the calendar may report overflow.
-    tester.takeException();
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('only level 1 is open on a fresh install',

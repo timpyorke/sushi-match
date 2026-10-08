@@ -9,12 +9,12 @@ import 'ui_art.dart';
 /// "Got it". Swallows taps meanwhile so no move is made blind.
 class TipOverlay extends ConsumerWidget {
   const TipOverlay(
-      {super.key, required this.id, required this.emoji, required this.text});
+      {super.key, required this.id, required this.iconAsset, required this.text});
 
   /// Remembered in [tipsProvider]; also the L10n key prefix:
   /// `<text>Title` / `<text>Body`.
   final String id;
-  final String emoji;
+  final String iconAsset;
   final String text;
 
   @override
@@ -33,7 +33,7 @@ class TipOverlay extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(emoji, style: const TextStyle(fontSize: 40)),
+                Image.asset(iconAsset, width: 40, height: 40),
                 const SizedBox(height: 8),
                 OutlinedTitle(L10n.t('${text}Title'), style: t.titleLarge),
                 const SizedBox(height: 8),

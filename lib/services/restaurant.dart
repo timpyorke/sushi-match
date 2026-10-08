@@ -10,9 +10,8 @@ import 'wallet.dart';
 /// A piece of furniture for the player's restaurant: bought once with stars,
 /// it draws more customers, who pay [coinsPerHour] into the till.
 class FurnitureDef {
-  const FurnitureDef(this.id, this.emoji, this.cost, this.coinsPerHour);
+  const FurnitureDef(this.id, this.cost, this.coinsPerHour);
   final String id;
-  final String emoji;
   final int cost;
   final int coinsPerHour;
 
@@ -22,9 +21,8 @@ class FurnitureDef {
 /// One region of the level map: a block of levels with its own name, map
 /// band and music. Regions open by clearing levels, not by buying.
 class ShopDef {
-  const ShopDef(this.id, this.emoji, this.firstLevel, this.lastLevel);
+  const ShopDef(this.id, this.firstLevel, this.lastLevel);
   final String id;
-  final String emoji;
   final int firstLevel;
   final int lastLevel;
 
@@ -38,36 +36,36 @@ class ShopDef {
 /// whole restaurant near the end of the map, sooner by replaying for 3 stars.
 abstract final class Restaurant {
   static const shops = [
-    ShopDef('tsukiji', '🐟', 1, 15),
-    ShopDef('osaka', '🍢', 16, 30),
-    ShopDef('kyoto', '⛩️', 31, 45),
-    ShopDef('hokkaido', '🦀', 46, 60),
-    ShopDef('fukuoka', '🍜', 61, 75),
-    ShopDef('okinawa', '🌺', 76, 90),
-    ShopDef('omakase', '👑', 91, 100),
-    ShopDef('nagoya', '🍤', 101, 115),
-    ShopDef('hiroshima', '🦪', 116, 130),
-    ShopDef('kanazawa', '🍱', 131, 145),
-    ShopDef('sendai', '🍖', 146, 160),
-    ShopDef('kobe', '⚓', 161, 175),
-    ShopDef('nara', '🦌', 176, 190),
-    ShopDef('ginza', '🌟', 191, 205),
+    ShopDef('tsukiji', 1, 15),
+    ShopDef('osaka', 16, 30),
+    ShopDef('kyoto', 31, 45),
+    ShopDef('hokkaido', 46, 60),
+    ShopDef('fukuoka', 61, 75),
+    ShopDef('okinawa', 76, 90),
+    ShopDef('omakase', 91, 100),
+    ShopDef('nagoya', 101, 115),
+    ShopDef('hiroshima', 116, 130),
+    ShopDef('kanazawa', 131, 145),
+    ShopDef('sendai', 146, 160),
+    ShopDef('kobe', 161, 175),
+    ShopDef('nara', 176, 190),
+    ShopDef('ginza', 191, 205),
   ];
 
   /// Cheapest first; the scene places each by id.
   static const furniture = [
-    FurnitureDef('lantern', '🏮', 2, 2),
-    FurnitureDef('stool', '🪑', 4, 2),
-    FurnitureDef('noren', '🎏', 7, 3),
-    FurnitureDef('sign', '🪧', 10, 3),
-    FurnitureDef('plant', '🪴', 15, 4),
-    FurnitureDef('luckycat', '🐱', 20, 4),
-    FurnitureDef('aquarium', '🐠', 28, 5),
-    FurnitureDef('conveyor', '🍣', 38, 5),
-    FurnitureDef('kadomatsu', '🎍', 50, 6),
-    FurnitureDef('taiko', '🥁', 62, 6),
-    FurnitureDef('sake', '🍶', 74, 8),
-    FurnitureDef('trophy', '🏆', 90, 10),
+    FurnitureDef('lantern', 2, 2),
+    FurnitureDef('stool', 4, 2),
+    FurnitureDef('noren', 7, 3),
+    FurnitureDef('sign', 10, 3),
+    FurnitureDef('plant', 15, 4),
+    FurnitureDef('luckycat', 20, 4),
+    FurnitureDef('aquarium', 28, 5),
+    FurnitureDef('conveyor', 38, 5),
+    FurnitureDef('kadomatsu', 50, 6),
+    FurnitureDef('taiko', 62, 6),
+    FurnitureDef('sake', 74, 8),
+    FurnitureDef('trophy', 90, 10),
   ];
 
   /// The till stops filling after this long, so coming back pays off but
