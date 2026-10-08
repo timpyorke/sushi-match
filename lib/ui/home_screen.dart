@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../gen/assets.gen.dart';
 import '../core/progress.dart';
 import '../core/settings.dart';
 import '../services/audio.dart';
@@ -66,9 +67,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     final t = Theme.of(context).textTheme;
     return Scaffold(
       body: DecoratedBox(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/backgrounds/bg.png'),
+            image: Assets.backgrounds.bg.provider(),
             fit: BoxFit.cover,
           ),
         ),

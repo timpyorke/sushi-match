@@ -14,6 +14,7 @@ flutter test test/core/game_engine_test.dart   # one file
 flutter test --plain-name "some test name"     # one test
 flutter run
 
+dart run build_runner build                   # regenerate lib/gen/ (typed asset paths) after adding/renaming assets
 dart run tool/balance.dart [runs] [level …] [--planner] [--no-belts]  # bot win rates / star spread per level
 dart run tool/tune.dart [runs] [--write]       # re-fit moves, goal counts, star thresholds in assets/levels
 dart run tool/gen_sounds.dart                  # regenerate placeholder WAVs in assets/audio/
@@ -35,6 +36,10 @@ Three layers, with dependencies pointing downward only:
 - **`lib/ui/` and `lib/main.dart`: Flutter UI** (HUD, level select, shop, restaurant, settings, dialogs). `l10n.dart` is a hand-rolled localisation (`L10n.language`).
 
 Levels are JSON in `assets/levels/level_NNN.json` (205 levels in 14 restaurants; see `docs/adding-levels.md` to add more; levels 61+ come from `tool/gen_levels.dart`). `tool/balance.dart`, `tune.dart` and `bots.dart` load and play them headlessly using the core engine.
+
+### Assets
+
+Asset paths come from `lib/gen/assets.gen.dart` (flutter_gen via build_runner, config under `flutter_gen:` in `pubspec.yaml`): use `Assets.ui.coin.provider()` / `.image(...)` / `.path`, `FontFamily.mali`, never a literal `'assets/…'`. A new folder must be listed under `flutter: assets:` and the generated files re-built and committed. Ids that come from game data go through the lookups in `UiArt` (`shop`, `furniture`, `obstacle`) and `PiecePainter.spriteOf`. Left as strings on purpose: `assets/levels/level_NNN.json` (computed from the level number) and the audio file names (`flame_audio` adds its own prefix).
 
 ### State and persistence
 

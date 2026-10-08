@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/event.dart';
 import '../core/piece.dart';
+import '../game/piece_painter.dart';
 import '../services/events.dart';
 import 'game_dialog.dart';
 import 'l10n.dart';
@@ -15,8 +16,7 @@ String timeLeftLabel(Duration d) {
   return L10n.t('eventHours', {'h': d.inHours + 1});
 }
 
-Widget eventSprite(PieceKind kind, double size) => Image.asset(
-    'assets/sprites/sushi/${kind.name}.png',
+Widget eventSprite(PieceKind kind, double size) => PiecePainter.spriteOf(kind).image(
     width: size,
     height: size,
     errorBuilder: (_, __, ___) => SizedBox(width: size, height: size));
@@ -45,7 +45,7 @@ class EventDialog extends ConsumerWidget {
     final left = timeLeftLabel(event.timeLeft(DateTime.now()));
     return GameDialog(
       title: event.title(L10n.language),
-      titleIcon: const Image(image: UiArt.gift, width: 28, height: 28),
+      titleIcon: Image(image: UiArt.gift, width: 28, height: 28),
       width: 360,
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -119,7 +119,7 @@ class _MilestoneRow extends StatelessWidget {
               ),
             ),
             if (claimed)
-              const Image(image: UiArt.check, width: 18, height: 18)
+              Image(image: UiArt.check, width: 18, height: 18)
             else if (reached)
               FilledButton(
                   onPressed: onClaim, child: Text(L10n.t('eventClaim')))

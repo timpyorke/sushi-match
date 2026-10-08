@@ -4,8 +4,9 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
-/// Joker the Boss Cat's animations (assets/sprites/obstacles/18-boss-cat-joker/
-/// `<anim>_0..3.png`).
+import '../gen/assets.gen.dart';
+
+/// Joker the Boss Cat's animations (four frames each).
 enum CatAnim {
   idle(4, loop: true),
   prowl(8),
@@ -24,7 +25,17 @@ enum CatAnim {
 /// it) [ready] is false and [CatComponent] draws its vector stand-in.
 abstract final class CatArt {
   static const frameCount = 4;
-  static const _folder = 'assets/sprites/obstacles/18-boss-cat-joker';
+
+  static List<AssetGenImage> _files(CatAnim anim) {
+    final j = Assets.sprites.obstacles.a18BossCatJoker;
+    return switch (anim) {
+      CatAnim.idle => [j.idle0, j.idle1, j.idle2, j.idle3],
+      CatAnim.prowl => [j.prowl0, j.prowl1, j.prowl2, j.prowl3],
+      CatAnim.eat => [j.eat0, j.eat1, j.eat2, j.eat3],
+      CatAnim.hit => [j.hit0, j.hit1, j.hit2, j.hit3],
+      CatAnim.flee => [j.flee0, j.flee1, j.flee2, j.flee3],
+    };
+  }
 
   static final _frames = <CatAnim, List<Image>>{};
 
@@ -34,8 +45,8 @@ abstract final class CatArt {
     for (final anim in CatAnim.values) {
       if (_frames.containsKey(anim)) continue;
       final images = <Image>[];
-      for (var i = 0; i < frameCount; i++) {
-        final data = await rootBundle.load('$_folder/${anim.name}_$i.png');
+      for (final file in _files(anim)) {
+        final data = await rootBundle.load(file.path);
         final codec = await instantiateImageCodec(data.buffer.asUint8List());
         images.add((await codec.getNextFrame()).image);
       }

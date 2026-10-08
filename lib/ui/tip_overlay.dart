@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../gen/assets.gen.dart';
 import '../services/tips.dart';
 import 'l10n.dart';
 import 'ui_art.dart';
@@ -9,12 +10,12 @@ import 'ui_art.dart';
 /// "Got it". Swallows taps meanwhile so no move is made blind.
 class TipOverlay extends ConsumerWidget {
   const TipOverlay(
-      {super.key, required this.id, required this.iconAsset, required this.text});
+      {super.key, required this.id, required this.icon, required this.text});
 
   /// Remembered in [tipsProvider]; also the L10n key prefix:
   /// `<text>Title` / `<text>Body`.
   final String id;
-  final String iconAsset;
+  final AssetGenImage icon;
   final String text;
 
   @override
@@ -33,7 +34,7 @@ class TipOverlay extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Image.asset(iconAsset, width: 40, height: 40),
+                icon.image(width: 40, height: 40),
                 const SizedBox(height: 8),
                 OutlinedTitle(L10n.t('${text}Title'), style: t.titleLarge),
                 const SizedBox(height: 8),

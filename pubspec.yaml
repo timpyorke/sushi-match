@@ -25,6 +25,8 @@ dev_dependencies:
   flutter_lints: ^4.0.0
   flutter_launcher_icons: ^0.14.4
   image: ^4.2.0
+  build_runner: ^2.15.1
+  flutter_gen_runner: ^5.15.0
 
 flutter_launcher_icons:
   android: true
@@ -34,6 +36,19 @@ flutter_launcher_icons:
   adaptive_icon_background: "#13307F"
   adaptive_icon_foreground: assets/icons/app_no_bg.png
   adaptive_icon_foreground_inset: 16
+
+# Typed asset references (lib/gen/): `dart run build_runner build`.
+flutter_gen:
+  output: lib/gen/
+  line_length: 80
+  assets:
+    exclude:
+      - "**/source/**"
+      - "**/*.md"
+      - assets/levels/**
+      - assets/icons/**
+  integrations:
+    image: true
 
 flutter:
   uses-material-design: true

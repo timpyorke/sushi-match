@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/event.dart';
 import '../core/level_tuning.dart';
+import '../gen/assets.gen.dart';
 
 /// Where the event schedule comes from. The app ships [AssetEventSource]; a
 /// Remote Config source can replace it later without touching anything else.
@@ -12,7 +13,7 @@ abstract interface class EventConfigSource {
 
 /// The schedule bundled in `assets/events/events.json`.
 class AssetEventSource implements EventConfigSource {
-  const AssetEventSource([this.path = 'assets/events/events.json']);
+  AssetEventSource([String? path]) : path = path ?? Assets.events.events;
   final String path;
 
   @override

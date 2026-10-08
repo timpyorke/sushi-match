@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../gen/assets.gen.dart';
 import '../services/audio.dart';
 import '../services/wallet.dart';
 import 'coin_shop_screen.dart';
@@ -26,9 +27,9 @@ class BoosterShopScreen extends StatelessWidget {
     final t = Theme.of(context).textTheme;
     return Scaffold(
       body: DecoratedBox(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/backgrounds/bg.png'),
+            image: Assets.backgrounds.bg.provider(),
             fit: BoxFit.cover,
           ),
         ),
@@ -264,7 +265,7 @@ class _LivesCard extends ConsumerWidget {
     final lives = ref.watch(walletProvider.select((w) => w.lives));
     final full = lives >= Wallet.maxLives;
     return _Card(
-      leading: const Image(image: UiArt.heart, width: 34, height: 34),
+      leading: Image(image: UiArt.heart, width: 34, height: 34),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

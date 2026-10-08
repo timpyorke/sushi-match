@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../gen/assets.gen.dart';
 import '../services/audio.dart';
 import '../services/iap.dart';
 import 'l10n.dart';
@@ -18,9 +19,9 @@ class CoinShopScreen extends ConsumerWidget {
     final iap = ref.watch(iapProvider);
     return Scaffold(
       body: DecoratedBox(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/backgrounds/bg.png'),
+            image: Assets.backgrounds.bg.provider(),
             fit: BoxFit.cover,
           ),
         ),
@@ -99,7 +100,7 @@ class _PackCard extends ConsumerWidget {
         style: const TextStyle(color: UiArt.ink),
         child: Row(
           children: [
-            const Image(image: UiArt.coin, width: 44, height: 44),
+            Image(image: UiArt.coin, width: 44, height: 44),
             const SizedBox(width: 12),
             Expanded(
               child: Column(

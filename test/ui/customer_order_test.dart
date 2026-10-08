@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sushi_trio/core/game_engine.dart';
 import 'package:sushi_trio/core/level.dart';
 import 'package:sushi_trio/core/piece.dart';
+import 'package:sushi_trio/gen/assets.gen.dart';
 import 'package:sushi_trio/ui/l10n.dart';
 import 'package:sushi_trio/ui/customer_order.dart';
 
@@ -20,8 +21,8 @@ void main() {
       expect(c.signature, isNotNull, reason: c.nameKey);
       for (final anim in CustomerAnim.values) {
         for (var i = 0; i < Customer.frameCount; i++) {
-          expect(File(c.frame(anim, i)).existsSync(), isTrue,
-              reason: c.frame(anim, i));
+          expect(File(c.frame(anim, i).path).existsSync(), isTrue,
+              reason: c.frame(anim, i).path);
         }
       }
     }
@@ -61,12 +62,14 @@ void main() {
 
   test('every customer sprite has its frames bundled', () {
     final pubspec = File('pubspec.yaml').readAsStringSync();
-    for (final c in Customer.roster.where((c) => c.sprite != null)) {
-      expect(pubspec, contains('assets/sprites/customers/${c.sprite}/'));
+    for (final c in Customer.roster.where((c) => c.hasSprite)) {
+      final folder = c.frame(CustomerAnim.idle, 0).path.split('/')
+        ..removeLast();
+      expect(pubspec, contains('${folder.join('/')}/'));
       for (final anim in CustomerAnim.values) {
         for (var i = 0; i < Customer.frameCount; i++) {
-          expect(File(c.frame(anim, i)).existsSync(), isTrue,
-              reason: c.frame(anim, i));
+          expect(File(c.frame(anim, i).path).existsSync(), isTrue,
+              reason: c.frame(anim, i).path);
         }
       }
     }
@@ -78,23 +81,24 @@ void main() {
 
   testWidgets('sprite plays the intro, then loops the animation',
       (tester) async {
-    const granny = Customer('👵', 'cust0', sprite: '00-granny-sakura');
-    await tester.pumpWidget(const MaterialApp(
+    final granny = Customer('👵', 'cust0',
+        art: Assets.sprites.customers.a00GrannySakura.values);
+    await tester.pumpWidget(MaterialApp(
         home: CustomerSprite(
             customer: granny, intro: CustomerAnim.talk, introLoops: 1)));
-    expect(shownFrame(tester), granny.frame(CustomerAnim.talk, 0));
+    expect(shownFrame(tester), granny.frame(CustomerAnim.talk, 0).path);
     await tester.pump(const Duration(milliseconds: 520)); // 6 fps → frame 3
-    expect(shownFrame(tester), granny.frame(CustomerAnim.talk, 3));
+    expect(shownFrame(tester), granny.frame(CustomerAnim.talk, 3).path);
     // The intro ends at 667 ms, then idle runs at its slower 4 fps.
     await tester.pump(const Duration(milliseconds: 340)); // 860 ms
-    expect(shownFrame(tester), granny.frame(CustomerAnim.idle, 0));
+    expect(shownFrame(tester), granny.frame(CustomerAnim.idle, 0).path);
     await tester.pump(const Duration(milliseconds: 200)); // 1060 ms
-    expect(shownFrame(tester), granny.frame(CustomerAnim.idle, 1));
+    expect(shownFrame(tester), granny.frame(CustomerAnim.idle, 1).path);
   });
 
   testWidgets('customers without art show their emoji', (tester) async {
-    await tester.pumpWidget(const MaterialApp(
-        home: CustomerSprite(customer: Customer('🐱', 'cust3'))));
+    await tester.pumpWidget(
+        MaterialApp(home: CustomerSprite(customer: Customer('🐱', 'cust3'))));
     expect(find.text('🐱'), findsOneWidget);
     expect(find.byType(Image), findsNothing);
   });

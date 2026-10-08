@@ -12,6 +12,8 @@ import 'core/progress.dart';
 import 'core/settings.dart';
 import 'game/piece_painter.dart';
 import 'game/sushi_game.dart';
+import 'gen/assets.gen.dart';
+import 'gen/fonts.gen.dart';
 import 'services/analytics.dart';
 import 'services/audio.dart';
 import 'services/event_config.dart';
@@ -43,7 +45,7 @@ void main() async {
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await _enterImmersive();
   await PiecePainter.loadSprites();
-  const bundledEvents = AssetEventSource();
+  final bundledEvents = AssetEventSource();
   final remote = await initFirebase() ? RemoteConfigFetch() : null;
   final EventConfigSource eventSource = remote == null
       ? bundledEvents
@@ -97,7 +99,7 @@ class _SushiTrioAppState extends State<SushiTrioApp> {
       theme: ThemeData(
         colorSchemeSeed: const Color(0xFFB71C2C),
         useMaterial3: true,
-        fontFamily: 'Mali',
+        fontFamily: FontFamily.mali,
       ),
       home: AnimatedSwitcher(
         duration: const Duration(milliseconds: 250),
@@ -188,9 +190,9 @@ class LevelSelectScreen extends ConsumerWidget {
     ref.watch(settingsProvider.select((s) => s.language));
     return Scaffold(
       body: DecoratedBox(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/backgrounds/bg.png'),
+            image: Assets.backgrounds.bg.provider(),
             fit: BoxFit.cover,
           ),
         ),
@@ -331,9 +333,9 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: DecoratedBox(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/backgrounds/bg.png'),
+          image: Assets.backgrounds.bg.provider(),
           fit: BoxFit.cover,
         ),
       ),
@@ -407,8 +409,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                                     ? const SizedBox.shrink()
                                     : TipOverlay(
                                         id: tip.$1,
-                                        iconAsset:
-                                            'assets/ui/obstacles/${tip.$1}.png',
+                                        icon: UiArt.obstacle(tip.$1),
                                         text: tip.$2);
                               },
                             ),

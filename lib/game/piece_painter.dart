@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/services.dart';
 
 import '../core/piece.dart';
+import '../gen/assets.gen.dart';
 
 /// Grey-box art: every kind differs by colour AND shape (colour-blind safe,
 /// per GDD). Swap for the sprite atlas later without touching game logic.
@@ -43,26 +44,38 @@ abstract final class PiecePainter {
   static final _sprites = <PieceKind, Image>{};
   static final _powerSprites = <SpecialType, Image>{};
 
-  static const _powerFiles = {
-    SpecialType.knifeRow: 'knife',
-    SpecialType.knifeCol: 'knife',
-    SpecialType.wasabi: 'wasabi',
-    SpecialType.omakase: 'omakase',
-    SpecialType.soyFish: 'soyfish',
+  static final _powerFiles = {
+    SpecialType.knifeRow: Assets.sprites.power.knife,
+    SpecialType.knifeCol: Assets.sprites.power.knife,
+    SpecialType.wasabi: Assets.sprites.power.wasabi,
+    SpecialType.omakase: Assets.sprites.power.omakase,
+    SpecialType.soyFish: Assets.sprites.power.soyfish,
   };
+
+  /// The sprite of [kind]; every kind has one (see [spriteKinds]).
+  static AssetGenImage spriteOf(PieceKind kind) => switch (kind) {
+        PieceKind.salmon => Assets.sprites.sushi.salmon,
+        PieceKind.maguro => Assets.sprites.sushi.maguro,
+        PieceKind.tamago => Assets.sprites.sushi.tamago,
+        PieceKind.ikura => Assets.sprites.sushi.ikura,
+        PieceKind.ebi => Assets.sprites.sushi.ebi,
+        PieceKind.kappa => Assets.sprites.sushi.kappa,
+        PieceKind.unagi => Assets.sprites.sushi.unagi,
+        PieceKind.hotate => Assets.sprites.sushi.hotate,
+        PieceKind.ika => Assets.sprites.sushi.ika,
+        PieceKind.tako => Assets.sprites.sushi.tako,
+      };
 
   static bool get _spritesReady =>
       _sprites.length == spriteKinds && _powerSprites.isNotEmpty;
 
-  /// Loads one 256px sprite per kind (assets/sprites/sushi/<kind>.png) and per power
-  /// item. Until they finish, pieces fall back to the vector art.
+  /// Loads one 256px sprite per kind and per power item. Until they finish, pieces fall back to the vector art.
   static Future<void> loadSprites() async {
     for (final kind in PieceKind.values.take(spriteKinds)) {
-      _sprites[kind] ??= await _decode('assets/sprites/sushi/${kind.name}.png');
+      _sprites[kind] ??= await _decode(spriteOf(kind));
     }
     for (final e in _powerFiles.entries) {
-      _powerSprites[e.key] ??=
-          await _decode('assets/sprites/power/${e.value}.png');
+      _powerSprites[e.key] ??= await _decode(e.value);
     }
   }
 
@@ -71,8 +84,8 @@ abstract final class PiecePainter {
   /// bandwidth on low-end GPUs.
   static const _spriteSize = 160;
 
-  static Future<Image> _decode(String asset) async {
-    final data = await rootBundle.load(asset);
+  static Future<Image> _decode(AssetGenImage asset) async {
+    final data = await rootBundle.load(asset.path);
     final codec = await instantiateImageCodec(data.buffer.asUint8List(),
         targetWidth: _spriteSize);
     return (await codec.getNextFrame()).image;

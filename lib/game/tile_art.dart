@@ -2,7 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter/services.dart' show rootBundle;
 
-/// Board tile sprites (assets/sprites/tiles/*.png, each pre-cropped to its tile).
+import '../gen/assets.gen.dart';
+
+/// Board tile sprites (each pre-cropped to its tile).
 ///
 /// cell_light/cell_dark: checkerboard cells. belt_straight/belt_corner/
 /// belt_cap/arrow: conveyor.
@@ -12,22 +14,22 @@ import 'package:flutter/services.dart' show rootBundle;
 enum MapTile { straight, corner, cap }
 
 abstract final class TileArt {
-  static const _names = [
-    'cell_light',
-    'cell_dark',
-    'belt_straight',
-    'belt_corner',
-    'belt_cap',
-    'arrow',
-  ];
+  static final _files = {
+    'cell_light': Assets.sprites.tiles.cellLight,
+    'cell_dark': Assets.sprites.tiles.cellDark,
+    'belt_straight': Assets.sprites.tiles.beltStraight,
+    'belt_corner': Assets.sprites.tiles.beltCorner,
+    'belt_cap': Assets.sprites.tiles.beltCap,
+    'arrow': Assets.sprites.tiles.arrow,
+  };
 
   static final _img = <String, Image>{};
 
-  static bool get ready => _img.length == _names.length;
+  static bool get ready => _img.length == _files.length;
 
   static Future<void> load() async {
-    for (final n in _names) {
-      _img[n] ??= await _decode('assets/sprites/tiles/$n.png');
+    for (final e in _files.entries) {
+      _img[e.key] ??= await _decode(e.value.path);
     }
   }
 

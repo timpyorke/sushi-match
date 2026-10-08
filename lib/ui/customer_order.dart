@@ -7,6 +7,7 @@ import '../core/game_engine.dart';
 import '../core/level.dart';
 import '../core/piece.dart';
 import '../game/piece_painter.dart';
+import '../gen/assets.gen.dart';
 import 'l10n.dart';
 import 'ui_art.dart';
 
@@ -64,25 +65,32 @@ class Signature {
 
 /// A diner who places the level's goals as a food order.
 class Customer {
-  const Customer(this.emoji, this.nameKey, {this.sprite, this.signature});
+  Customer(this.emoji, this.nameKey, {this.art, this.signature});
   final String emoji;
   final String nameKey;
 
   /// The extra animation beyond [CustomerAnim]'s shared ones; null for none.
   final Signature? signature;
 
-  /// Folder under `assets/sprites/customers/`; null until the art exists,
+  /// Every file of the customer's sprite folder
+  /// (`Assets.sprites.customers.<folder>.values`); null until the art exists,
   /// in which case [emoji] stands in.
-  final String? sprite;
+  final List<dynamic>? art;
+
+  bool get hasSprite => art != null;
+
+  late final Map<String, AssetGenImage> _frames = {
+    for (final a in art!.whereType<AssetGenImage>()) a.path.split('/').last: a,
+  };
 
   /// Frames per animation.
   static const frameCount = 4;
 
   String get name => L10n.t(nameKey);
 
-  String frame(CustomerAnim anim, int i) {
+  AssetGenImage frame(CustomerAnim anim, int i) {
     final name = anim == CustomerAnim.signature ? signature!.name : anim.name;
-    return 'assets/sprites/customers/$sprite/${name}_$i.png';
+    return _frames['${name}_$i.png']!;
   }
 
   /// Playback speed of [anim] for this customer.
@@ -91,59 +99,66 @@ class Customer {
           ? signature!.fps
           : anim.fps;
 
-  static const roster = [
+  static final roster = [
     Customer('👵', 'cust0',
-        sprite: '00-granny-sakura',
-        signature: Signature('bow', SignatureCue.start)),
+        art: Assets.sprites.customers.a00GrannySakura.values,
+        signature: const Signature('bow', SignatureCue.start)),
     Customer('👨‍💼', 'cust1',
-        sprite: '01-mr-tanaka',
-        signature: Signature('watch', SignatureCue.lowMoves, loop: true)),
+        art: Assets.sprites.customers.a01MrTanaka.values,
+        signature: const Signature('watch', SignatureCue.lowMoves, loop: true)),
     Customer('👧', 'cust2',
-        sprite: '02-little-mei',
-        signature: Signature('clap', SignatureCue.combo, fps: 10, loop: true)),
-    Customer('🐱', 'cust3',
-        sprite: '03-lucky-cat',
-        signature: Signature('beckon', SignatureCue.start, fps: 6, loop: true)),
-    Customer('🧑‍🎤', 'cust4',
-        sprite: '04-yuki', signature: Signature('photo', SignatureCue.served)),
-    Customer('👴', 'cust5',
-        sprite: '05-grandpa-taro',
-        signature: Signature('nod', SignatureCue.goal, fps: 6)),
-    Customer('💪', 'cust6',
-        sprite: '06-ryo', signature: Signature('carry', SignatureCue.start)),
-    Customer('👩‍🦰', 'cust7',
-        sprite: '07-auntie-kiku',
-        signature: Signature('inspect', SignatureCue.start)),
-    Customer('🔔', 'cust8',
-        sprite: '08-masa',
-        signature: Signature('auction', SignatureCue.lowMoves, fps: 10)),
-    Customer('🐙', 'cust9',
-        sprite: '09-taco-neesan',
-        signature: Signature('flip', SignatureCue.idle, fps: 10, loop: true)),
-    Customer('🥁', 'cust10',
-        sprite: '10-oto',
-        signature: Signature('drum', SignatureCue.combo, fps: 10, loop: true)),
-    Customer('👜', 'cust11',
-        sprite: '11-aunt-hana',
-        signature: Signature('bargain', SignatureCue.start)),
-    Customer('👘', 'cust12',
-        sprite: '12-ume', signature: Signature('fan', SignatureCue.start)),
-    Customer('🍵', 'cust13',
-        sprite: '13-haru',
-        signature: Signature('tea', SignatureCue.start, fps: 6)),
-    Customer('📿', 'cust14',
-        sprite: '14-monk-genjo',
+        art: Assets.sprites.customers.a02LittleMei.values,
         signature:
-            Signature('meditate', SignatureCue.idle, fps: 4, loop: true)),
+            const Signature('clap', SignatureCue.combo, fps: 10, loop: true)),
+    Customer('🐱', 'cust3',
+        art: Assets.sprites.customers.a03LuckyCat.values,
+        signature:
+            const Signature('beckon', SignatureCue.start, fps: 6, loop: true)),
+    Customer('🧑‍🎤', 'cust4',
+        art: Assets.sprites.customers.a04Yuki.values,
+        signature: const Signature('photo', SignatureCue.served)),
+    Customer('👴', 'cust5',
+        art: Assets.sprites.customers.a05GrandpaTaro.values,
+        signature: const Signature('nod', SignatureCue.goal, fps: 6)),
+    Customer('💪', 'cust6',
+        art: Assets.sprites.customers.a06Ryo.values,
+        signature: const Signature('carry', SignatureCue.start)),
+    Customer('👩‍🦰', 'cust7',
+        art: Assets.sprites.customers.a07AuntieKiku.values,
+        signature: const Signature('inspect', SignatureCue.start)),
+    Customer('🔔', 'cust8',
+        art: Assets.sprites.customers.a08Masa.values,
+        signature: const Signature('auction', SignatureCue.lowMoves, fps: 10)),
+    Customer('🐙', 'cust9',
+        art: Assets.sprites.customers.a09TacoNeesan.values,
+        signature:
+            const Signature('flip', SignatureCue.idle, fps: 10, loop: true)),
+    Customer('🥁', 'cust10',
+        art: Assets.sprites.customers.a10Oto.values,
+        signature:
+            const Signature('drum', SignatureCue.combo, fps: 10, loop: true)),
+    Customer('👜', 'cust11',
+        art: Assets.sprites.customers.a11AuntHana.values,
+        signature: const Signature('bargain', SignatureCue.start)),
+    Customer('👘', 'cust12',
+        art: Assets.sprites.customers.a12Ume.values,
+        signature: const Signature('fan', SignatureCue.start)),
+    Customer('🍵', 'cust13',
+        art: Assets.sprites.customers.a13Haru.values,
+        signature: const Signature('tea', SignatureCue.start, fps: 6)),
+    Customer('📿', 'cust14',
+        art: Assets.sprites.customers.a14MonkGenjo.values,
+        signature:
+            const Signature('meditate', SignatureCue.idle, fps: 4, loop: true)),
     Customer('⚓', 'cust15',
-        sprite: '15-captain-umi',
-        signature: Signature('tale', SignatureCue.start)),
+        art: Assets.sprites.customers.a15CaptainUmi.values,
+        signature: const Signature('tale', SignatureCue.start)),
     Customer('🎿', 'cust16',
-        sprite: '16-yukiko',
-        signature: Signature('stretch', SignatureCue.start)),
+        art: Assets.sprites.customers.a16Yukiko.values,
+        signature: const Signature('stretch', SignatureCue.start)),
     Customer('🐻', 'cust17',
-        sprite: '17-chef-kuma',
-        signature: Signature('taste', SignatureCue.served, fps: 6)),
+        art: Assets.sprites.customers.a17ChefKuma.values,
+        signature: const Signature('taste', SignatureCue.served, fps: 6)),
   ];
 
   /// Customers take turns across levels so every plate has a face.
@@ -213,7 +228,7 @@ class _CustomerSpriteState extends State<CustomerSprite>
   @override
   void initState() {
     super.initState();
-    if (widget.customer.sprite != null) {
+    if (widget.customer.hasSprite) {
       _ticker = createTicker(_tick)..start();
     }
   }
@@ -222,10 +237,10 @@ class _CustomerSpriteState extends State<CustomerSprite>
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Decode every frame up front so the loop doesn't flicker.
-    if (widget.customer.sprite == null) return;
+    if (!widget.customer.hasSprite) return;
     for (final anim in {widget.intro, widget.anim}.nonNulls) {
       for (var i = 0; i < Customer.frameCount; i++) {
-        precacheImage(AssetImage(widget.customer.frame(anim, i)), context);
+        precacheImage(widget.customer.frame(anim, i).provider(), context);
       }
     }
   }
@@ -249,7 +264,7 @@ class _CustomerSpriteState extends State<CustomerSprite>
   @override
   Widget build(BuildContext context) {
     final c = widget.customer;
-    if (c.sprite == null) {
+    if (!c.hasSprite) {
       return SizedBox.square(
         dimension: widget.size,
         child: Center(
@@ -258,14 +273,13 @@ class _CustomerSpriteState extends State<CustomerSprite>
       );
     }
     final (anim, i) = _frame;
-    return Image.asset(
-      c.frame(anim, i),
-      width: widget.size,
-      height: widget.size,
-      gaplessPlayback: true,
-      filterQuality: FilterQuality.medium,
-      semanticLabel: c.name,
-    );
+    return c.frame(anim, i).image(
+          width: widget.size,
+          height: widget.size,
+          gaplessPlayback: true,
+          filterQuality: FilterQuality.medium,
+          semanticLabel: c.name,
+        );
   }
 }
 
@@ -298,18 +312,15 @@ class GoalCount extends StatelessWidget {
   const GoalCount({super.key, required this.progress});
   final GoalProgress progress;
 
-  static Widget _obstacleIcon(String id) => Image.asset(
-        'assets/ui/obstacles/$id.png',
-        width: 16,
-        height: 16,
-      );
+  static Widget _obstacleIcon(String id) =>
+      UiArt.obstacle(id).image(width: 16, height: 16);
 
   static Widget _icon(LevelGoal g) => switch (g.type) {
         GoalType.collect => SizedBox(
             width: 20,
             height: 20,
             child: CustomPaint(painter: _PiecePainter(g.piece!))),
-        GoalType.score => const Image(image: UiArt.star, width: 16, height: 16),
+        GoalType.score => Image(image: UiArt.star, width: 16, height: 16),
         GoalType.clearNori => _obstacleIcon('nori'),
         GoalType.breakIce => _obstacleIcon('ice'),
         GoalType.breakBag => _obstacleIcon('bag'),
