@@ -67,7 +67,9 @@ class _LevelSelectViewState extends State<LevelSelectView> {
               Padding(
                 padding: const EdgeInsets.only(left: 12, top: 8),
                 child: RoundIconButton(
-                    icon: Icons.arrow_back, onPressed: widget.onBack!),
+                    sprite: const UiControlIcon(UiControl.back,
+                        color: Colors.white),
+                    onPressed: widget.onBack!),
               ),
             // Shrinks on narrow phones so the three buttons still fit.
             const Expanded(
@@ -84,7 +86,8 @@ class _LevelSelectViewState extends State<LevelSelectView> {
               Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: RoundIconButton(
-                    sprite: const ShopIcon(size: 28), onPressed: widget.onShop!),
+                    sprite: const ShopIcon(size: 28),
+                    onPressed: widget.onShop!),
               ),
             if (widget.onRestaurant != null)
               Padding(
@@ -96,7 +99,9 @@ class _LevelSelectViewState extends State<LevelSelectView> {
               Padding(
                 padding: const EdgeInsets.only(right: 12),
                 child: RoundIconButton(
-                    icon: Icons.settings, onPressed: widget.onSettings!),
+                    sprite: const UiControlIcon(UiControl.settings,
+                        color: Colors.white),
+                    onPressed: widget.onSettings!),
               ),
           ],
         ),

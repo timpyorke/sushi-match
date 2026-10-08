@@ -70,7 +70,7 @@ class _StarterDialogState extends ConsumerState<_StarterDialog> {
         ),
         GameDialogButton(
             onPressed: () => Navigator.pop(context),
-            child: const Icon(Icons.close)),
+            child: const UiControlIcon(UiControl.close)),
       ],
     );
   }

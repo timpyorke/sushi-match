@@ -21,6 +21,14 @@ abstract final class TileArt {
     'belt_corner': Assets.sprites.tiles.beltCorner,
     'belt_cap': Assets.sprites.tiles.beltCap,
     'arrow': Assets.sprites.tiles.arrow,
+    'frame_edge': Assets.sprites.tiles.frameEdge,
+    'frame_corner': Assets.sprites.tiles.frameCorner,
+    'onigiri': Assets.sprites.tiles.onigiri,
+    'clear_burst': Assets.sprites.tiles.clearBurst,
+    'smoke': Assets.sprites.tiles.smoke,
+    'rice_spill': Assets.sprites.tiles.riceSpill,
+    'ice_shards': Assets.sprites.tiles.iceShards,
+    'nori_bits': Assets.sprites.tiles.noriBits,
   };
 
   static final _img = <String, Image>{};
@@ -90,6 +98,39 @@ abstract final class TileArt {
         Rect.fromCenter(center: Offset.zero, width: width, height: height),
         _paint);
     canvas.restore();
+  }
+
+  /// A piece of the board frame on the outside of [dst]. [turns] quarter
+  /// turns clockwise from the top edge (or top-left corner).
+  static void frame(Canvas canvas, Rect dst,
+      {required int turns, required bool corner}) {
+    final img = _img[corner ? 'frame_corner' : 'frame_edge']!;
+    canvas.save();
+    canvas.translate(dst.center.dx, dst.center.dy);
+    canvas.rotate(turns * 1.5707963267948966);
+    canvas.drawImageRect(
+        img,
+        Rect.fromLTWH(0, 0, img.width.toDouble(), img.height.toDouble()),
+        Rect.fromCenter(
+            center: Offset.zero, width: dst.width, height: dst.height),
+        _paint);
+    canvas.restore();
+  }
+
+  /// The delivery rice ball.
+  static void onigiri(Canvas canvas, Rect dst) => _draw(canvas, 'onigiri', dst);
+
+  /// Burst sprite ([name] is `clear_burst`, `smoke`, `rice_spill`,
+  /// `ice_shards` or `nori_bits`) scaled into [dst] with [alpha] 0-1.
+  static void fx(Canvas canvas, String name, Rect dst, double alpha) {
+    final img = _img[name]!;
+    canvas.drawImageRect(
+        img,
+        Rect.fromLTWH(0, 0, img.width.toDouble(), img.height.toDouble()),
+        dst,
+        Paint()
+          ..filterQuality = FilterQuality.medium
+          ..color = Color.fromRGBO(255, 255, 255, alpha));
   }
 
   /// Direction arrow; [dir] is +1 for right, -1 for left.

@@ -361,6 +361,42 @@ class BoardComponent extends PositionComponent
     super.onRemove();
   }
 
+  /// Red lacquer rail round the outside of the playable cells.
+  void _drawFrame(Canvas canvas) {
+    if (!TileArt.ready) return;
+    bool open(Pos p) => !board.isPlayable(p);
+    for (final p in board.positions) {
+      final top = open(Pos(p.row - 1, p.col));
+      final right = open(Pos(p.row, p.col + 1));
+      final bottom = open(Pos(p.row + 1, p.col));
+      final left = open(Pos(p.row, p.col - 1));
+      final rect = Rect.fromLTWH(p.col * cell, p.row * cell, cell, cell);
+      var t = top, r = right, b = bottom, l = left;
+      void corner(int turns) =>
+          TileArt.frame(canvas, rect, turns: turns, corner: true);
+      if (t && l) {
+        corner(0);
+        t = l = false;
+      }
+      if (t && r) {
+        corner(1);
+        t = r = false;
+      }
+      if (b && r) {
+        corner(2);
+        b = r = false;
+      }
+      if (b && l) {
+        corner(3);
+        b = l = false;
+      }
+      if (t) TileArt.frame(canvas, rect, turns: 0, corner: false);
+      if (r) TileArt.frame(canvas, rect, turns: 1, corner: false);
+      if (b) TileArt.frame(canvas, rect, turns: 2, corner: false);
+      if (l) TileArt.frame(canvas, rect, turns: 3, corner: false);
+    }
+  }
+
   void _paintBackground(Canvas canvas) {
     void drawCell(int row, int col) {
       final rect = Rect.fromLTWH(col * cell, row * cell, cell, cell);
@@ -381,6 +417,7 @@ class BoardComponent extends PositionComponent
     for (final p in engine.level.portals) {
       drawCell(p.entry.row, p.entry.col);
     }
+    _drawFrame(canvas);
     _drawGravityArrows(canvas);
     // Bagged cells sit on a plain tile too; the sack is drawn over the pieces.
     for (var i = 0; i < _bags.length; i++) {
@@ -887,6 +924,18 @@ class BoardComponent extends PositionComponent
   void _burst(Vector2 at, {Paint? paint, int count = 7}) {
     if (_liveBursts >= _maxBursts) return;
     _liveBursts++;
+    if (TileArt.ready) {
+      final fx = identical(paint, _sackBurst)
+          ? 'rice_spill'
+          : identical(paint, _iceChip)
+              ? 'ice_shards'
+              : identical(paint, _matChip)
+                  ? 'nori_bits'
+                  : identical(paint, _emberChip)
+                      ? 'smoke'
+                      : 'clear_burst';
+      _layer.add(_FxSprite(fx, at.clone()));
+    }
     _layer.add(_Burst(
       onGone: () => _liveBursts--,
       position: at.clone(),
@@ -981,6 +1030,31 @@ class BoardComponent extends PositionComponent
 }
 
 /// A grain burst that reports when it is gone, for [BoardComponent]'s cap.
+/// A burst sprite that grows and fades out over a third of a second.
+class _FxSprite extends PositionComponent {
+  _FxSprite(this.name, Vector2 at)
+      : super(position: at, anchor: Anchor.center, priority: 5);
+
+  final String name;
+  double _t = 0;
+
+  static const _life = 0.35;
+
+  @override
+  void update(double dt) {
+    _t += dt;
+    if (_t >= _life) removeFromParent();
+  }
+
+  @override
+  void render(Canvas canvas) {
+    final k = (_t / _life).clamp(0.0, 1.0);
+    final side = BoardComponent.cell * (0.8 + 0.7 * k);
+    TileArt.fx(canvas, name,
+        Rect.fromCenter(center: Offset.zero, width: side, height: side), 1 - k);
+  }
+}
+
 class _Burst extends ParticleSystemComponent {
   _Burst({required this.onGone, super.position, super.particle});
 

@@ -89,6 +89,25 @@ abstract final class UiArt {
         _ => throw ArgumentError.value(id, 'id', 'no obstacle icon'),
       };
 
+  /// Backdrop of a restaurant's levels; the shared one for an unknown id.
+  static AssetGenImage levelBackground(String? id) => switch (id) {
+        'tsukiji' => Assets.backgrounds.levelTsukiji,
+        'osaka' => Assets.backgrounds.levelOsaka,
+        'kyoto' => Assets.backgrounds.levelKyoto,
+        'hokkaido' => Assets.backgrounds.levelHokkaido,
+        'fukuoka' => Assets.backgrounds.levelFukuoka,
+        'okinawa' => Assets.backgrounds.levelOkinawa,
+        'omakase' => Assets.backgrounds.levelOmakase,
+        'nagoya' => Assets.backgrounds.levelNagoya,
+        'hiroshima' => Assets.backgrounds.levelHiroshima,
+        'kanazawa' => Assets.backgrounds.levelKanazawa,
+        'sendai' => Assets.backgrounds.levelSendai,
+        'kobe' => Assets.backgrounds.levelKobe,
+        'nara' => Assets.backgrounds.levelNara,
+        'ginza' => Assets.backgrounds.levelGinza,
+        _ => Assets.backgrounds.bg,
+      };
+
   /// Shop icon by id; the ids are the ones the game data uses.
   static AssetGenImage shop(String id) => switch (id) {
         'tsukiji' => Assets.ui.shops.tsukiji,
@@ -209,6 +228,44 @@ class ShopIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Assets.ui.shopping
       .image(width: size, height: size, cacheWidth: (size * 3).round());
+}
+
+/// Controls that are still Material icons until their art lands in
+/// `assets/ui/` (prompts in `docs/prompts/icons/ui.md`).
+enum UiControl {
+  back(Icons.arrow_back_ios_new),
+  settings(Icons.settings),
+  close(Icons.close),
+  plus(Icons.add_circle),
+  soundOn(Icons.volume_up),
+  soundOff(Icons.volume_off),
+  lock(Icons.lock_outline),
+  chevron(Icons.chevron_right);
+
+  const UiControl(this.fallback);
+  final IconData fallback;
+}
+
+/// Art for each [UiControl]. Add an entry (e.g.
+/// `UiControl.back: Assets.ui.back`) once the file exists and the generated
+/// assets are rebuilt; the icon is then used everywhere automatically.
+const _controlArt = <UiControl, AssetGenImage>{};
+
+/// A [UiControl] drawn from its sprite, or the Material icon if it has none.
+class UiControlIcon extends StatelessWidget {
+  const UiControlIcon(this.control, {super.key, this.size = 24, this.color});
+  final UiControl control;
+  final double size;
+
+  /// Tints the Material fallback only; the sprite keeps its own colours.
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    final art = _controlArt[control];
+    if (art == null) return Icon(control.fallback, size: size, color: color);
+    return UiArt.sized(art.provider(), size);
+  }
 }
 
 /// Gold star, greyed out when [lit] is false.

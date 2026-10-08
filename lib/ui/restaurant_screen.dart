@@ -81,7 +81,8 @@ class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
               Row(
                 children: [
                   RoundIconButton(
-                    icon: Icons.arrow_back,
+                    sprite: const UiControlIcon(UiControl.back,
+                        color: Colors.white),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   const Expanded(

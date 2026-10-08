@@ -641,10 +641,6 @@ class $AssetsSpritesTilesGen {
   AssetGenImage get fire1 =>
       const AssetGenImage('assets/sprites/tiles/fire_1.webp');
 
-  /// File path: assets/sprites/tiles/fire_2 lossless.webp
-  AssetGenImage get fire2Lossless =>
-      const AssetGenImage('assets/sprites/tiles/fire_2 lossless.webp');
-
   /// File path: assets/sprites/tiles/fire_2.webp
   AssetGenImage get fire2 =>
       const AssetGenImage('assets/sprites/tiles/fire_2.webp');
@@ -738,7 +734,6 @@ class $AssetsSpritesTilesGen {
         cellLight,
         clearBurst,
         fire1,
-        fire2Lossless,
         fire2,
         frameCorner,
         frameEdge,

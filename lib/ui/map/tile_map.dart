@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'dart:ui' as ui;
+
 import 'japan_map.dart';
+import 'map_art.dart';
 import 'level_node.dart';
 import '../l10n.dart';
 import '../ui_art.dart';
@@ -11,7 +14,8 @@ class TileMapPainter extends CustomPainter {
       {required this.layout,
       required this.tile,
       required this.lockedShops,
-      required this.reached});
+      required this.reached,
+      this.art});
 
   final MapLayout layout;
   final double tile;
@@ -22,6 +26,31 @@ class TileMapPainter extends CustomPainter {
   /// Distance along the route up to the next level to play.
   final double reached;
 
+  /// Decoded sprites; `null` until loaded, then shapes are drawn instead.
+  final MapArt? art;
+
+  /// Draws [img] inside [rc], keeping its proportions.
+  void _sprite(Canvas canvas, ui.Image? img, Rect rc,
+      {double scale = 1,
+      Alignment align = Alignment.center,
+      double alpha = 1}) {
+    if (img == null) return;
+    final src =
+        Rect.fromLTWH(0, 0, img.width.toDouble(), img.height.toDouble());
+    final k = (rc.width / img.width) < (rc.height / img.height)
+        ? rc.width / img.width
+        : rc.height / img.height;
+    final w = img.width * k * scale, h = img.height * k * scale;
+    final dst = align.inscribe(Size(w, h), rc);
+    canvas.drawImageRect(
+        img,
+        src,
+        dst,
+        Paint()
+          ..filterQuality = FilterQuality.medium
+          ..color = Color.fromRGBO(255, 255, 255, alpha));
+  }
+
   @override
   void paint(Canvas canvas, Size size) {
     final fill = Paint();
@@ -31,15 +60,59 @@ class TileMapPainter extends CustomPainter {
       for (var c = 0; c < kMapCols; c++) {
         final rect = Rect.fromLTWH(c * tile, r * tile, tile + 0.5, tile + 0.5);
         final type = layout.tileAt(c, r);
+        final hash = (c * 7 + r * 13 + c * r) % 11;
+        final a = art;
         if (type == MapTile.sea) {
+          if (a != null) {
+            final sea = hash == 0
+                ? 'sea_c'
+                : hash == 1
+                    ? 'sea_d'
+                    : (c + r) % 2 == 0
+                        ? 'sea_a'
+                        : 'sea_b';
+            _sprite(canvas, a[sea], rect);
+            if (hash == 5) _sprite(canvas, a['wave_crest'], rect, scale: 0.5);
+          }
           continue;
         }
         final base = (c + r) % 2 == 0
             ? region.land
             : Color.lerp(region.land, Colors.white, 0.12)!;
-        canvas.drawRect(rect, fill..color = base);
+        final id = layout.shops[shop].id;
         final below =
             r + 1 >= layout.rows ? MapTile.sea : layout.tileAt(c, r + 1);
+        if (a != null && a.region(id, 'land_a') != null) {
+          final land = hash < 2
+              ? ((c + r) % 2 == 0 ? 'land_c' : 'land_d')
+              : ((c + r) % 2 == 0 ? 'land_a' : 'land_b');
+          _sprite(canvas, a.region(id, land), rect);
+          if (below == MapTile.sea) {
+            final left = c > 0 && layout.tileAt(c - 1, r) == MapTile.sea;
+            final right =
+                c + 1 < kMapCols && layout.tileAt(c + 1, r) == MapTile.sea;
+            _sprite(
+                canvas,
+                a[left && !right
+                    ? 'cliff_left'
+                    : right && !left
+                        ? 'cliff_right'
+                        : 'cliff'],
+                rect);
+          }
+          final deco = switch (type) {
+            MapTile.mountain => 'mountain',
+            MapTile.forest => 'forest',
+            MapTile.city => 'city',
+            _ => null,
+          };
+          if (deco != null) _sprite(canvas, a.region(id, deco), rect);
+          if (lockedShops.contains(shop)) {
+            _sprite(canvas, a['fog'], rect, alpha: 0.9);
+          }
+          continue;
+        }
+        canvas.drawRect(rect, fill..color = base);
         if (below == MapTile.sea) {
           canvas.drawRect(
               Rect.fromLTWH(
@@ -93,7 +166,24 @@ class TileMapPainter extends CustomPainter {
     }
   }
 
+  void _spriteRoute(Canvas canvas, MapArt a) {
+    final total = layout.nodeDist.isEmpty ? 0.0 : layout.nodeDist.last;
+    final step = tile * 0.5;
+    final dot = Rect.fromCenter(
+        center: Offset.zero, width: tile * 0.28, height: tile * 0.28);
+    for (var d = 0.0; d <= total; d += step) {
+      final p = layout.pointAt(d) * tile;
+      final img = d <= reached ? a['route_done'] : a['route_dot'];
+      _sprite(canvas, img, dot.shift(p));
+    }
+  }
+
   void _route(Canvas canvas) {
+    final a = art;
+    if (a != null && a['route_dot'] != null && a['route_done'] != null) {
+      _spriteRoute(canvas, a);
+      return;
+    }
     Path poly(List<Offset> pts) {
       final path = Path()..moveTo(pts.first.dx * tile, pts.first.dy * tile);
       for (final p in pts.skip(1)) {
@@ -126,6 +216,7 @@ class TileMapPainter extends CustomPainter {
   @override
   bool shouldRepaint(TileMapPainter old) =>
       old.tile != tile ||
+      old.art != art ||
       old.reached != reached ||
       old.lockedShops.length != lockedShops.length ||
       !old.lockedShops.containsAll(lockedShops);
@@ -136,11 +227,13 @@ class RegionBanner extends StatelessWidget {
   const RegionBanner(
       {super.key,
       required this.shopId,
+      this.art,
       required this.nameKey,
       required this.locked,
       required this.done,
       required this.total});
   final String shopId, nameKey;
+  final MapArt? art;
   final bool locked;
   final int done, total;
 
@@ -150,19 +243,30 @@ class RegionBanner extends StatelessWidget {
     final style = regionOf(shopId);
     final top = locked ? Colors.blueGrey.shade300 : style.top;
     final bottom = locked ? Colors.blueGrey.shade500 : style.bottom;
+    final banner = art?['banner'];
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [top, bottom]),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.white, width: 2),
-        boxShadow: const [
-          BoxShadow(color: Colors.black38, blurRadius: 4, offset: Offset(0, 2))
-        ],
-      ),
+      decoration: banner != null
+          ? BoxDecoration(
+              image: DecorationImage(
+                  image: DecodedImage(banner),
+                  fit: BoxFit.fill,
+                  colorFilter: locked
+                      ? const ColorFilter.mode(
+                          Color(0x99607D8B), BlendMode.srcATop)
+                      : null))
+          : BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [top, bottom]),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: Colors.white, width: 2),
+              boxShadow: const [
+                BoxShadow(
+                    color: Colors.black38, blurRadius: 4, offset: Offset(0, 2))
+              ],
+            ),
       child: Row(
         children: [
           UiArt.shop(shopId).sized(24),
@@ -189,7 +293,7 @@ class RegionBanner extends StatelessWidget {
                   color: Colors.white54, fontWeight: FontWeight.bold)),
           const SizedBox(width: 8),
           if (locked)
-            const Icon(Icons.lock_outline, color: Colors.white)
+            const UiControlIcon(UiControl.lock, color: Colors.white)
           else
             Text('$done/$total',
                 style: t.titleSmall?.copyWith(
@@ -224,6 +328,15 @@ class TileMapView extends StatefulWidget {
 class _TileMapViewState extends State<TileMapView> {
   final _scroll = ScrollController();
   bool _positioned = false;
+  MapArt? _art;
+
+  @override
+  void initState() {
+    super.initState();
+    MapArt.load().then((a) {
+      if (mounted) setState(() => _art = a);
+    });
+  }
 
   @override
   void dispose() {
@@ -278,6 +391,7 @@ class _TileMapViewState extends State<TileMapView> {
                         layout: layout,
                         tile: tile,
                         lockedShops: locked,
+                        art: _art,
                         reached: layout.nodeDist[next - 1]),
                   ),
                 ),
@@ -291,6 +405,7 @@ class _TileMapViewState extends State<TileMapView> {
                     height: tile * 1.4,
                     child: RegionBanner(
                       shopId: layout.shops[s].id,
+                      art: _art,
                       nameKey: layout.shops[s].nameKey,
                       locked: locked.contains(s),
                       done: (cleared - (layout.shops[s].firstLevel - 1)).clamp(
@@ -315,6 +430,8 @@ class _TileMapViewState extends State<TileMapView> {
                     done: n <= cleared,
                     stars: widget.stars[n] ?? 0,
                     current: n == cleared + 1 && !_lockedLevel(n, locked),
+                    boss: widget.layout.isShopEnd(n),
+                    art: _art,
                     onTap: () => widget.onTap(n),
                   ),
                 ),

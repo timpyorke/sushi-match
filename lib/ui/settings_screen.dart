@@ -66,7 +66,8 @@ class SettingsScreen extends ConsumerWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: RoundIconButton(
-                  icon: Icons.arrow_back,
+                  sprite:
+                      const UiControlIcon(UiControl.back, color: Colors.white),
                   onPressed: () => Navigator.of(context).pop(),
                 ),
               ),
@@ -86,8 +87,8 @@ class SettingsScreen extends ConsumerWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         _VolumeTile(
-                          icon: Icons.volume_up,
-                          mutedIcon: Icons.volume_off,
+                          icon: const UiControlIcon(UiControl.soundOn),
+                          mutedIcon: const UiControlIcon(UiControl.soundOff),
                           label: L10n.t('soundEffects'),
                           value: settings.soundVolume,
                           onChanged: notifier.setSoundVolume,
@@ -95,8 +96,8 @@ class SettingsScreen extends ConsumerWidget {
                           onChangeEnd: (_) => Audio.play(Sfx.tap),
                         ),
                         _VolumeTile(
-                          icon: Icons.music_note,
-                          mutedIcon: Icons.music_off,
+                          icon: const Icon(Icons.music_note),
+                          mutedIcon: const Icon(Icons.music_off),
                           label: L10n.t('music'),
                           value: settings.musicVolume,
                           onChanged: notifier.setMusicVolume,
@@ -165,8 +166,8 @@ class _VolumeTile extends StatelessWidget {
     this.onChangeEnd,
   });
 
-  final IconData icon;
-  final IconData mutedIcon;
+  final Widget icon;
+  final Widget mutedIcon;
   final String label;
   final double value;
   final ValueChanged<double> onChanged;
@@ -176,7 +177,7 @@ class _VolumeTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final percent = '${(value * 100).round()}%';
     return ListTile(
-      leading: Icon(value == 0 ? mutedIcon : icon),
+      leading: value == 0 ? mutedIcon : icon,
       title: Text(label),
       trailing: Text(percent),
       subtitle: Slider(

@@ -336,7 +336,9 @@ class _GameScreenState extends ConsumerState<GameScreen> {
         body: DecoratedBox(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: Assets.backgrounds.bg.provider(),
+          image: UiArt.levelBackground(
+                  Restaurant.shopOfLevel(widget.levelNumber)?.id)
+              .provider(),
           fit: BoxFit.cover,
         ),
       ),
@@ -365,7 +367,8 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                         child: Row(
                           children: [
                             RoundIconButton(
-                              icon: Icons.arrow_back,
+                              sprite: const UiControlIcon(UiControl.back,
+                                  color: Colors.white),
                               onPressed: () => _leave(game),
                             ),
                             const SizedBox(width: 8),

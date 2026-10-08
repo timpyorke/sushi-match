@@ -31,7 +31,8 @@ class CoinShopScreen extends ConsumerWidget {
               Row(
                 children: [
                   RoundIconButton(
-                    icon: Icons.arrow_back,
+                    sprite: const UiControlIcon(UiControl.back,
+                        color: Colors.white),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   const Spacer(),

@@ -149,7 +149,7 @@ class _WalletBarState extends ConsumerState<WalletBar> {
               children: [
                 CoinAmount(wallet.coins, size: 20, style: _pillStyle),
                 const SizedBox(width: 4),
-                const Icon(Icons.add_circle, size: 20, color: UiArt.ink),
+                const UiControlIcon(UiControl.plus, size: 20, color: UiArt.ink),
               ],
             )),
           )

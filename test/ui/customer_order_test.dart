@@ -61,7 +61,6 @@ void main() {
   });
 
   test('every level gets a customer', () {
-    expect(Customer.forLevel(1).emoji, isNotEmpty);
     final n = Customer.roster.length;
     expect(Customer.forLevel(n + 1).nameKey, Customer.forLevel(1).nameKey);
   });
@@ -87,7 +86,7 @@ void main() {
 
   testWidgets('sprite plays the intro, then loops the animation',
       (tester) async {
-    final granny = Customer('👵', 'cust0',
+    final granny = Customer('cust0',
         art: Assets.sprites.customers.a00GrannySakura.values);
     await tester.pumpWidget(MaterialApp(
         home: CustomerSprite(
@@ -102,10 +101,9 @@ void main() {
     expect(shownFrame(tester), granny.frame(CustomerAnim.idle, 1).path);
   });
 
-  testWidgets('customers without art show their emoji', (tester) async {
+  testWidgets('customers without art draw nothing', (tester) async {
     await tester.pumpWidget(
-        MaterialApp(home: CustomerSprite(customer: Customer('🐱', 'cust3'))));
-    expect(find.text('🐱'), findsOneWidget);
+        MaterialApp(home: CustomerSprite(customer: Customer('cust3'))));
     expect(find.byType(Image), findsNothing);
   });
 }

@@ -23,7 +23,7 @@ dart run tool/gen_icon_prompts.dart
 | [Obstacle and goal icons](obstacles.md) | `assets/ui/obstacles` | 192 px | 🌿 nori, 🧊 ice, 🌾 bag, 🎋 mat, 🔥 fire, 🐱 cat, 🔑 key, 💣 bomb, 🌀 portal, ➡️🔒 conveyor, ↔️ gravity, 🍙 deliver |
 | [Restaurant icons](shops.md) | `assets/ui/shops` | 192 px | 🐟 tsukiji, 🍢 osaka, ⛩️ kyoto, 🦀 hokkaido, 🍜 fukuoka, 🌺 okinawa, 👑 omakase, 🍤 nagoya, 🦪 hiroshima, 🍱 kanazawa, 🍖 sendai, ⚓ kobe, 🦌 nara, 🌟 ginza |
 | [Restaurant furniture](furniture.md) | `assets/sprites/furniture` | 256 px | 🏮 lantern, 🪑 stool, 🎏 noren, 🪧 sign, 🪴 plant, 🐱 luckycat, 🐠 aquarium, 🍣 conveyor, 🎍 kadomatsu, 🥁 taiko, 🍶 sake, 🏆 trophy |
-| [UI icons](ui.md) | `assets/ui` | 192 px | 🎁 gift, 💔 heart_broken, ✅ check |
+| [UI icons](ui.md) | `assets/ui` | 192 px | 🎁 gift, 💔 heart_broken, ✅ check, ← back, ⚙ settings, ✕ close, ＋ plus, 🔊 sound_on, 🔇 sound_off, 🔒 lock, › chevron |
 
 ## Quality checklist
 

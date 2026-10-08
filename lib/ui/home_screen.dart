@@ -91,7 +91,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   Padding(
                     padding: const EdgeInsets.only(right: 12),
                     child: RoundIconButton(
-                        icon: Icons.settings, onPressed: widget.onSettings),
+                        sprite: const UiControlIcon(UiControl.settings,
+                            color: Colors.white),
+                        onPressed: widget.onSettings),
                   ),
                 ],
               ),

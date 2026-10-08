@@ -93,7 +93,7 @@ abstract final class L10n {
       'hotate': 'Hotate',
       'ika': 'Ika',
       'tako': 'Tako',
-      'win': 'Oishii! 🍣',
+      'win': 'Oishii!',
       'lose': 'Out of moves',
       'scoreN': 'Score {n}',
       'reward': '+{n} coins',

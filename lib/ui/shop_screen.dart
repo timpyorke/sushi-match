@@ -39,7 +39,8 @@ class BoosterShopScreen extends StatelessWidget {
               Row(
                 children: [
                   RoundIconButton(
-                    icon: Icons.arrow_back,
+                    sprite: const UiControlIcon(UiControl.back,
+                        color: Colors.white),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   const Spacer(),
@@ -81,7 +82,7 @@ class CoinPill extends ConsumerWidget {
               style: const TextStyle(
                   color: UiArt.ink, fontWeight: FontWeight.bold)),
           if (tappable)
-            const Icon(Icons.add_circle, size: 20, color: UiArt.ink),
+            const UiControlIcon(UiControl.plus, size: 20, color: UiArt.ink),
         ],
       ),
     );
@@ -143,7 +144,8 @@ Future<void> showBoosterShopSheet(BuildContext context) {
                   const Padding(
                       padding: EdgeInsets.only(bottom: 8), child: CoinPill()),
                   IconButton(
-                      icon: const Icon(Icons.close, color: UiArt.ink),
+                      icon: const UiControlIcon(UiControl.close,
+                          color: UiArt.ink),
                       onPressed: () => Navigator.of(context).pop()),
                 ],
               ),

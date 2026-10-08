@@ -65,8 +65,7 @@ class Signature {
 
 /// A diner who places the level's goals as a food order.
 class Customer {
-  Customer(this.emoji, this.nameKey, {this.art, this.signature});
-  final String emoji;
+  Customer(this.nameKey, {this.art, this.signature});
   final String nameKey;
 
   /// The extra animation beyond [CustomerAnim]'s shared ones; null for none.
@@ -74,7 +73,7 @@ class Customer {
 
   /// Every file of the customer's sprite folder
   /// (`Assets.sprites.customers.<folder>.values`); null until the art exists,
-  /// in which case [emoji] stands in.
+  /// in which case nothing is drawn.
   final List<dynamic>? art;
 
   bool get hasSprite => art != null;
@@ -102,63 +101,63 @@ class Customer {
           : anim.fps;
 
   static final roster = [
-    Customer('👵', 'cust0',
+    Customer('cust0',
         art: Assets.sprites.customers.a00GrannySakura.values,
         signature: const Signature('bow', SignatureCue.start)),
-    Customer('👨‍💼', 'cust1',
+    Customer('cust1',
         art: Assets.sprites.customers.a01MrTanaka.values,
         signature: const Signature('watch', SignatureCue.lowMoves, loop: true)),
-    Customer('👧', 'cust2',
+    Customer('cust2',
         art: Assets.sprites.customers.a02LittleMei.values,
         signature:
             const Signature('clap', SignatureCue.combo, fps: 10, loop: true)),
-    Customer('🐱', 'cust3',
+    Customer('cust3',
         art: Assets.sprites.customers.a03LuckyCat.values,
         signature:
             const Signature('beckon', SignatureCue.start, fps: 6, loop: true)),
-    Customer('🧑‍🎤', 'cust4',
+    Customer('cust4',
         art: Assets.sprites.customers.a04Yuki.values,
         signature: const Signature('photo', SignatureCue.served)),
-    Customer('👴', 'cust5',
+    Customer('cust5',
         art: Assets.sprites.customers.a05GrandpaTaro.values,
         signature: const Signature('nod', SignatureCue.goal, fps: 6)),
-    Customer('💪', 'cust6',
+    Customer('cust6',
         art: Assets.sprites.customers.a06Ryo.values,
         signature: const Signature('carry', SignatureCue.start)),
-    Customer('👩‍🦰', 'cust7',
+    Customer('cust7',
         art: Assets.sprites.customers.a07AuntieKiku.values,
         signature: const Signature('inspect', SignatureCue.start)),
-    Customer('🔔', 'cust8',
+    Customer('cust8',
         art: Assets.sprites.customers.a08Masa.values,
         signature: const Signature('auction', SignatureCue.lowMoves, fps: 10)),
-    Customer('🐙', 'cust9',
+    Customer('cust9',
         art: Assets.sprites.customers.a09TacoNeesan.values,
         signature:
             const Signature('flip', SignatureCue.idle, fps: 10, loop: true)),
-    Customer('🥁', 'cust10',
+    Customer('cust10',
         art: Assets.sprites.customers.a10Oto.values,
         signature:
             const Signature('drum', SignatureCue.combo, fps: 10, loop: true)),
-    Customer('👜', 'cust11',
+    Customer('cust11',
         art: Assets.sprites.customers.a11AuntHana.values,
         signature: const Signature('bargain', SignatureCue.start)),
-    Customer('👘', 'cust12',
+    Customer('cust12',
         art: Assets.sprites.customers.a12Ume.values,
         signature: const Signature('fan', SignatureCue.start)),
-    Customer('🍵', 'cust13',
+    Customer('cust13',
         art: Assets.sprites.customers.a13Haru.values,
         signature: const Signature('tea', SignatureCue.start, fps: 6)),
-    Customer('📿', 'cust14',
+    Customer('cust14',
         art: Assets.sprites.customers.a14MonkGenjo.values,
         signature:
             const Signature('meditate', SignatureCue.idle, fps: 4, loop: true)),
-    Customer('⚓', 'cust15',
+    Customer('cust15',
         art: Assets.sprites.customers.a15CaptainUmi.values,
         signature: const Signature('tale', SignatureCue.start)),
-    Customer('🎿', 'cust16',
+    Customer('cust16',
         art: Assets.sprites.customers.a16Yukiko.values,
         signature: const Signature('stretch', SignatureCue.start)),
-    Customer('🐻', 'cust17',
+    Customer('cust17',
         art: Assets.sprites.customers.a17ChefKuma.values,
         signature: const Signature('taste', SignatureCue.served, fps: 6)),
   ];
@@ -169,7 +168,7 @@ class Customer {
 }
 
 /// A customer playing [anim] on a loop, after [intro] plays [introLoops]
-/// times if given. Falls back to the emoji when the customer has no sprite.
+/// times if given. Draws nothing when the customer has no sprite.
 class CustomerSprite extends StatefulWidget {
   const CustomerSprite({
     super.key,
@@ -267,12 +266,7 @@ class _CustomerSpriteState extends State<CustomerSprite>
   Widget build(BuildContext context) {
     final c = widget.customer;
     if (!c.hasSprite) {
-      return SizedBox.square(
-        dimension: widget.size,
-        child: Center(
-            child:
-                Text(c.emoji, style: TextStyle(fontSize: widget.size * 0.5))),
-      );
+      return SizedBox.square(dimension: widget.size);
     }
     final (anim, i) = _frame;
     return c.frame(anim, i).image(

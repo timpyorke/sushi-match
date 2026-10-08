@@ -126,7 +126,7 @@ class _MilestoneRow extends StatelessWidget {
               FilledButton(
                   onPressed: onClaim, child: Text(L10n.t('eventClaim')))
             else
-              const Icon(Icons.lock_outline, size: 18),
+              const UiControlIcon(UiControl.lock, size: 18),
           ],
         ),
       ),

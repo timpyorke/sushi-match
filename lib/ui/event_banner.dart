@@ -72,7 +72,7 @@ class EventBanner extends ConsumerWidget {
                 child: UiArt.sized(UiArt.gift, 24),
               )
             else
-              const Icon(Icons.chevron_right, color: UiArt.ink),
+              const UiControlIcon(UiControl.chevron, color: UiArt.ink),
           ],
         ),
       ),

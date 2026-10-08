@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 import '../core/piece.dart';
 import '../gen/assets.gen.dart';
+import 'tile_art.dart';
 
 /// Grey-box art: every kind differs by colour AND shape (colour-blind safe,
 /// per GDD). Swap for the sprite atlas later without touching game logic.
@@ -172,6 +173,10 @@ abstract final class PiecePainter {
 
   /// Delivery ingredient: a smiling rice ball on a golden glow.
   static void paintIngredient(Canvas canvas, double s) {
+    if (TileArt.ready) {
+      TileArt.onigiri(canvas, Rect.fromLTWH(0, 0, s, s));
+      return;
+    }
     final tri = Path()
       ..moveTo(s * 0.5, s * 0.2)
       ..lineTo(s * 0.82, s * 0.78)

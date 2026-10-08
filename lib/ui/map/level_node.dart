@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/piece.dart';
 import '../../game/piece_painter.dart';
 import '../ui_art.dart';
+import 'map_art.dart';
 
 /// One level on the map: a sushi plate (or a lock), its number and, once
 /// cleared, the stars earned.
@@ -15,6 +16,8 @@ class LevelNode extends StatelessWidget {
       required this.done,
       required this.stars,
       required this.current,
+      this.boss = false,
+      this.art,
       required this.onTap});
   final int level;
   final double size;
@@ -26,48 +29,109 @@ class LevelNode extends StatelessWidget {
 
   /// The next level to play: gets a glow.
   final bool current;
+
+  /// Last level of its restaurant: shows a pennant.
+  final bool boss;
+
+  /// Decoded map sprites; `null` while loading (shapes are drawn instead).
+  final MapArt? art;
   final VoidCallback onTap;
+
+  Widget _star(bool lit, double s) {
+    final img = art?[lit ? 'star_lit' : 'star_dim'];
+    if (img == null) return StarIcon(size: s, lit: lit);
+    return SizedBox.square(
+        dimension: s, child: RawImage(image: img, fit: BoxFit.contain));
+  }
+
+  /// The plate with the sushi (or a padlock) on it.
+  Widget _plate() {
+    final a = art;
+    final name = locked
+        ? 'plate_locked'
+        : current
+            ? 'plate_current'
+            : 'plate';
+    final img = a == null ? null : a[name];
+    if (a == null || img == null) {
+      return DecoratedBox(
+        decoration: current
+            ? const BoxDecoration(shape: BoxShape.circle, boxShadow: [
+                BoxShadow(
+                    color: Color(0xCCFFD54F), blurRadius: 18, spreadRadius: 4)
+              ])
+            : const BoxDecoration(),
+        child: locked
+            ? Icon(Icons.lock, size: size * 0.6, color: Colors.black54)
+            : CustomPaint(
+                painter: _SushiPainter(
+                    PieceKind.values[(level - 1) % PieceKind.values.length])),
+      );
+    }
+    final flag = boss && !locked ? a['flag_boss'] : null;
+    return Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.center,
+      children: [
+        Positioned.fill(child: RawImage(image: img, fit: BoxFit.contain)),
+        if (!locked)
+          Padding(
+            padding: EdgeInsets.all(size * 0.2),
+            child: CustomPaint(
+                painter: _SushiPainter(
+                    PieceKind.values[(level - 1) % PieceKind.values.length])),
+          ),
+        if (current && a['marker'] != null)
+          Positioned(
+              left: size * 0.2,
+              right: size * 0.2,
+              top: -size * 0.55,
+              height: size * 0.6,
+              child: RawImage(image: a['marker'], fit: BoxFit.contain)),
+        if (flag != null)
+          Positioned(
+              right: -size * 0.15,
+              top: -size * 0.25,
+              width: size * 0.5,
+              height: size * 0.5,
+              child: RawImage(image: flag, fit: BoxFit.contain)),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final kind = PieceKind.values[(level - 1) % PieceKind.values.length];
+    final tag = art?['number_tag'];
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width: size,
-            height: size,
-            decoration: current
-                ? const BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                          color: Color(0xCCFFD54F),
-                          blurRadius: 18,
-                          spreadRadius: 4)
-                    ],
-                  )
-                : null,
-            child: locked
-                ? Icon(Icons.lock, size: size * 0.6, color: Colors.black54)
-                : CustomPaint(painter: _SushiPainter(kind)),
-          ),
+          SizedBox(width: size, height: size, child: _plate()),
           const SizedBox(height: 2),
           Container(
             width: size + 4,
             height: 28,
             alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: locked ? Colors.grey.shade400 : Colors.white,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(
-                  color:
-                      locked ? Colors.grey.shade600 : const Color(0xFFB71C2C),
-                  width: 2.5),
-            ),
+            decoration: tag != null
+                ? BoxDecoration(
+                    image: DecorationImage(
+                        image: DecodedImage(tag),
+                        fit: BoxFit.fill,
+                        colorFilter: locked
+                            ? const ColorFilter.mode(
+                                Color(0x99808080), BlendMode.srcATop)
+                            : null))
+                : BoxDecoration(
+                    color: locked ? Colors.grey.shade400 : Colors.white,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(
+                        color: locked
+                            ? Colors.grey.shade600
+                            : const Color(0xFFB71C2C),
+                        width: 2.5),
+                  ),
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Text('$level',
@@ -84,8 +148,7 @@ class LevelNode extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   for (var i = 1; i <= 3; i++)
-                    StarIcon(
-                        size: (size / 3).clamp(10.0, 16.0), lit: i <= stars),
+                    _star(i <= stars, (size / 3).clamp(10.0, 16.0)),
                 ],
               ),
             )

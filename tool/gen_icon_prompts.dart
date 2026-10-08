@@ -438,7 +438,8 @@ const _ui = Doc(
   title: 'UI icons',
   intro: 'The last emoji in the dialogs. 🪙, ❤️, ⭐ and the booster emoji '
       'already have art (`UiArt.coin`, `UiArt.heart`, `UiArt.star`, '
-      '`BoosterIcon` in `lib/ui/ui_art.dart`), so only these three are new. '
+      '`BoosterIcon` in `lib/ui/ui_art.dart`), so only these are new: three '
+      'dialog icons and eight controls that are still Material `Icons`. '
       'They sit next to `assets/ui/heart.png`, so they follow its look.',
   folder: 'assets/ui',
   out: 192,
@@ -449,7 +450,9 @@ const _ui = Doc(
   wiring: 'Replace 🎁 in `daily_reward_dialog.dart`, `event_banner.dart` and '
       '`event_dialog.dart`, 💔 in `lives_ui.dart`, ✅ in '
       '`daily_reward_dialog.dart` and `event_dialog.dart`, and use the '
-      'existing art for 🪙 ❤️ ⭐ and the boosters.',
+      'existing art for 🪙 ❤️ ⭐ and the boosters. The controls go through '
+      '`UiArt.control(UiControl.back)` and friends, which draw the Material '
+      'icon until the file exists, so each can be dropped in on its own.',
   sheets: [
     Sheet(name: 'ui', title: 'Dialog icons', icons: [
       Icon(
@@ -468,6 +471,45 @@ const _ui = Doc(
           '✅',
           'a chunky green #4CAF50 tick mark on a round cream badge with a '
               'thin gold rim.'),
+    ]),
+    Sheet(name: 'controls', title: 'Controls', icons: [
+      Icon(
+          'back',
+          '←',
+          'a chunky cream arrow pointing left with a red #B71C2C outline-shade, '
+              'rounded ends.'),
+      Icon(
+          'settings',
+          '⚙',
+          'a chunky round cog in warm grey with a red #B71C2C centre hole and '
+              'a white highlight.'),
+      Icon(
+          'close',
+          '✕',
+          'a chunky cream cross with rounded ends and a red #B71C2C shade.'),
+      Icon(
+          'plus',
+          '＋',
+          'a chunky gold #FFD54F plus sign on a round red #B71C2C badge.'),
+    ]),
+    Sheet(name: 'controls2', title: 'More controls', icons: [
+      Icon(
+          'sound_on',
+          '🔊',
+          'a cute cream speaker with two curved red sound waves.'),
+      Icon(
+          'sound_off',
+          '🔇',
+          'the same speaker with a red cross instead of the waves.'),
+      Icon(
+          'lock',
+          '🔒',
+          'a chunky gold padlock with a red keyhole, closed shackle.'),
+      Icon(
+          'chevron',
+          '›',
+          'a chunky cream chevron pointing right with a red shade, rounded '
+              'ends.'),
     ]),
   ],
 );

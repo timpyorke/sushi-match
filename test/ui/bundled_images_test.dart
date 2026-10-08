@@ -9,7 +9,8 @@ void main() {
     final files = [
       for (final dir in ['assets/ui', 'assets/sprites', 'assets/backgrounds'])
         for (final f in Directory(dir).listSync(recursive: true))
-          if (f is File && !f.path.contains('/source/')) f,
+          if (f is File && !f.path.replaceAll(r'\', '/').contains('/source/'))
+            f,
     ];
     expect(files, isNotEmpty);
     final bad = <String>[];

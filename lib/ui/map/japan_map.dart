@@ -226,6 +226,9 @@ class MapLayout {
   late final List<double> nodeDist;
   late final List<double> _cum;
 
+  /// Whether level [n] is the last of its restaurant (the boss level).
+  bool isShopEnd(int n) => shops.any((s) => s.lastLevel == n);
+
   /// First row of the band belonging to shop index [s].
   int bandTop(int s) => (shops.length - 1 - s) * kBandRows;
 
