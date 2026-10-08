@@ -1,5 +1,5 @@
 /// Declaration order matters: the first [PiecePainter.spriteKinds] values have
-/// a sprite (assets/sprites/sushi/<name>.png), so new kinds are appended at the end.
+/// a sprite (assets/sprites/sushi/<name>.webp), so new kinds are appended at the end.
 enum PieceKind {
   salmon,
   maguro,

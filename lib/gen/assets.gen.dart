@@ -14,74 +14,74 @@ import 'package:flutter/widgets.dart';
 class $AssetsAudioGen {
   const $AssetsAudioGen();
 
-  /// File path: assets/audio/bgm_hokkaido.wav
-  String get bgmHokkaido => 'assets/audio/bgm_hokkaido.wav';
+  /// File path: assets/audio/bgm_hokkaido.m4a
+  String get bgmHokkaido => 'assets/audio/bgm_hokkaido.m4a';
 
-  /// File path: assets/audio/bgm_kyoto.wav
-  String get bgmKyoto => 'assets/audio/bgm_kyoto.wav';
+  /// File path: assets/audio/bgm_kyoto.m4a
+  String get bgmKyoto => 'assets/audio/bgm_kyoto.m4a';
 
-  /// File path: assets/audio/bgm_osaka.wav
-  String get bgmOsaka => 'assets/audio/bgm_osaka.wav';
+  /// File path: assets/audio/bgm_osaka.m4a
+  String get bgmOsaka => 'assets/audio/bgm_osaka.m4a';
 
-  /// File path: assets/audio/bgm_tsukiji.wav
-  String get bgmTsukiji => 'assets/audio/bgm_tsukiji.wav';
+  /// File path: assets/audio/bgm_tsukiji.m4a
+  String get bgmTsukiji => 'assets/audio/bgm_tsukiji.m4a';
 
-  /// File path: assets/audio/boom.wav
-  String get boom => 'assets/audio/boom.wav';
+  /// File path: assets/audio/boom.m4a
+  String get boom => 'assets/audio/boom.m4a';
 
-  /// File path: assets/audio/chime.wav
-  String get chime => 'assets/audio/chime.wav';
+  /// File path: assets/audio/chime.m4a
+  String get chime => 'assets/audio/chime.m4a';
 
-  /// File path: assets/audio/coin.wav
-  String get coin => 'assets/audio/coin.wav';
+  /// File path: assets/audio/coin.m4a
+  String get coin => 'assets/audio/coin.m4a';
 
-  /// File path: assets/audio/crack.wav
-  String get crack => 'assets/audio/crack.wav';
+  /// File path: assets/audio/crack.m4a
+  String get crack => 'assets/audio/crack.m4a';
 
-  /// File path: assets/audio/invalid.wav
-  String get invalid => 'assets/audio/invalid.wav';
+  /// File path: assets/audio/invalid.m4a
+  String get invalid => 'assets/audio/invalid.m4a';
 
-  /// File path: assets/audio/lose.wav
-  String get lose => 'assets/audio/lose.wav';
+  /// File path: assets/audio/lose.m4a
+  String get lose => 'assets/audio/lose.m4a';
 
-  /// File path: assets/audio/match_1.wav
-  String get match1 => 'assets/audio/match_1.wav';
+  /// File path: assets/audio/match_1.m4a
+  String get match1 => 'assets/audio/match_1.m4a';
 
-  /// File path: assets/audio/match_2.wav
-  String get match2 => 'assets/audio/match_2.wav';
+  /// File path: assets/audio/match_2.m4a
+  String get match2 => 'assets/audio/match_2.m4a';
 
-  /// File path: assets/audio/match_3.wav
-  String get match3 => 'assets/audio/match_3.wav';
+  /// File path: assets/audio/match_3.m4a
+  String get match3 => 'assets/audio/match_3.m4a';
 
-  /// File path: assets/audio/match_4.wav
-  String get match4 => 'assets/audio/match_4.wav';
+  /// File path: assets/audio/match_4.m4a
+  String get match4 => 'assets/audio/match_4.m4a';
 
-  /// File path: assets/audio/match_5.wav
-  String get match5 => 'assets/audio/match_5.wav';
+  /// File path: assets/audio/match_5.m4a
+  String get match5 => 'assets/audio/match_5.m4a';
 
-  /// File path: assets/audio/match_6.wav
-  String get match6 => 'assets/audio/match_6.wav';
+  /// File path: assets/audio/match_6.m4a
+  String get match6 => 'assets/audio/match_6.m4a';
 
-  /// File path: assets/audio/meow.wav
-  String get meow => 'assets/audio/meow.wav';
+  /// File path: assets/audio/meow.m4a
+  String get meow => 'assets/audio/meow.m4a';
 
-  /// File path: assets/audio/shuffle.wav
-  String get shuffle => 'assets/audio/shuffle.wav';
+  /// File path: assets/audio/shuffle.m4a
+  String get shuffle => 'assets/audio/shuffle.m4a';
 
-  /// File path: assets/audio/special.wav
-  String get special => 'assets/audio/special.wav';
+  /// File path: assets/audio/special.m4a
+  String get special => 'assets/audio/special.m4a';
 
-  /// File path: assets/audio/swap.wav
-  String get swap => 'assets/audio/swap.wav';
+  /// File path: assets/audio/swap.m4a
+  String get swap => 'assets/audio/swap.m4a';
 
-  /// File path: assets/audio/tap.wav
-  String get tap => 'assets/audio/tap.wav';
+  /// File path: assets/audio/tap.m4a
+  String get tap => 'assets/audio/tap.m4a';
 
-  /// File path: assets/audio/unlock.wav
-  String get unlock => 'assets/audio/unlock.wav';
+  /// File path: assets/audio/unlock.m4a
+  String get unlock => 'assets/audio/unlock.m4a';
 
-  /// File path: assets/audio/win.wav
-  String get win => 'assets/audio/win.wav';
+  /// File path: assets/audio/win.m4a
+  String get win => 'assets/audio/win.m4a';
 
   /// List of all assets
   List<String> get values => [
@@ -114,8 +114,8 @@ class $AssetsAudioGen {
 class $AssetsBackgroundsGen {
   const $AssetsBackgroundsGen();
 
-  /// File path: assets/backgrounds/bg.png
-  AssetGenImage get bg => const AssetGenImage('assets/backgrounds/bg.png');
+  /// File path: assets/backgrounds/bg.webp
+  AssetGenImage get bg => const AssetGenImage('assets/backgrounds/bg.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [bg];
@@ -162,43 +162,43 @@ class $AssetsSpritesGen {
 class $AssetsUiGen {
   const $AssetsUiGen();
 
-  /// File path: assets/ui/button_round.png
+  /// File path: assets/ui/button_round.webp
   AssetGenImage get buttonRound =>
-      const AssetGenImage('assets/ui/button_round.png');
+      const AssetGenImage('assets/ui/button_round.webp');
 
-  /// File path: assets/ui/check.png
-  AssetGenImage get check => const AssetGenImage('assets/ui/check.png');
+  /// File path: assets/ui/check.webp
+  AssetGenImage get check => const AssetGenImage('assets/ui/check.webp');
 
-  /// File path: assets/ui/coin.png
-  AssetGenImage get coin => const AssetGenImage('assets/ui/coin.png');
+  /// File path: assets/ui/coin.webp
+  AssetGenImage get coin => const AssetGenImage('assets/ui/coin.webp');
 
-  /// File path: assets/ui/gift.png
-  AssetGenImage get gift => const AssetGenImage('assets/ui/gift.png');
+  /// File path: assets/ui/gift.webp
+  AssetGenImage get gift => const AssetGenImage('assets/ui/gift.webp');
 
-  /// File path: assets/ui/heart.png
-  AssetGenImage get heart => const AssetGenImage('assets/ui/heart.png');
+  /// File path: assets/ui/heart.webp
+  AssetGenImage get heart => const AssetGenImage('assets/ui/heart.webp');
 
-  /// File path: assets/ui/heart_broken.png
+  /// File path: assets/ui/heart_broken.webp
   AssetGenImage get heartBroken =>
-      const AssetGenImage('assets/ui/heart_broken.png');
+      const AssetGenImage('assets/ui/heart_broken.webp');
 
   /// Directory path: assets/ui/obstacles
   $AssetsUiObstaclesGen get obstacles => const $AssetsUiObstaclesGen();
 
-  /// File path: assets/ui/panel.png
-  AssetGenImage get panel => const AssetGenImage('assets/ui/panel.png');
+  /// File path: assets/ui/panel.webp
+  AssetGenImage get panel => const AssetGenImage('assets/ui/panel.webp');
 
-  /// File path: assets/ui/plank.png
-  AssetGenImage get plank => const AssetGenImage('assets/ui/plank.png');
+  /// File path: assets/ui/plank.webp
+  AssetGenImage get plank => const AssetGenImage('assets/ui/plank.webp');
 
-  /// File path: assets/ui/shopping.png
-  AssetGenImage get shopping => const AssetGenImage('assets/ui/shopping.png');
+  /// File path: assets/ui/shopping.webp
+  AssetGenImage get shopping => const AssetGenImage('assets/ui/shopping.webp');
 
   /// Directory path: assets/ui/shops
   $AssetsUiShopsGen get shops => const $AssetsUiShopsGen();
 
-  /// File path: assets/ui/star.png
-  AssetGenImage get star => const AssetGenImage('assets/ui/star.png');
+  /// File path: assets/ui/star.webp
+  AssetGenImage get star => const AssetGenImage('assets/ui/star.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [
@@ -218,21 +218,21 @@ class $AssetsUiGen {
 class $AssetsSpritesBoostersGen {
   const $AssetsSpritesBoostersGen();
 
-  /// File path: assets/sprites/boosters/chopsticks.png
+  /// File path: assets/sprites/boosters/chopsticks.webp
   AssetGenImage get chopsticks =>
-      const AssetGenImage('assets/sprites/boosters/chopsticks.png');
+      const AssetGenImage('assets/sprites/boosters/chopsticks.webp');
 
-  /// File path: assets/sprites/boosters/hourglass.png
+  /// File path: assets/sprites/boosters/hourglass.webp
   AssetGenImage get hourglass =>
-      const AssetGenImage('assets/sprites/boosters/hourglass.png');
+      const AssetGenImage('assets/sprites/boosters/hourglass.webp');
 
-  /// File path: assets/sprites/boosters/shuffle.png
+  /// File path: assets/sprites/boosters/shuffle.webp
   AssetGenImage get shuffle =>
-      const AssetGenImage('assets/sprites/boosters/shuffle.png');
+      const AssetGenImage('assets/sprites/boosters/shuffle.webp');
 
-  /// File path: assets/sprites/boosters/swap.png
+  /// File path: assets/sprites/boosters/swap.webp
   AssetGenImage get swap =>
-      const AssetGenImage('assets/sprites/boosters/swap.png');
+      const AssetGenImage('assets/sprites/boosters/swap.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [chopsticks, hourglass, shuffle, swap];
@@ -317,53 +317,53 @@ class $AssetsSpritesCustomersGen {
 class $AssetsSpritesFurnitureGen {
   const $AssetsSpritesFurnitureGen();
 
-  /// File path: assets/sprites/furniture/aquarium.png
+  /// File path: assets/sprites/furniture/aquarium.webp
   AssetGenImage get aquarium =>
-      const AssetGenImage('assets/sprites/furniture/aquarium.png');
+      const AssetGenImage('assets/sprites/furniture/aquarium.webp');
 
-  /// File path: assets/sprites/furniture/conveyor.png
+  /// File path: assets/sprites/furniture/conveyor.webp
   AssetGenImage get conveyor =>
-      const AssetGenImage('assets/sprites/furniture/conveyor.png');
+      const AssetGenImage('assets/sprites/furniture/conveyor.webp');
 
-  /// File path: assets/sprites/furniture/kadomatsu.png
+  /// File path: assets/sprites/furniture/kadomatsu.webp
   AssetGenImage get kadomatsu =>
-      const AssetGenImage('assets/sprites/furniture/kadomatsu.png');
+      const AssetGenImage('assets/sprites/furniture/kadomatsu.webp');
 
-  /// File path: assets/sprites/furniture/lantern.png
+  /// File path: assets/sprites/furniture/lantern.webp
   AssetGenImage get lantern =>
-      const AssetGenImage('assets/sprites/furniture/lantern.png');
+      const AssetGenImage('assets/sprites/furniture/lantern.webp');
 
-  /// File path: assets/sprites/furniture/luckycat.png
+  /// File path: assets/sprites/furniture/luckycat.webp
   AssetGenImage get luckycat =>
-      const AssetGenImage('assets/sprites/furniture/luckycat.png');
+      const AssetGenImage('assets/sprites/furniture/luckycat.webp');
 
-  /// File path: assets/sprites/furniture/noren.png
+  /// File path: assets/sprites/furniture/noren.webp
   AssetGenImage get noren =>
-      const AssetGenImage('assets/sprites/furniture/noren.png');
+      const AssetGenImage('assets/sprites/furniture/noren.webp');
 
-  /// File path: assets/sprites/furniture/plant.png
+  /// File path: assets/sprites/furniture/plant.webp
   AssetGenImage get plant =>
-      const AssetGenImage('assets/sprites/furniture/plant.png');
+      const AssetGenImage('assets/sprites/furniture/plant.webp');
 
-  /// File path: assets/sprites/furniture/sake.png
+  /// File path: assets/sprites/furniture/sake.webp
   AssetGenImage get sake =>
-      const AssetGenImage('assets/sprites/furniture/sake.png');
+      const AssetGenImage('assets/sprites/furniture/sake.webp');
 
-  /// File path: assets/sprites/furniture/sign.png
+  /// File path: assets/sprites/furniture/sign.webp
   AssetGenImage get sign =>
-      const AssetGenImage('assets/sprites/furniture/sign.png');
+      const AssetGenImage('assets/sprites/furniture/sign.webp');
 
-  /// File path: assets/sprites/furniture/stool.png
+  /// File path: assets/sprites/furniture/stool.webp
   AssetGenImage get stool =>
-      const AssetGenImage('assets/sprites/furniture/stool.png');
+      const AssetGenImage('assets/sprites/furniture/stool.webp');
 
-  /// File path: assets/sprites/furniture/taiko.png
+  /// File path: assets/sprites/furniture/taiko.webp
   AssetGenImage get taiko =>
-      const AssetGenImage('assets/sprites/furniture/taiko.png');
+      const AssetGenImage('assets/sprites/furniture/taiko.webp');
 
-  /// File path: assets/sprites/furniture/trophy.png
+  /// File path: assets/sprites/furniture/trophy.webp
   AssetGenImage get trophy =>
-      const AssetGenImage('assets/sprites/furniture/trophy.png');
+      const AssetGenImage('assets/sprites/furniture/trophy.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [
@@ -393,21 +393,21 @@ class $AssetsSpritesObstaclesGen {
 class $AssetsSpritesPowerGen {
   const $AssetsSpritesPowerGen();
 
-  /// File path: assets/sprites/power/knife.png
+  /// File path: assets/sprites/power/knife.webp
   AssetGenImage get knife =>
-      const AssetGenImage('assets/sprites/power/knife.png');
+      const AssetGenImage('assets/sprites/power/knife.webp');
 
-  /// File path: assets/sprites/power/omakase.png
+  /// File path: assets/sprites/power/omakase.webp
   AssetGenImage get omakase =>
-      const AssetGenImage('assets/sprites/power/omakase.png');
+      const AssetGenImage('assets/sprites/power/omakase.webp');
 
-  /// File path: assets/sprites/power/soyfish.png
+  /// File path: assets/sprites/power/soyfish.webp
   AssetGenImage get soyfish =>
-      const AssetGenImage('assets/sprites/power/soyfish.png');
+      const AssetGenImage('assets/sprites/power/soyfish.webp');
 
-  /// File path: assets/sprites/power/wasabi.png
+  /// File path: assets/sprites/power/wasabi.webp
   AssetGenImage get wasabi =>
-      const AssetGenImage('assets/sprites/power/wasabi.png');
+      const AssetGenImage('assets/sprites/power/wasabi.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [knife, omakase, soyfish, wasabi];
@@ -416,43 +416,43 @@ class $AssetsSpritesPowerGen {
 class $AssetsSpritesSushiGen {
   const $AssetsSpritesSushiGen();
 
-  /// File path: assets/sprites/sushi/ebi.png
-  AssetGenImage get ebi => const AssetGenImage('assets/sprites/sushi/ebi.png');
+  /// File path: assets/sprites/sushi/ebi.webp
+  AssetGenImage get ebi => const AssetGenImage('assets/sprites/sushi/ebi.webp');
 
-  /// File path: assets/sprites/sushi/hotate.png
+  /// File path: assets/sprites/sushi/hotate.webp
   AssetGenImage get hotate =>
-      const AssetGenImage('assets/sprites/sushi/hotate.png');
+      const AssetGenImage('assets/sprites/sushi/hotate.webp');
 
-  /// File path: assets/sprites/sushi/ika.png
-  AssetGenImage get ika => const AssetGenImage('assets/sprites/sushi/ika.png');
+  /// File path: assets/sprites/sushi/ika.webp
+  AssetGenImage get ika => const AssetGenImage('assets/sprites/sushi/ika.webp');
 
-  /// File path: assets/sprites/sushi/ikura.png
+  /// File path: assets/sprites/sushi/ikura.webp
   AssetGenImage get ikura =>
-      const AssetGenImage('assets/sprites/sushi/ikura.png');
+      const AssetGenImage('assets/sprites/sushi/ikura.webp');
 
-  /// File path: assets/sprites/sushi/kappa.png
+  /// File path: assets/sprites/sushi/kappa.webp
   AssetGenImage get kappa =>
-      const AssetGenImage('assets/sprites/sushi/kappa.png');
+      const AssetGenImage('assets/sprites/sushi/kappa.webp');
 
-  /// File path: assets/sprites/sushi/maguro.png
+  /// File path: assets/sprites/sushi/maguro.webp
   AssetGenImage get maguro =>
-      const AssetGenImage('assets/sprites/sushi/maguro.png');
+      const AssetGenImage('assets/sprites/sushi/maguro.webp');
 
-  /// File path: assets/sprites/sushi/salmon.png
+  /// File path: assets/sprites/sushi/salmon.webp
   AssetGenImage get salmon =>
-      const AssetGenImage('assets/sprites/sushi/salmon.png');
+      const AssetGenImage('assets/sprites/sushi/salmon.webp');
 
-  /// File path: assets/sprites/sushi/tako.png
+  /// File path: assets/sprites/sushi/tako.webp
   AssetGenImage get tako =>
-      const AssetGenImage('assets/sprites/sushi/tako.png');
+      const AssetGenImage('assets/sprites/sushi/tako.webp');
 
-  /// File path: assets/sprites/sushi/tamago.png
+  /// File path: assets/sprites/sushi/tamago.webp
   AssetGenImage get tamago =>
-      const AssetGenImage('assets/sprites/sushi/tamago.png');
+      const AssetGenImage('assets/sprites/sushi/tamago.webp');
 
-  /// File path: assets/sprites/sushi/unagi.png
+  /// File path: assets/sprites/sushi/unagi.webp
   AssetGenImage get unagi =>
-      const AssetGenImage('assets/sprites/sushi/unagi.png');
+      const AssetGenImage('assets/sprites/sushi/unagi.webp');
 
   /// List of all assets
   List<AssetGenImage> get values =>
@@ -462,29 +462,29 @@ class $AssetsSpritesSushiGen {
 class $AssetsSpritesTilesGen {
   const $AssetsSpritesTilesGen();
 
-  /// File path: assets/sprites/tiles/arrow.png
+  /// File path: assets/sprites/tiles/arrow.webp
   AssetGenImage get arrow =>
-      const AssetGenImage('assets/sprites/tiles/arrow.png');
+      const AssetGenImage('assets/sprites/tiles/arrow.webp');
 
-  /// File path: assets/sprites/tiles/belt_cap.png
+  /// File path: assets/sprites/tiles/belt_cap.webp
   AssetGenImage get beltCap =>
-      const AssetGenImage('assets/sprites/tiles/belt_cap.png');
+      const AssetGenImage('assets/sprites/tiles/belt_cap.webp');
 
-  /// File path: assets/sprites/tiles/belt_corner.png
+  /// File path: assets/sprites/tiles/belt_corner.webp
   AssetGenImage get beltCorner =>
-      const AssetGenImage('assets/sprites/tiles/belt_corner.png');
+      const AssetGenImage('assets/sprites/tiles/belt_corner.webp');
 
-  /// File path: assets/sprites/tiles/belt_straight.png
+  /// File path: assets/sprites/tiles/belt_straight.webp
   AssetGenImage get beltStraight =>
-      const AssetGenImage('assets/sprites/tiles/belt_straight.png');
+      const AssetGenImage('assets/sprites/tiles/belt_straight.webp');
 
-  /// File path: assets/sprites/tiles/cell_dark.png
+  /// File path: assets/sprites/tiles/cell_dark.webp
   AssetGenImage get cellDark =>
-      const AssetGenImage('assets/sprites/tiles/cell_dark.png');
+      const AssetGenImage('assets/sprites/tiles/cell_dark.webp');
 
-  /// File path: assets/sprites/tiles/cell_light.png
+  /// File path: assets/sprites/tiles/cell_light.webp
   AssetGenImage get cellLight =>
-      const AssetGenImage('assets/sprites/tiles/cell_light.png');
+      const AssetGenImage('assets/sprites/tiles/cell_light.webp');
 
   /// List of all assets
   List<AssetGenImage> get values =>
@@ -494,45 +494,48 @@ class $AssetsSpritesTilesGen {
 class $AssetsUiObstaclesGen {
   const $AssetsUiObstaclesGen();
 
-  /// File path: assets/ui/obstacles/bag.png
-  AssetGenImage get bag => const AssetGenImage('assets/ui/obstacles/bag.png');
+  /// File path: assets/ui/obstacles/bag.webp
+  AssetGenImage get bag => const AssetGenImage('assets/ui/obstacles/bag.webp');
 
-  /// File path: assets/ui/obstacles/bomb.png
-  AssetGenImage get bomb => const AssetGenImage('assets/ui/obstacles/bomb.png');
+  /// File path: assets/ui/obstacles/bomb.webp
+  AssetGenImage get bomb =>
+      const AssetGenImage('assets/ui/obstacles/bomb.webp');
 
-  /// File path: assets/ui/obstacles/cat.png
-  AssetGenImage get cat => const AssetGenImage('assets/ui/obstacles/cat.png');
+  /// File path: assets/ui/obstacles/cat.webp
+  AssetGenImage get cat => const AssetGenImage('assets/ui/obstacles/cat.webp');
 
-  /// File path: assets/ui/obstacles/conveyor.png
+  /// File path: assets/ui/obstacles/conveyor.webp
   AssetGenImage get conveyor =>
-      const AssetGenImage('assets/ui/obstacles/conveyor.png');
+      const AssetGenImage('assets/ui/obstacles/conveyor.webp');
 
-  /// File path: assets/ui/obstacles/deliver.png
+  /// File path: assets/ui/obstacles/deliver.webp
   AssetGenImage get deliver =>
-      const AssetGenImage('assets/ui/obstacles/deliver.png');
+      const AssetGenImage('assets/ui/obstacles/deliver.webp');
 
-  /// File path: assets/ui/obstacles/fire.png
-  AssetGenImage get fire => const AssetGenImage('assets/ui/obstacles/fire.png');
+  /// File path: assets/ui/obstacles/fire.webp
+  AssetGenImage get fire =>
+      const AssetGenImage('assets/ui/obstacles/fire.webp');
 
-  /// File path: assets/ui/obstacles/gravity.png
+  /// File path: assets/ui/obstacles/gravity.webp
   AssetGenImage get gravity =>
-      const AssetGenImage('assets/ui/obstacles/gravity.png');
+      const AssetGenImage('assets/ui/obstacles/gravity.webp');
 
-  /// File path: assets/ui/obstacles/ice.png
-  AssetGenImage get ice => const AssetGenImage('assets/ui/obstacles/ice.png');
+  /// File path: assets/ui/obstacles/ice.webp
+  AssetGenImage get ice => const AssetGenImage('assets/ui/obstacles/ice.webp');
 
-  /// File path: assets/ui/obstacles/key.png
-  AssetGenImage get key => const AssetGenImage('assets/ui/obstacles/key.png');
+  /// File path: assets/ui/obstacles/key.webp
+  AssetGenImage get key => const AssetGenImage('assets/ui/obstacles/key.webp');
 
-  /// File path: assets/ui/obstacles/mat.png
-  AssetGenImage get mat => const AssetGenImage('assets/ui/obstacles/mat.png');
+  /// File path: assets/ui/obstacles/mat.webp
+  AssetGenImage get mat => const AssetGenImage('assets/ui/obstacles/mat.webp');
 
-  /// File path: assets/ui/obstacles/nori.png
-  AssetGenImage get nori => const AssetGenImage('assets/ui/obstacles/nori.png');
+  /// File path: assets/ui/obstacles/nori.webp
+  AssetGenImage get nori =>
+      const AssetGenImage('assets/ui/obstacles/nori.webp');
 
-  /// File path: assets/ui/obstacles/portal.png
+  /// File path: assets/ui/obstacles/portal.webp
   AssetGenImage get portal =>
-      const AssetGenImage('assets/ui/obstacles/portal.png');
+      const AssetGenImage('assets/ui/obstacles/portal.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [
@@ -554,54 +557,56 @@ class $AssetsUiObstaclesGen {
 class $AssetsUiShopsGen {
   const $AssetsUiShopsGen();
 
-  /// File path: assets/ui/shops/fukuoka.png
+  /// File path: assets/ui/shops/fukuoka.webp
   AssetGenImage get fukuoka =>
-      const AssetGenImage('assets/ui/shops/fukuoka.png');
+      const AssetGenImage('assets/ui/shops/fukuoka.webp');
 
-  /// File path: assets/ui/shops/ginza.png
-  AssetGenImage get ginza => const AssetGenImage('assets/ui/shops/ginza.png');
+  /// File path: assets/ui/shops/ginza.webp
+  AssetGenImage get ginza => const AssetGenImage('assets/ui/shops/ginza.webp');
 
-  /// File path: assets/ui/shops/hiroshima.png
+  /// File path: assets/ui/shops/hiroshima.webp
   AssetGenImage get hiroshima =>
-      const AssetGenImage('assets/ui/shops/hiroshima.png');
+      const AssetGenImage('assets/ui/shops/hiroshima.webp');
 
-  /// File path: assets/ui/shops/hokkaido.png
+  /// File path: assets/ui/shops/hokkaido.webp
   AssetGenImage get hokkaido =>
-      const AssetGenImage('assets/ui/shops/hokkaido.png');
+      const AssetGenImage('assets/ui/shops/hokkaido.webp');
 
-  /// File path: assets/ui/shops/kanazawa.png
+  /// File path: assets/ui/shops/kanazawa.webp
   AssetGenImage get kanazawa =>
-      const AssetGenImage('assets/ui/shops/kanazawa.png');
+      const AssetGenImage('assets/ui/shops/kanazawa.webp');
 
-  /// File path: assets/ui/shops/kobe.png
-  AssetGenImage get kobe => const AssetGenImage('assets/ui/shops/kobe.png');
+  /// File path: assets/ui/shops/kobe.webp
+  AssetGenImage get kobe => const AssetGenImage('assets/ui/shops/kobe.webp');
 
-  /// File path: assets/ui/shops/kyoto.png
-  AssetGenImage get kyoto => const AssetGenImage('assets/ui/shops/kyoto.png');
+  /// File path: assets/ui/shops/kyoto.webp
+  AssetGenImage get kyoto => const AssetGenImage('assets/ui/shops/kyoto.webp');
 
-  /// File path: assets/ui/shops/nagoya.png
-  AssetGenImage get nagoya => const AssetGenImage('assets/ui/shops/nagoya.png');
+  /// File path: assets/ui/shops/nagoya.webp
+  AssetGenImage get nagoya =>
+      const AssetGenImage('assets/ui/shops/nagoya.webp');
 
-  /// File path: assets/ui/shops/nara.png
-  AssetGenImage get nara => const AssetGenImage('assets/ui/shops/nara.png');
+  /// File path: assets/ui/shops/nara.webp
+  AssetGenImage get nara => const AssetGenImage('assets/ui/shops/nara.webp');
 
-  /// File path: assets/ui/shops/okinawa.png
+  /// File path: assets/ui/shops/okinawa.webp
   AssetGenImage get okinawa =>
-      const AssetGenImage('assets/ui/shops/okinawa.png');
+      const AssetGenImage('assets/ui/shops/okinawa.webp');
 
-  /// File path: assets/ui/shops/omakase.png
+  /// File path: assets/ui/shops/omakase.webp
   AssetGenImage get omakase =>
-      const AssetGenImage('assets/ui/shops/omakase.png');
+      const AssetGenImage('assets/ui/shops/omakase.webp');
 
-  /// File path: assets/ui/shops/osaka.png
-  AssetGenImage get osaka => const AssetGenImage('assets/ui/shops/osaka.png');
+  /// File path: assets/ui/shops/osaka.webp
+  AssetGenImage get osaka => const AssetGenImage('assets/ui/shops/osaka.webp');
 
-  /// File path: assets/ui/shops/sendai.png
-  AssetGenImage get sendai => const AssetGenImage('assets/ui/shops/sendai.png');
+  /// File path: assets/ui/shops/sendai.webp
+  AssetGenImage get sendai =>
+      const AssetGenImage('assets/ui/shops/sendai.webp');
 
-  /// File path: assets/ui/shops/tsukiji.png
+  /// File path: assets/ui/shops/tsukiji.webp
   AssetGenImage get tsukiji =>
-      const AssetGenImage('assets/ui/shops/tsukiji.png');
+      const AssetGenImage('assets/ui/shops/tsukiji.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [
@@ -625,101 +630,101 @@ class $AssetsUiShopsGen {
 class $AssetsSpritesCustomers00GrannySakuraGen {
   const $AssetsSpritesCustomers00GrannySakuraGen();
 
-  /// File path: assets/sprites/customers/00-granny-sakura/bow_0.png
+  /// File path: assets/sprites/customers/00-granny-sakura/bow_0.webp
   AssetGenImage get bow0 => const AssetGenImage(
-      'assets/sprites/customers/00-granny-sakura/bow_0.png');
+      'assets/sprites/customers/00-granny-sakura/bow_0.webp');
 
-  /// File path: assets/sprites/customers/00-granny-sakura/bow_1.png
+  /// File path: assets/sprites/customers/00-granny-sakura/bow_1.webp
   AssetGenImage get bow1 => const AssetGenImage(
-      'assets/sprites/customers/00-granny-sakura/bow_1.png');
+      'assets/sprites/customers/00-granny-sakura/bow_1.webp');
 
-  /// File path: assets/sprites/customers/00-granny-sakura/bow_2.png
+  /// File path: assets/sprites/customers/00-granny-sakura/bow_2.webp
   AssetGenImage get bow2 => const AssetGenImage(
-      'assets/sprites/customers/00-granny-sakura/bow_2.png');
+      'assets/sprites/customers/00-granny-sakura/bow_2.webp');
 
-  /// File path: assets/sprites/customers/00-granny-sakura/bow_3.png
+  /// File path: assets/sprites/customers/00-granny-sakura/bow_3.webp
   AssetGenImage get bow3 => const AssetGenImage(
-      'assets/sprites/customers/00-granny-sakura/bow_3.png');
+      'assets/sprites/customers/00-granny-sakura/bow_3.webp');
 
-  /// File path: assets/sprites/customers/00-granny-sakura/happy_0.png
+  /// File path: assets/sprites/customers/00-granny-sakura/happy_0.webp
   AssetGenImage get happy0 => const AssetGenImage(
-      'assets/sprites/customers/00-granny-sakura/happy_0.png');
+      'assets/sprites/customers/00-granny-sakura/happy_0.webp');
 
-  /// File path: assets/sprites/customers/00-granny-sakura/happy_1.png
+  /// File path: assets/sprites/customers/00-granny-sakura/happy_1.webp
   AssetGenImage get happy1 => const AssetGenImage(
-      'assets/sprites/customers/00-granny-sakura/happy_1.png');
+      'assets/sprites/customers/00-granny-sakura/happy_1.webp');
 
-  /// File path: assets/sprites/customers/00-granny-sakura/happy_2.png
+  /// File path: assets/sprites/customers/00-granny-sakura/happy_2.webp
   AssetGenImage get happy2 => const AssetGenImage(
-      'assets/sprites/customers/00-granny-sakura/happy_2.png');
+      'assets/sprites/customers/00-granny-sakura/happy_2.webp');
 
-  /// File path: assets/sprites/customers/00-granny-sakura/happy_3.png
+  /// File path: assets/sprites/customers/00-granny-sakura/happy_3.webp
   AssetGenImage get happy3 => const AssetGenImage(
-      'assets/sprites/customers/00-granny-sakura/happy_3.png');
+      'assets/sprites/customers/00-granny-sakura/happy_3.webp');
 
-  /// File path: assets/sprites/customers/00-granny-sakura/idle_0.png
+  /// File path: assets/sprites/customers/00-granny-sakura/idle_0.webp
   AssetGenImage get idle0 => const AssetGenImage(
-      'assets/sprites/customers/00-granny-sakura/idle_0.png');
+      'assets/sprites/customers/00-granny-sakura/idle_0.webp');
 
-  /// File path: assets/sprites/customers/00-granny-sakura/idle_1.png
+  /// File path: assets/sprites/customers/00-granny-sakura/idle_1.webp
   AssetGenImage get idle1 => const AssetGenImage(
-      'assets/sprites/customers/00-granny-sakura/idle_1.png');
+      'assets/sprites/customers/00-granny-sakura/idle_1.webp');
 
-  /// File path: assets/sprites/customers/00-granny-sakura/idle_2.png
+  /// File path: assets/sprites/customers/00-granny-sakura/idle_2.webp
   AssetGenImage get idle2 => const AssetGenImage(
-      'assets/sprites/customers/00-granny-sakura/idle_2.png');
+      'assets/sprites/customers/00-granny-sakura/idle_2.webp');
 
-  /// File path: assets/sprites/customers/00-granny-sakura/idle_3.png
+  /// File path: assets/sprites/customers/00-granny-sakura/idle_3.webp
   AssetGenImage get idle3 => const AssetGenImage(
-      'assets/sprites/customers/00-granny-sakura/idle_3.png');
+      'assets/sprites/customers/00-granny-sakura/idle_3.webp');
 
-  /// File path: assets/sprites/customers/00-granny-sakura/sad_0.png
+  /// File path: assets/sprites/customers/00-granny-sakura/sad_0.webp
   AssetGenImage get sad0 => const AssetGenImage(
-      'assets/sprites/customers/00-granny-sakura/sad_0.png');
+      'assets/sprites/customers/00-granny-sakura/sad_0.webp');
 
-  /// File path: assets/sprites/customers/00-granny-sakura/sad_1.png
+  /// File path: assets/sprites/customers/00-granny-sakura/sad_1.webp
   AssetGenImage get sad1 => const AssetGenImage(
-      'assets/sprites/customers/00-granny-sakura/sad_1.png');
+      'assets/sprites/customers/00-granny-sakura/sad_1.webp');
 
-  /// File path: assets/sprites/customers/00-granny-sakura/sad_2.png
+  /// File path: assets/sprites/customers/00-granny-sakura/sad_2.webp
   AssetGenImage get sad2 => const AssetGenImage(
-      'assets/sprites/customers/00-granny-sakura/sad_2.png');
+      'assets/sprites/customers/00-granny-sakura/sad_2.webp');
 
-  /// File path: assets/sprites/customers/00-granny-sakura/sad_3.png
+  /// File path: assets/sprites/customers/00-granny-sakura/sad_3.webp
   AssetGenImage get sad3 => const AssetGenImage(
-      'assets/sprites/customers/00-granny-sakura/sad_3.png');
+      'assets/sprites/customers/00-granny-sakura/sad_3.webp');
 
-  /// File path: assets/sprites/customers/00-granny-sakura/talk_0.png
+  /// File path: assets/sprites/customers/00-granny-sakura/talk_0.webp
   AssetGenImage get talk0 => const AssetGenImage(
-      'assets/sprites/customers/00-granny-sakura/talk_0.png');
+      'assets/sprites/customers/00-granny-sakura/talk_0.webp');
 
-  /// File path: assets/sprites/customers/00-granny-sakura/talk_1.png
+  /// File path: assets/sprites/customers/00-granny-sakura/talk_1.webp
   AssetGenImage get talk1 => const AssetGenImage(
-      'assets/sprites/customers/00-granny-sakura/talk_1.png');
+      'assets/sprites/customers/00-granny-sakura/talk_1.webp');
 
-  /// File path: assets/sprites/customers/00-granny-sakura/talk_2.png
+  /// File path: assets/sprites/customers/00-granny-sakura/talk_2.webp
   AssetGenImage get talk2 => const AssetGenImage(
-      'assets/sprites/customers/00-granny-sakura/talk_2.png');
+      'assets/sprites/customers/00-granny-sakura/talk_2.webp');
 
-  /// File path: assets/sprites/customers/00-granny-sakura/talk_3.png
+  /// File path: assets/sprites/customers/00-granny-sakura/talk_3.webp
   AssetGenImage get talk3 => const AssetGenImage(
-      'assets/sprites/customers/00-granny-sakura/talk_3.png');
+      'assets/sprites/customers/00-granny-sakura/talk_3.webp');
 
-  /// File path: assets/sprites/customers/00-granny-sakura/walk_0.png
+  /// File path: assets/sprites/customers/00-granny-sakura/walk_0.webp
   AssetGenImage get walk0 => const AssetGenImage(
-      'assets/sprites/customers/00-granny-sakura/walk_0.png');
+      'assets/sprites/customers/00-granny-sakura/walk_0.webp');
 
-  /// File path: assets/sprites/customers/00-granny-sakura/walk_1.png
+  /// File path: assets/sprites/customers/00-granny-sakura/walk_1.webp
   AssetGenImage get walk1 => const AssetGenImage(
-      'assets/sprites/customers/00-granny-sakura/walk_1.png');
+      'assets/sprites/customers/00-granny-sakura/walk_1.webp');
 
-  /// File path: assets/sprites/customers/00-granny-sakura/walk_2.png
+  /// File path: assets/sprites/customers/00-granny-sakura/walk_2.webp
   AssetGenImage get walk2 => const AssetGenImage(
-      'assets/sprites/customers/00-granny-sakura/walk_2.png');
+      'assets/sprites/customers/00-granny-sakura/walk_2.webp');
 
-  /// File path: assets/sprites/customers/00-granny-sakura/walk_3.png
+  /// File path: assets/sprites/customers/00-granny-sakura/walk_3.webp
   AssetGenImage get walk3 => const AssetGenImage(
-      'assets/sprites/customers/00-granny-sakura/walk_3.png');
+      'assets/sprites/customers/00-granny-sakura/walk_3.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [
@@ -753,101 +758,101 @@ class $AssetsSpritesCustomers00GrannySakuraGen {
 class $AssetsSpritesCustomers01MrTanakaGen {
   const $AssetsSpritesCustomers01MrTanakaGen();
 
-  /// File path: assets/sprites/customers/01-mr-tanaka/happy_0.png
+  /// File path: assets/sprites/customers/01-mr-tanaka/happy_0.webp
   AssetGenImage get happy0 =>
-      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/happy_0.png');
+      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/happy_0.webp');
 
-  /// File path: assets/sprites/customers/01-mr-tanaka/happy_1.png
+  /// File path: assets/sprites/customers/01-mr-tanaka/happy_1.webp
   AssetGenImage get happy1 =>
-      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/happy_1.png');
+      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/happy_1.webp');
 
-  /// File path: assets/sprites/customers/01-mr-tanaka/happy_2.png
+  /// File path: assets/sprites/customers/01-mr-tanaka/happy_2.webp
   AssetGenImage get happy2 =>
-      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/happy_2.png');
+      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/happy_2.webp');
 
-  /// File path: assets/sprites/customers/01-mr-tanaka/happy_3.png
+  /// File path: assets/sprites/customers/01-mr-tanaka/happy_3.webp
   AssetGenImage get happy3 =>
-      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/happy_3.png');
+      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/happy_3.webp');
 
-  /// File path: assets/sprites/customers/01-mr-tanaka/idle_0.png
+  /// File path: assets/sprites/customers/01-mr-tanaka/idle_0.webp
   AssetGenImage get idle0 =>
-      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/idle_0.png');
+      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/idle_0.webp');
 
-  /// File path: assets/sprites/customers/01-mr-tanaka/idle_1.png
+  /// File path: assets/sprites/customers/01-mr-tanaka/idle_1.webp
   AssetGenImage get idle1 =>
-      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/idle_1.png');
+      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/idle_1.webp');
 
-  /// File path: assets/sprites/customers/01-mr-tanaka/idle_2.png
+  /// File path: assets/sprites/customers/01-mr-tanaka/idle_2.webp
   AssetGenImage get idle2 =>
-      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/idle_2.png');
+      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/idle_2.webp');
 
-  /// File path: assets/sprites/customers/01-mr-tanaka/idle_3.png
+  /// File path: assets/sprites/customers/01-mr-tanaka/idle_3.webp
   AssetGenImage get idle3 =>
-      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/idle_3.png');
+      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/idle_3.webp');
 
-  /// File path: assets/sprites/customers/01-mr-tanaka/sad_0.png
+  /// File path: assets/sprites/customers/01-mr-tanaka/sad_0.webp
   AssetGenImage get sad0 =>
-      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/sad_0.png');
+      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/sad_0.webp');
 
-  /// File path: assets/sprites/customers/01-mr-tanaka/sad_1.png
+  /// File path: assets/sprites/customers/01-mr-tanaka/sad_1.webp
   AssetGenImage get sad1 =>
-      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/sad_1.png');
+      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/sad_1.webp');
 
-  /// File path: assets/sprites/customers/01-mr-tanaka/sad_2.png
+  /// File path: assets/sprites/customers/01-mr-tanaka/sad_2.webp
   AssetGenImage get sad2 =>
-      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/sad_2.png');
+      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/sad_2.webp');
 
-  /// File path: assets/sprites/customers/01-mr-tanaka/sad_3.png
+  /// File path: assets/sprites/customers/01-mr-tanaka/sad_3.webp
   AssetGenImage get sad3 =>
-      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/sad_3.png');
+      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/sad_3.webp');
 
-  /// File path: assets/sprites/customers/01-mr-tanaka/talk_0.png
+  /// File path: assets/sprites/customers/01-mr-tanaka/talk_0.webp
   AssetGenImage get talk0 =>
-      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/talk_0.png');
+      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/talk_0.webp');
 
-  /// File path: assets/sprites/customers/01-mr-tanaka/talk_1.png
+  /// File path: assets/sprites/customers/01-mr-tanaka/talk_1.webp
   AssetGenImage get talk1 =>
-      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/talk_1.png');
+      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/talk_1.webp');
 
-  /// File path: assets/sprites/customers/01-mr-tanaka/talk_2.png
+  /// File path: assets/sprites/customers/01-mr-tanaka/talk_2.webp
   AssetGenImage get talk2 =>
-      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/talk_2.png');
+      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/talk_2.webp');
 
-  /// File path: assets/sprites/customers/01-mr-tanaka/talk_3.png
+  /// File path: assets/sprites/customers/01-mr-tanaka/talk_3.webp
   AssetGenImage get talk3 =>
-      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/talk_3.png');
+      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/talk_3.webp');
 
-  /// File path: assets/sprites/customers/01-mr-tanaka/walk_0.png
+  /// File path: assets/sprites/customers/01-mr-tanaka/walk_0.webp
   AssetGenImage get walk0 =>
-      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/walk_0.png');
+      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/walk_0.webp');
 
-  /// File path: assets/sprites/customers/01-mr-tanaka/walk_1.png
+  /// File path: assets/sprites/customers/01-mr-tanaka/walk_1.webp
   AssetGenImage get walk1 =>
-      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/walk_1.png');
+      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/walk_1.webp');
 
-  /// File path: assets/sprites/customers/01-mr-tanaka/walk_2.png
+  /// File path: assets/sprites/customers/01-mr-tanaka/walk_2.webp
   AssetGenImage get walk2 =>
-      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/walk_2.png');
+      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/walk_2.webp');
 
-  /// File path: assets/sprites/customers/01-mr-tanaka/walk_3.png
+  /// File path: assets/sprites/customers/01-mr-tanaka/walk_3.webp
   AssetGenImage get walk3 =>
-      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/walk_3.png');
+      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/walk_3.webp');
 
-  /// File path: assets/sprites/customers/01-mr-tanaka/watch_0.png
+  /// File path: assets/sprites/customers/01-mr-tanaka/watch_0.webp
   AssetGenImage get watch0 =>
-      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/watch_0.png');
+      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/watch_0.webp');
 
-  /// File path: assets/sprites/customers/01-mr-tanaka/watch_1.png
+  /// File path: assets/sprites/customers/01-mr-tanaka/watch_1.webp
   AssetGenImage get watch1 =>
-      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/watch_1.png');
+      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/watch_1.webp');
 
-  /// File path: assets/sprites/customers/01-mr-tanaka/watch_2.png
+  /// File path: assets/sprites/customers/01-mr-tanaka/watch_2.webp
   AssetGenImage get watch2 =>
-      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/watch_2.png');
+      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/watch_2.webp');
 
-  /// File path: assets/sprites/customers/01-mr-tanaka/watch_3.png
+  /// File path: assets/sprites/customers/01-mr-tanaka/watch_3.webp
   AssetGenImage get watch3 =>
-      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/watch_3.png');
+      const AssetGenImage('assets/sprites/customers/01-mr-tanaka/watch_3.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [
@@ -881,101 +886,101 @@ class $AssetsSpritesCustomers01MrTanakaGen {
 class $AssetsSpritesCustomers02LittleMeiGen {
   const $AssetsSpritesCustomers02LittleMeiGen();
 
-  /// File path: assets/sprites/customers/02-little-mei/clap_0.png
+  /// File path: assets/sprites/customers/02-little-mei/clap_0.webp
   AssetGenImage get clap0 =>
-      const AssetGenImage('assets/sprites/customers/02-little-mei/clap_0.png');
+      const AssetGenImage('assets/sprites/customers/02-little-mei/clap_0.webp');
 
-  /// File path: assets/sprites/customers/02-little-mei/clap_1.png
+  /// File path: assets/sprites/customers/02-little-mei/clap_1.webp
   AssetGenImage get clap1 =>
-      const AssetGenImage('assets/sprites/customers/02-little-mei/clap_1.png');
+      const AssetGenImage('assets/sprites/customers/02-little-mei/clap_1.webp');
 
-  /// File path: assets/sprites/customers/02-little-mei/clap_2.png
+  /// File path: assets/sprites/customers/02-little-mei/clap_2.webp
   AssetGenImage get clap2 =>
-      const AssetGenImage('assets/sprites/customers/02-little-mei/clap_2.png');
+      const AssetGenImage('assets/sprites/customers/02-little-mei/clap_2.webp');
 
-  /// File path: assets/sprites/customers/02-little-mei/clap_3.png
+  /// File path: assets/sprites/customers/02-little-mei/clap_3.webp
   AssetGenImage get clap3 =>
-      const AssetGenImage('assets/sprites/customers/02-little-mei/clap_3.png');
+      const AssetGenImage('assets/sprites/customers/02-little-mei/clap_3.webp');
 
-  /// File path: assets/sprites/customers/02-little-mei/happy_0.png
-  AssetGenImage get happy0 =>
-      const AssetGenImage('assets/sprites/customers/02-little-mei/happy_0.png');
+  /// File path: assets/sprites/customers/02-little-mei/happy_0.webp
+  AssetGenImage get happy0 => const AssetGenImage(
+      'assets/sprites/customers/02-little-mei/happy_0.webp');
 
-  /// File path: assets/sprites/customers/02-little-mei/happy_1.png
-  AssetGenImage get happy1 =>
-      const AssetGenImage('assets/sprites/customers/02-little-mei/happy_1.png');
+  /// File path: assets/sprites/customers/02-little-mei/happy_1.webp
+  AssetGenImage get happy1 => const AssetGenImage(
+      'assets/sprites/customers/02-little-mei/happy_1.webp');
 
-  /// File path: assets/sprites/customers/02-little-mei/happy_2.png
-  AssetGenImage get happy2 =>
-      const AssetGenImage('assets/sprites/customers/02-little-mei/happy_2.png');
+  /// File path: assets/sprites/customers/02-little-mei/happy_2.webp
+  AssetGenImage get happy2 => const AssetGenImage(
+      'assets/sprites/customers/02-little-mei/happy_2.webp');
 
-  /// File path: assets/sprites/customers/02-little-mei/happy_3.png
-  AssetGenImage get happy3 =>
-      const AssetGenImage('assets/sprites/customers/02-little-mei/happy_3.png');
+  /// File path: assets/sprites/customers/02-little-mei/happy_3.webp
+  AssetGenImage get happy3 => const AssetGenImage(
+      'assets/sprites/customers/02-little-mei/happy_3.webp');
 
-  /// File path: assets/sprites/customers/02-little-mei/idle_0.png
+  /// File path: assets/sprites/customers/02-little-mei/idle_0.webp
   AssetGenImage get idle0 =>
-      const AssetGenImage('assets/sprites/customers/02-little-mei/idle_0.png');
+      const AssetGenImage('assets/sprites/customers/02-little-mei/idle_0.webp');
 
-  /// File path: assets/sprites/customers/02-little-mei/idle_1.png
+  /// File path: assets/sprites/customers/02-little-mei/idle_1.webp
   AssetGenImage get idle1 =>
-      const AssetGenImage('assets/sprites/customers/02-little-mei/idle_1.png');
+      const AssetGenImage('assets/sprites/customers/02-little-mei/idle_1.webp');
 
-  /// File path: assets/sprites/customers/02-little-mei/idle_2.png
+  /// File path: assets/sprites/customers/02-little-mei/idle_2.webp
   AssetGenImage get idle2 =>
-      const AssetGenImage('assets/sprites/customers/02-little-mei/idle_2.png');
+      const AssetGenImage('assets/sprites/customers/02-little-mei/idle_2.webp');
 
-  /// File path: assets/sprites/customers/02-little-mei/idle_3.png
+  /// File path: assets/sprites/customers/02-little-mei/idle_3.webp
   AssetGenImage get idle3 =>
-      const AssetGenImage('assets/sprites/customers/02-little-mei/idle_3.png');
+      const AssetGenImage('assets/sprites/customers/02-little-mei/idle_3.webp');
 
-  /// File path: assets/sprites/customers/02-little-mei/sad_0.png
+  /// File path: assets/sprites/customers/02-little-mei/sad_0.webp
   AssetGenImage get sad0 =>
-      const AssetGenImage('assets/sprites/customers/02-little-mei/sad_0.png');
+      const AssetGenImage('assets/sprites/customers/02-little-mei/sad_0.webp');
 
-  /// File path: assets/sprites/customers/02-little-mei/sad_1.png
+  /// File path: assets/sprites/customers/02-little-mei/sad_1.webp
   AssetGenImage get sad1 =>
-      const AssetGenImage('assets/sprites/customers/02-little-mei/sad_1.png');
+      const AssetGenImage('assets/sprites/customers/02-little-mei/sad_1.webp');
 
-  /// File path: assets/sprites/customers/02-little-mei/sad_2.png
+  /// File path: assets/sprites/customers/02-little-mei/sad_2.webp
   AssetGenImage get sad2 =>
-      const AssetGenImage('assets/sprites/customers/02-little-mei/sad_2.png');
+      const AssetGenImage('assets/sprites/customers/02-little-mei/sad_2.webp');
 
-  /// File path: assets/sprites/customers/02-little-mei/sad_3.png
+  /// File path: assets/sprites/customers/02-little-mei/sad_3.webp
   AssetGenImage get sad3 =>
-      const AssetGenImage('assets/sprites/customers/02-little-mei/sad_3.png');
+      const AssetGenImage('assets/sprites/customers/02-little-mei/sad_3.webp');
 
-  /// File path: assets/sprites/customers/02-little-mei/talk_0.png
+  /// File path: assets/sprites/customers/02-little-mei/talk_0.webp
   AssetGenImage get talk0 =>
-      const AssetGenImage('assets/sprites/customers/02-little-mei/talk_0.png');
+      const AssetGenImage('assets/sprites/customers/02-little-mei/talk_0.webp');
 
-  /// File path: assets/sprites/customers/02-little-mei/talk_1.png
+  /// File path: assets/sprites/customers/02-little-mei/talk_1.webp
   AssetGenImage get talk1 =>
-      const AssetGenImage('assets/sprites/customers/02-little-mei/talk_1.png');
+      const AssetGenImage('assets/sprites/customers/02-little-mei/talk_1.webp');
 
-  /// File path: assets/sprites/customers/02-little-mei/talk_2.png
+  /// File path: assets/sprites/customers/02-little-mei/talk_2.webp
   AssetGenImage get talk2 =>
-      const AssetGenImage('assets/sprites/customers/02-little-mei/talk_2.png');
+      const AssetGenImage('assets/sprites/customers/02-little-mei/talk_2.webp');
 
-  /// File path: assets/sprites/customers/02-little-mei/talk_3.png
+  /// File path: assets/sprites/customers/02-little-mei/talk_3.webp
   AssetGenImage get talk3 =>
-      const AssetGenImage('assets/sprites/customers/02-little-mei/talk_3.png');
+      const AssetGenImage('assets/sprites/customers/02-little-mei/talk_3.webp');
 
-  /// File path: assets/sprites/customers/02-little-mei/walk_0.png
+  /// File path: assets/sprites/customers/02-little-mei/walk_0.webp
   AssetGenImage get walk0 =>
-      const AssetGenImage('assets/sprites/customers/02-little-mei/walk_0.png');
+      const AssetGenImage('assets/sprites/customers/02-little-mei/walk_0.webp');
 
-  /// File path: assets/sprites/customers/02-little-mei/walk_1.png
+  /// File path: assets/sprites/customers/02-little-mei/walk_1.webp
   AssetGenImage get walk1 =>
-      const AssetGenImage('assets/sprites/customers/02-little-mei/walk_1.png');
+      const AssetGenImage('assets/sprites/customers/02-little-mei/walk_1.webp');
 
-  /// File path: assets/sprites/customers/02-little-mei/walk_2.png
+  /// File path: assets/sprites/customers/02-little-mei/walk_2.webp
   AssetGenImage get walk2 =>
-      const AssetGenImage('assets/sprites/customers/02-little-mei/walk_2.png');
+      const AssetGenImage('assets/sprites/customers/02-little-mei/walk_2.webp');
 
-  /// File path: assets/sprites/customers/02-little-mei/walk_3.png
+  /// File path: assets/sprites/customers/02-little-mei/walk_3.webp
   AssetGenImage get walk3 =>
-      const AssetGenImage('assets/sprites/customers/02-little-mei/walk_3.png');
+      const AssetGenImage('assets/sprites/customers/02-little-mei/walk_3.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [
@@ -1009,101 +1014,101 @@ class $AssetsSpritesCustomers02LittleMeiGen {
 class $AssetsSpritesCustomers03LuckyCatGen {
   const $AssetsSpritesCustomers03LuckyCatGen();
 
-  /// File path: assets/sprites/customers/03-lucky-cat/beckon_0.png
-  AssetGenImage get beckon0 =>
-      const AssetGenImage('assets/sprites/customers/03-lucky-cat/beckon_0.png');
+  /// File path: assets/sprites/customers/03-lucky-cat/beckon_0.webp
+  AssetGenImage get beckon0 => const AssetGenImage(
+      'assets/sprites/customers/03-lucky-cat/beckon_0.webp');
 
-  /// File path: assets/sprites/customers/03-lucky-cat/beckon_1.png
-  AssetGenImage get beckon1 =>
-      const AssetGenImage('assets/sprites/customers/03-lucky-cat/beckon_1.png');
+  /// File path: assets/sprites/customers/03-lucky-cat/beckon_1.webp
+  AssetGenImage get beckon1 => const AssetGenImage(
+      'assets/sprites/customers/03-lucky-cat/beckon_1.webp');
 
-  /// File path: assets/sprites/customers/03-lucky-cat/beckon_2.png
-  AssetGenImage get beckon2 =>
-      const AssetGenImage('assets/sprites/customers/03-lucky-cat/beckon_2.png');
+  /// File path: assets/sprites/customers/03-lucky-cat/beckon_2.webp
+  AssetGenImage get beckon2 => const AssetGenImage(
+      'assets/sprites/customers/03-lucky-cat/beckon_2.webp');
 
-  /// File path: assets/sprites/customers/03-lucky-cat/beckon_3.png
-  AssetGenImage get beckon3 =>
-      const AssetGenImage('assets/sprites/customers/03-lucky-cat/beckon_3.png');
+  /// File path: assets/sprites/customers/03-lucky-cat/beckon_3.webp
+  AssetGenImage get beckon3 => const AssetGenImage(
+      'assets/sprites/customers/03-lucky-cat/beckon_3.webp');
 
-  /// File path: assets/sprites/customers/03-lucky-cat/happy_0.png
+  /// File path: assets/sprites/customers/03-lucky-cat/happy_0.webp
   AssetGenImage get happy0 =>
-      const AssetGenImage('assets/sprites/customers/03-lucky-cat/happy_0.png');
+      const AssetGenImage('assets/sprites/customers/03-lucky-cat/happy_0.webp');
 
-  /// File path: assets/sprites/customers/03-lucky-cat/happy_1.png
+  /// File path: assets/sprites/customers/03-lucky-cat/happy_1.webp
   AssetGenImage get happy1 =>
-      const AssetGenImage('assets/sprites/customers/03-lucky-cat/happy_1.png');
+      const AssetGenImage('assets/sprites/customers/03-lucky-cat/happy_1.webp');
 
-  /// File path: assets/sprites/customers/03-lucky-cat/happy_2.png
+  /// File path: assets/sprites/customers/03-lucky-cat/happy_2.webp
   AssetGenImage get happy2 =>
-      const AssetGenImage('assets/sprites/customers/03-lucky-cat/happy_2.png');
+      const AssetGenImage('assets/sprites/customers/03-lucky-cat/happy_2.webp');
 
-  /// File path: assets/sprites/customers/03-lucky-cat/happy_3.png
+  /// File path: assets/sprites/customers/03-lucky-cat/happy_3.webp
   AssetGenImage get happy3 =>
-      const AssetGenImage('assets/sprites/customers/03-lucky-cat/happy_3.png');
+      const AssetGenImage('assets/sprites/customers/03-lucky-cat/happy_3.webp');
 
-  /// File path: assets/sprites/customers/03-lucky-cat/idle_0.png
+  /// File path: assets/sprites/customers/03-lucky-cat/idle_0.webp
   AssetGenImage get idle0 =>
-      const AssetGenImage('assets/sprites/customers/03-lucky-cat/idle_0.png');
+      const AssetGenImage('assets/sprites/customers/03-lucky-cat/idle_0.webp');
 
-  /// File path: assets/sprites/customers/03-lucky-cat/idle_1.png
+  /// File path: assets/sprites/customers/03-lucky-cat/idle_1.webp
   AssetGenImage get idle1 =>
-      const AssetGenImage('assets/sprites/customers/03-lucky-cat/idle_1.png');
+      const AssetGenImage('assets/sprites/customers/03-lucky-cat/idle_1.webp');
 
-  /// File path: assets/sprites/customers/03-lucky-cat/idle_2.png
+  /// File path: assets/sprites/customers/03-lucky-cat/idle_2.webp
   AssetGenImage get idle2 =>
-      const AssetGenImage('assets/sprites/customers/03-lucky-cat/idle_2.png');
+      const AssetGenImage('assets/sprites/customers/03-lucky-cat/idle_2.webp');
 
-  /// File path: assets/sprites/customers/03-lucky-cat/idle_3.png
+  /// File path: assets/sprites/customers/03-lucky-cat/idle_3.webp
   AssetGenImage get idle3 =>
-      const AssetGenImage('assets/sprites/customers/03-lucky-cat/idle_3.png');
+      const AssetGenImage('assets/sprites/customers/03-lucky-cat/idle_3.webp');
 
-  /// File path: assets/sprites/customers/03-lucky-cat/sad_0.png
+  /// File path: assets/sprites/customers/03-lucky-cat/sad_0.webp
   AssetGenImage get sad0 =>
-      const AssetGenImage('assets/sprites/customers/03-lucky-cat/sad_0.png');
+      const AssetGenImage('assets/sprites/customers/03-lucky-cat/sad_0.webp');
 
-  /// File path: assets/sprites/customers/03-lucky-cat/sad_1.png
+  /// File path: assets/sprites/customers/03-lucky-cat/sad_1.webp
   AssetGenImage get sad1 =>
-      const AssetGenImage('assets/sprites/customers/03-lucky-cat/sad_1.png');
+      const AssetGenImage('assets/sprites/customers/03-lucky-cat/sad_1.webp');
 
-  /// File path: assets/sprites/customers/03-lucky-cat/sad_2.png
+  /// File path: assets/sprites/customers/03-lucky-cat/sad_2.webp
   AssetGenImage get sad2 =>
-      const AssetGenImage('assets/sprites/customers/03-lucky-cat/sad_2.png');
+      const AssetGenImage('assets/sprites/customers/03-lucky-cat/sad_2.webp');
 
-  /// File path: assets/sprites/customers/03-lucky-cat/sad_3.png
+  /// File path: assets/sprites/customers/03-lucky-cat/sad_3.webp
   AssetGenImage get sad3 =>
-      const AssetGenImage('assets/sprites/customers/03-lucky-cat/sad_3.png');
+      const AssetGenImage('assets/sprites/customers/03-lucky-cat/sad_3.webp');
 
-  /// File path: assets/sprites/customers/03-lucky-cat/talk_0.png
+  /// File path: assets/sprites/customers/03-lucky-cat/talk_0.webp
   AssetGenImage get talk0 =>
-      const AssetGenImage('assets/sprites/customers/03-lucky-cat/talk_0.png');
+      const AssetGenImage('assets/sprites/customers/03-lucky-cat/talk_0.webp');
 
-  /// File path: assets/sprites/customers/03-lucky-cat/talk_1.png
+  /// File path: assets/sprites/customers/03-lucky-cat/talk_1.webp
   AssetGenImage get talk1 =>
-      const AssetGenImage('assets/sprites/customers/03-lucky-cat/talk_1.png');
+      const AssetGenImage('assets/sprites/customers/03-lucky-cat/talk_1.webp');
 
-  /// File path: assets/sprites/customers/03-lucky-cat/talk_2.png
+  /// File path: assets/sprites/customers/03-lucky-cat/talk_2.webp
   AssetGenImage get talk2 =>
-      const AssetGenImage('assets/sprites/customers/03-lucky-cat/talk_2.png');
+      const AssetGenImage('assets/sprites/customers/03-lucky-cat/talk_2.webp');
 
-  /// File path: assets/sprites/customers/03-lucky-cat/talk_3.png
+  /// File path: assets/sprites/customers/03-lucky-cat/talk_3.webp
   AssetGenImage get talk3 =>
-      const AssetGenImage('assets/sprites/customers/03-lucky-cat/talk_3.png');
+      const AssetGenImage('assets/sprites/customers/03-lucky-cat/talk_3.webp');
 
-  /// File path: assets/sprites/customers/03-lucky-cat/walk_0.png
+  /// File path: assets/sprites/customers/03-lucky-cat/walk_0.webp
   AssetGenImage get walk0 =>
-      const AssetGenImage('assets/sprites/customers/03-lucky-cat/walk_0.png');
+      const AssetGenImage('assets/sprites/customers/03-lucky-cat/walk_0.webp');
 
-  /// File path: assets/sprites/customers/03-lucky-cat/walk_1.png
+  /// File path: assets/sprites/customers/03-lucky-cat/walk_1.webp
   AssetGenImage get walk1 =>
-      const AssetGenImage('assets/sprites/customers/03-lucky-cat/walk_1.png');
+      const AssetGenImage('assets/sprites/customers/03-lucky-cat/walk_1.webp');
 
-  /// File path: assets/sprites/customers/03-lucky-cat/walk_2.png
+  /// File path: assets/sprites/customers/03-lucky-cat/walk_2.webp
   AssetGenImage get walk2 =>
-      const AssetGenImage('assets/sprites/customers/03-lucky-cat/walk_2.png');
+      const AssetGenImage('assets/sprites/customers/03-lucky-cat/walk_2.webp');
 
-  /// File path: assets/sprites/customers/03-lucky-cat/walk_3.png
+  /// File path: assets/sprites/customers/03-lucky-cat/walk_3.webp
   AssetGenImage get walk3 =>
-      const AssetGenImage('assets/sprites/customers/03-lucky-cat/walk_3.png');
+      const AssetGenImage('assets/sprites/customers/03-lucky-cat/walk_3.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [
@@ -1137,101 +1142,101 @@ class $AssetsSpritesCustomers03LuckyCatGen {
 class $AssetsSpritesCustomers04YukiGen {
   const $AssetsSpritesCustomers04YukiGen();
 
-  /// File path: assets/sprites/customers/04-yuki/happy_0.png
+  /// File path: assets/sprites/customers/04-yuki/happy_0.webp
   AssetGenImage get happy0 =>
-      const AssetGenImage('assets/sprites/customers/04-yuki/happy_0.png');
+      const AssetGenImage('assets/sprites/customers/04-yuki/happy_0.webp');
 
-  /// File path: assets/sprites/customers/04-yuki/happy_1.png
+  /// File path: assets/sprites/customers/04-yuki/happy_1.webp
   AssetGenImage get happy1 =>
-      const AssetGenImage('assets/sprites/customers/04-yuki/happy_1.png');
+      const AssetGenImage('assets/sprites/customers/04-yuki/happy_1.webp');
 
-  /// File path: assets/sprites/customers/04-yuki/happy_2.png
+  /// File path: assets/sprites/customers/04-yuki/happy_2.webp
   AssetGenImage get happy2 =>
-      const AssetGenImage('assets/sprites/customers/04-yuki/happy_2.png');
+      const AssetGenImage('assets/sprites/customers/04-yuki/happy_2.webp');
 
-  /// File path: assets/sprites/customers/04-yuki/happy_3.png
+  /// File path: assets/sprites/customers/04-yuki/happy_3.webp
   AssetGenImage get happy3 =>
-      const AssetGenImage('assets/sprites/customers/04-yuki/happy_3.png');
+      const AssetGenImage('assets/sprites/customers/04-yuki/happy_3.webp');
 
-  /// File path: assets/sprites/customers/04-yuki/idle_0.png
+  /// File path: assets/sprites/customers/04-yuki/idle_0.webp
   AssetGenImage get idle0 =>
-      const AssetGenImage('assets/sprites/customers/04-yuki/idle_0.png');
+      const AssetGenImage('assets/sprites/customers/04-yuki/idle_0.webp');
 
-  /// File path: assets/sprites/customers/04-yuki/idle_1.png
+  /// File path: assets/sprites/customers/04-yuki/idle_1.webp
   AssetGenImage get idle1 =>
-      const AssetGenImage('assets/sprites/customers/04-yuki/idle_1.png');
+      const AssetGenImage('assets/sprites/customers/04-yuki/idle_1.webp');
 
-  /// File path: assets/sprites/customers/04-yuki/idle_2.png
+  /// File path: assets/sprites/customers/04-yuki/idle_2.webp
   AssetGenImage get idle2 =>
-      const AssetGenImage('assets/sprites/customers/04-yuki/idle_2.png');
+      const AssetGenImage('assets/sprites/customers/04-yuki/idle_2.webp');
 
-  /// File path: assets/sprites/customers/04-yuki/idle_3.png
+  /// File path: assets/sprites/customers/04-yuki/idle_3.webp
   AssetGenImage get idle3 =>
-      const AssetGenImage('assets/sprites/customers/04-yuki/idle_3.png');
+      const AssetGenImage('assets/sprites/customers/04-yuki/idle_3.webp');
 
-  /// File path: assets/sprites/customers/04-yuki/photo_0.png
+  /// File path: assets/sprites/customers/04-yuki/photo_0.webp
   AssetGenImage get photo0 =>
-      const AssetGenImage('assets/sprites/customers/04-yuki/photo_0.png');
+      const AssetGenImage('assets/sprites/customers/04-yuki/photo_0.webp');
 
-  /// File path: assets/sprites/customers/04-yuki/photo_1.png
+  /// File path: assets/sprites/customers/04-yuki/photo_1.webp
   AssetGenImage get photo1 =>
-      const AssetGenImage('assets/sprites/customers/04-yuki/photo_1.png');
+      const AssetGenImage('assets/sprites/customers/04-yuki/photo_1.webp');
 
-  /// File path: assets/sprites/customers/04-yuki/photo_2.png
+  /// File path: assets/sprites/customers/04-yuki/photo_2.webp
   AssetGenImage get photo2 =>
-      const AssetGenImage('assets/sprites/customers/04-yuki/photo_2.png');
+      const AssetGenImage('assets/sprites/customers/04-yuki/photo_2.webp');
 
-  /// File path: assets/sprites/customers/04-yuki/photo_3.png
+  /// File path: assets/sprites/customers/04-yuki/photo_3.webp
   AssetGenImage get photo3 =>
-      const AssetGenImage('assets/sprites/customers/04-yuki/photo_3.png');
+      const AssetGenImage('assets/sprites/customers/04-yuki/photo_3.webp');
 
-  /// File path: assets/sprites/customers/04-yuki/sad_0.png
+  /// File path: assets/sprites/customers/04-yuki/sad_0.webp
   AssetGenImage get sad0 =>
-      const AssetGenImage('assets/sprites/customers/04-yuki/sad_0.png');
+      const AssetGenImage('assets/sprites/customers/04-yuki/sad_0.webp');
 
-  /// File path: assets/sprites/customers/04-yuki/sad_1.png
+  /// File path: assets/sprites/customers/04-yuki/sad_1.webp
   AssetGenImage get sad1 =>
-      const AssetGenImage('assets/sprites/customers/04-yuki/sad_1.png');
+      const AssetGenImage('assets/sprites/customers/04-yuki/sad_1.webp');
 
-  /// File path: assets/sprites/customers/04-yuki/sad_2.png
+  /// File path: assets/sprites/customers/04-yuki/sad_2.webp
   AssetGenImage get sad2 =>
-      const AssetGenImage('assets/sprites/customers/04-yuki/sad_2.png');
+      const AssetGenImage('assets/sprites/customers/04-yuki/sad_2.webp');
 
-  /// File path: assets/sprites/customers/04-yuki/sad_3.png
+  /// File path: assets/sprites/customers/04-yuki/sad_3.webp
   AssetGenImage get sad3 =>
-      const AssetGenImage('assets/sprites/customers/04-yuki/sad_3.png');
+      const AssetGenImage('assets/sprites/customers/04-yuki/sad_3.webp');
 
-  /// File path: assets/sprites/customers/04-yuki/talk_0.png
+  /// File path: assets/sprites/customers/04-yuki/talk_0.webp
   AssetGenImage get talk0 =>
-      const AssetGenImage('assets/sprites/customers/04-yuki/talk_0.png');
+      const AssetGenImage('assets/sprites/customers/04-yuki/talk_0.webp');
 
-  /// File path: assets/sprites/customers/04-yuki/talk_1.png
+  /// File path: assets/sprites/customers/04-yuki/talk_1.webp
   AssetGenImage get talk1 =>
-      const AssetGenImage('assets/sprites/customers/04-yuki/talk_1.png');
+      const AssetGenImage('assets/sprites/customers/04-yuki/talk_1.webp');
 
-  /// File path: assets/sprites/customers/04-yuki/talk_2.png
+  /// File path: assets/sprites/customers/04-yuki/talk_2.webp
   AssetGenImage get talk2 =>
-      const AssetGenImage('assets/sprites/customers/04-yuki/talk_2.png');
+      const AssetGenImage('assets/sprites/customers/04-yuki/talk_2.webp');
 
-  /// File path: assets/sprites/customers/04-yuki/talk_3.png
+  /// File path: assets/sprites/customers/04-yuki/talk_3.webp
   AssetGenImage get talk3 =>
-      const AssetGenImage('assets/sprites/customers/04-yuki/talk_3.png');
+      const AssetGenImage('assets/sprites/customers/04-yuki/talk_3.webp');
 
-  /// File path: assets/sprites/customers/04-yuki/walk_0.png
+  /// File path: assets/sprites/customers/04-yuki/walk_0.webp
   AssetGenImage get walk0 =>
-      const AssetGenImage('assets/sprites/customers/04-yuki/walk_0.png');
+      const AssetGenImage('assets/sprites/customers/04-yuki/walk_0.webp');
 
-  /// File path: assets/sprites/customers/04-yuki/walk_1.png
+  /// File path: assets/sprites/customers/04-yuki/walk_1.webp
   AssetGenImage get walk1 =>
-      const AssetGenImage('assets/sprites/customers/04-yuki/walk_1.png');
+      const AssetGenImage('assets/sprites/customers/04-yuki/walk_1.webp');
 
-  /// File path: assets/sprites/customers/04-yuki/walk_2.png
+  /// File path: assets/sprites/customers/04-yuki/walk_2.webp
   AssetGenImage get walk2 =>
-      const AssetGenImage('assets/sprites/customers/04-yuki/walk_2.png');
+      const AssetGenImage('assets/sprites/customers/04-yuki/walk_2.webp');
 
-  /// File path: assets/sprites/customers/04-yuki/walk_3.png
+  /// File path: assets/sprites/customers/04-yuki/walk_3.webp
   AssetGenImage get walk3 =>
-      const AssetGenImage('assets/sprites/customers/04-yuki/walk_3.png');
+      const AssetGenImage('assets/sprites/customers/04-yuki/walk_3.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [
@@ -1265,101 +1270,101 @@ class $AssetsSpritesCustomers04YukiGen {
 class $AssetsSpritesCustomers05GrandpaTaroGen {
   const $AssetsSpritesCustomers05GrandpaTaroGen();
 
-  /// File path: assets/sprites/customers/05-grandpa-taro/happy_0.png
+  /// File path: assets/sprites/customers/05-grandpa-taro/happy_0.webp
   AssetGenImage get happy0 => const AssetGenImage(
-      'assets/sprites/customers/05-grandpa-taro/happy_0.png');
+      'assets/sprites/customers/05-grandpa-taro/happy_0.webp');
 
-  /// File path: assets/sprites/customers/05-grandpa-taro/happy_1.png
+  /// File path: assets/sprites/customers/05-grandpa-taro/happy_1.webp
   AssetGenImage get happy1 => const AssetGenImage(
-      'assets/sprites/customers/05-grandpa-taro/happy_1.png');
+      'assets/sprites/customers/05-grandpa-taro/happy_1.webp');
 
-  /// File path: assets/sprites/customers/05-grandpa-taro/happy_2.png
+  /// File path: assets/sprites/customers/05-grandpa-taro/happy_2.webp
   AssetGenImage get happy2 => const AssetGenImage(
-      'assets/sprites/customers/05-grandpa-taro/happy_2.png');
+      'assets/sprites/customers/05-grandpa-taro/happy_2.webp');
 
-  /// File path: assets/sprites/customers/05-grandpa-taro/happy_3.png
+  /// File path: assets/sprites/customers/05-grandpa-taro/happy_3.webp
   AssetGenImage get happy3 => const AssetGenImage(
-      'assets/sprites/customers/05-grandpa-taro/happy_3.png');
+      'assets/sprites/customers/05-grandpa-taro/happy_3.webp');
 
-  /// File path: assets/sprites/customers/05-grandpa-taro/idle_0.png
+  /// File path: assets/sprites/customers/05-grandpa-taro/idle_0.webp
   AssetGenImage get idle0 => const AssetGenImage(
-      'assets/sprites/customers/05-grandpa-taro/idle_0.png');
+      'assets/sprites/customers/05-grandpa-taro/idle_0.webp');
 
-  /// File path: assets/sprites/customers/05-grandpa-taro/idle_1.png
+  /// File path: assets/sprites/customers/05-grandpa-taro/idle_1.webp
   AssetGenImage get idle1 => const AssetGenImage(
-      'assets/sprites/customers/05-grandpa-taro/idle_1.png');
+      'assets/sprites/customers/05-grandpa-taro/idle_1.webp');
 
-  /// File path: assets/sprites/customers/05-grandpa-taro/idle_2.png
+  /// File path: assets/sprites/customers/05-grandpa-taro/idle_2.webp
   AssetGenImage get idle2 => const AssetGenImage(
-      'assets/sprites/customers/05-grandpa-taro/idle_2.png');
+      'assets/sprites/customers/05-grandpa-taro/idle_2.webp');
 
-  /// File path: assets/sprites/customers/05-grandpa-taro/idle_3.png
+  /// File path: assets/sprites/customers/05-grandpa-taro/idle_3.webp
   AssetGenImage get idle3 => const AssetGenImage(
-      'assets/sprites/customers/05-grandpa-taro/idle_3.png');
+      'assets/sprites/customers/05-grandpa-taro/idle_3.webp');
 
-  /// File path: assets/sprites/customers/05-grandpa-taro/nod_0.png
-  AssetGenImage get nod0 =>
-      const AssetGenImage('assets/sprites/customers/05-grandpa-taro/nod_0.png');
+  /// File path: assets/sprites/customers/05-grandpa-taro/nod_0.webp
+  AssetGenImage get nod0 => const AssetGenImage(
+      'assets/sprites/customers/05-grandpa-taro/nod_0.webp');
 
-  /// File path: assets/sprites/customers/05-grandpa-taro/nod_1.png
-  AssetGenImage get nod1 =>
-      const AssetGenImage('assets/sprites/customers/05-grandpa-taro/nod_1.png');
+  /// File path: assets/sprites/customers/05-grandpa-taro/nod_1.webp
+  AssetGenImage get nod1 => const AssetGenImage(
+      'assets/sprites/customers/05-grandpa-taro/nod_1.webp');
 
-  /// File path: assets/sprites/customers/05-grandpa-taro/nod_2.png
-  AssetGenImage get nod2 =>
-      const AssetGenImage('assets/sprites/customers/05-grandpa-taro/nod_2.png');
+  /// File path: assets/sprites/customers/05-grandpa-taro/nod_2.webp
+  AssetGenImage get nod2 => const AssetGenImage(
+      'assets/sprites/customers/05-grandpa-taro/nod_2.webp');
 
-  /// File path: assets/sprites/customers/05-grandpa-taro/nod_3.png
-  AssetGenImage get nod3 =>
-      const AssetGenImage('assets/sprites/customers/05-grandpa-taro/nod_3.png');
+  /// File path: assets/sprites/customers/05-grandpa-taro/nod_3.webp
+  AssetGenImage get nod3 => const AssetGenImage(
+      'assets/sprites/customers/05-grandpa-taro/nod_3.webp');
 
-  /// File path: assets/sprites/customers/05-grandpa-taro/sad_0.png
-  AssetGenImage get sad0 =>
-      const AssetGenImage('assets/sprites/customers/05-grandpa-taro/sad_0.png');
+  /// File path: assets/sprites/customers/05-grandpa-taro/sad_0.webp
+  AssetGenImage get sad0 => const AssetGenImage(
+      'assets/sprites/customers/05-grandpa-taro/sad_0.webp');
 
-  /// File path: assets/sprites/customers/05-grandpa-taro/sad_1.png
-  AssetGenImage get sad1 =>
-      const AssetGenImage('assets/sprites/customers/05-grandpa-taro/sad_1.png');
+  /// File path: assets/sprites/customers/05-grandpa-taro/sad_1.webp
+  AssetGenImage get sad1 => const AssetGenImage(
+      'assets/sprites/customers/05-grandpa-taro/sad_1.webp');
 
-  /// File path: assets/sprites/customers/05-grandpa-taro/sad_2.png
-  AssetGenImage get sad2 =>
-      const AssetGenImage('assets/sprites/customers/05-grandpa-taro/sad_2.png');
+  /// File path: assets/sprites/customers/05-grandpa-taro/sad_2.webp
+  AssetGenImage get sad2 => const AssetGenImage(
+      'assets/sprites/customers/05-grandpa-taro/sad_2.webp');
 
-  /// File path: assets/sprites/customers/05-grandpa-taro/sad_3.png
-  AssetGenImage get sad3 =>
-      const AssetGenImage('assets/sprites/customers/05-grandpa-taro/sad_3.png');
+  /// File path: assets/sprites/customers/05-grandpa-taro/sad_3.webp
+  AssetGenImage get sad3 => const AssetGenImage(
+      'assets/sprites/customers/05-grandpa-taro/sad_3.webp');
 
-  /// File path: assets/sprites/customers/05-grandpa-taro/talk_0.png
+  /// File path: assets/sprites/customers/05-grandpa-taro/talk_0.webp
   AssetGenImage get talk0 => const AssetGenImage(
-      'assets/sprites/customers/05-grandpa-taro/talk_0.png');
+      'assets/sprites/customers/05-grandpa-taro/talk_0.webp');
 
-  /// File path: assets/sprites/customers/05-grandpa-taro/talk_1.png
+  /// File path: assets/sprites/customers/05-grandpa-taro/talk_1.webp
   AssetGenImage get talk1 => const AssetGenImage(
-      'assets/sprites/customers/05-grandpa-taro/talk_1.png');
+      'assets/sprites/customers/05-grandpa-taro/talk_1.webp');
 
-  /// File path: assets/sprites/customers/05-grandpa-taro/talk_2.png
+  /// File path: assets/sprites/customers/05-grandpa-taro/talk_2.webp
   AssetGenImage get talk2 => const AssetGenImage(
-      'assets/sprites/customers/05-grandpa-taro/talk_2.png');
+      'assets/sprites/customers/05-grandpa-taro/talk_2.webp');
 
-  /// File path: assets/sprites/customers/05-grandpa-taro/talk_3.png
+  /// File path: assets/sprites/customers/05-grandpa-taro/talk_3.webp
   AssetGenImage get talk3 => const AssetGenImage(
-      'assets/sprites/customers/05-grandpa-taro/talk_3.png');
+      'assets/sprites/customers/05-grandpa-taro/talk_3.webp');
 
-  /// File path: assets/sprites/customers/05-grandpa-taro/walk_0.png
+  /// File path: assets/sprites/customers/05-grandpa-taro/walk_0.webp
   AssetGenImage get walk0 => const AssetGenImage(
-      'assets/sprites/customers/05-grandpa-taro/walk_0.png');
+      'assets/sprites/customers/05-grandpa-taro/walk_0.webp');
 
-  /// File path: assets/sprites/customers/05-grandpa-taro/walk_1.png
+  /// File path: assets/sprites/customers/05-grandpa-taro/walk_1.webp
   AssetGenImage get walk1 => const AssetGenImage(
-      'assets/sprites/customers/05-grandpa-taro/walk_1.png');
+      'assets/sprites/customers/05-grandpa-taro/walk_1.webp');
 
-  /// File path: assets/sprites/customers/05-grandpa-taro/walk_2.png
+  /// File path: assets/sprites/customers/05-grandpa-taro/walk_2.webp
   AssetGenImage get walk2 => const AssetGenImage(
-      'assets/sprites/customers/05-grandpa-taro/walk_2.png');
+      'assets/sprites/customers/05-grandpa-taro/walk_2.webp');
 
-  /// File path: assets/sprites/customers/05-grandpa-taro/walk_3.png
+  /// File path: assets/sprites/customers/05-grandpa-taro/walk_3.webp
   AssetGenImage get walk3 => const AssetGenImage(
-      'assets/sprites/customers/05-grandpa-taro/walk_3.png');
+      'assets/sprites/customers/05-grandpa-taro/walk_3.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [
@@ -1393,101 +1398,101 @@ class $AssetsSpritesCustomers05GrandpaTaroGen {
 class $AssetsSpritesCustomers06RyoGen {
   const $AssetsSpritesCustomers06RyoGen();
 
-  /// File path: assets/sprites/customers/06-ryo/carry_0.png
+  /// File path: assets/sprites/customers/06-ryo/carry_0.webp
   AssetGenImage get carry0 =>
-      const AssetGenImage('assets/sprites/customers/06-ryo/carry_0.png');
+      const AssetGenImage('assets/sprites/customers/06-ryo/carry_0.webp');
 
-  /// File path: assets/sprites/customers/06-ryo/carry_1.png
+  /// File path: assets/sprites/customers/06-ryo/carry_1.webp
   AssetGenImage get carry1 =>
-      const AssetGenImage('assets/sprites/customers/06-ryo/carry_1.png');
+      const AssetGenImage('assets/sprites/customers/06-ryo/carry_1.webp');
 
-  /// File path: assets/sprites/customers/06-ryo/carry_2.png
+  /// File path: assets/sprites/customers/06-ryo/carry_2.webp
   AssetGenImage get carry2 =>
-      const AssetGenImage('assets/sprites/customers/06-ryo/carry_2.png');
+      const AssetGenImage('assets/sprites/customers/06-ryo/carry_2.webp');
 
-  /// File path: assets/sprites/customers/06-ryo/carry_3.png
+  /// File path: assets/sprites/customers/06-ryo/carry_3.webp
   AssetGenImage get carry3 =>
-      const AssetGenImage('assets/sprites/customers/06-ryo/carry_3.png');
+      const AssetGenImage('assets/sprites/customers/06-ryo/carry_3.webp');
 
-  /// File path: assets/sprites/customers/06-ryo/happy_0.png
+  /// File path: assets/sprites/customers/06-ryo/happy_0.webp
   AssetGenImage get happy0 =>
-      const AssetGenImage('assets/sprites/customers/06-ryo/happy_0.png');
+      const AssetGenImage('assets/sprites/customers/06-ryo/happy_0.webp');
 
-  /// File path: assets/sprites/customers/06-ryo/happy_1.png
+  /// File path: assets/sprites/customers/06-ryo/happy_1.webp
   AssetGenImage get happy1 =>
-      const AssetGenImage('assets/sprites/customers/06-ryo/happy_1.png');
+      const AssetGenImage('assets/sprites/customers/06-ryo/happy_1.webp');
 
-  /// File path: assets/sprites/customers/06-ryo/happy_2.png
+  /// File path: assets/sprites/customers/06-ryo/happy_2.webp
   AssetGenImage get happy2 =>
-      const AssetGenImage('assets/sprites/customers/06-ryo/happy_2.png');
+      const AssetGenImage('assets/sprites/customers/06-ryo/happy_2.webp');
 
-  /// File path: assets/sprites/customers/06-ryo/happy_3.png
+  /// File path: assets/sprites/customers/06-ryo/happy_3.webp
   AssetGenImage get happy3 =>
-      const AssetGenImage('assets/sprites/customers/06-ryo/happy_3.png');
+      const AssetGenImage('assets/sprites/customers/06-ryo/happy_3.webp');
 
-  /// File path: assets/sprites/customers/06-ryo/idle_0.png
+  /// File path: assets/sprites/customers/06-ryo/idle_0.webp
   AssetGenImage get idle0 =>
-      const AssetGenImage('assets/sprites/customers/06-ryo/idle_0.png');
+      const AssetGenImage('assets/sprites/customers/06-ryo/idle_0.webp');
 
-  /// File path: assets/sprites/customers/06-ryo/idle_1.png
+  /// File path: assets/sprites/customers/06-ryo/idle_1.webp
   AssetGenImage get idle1 =>
-      const AssetGenImage('assets/sprites/customers/06-ryo/idle_1.png');
+      const AssetGenImage('assets/sprites/customers/06-ryo/idle_1.webp');
 
-  /// File path: assets/sprites/customers/06-ryo/idle_2.png
+  /// File path: assets/sprites/customers/06-ryo/idle_2.webp
   AssetGenImage get idle2 =>
-      const AssetGenImage('assets/sprites/customers/06-ryo/idle_2.png');
+      const AssetGenImage('assets/sprites/customers/06-ryo/idle_2.webp');
 
-  /// File path: assets/sprites/customers/06-ryo/idle_3.png
+  /// File path: assets/sprites/customers/06-ryo/idle_3.webp
   AssetGenImage get idle3 =>
-      const AssetGenImage('assets/sprites/customers/06-ryo/idle_3.png');
+      const AssetGenImage('assets/sprites/customers/06-ryo/idle_3.webp');
 
-  /// File path: assets/sprites/customers/06-ryo/sad_0.png
+  /// File path: assets/sprites/customers/06-ryo/sad_0.webp
   AssetGenImage get sad0 =>
-      const AssetGenImage('assets/sprites/customers/06-ryo/sad_0.png');
+      const AssetGenImage('assets/sprites/customers/06-ryo/sad_0.webp');
 
-  /// File path: assets/sprites/customers/06-ryo/sad_1.png
+  /// File path: assets/sprites/customers/06-ryo/sad_1.webp
   AssetGenImage get sad1 =>
-      const AssetGenImage('assets/sprites/customers/06-ryo/sad_1.png');
+      const AssetGenImage('assets/sprites/customers/06-ryo/sad_1.webp');
 
-  /// File path: assets/sprites/customers/06-ryo/sad_2.png
+  /// File path: assets/sprites/customers/06-ryo/sad_2.webp
   AssetGenImage get sad2 =>
-      const AssetGenImage('assets/sprites/customers/06-ryo/sad_2.png');
+      const AssetGenImage('assets/sprites/customers/06-ryo/sad_2.webp');
 
-  /// File path: assets/sprites/customers/06-ryo/sad_3.png
+  /// File path: assets/sprites/customers/06-ryo/sad_3.webp
   AssetGenImage get sad3 =>
-      const AssetGenImage('assets/sprites/customers/06-ryo/sad_3.png');
+      const AssetGenImage('assets/sprites/customers/06-ryo/sad_3.webp');
 
-  /// File path: assets/sprites/customers/06-ryo/talk_0.png
+  /// File path: assets/sprites/customers/06-ryo/talk_0.webp
   AssetGenImage get talk0 =>
-      const AssetGenImage('assets/sprites/customers/06-ryo/talk_0.png');
+      const AssetGenImage('assets/sprites/customers/06-ryo/talk_0.webp');
 
-  /// File path: assets/sprites/customers/06-ryo/talk_1.png
+  /// File path: assets/sprites/customers/06-ryo/talk_1.webp
   AssetGenImage get talk1 =>
-      const AssetGenImage('assets/sprites/customers/06-ryo/talk_1.png');
+      const AssetGenImage('assets/sprites/customers/06-ryo/talk_1.webp');
 
-  /// File path: assets/sprites/customers/06-ryo/talk_2.png
+  /// File path: assets/sprites/customers/06-ryo/talk_2.webp
   AssetGenImage get talk2 =>
-      const AssetGenImage('assets/sprites/customers/06-ryo/talk_2.png');
+      const AssetGenImage('assets/sprites/customers/06-ryo/talk_2.webp');
 
-  /// File path: assets/sprites/customers/06-ryo/talk_3.png
+  /// File path: assets/sprites/customers/06-ryo/talk_3.webp
   AssetGenImage get talk3 =>
-      const AssetGenImage('assets/sprites/customers/06-ryo/talk_3.png');
+      const AssetGenImage('assets/sprites/customers/06-ryo/talk_3.webp');
 
-  /// File path: assets/sprites/customers/06-ryo/walk_0.png
+  /// File path: assets/sprites/customers/06-ryo/walk_0.webp
   AssetGenImage get walk0 =>
-      const AssetGenImage('assets/sprites/customers/06-ryo/walk_0.png');
+      const AssetGenImage('assets/sprites/customers/06-ryo/walk_0.webp');
 
-  /// File path: assets/sprites/customers/06-ryo/walk_1.png
+  /// File path: assets/sprites/customers/06-ryo/walk_1.webp
   AssetGenImage get walk1 =>
-      const AssetGenImage('assets/sprites/customers/06-ryo/walk_1.png');
+      const AssetGenImage('assets/sprites/customers/06-ryo/walk_1.webp');
 
-  /// File path: assets/sprites/customers/06-ryo/walk_2.png
+  /// File path: assets/sprites/customers/06-ryo/walk_2.webp
   AssetGenImage get walk2 =>
-      const AssetGenImage('assets/sprites/customers/06-ryo/walk_2.png');
+      const AssetGenImage('assets/sprites/customers/06-ryo/walk_2.webp');
 
-  /// File path: assets/sprites/customers/06-ryo/walk_3.png
+  /// File path: assets/sprites/customers/06-ryo/walk_3.webp
   AssetGenImage get walk3 =>
-      const AssetGenImage('assets/sprites/customers/06-ryo/walk_3.png');
+      const AssetGenImage('assets/sprites/customers/06-ryo/walk_3.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [
@@ -1521,101 +1526,101 @@ class $AssetsSpritesCustomers06RyoGen {
 class $AssetsSpritesCustomers07AuntieKikuGen {
   const $AssetsSpritesCustomers07AuntieKikuGen();
 
-  /// File path: assets/sprites/customers/07-auntie-kiku/happy_0.png
+  /// File path: assets/sprites/customers/07-auntie-kiku/happy_0.webp
   AssetGenImage get happy0 => const AssetGenImage(
-      'assets/sprites/customers/07-auntie-kiku/happy_0.png');
+      'assets/sprites/customers/07-auntie-kiku/happy_0.webp');
 
-  /// File path: assets/sprites/customers/07-auntie-kiku/happy_1.png
+  /// File path: assets/sprites/customers/07-auntie-kiku/happy_1.webp
   AssetGenImage get happy1 => const AssetGenImage(
-      'assets/sprites/customers/07-auntie-kiku/happy_1.png');
+      'assets/sprites/customers/07-auntie-kiku/happy_1.webp');
 
-  /// File path: assets/sprites/customers/07-auntie-kiku/happy_2.png
+  /// File path: assets/sprites/customers/07-auntie-kiku/happy_2.webp
   AssetGenImage get happy2 => const AssetGenImage(
-      'assets/sprites/customers/07-auntie-kiku/happy_2.png');
+      'assets/sprites/customers/07-auntie-kiku/happy_2.webp');
 
-  /// File path: assets/sprites/customers/07-auntie-kiku/happy_3.png
+  /// File path: assets/sprites/customers/07-auntie-kiku/happy_3.webp
   AssetGenImage get happy3 => const AssetGenImage(
-      'assets/sprites/customers/07-auntie-kiku/happy_3.png');
+      'assets/sprites/customers/07-auntie-kiku/happy_3.webp');
 
-  /// File path: assets/sprites/customers/07-auntie-kiku/idle_0.png
-  AssetGenImage get idle0 =>
-      const AssetGenImage('assets/sprites/customers/07-auntie-kiku/idle_0.png');
+  /// File path: assets/sprites/customers/07-auntie-kiku/idle_0.webp
+  AssetGenImage get idle0 => const AssetGenImage(
+      'assets/sprites/customers/07-auntie-kiku/idle_0.webp');
 
-  /// File path: assets/sprites/customers/07-auntie-kiku/idle_1.png
-  AssetGenImage get idle1 =>
-      const AssetGenImage('assets/sprites/customers/07-auntie-kiku/idle_1.png');
+  /// File path: assets/sprites/customers/07-auntie-kiku/idle_1.webp
+  AssetGenImage get idle1 => const AssetGenImage(
+      'assets/sprites/customers/07-auntie-kiku/idle_1.webp');
 
-  /// File path: assets/sprites/customers/07-auntie-kiku/idle_2.png
-  AssetGenImage get idle2 =>
-      const AssetGenImage('assets/sprites/customers/07-auntie-kiku/idle_2.png');
+  /// File path: assets/sprites/customers/07-auntie-kiku/idle_2.webp
+  AssetGenImage get idle2 => const AssetGenImage(
+      'assets/sprites/customers/07-auntie-kiku/idle_2.webp');
 
-  /// File path: assets/sprites/customers/07-auntie-kiku/idle_3.png
-  AssetGenImage get idle3 =>
-      const AssetGenImage('assets/sprites/customers/07-auntie-kiku/idle_3.png');
+  /// File path: assets/sprites/customers/07-auntie-kiku/idle_3.webp
+  AssetGenImage get idle3 => const AssetGenImage(
+      'assets/sprites/customers/07-auntie-kiku/idle_3.webp');
 
-  /// File path: assets/sprites/customers/07-auntie-kiku/inspect_0.png
+  /// File path: assets/sprites/customers/07-auntie-kiku/inspect_0.webp
   AssetGenImage get inspect0 => const AssetGenImage(
-      'assets/sprites/customers/07-auntie-kiku/inspect_0.png');
+      'assets/sprites/customers/07-auntie-kiku/inspect_0.webp');
 
-  /// File path: assets/sprites/customers/07-auntie-kiku/inspect_1.png
+  /// File path: assets/sprites/customers/07-auntie-kiku/inspect_1.webp
   AssetGenImage get inspect1 => const AssetGenImage(
-      'assets/sprites/customers/07-auntie-kiku/inspect_1.png');
+      'assets/sprites/customers/07-auntie-kiku/inspect_1.webp');
 
-  /// File path: assets/sprites/customers/07-auntie-kiku/inspect_2.png
+  /// File path: assets/sprites/customers/07-auntie-kiku/inspect_2.webp
   AssetGenImage get inspect2 => const AssetGenImage(
-      'assets/sprites/customers/07-auntie-kiku/inspect_2.png');
+      'assets/sprites/customers/07-auntie-kiku/inspect_2.webp');
 
-  /// File path: assets/sprites/customers/07-auntie-kiku/inspect_3.png
+  /// File path: assets/sprites/customers/07-auntie-kiku/inspect_3.webp
   AssetGenImage get inspect3 => const AssetGenImage(
-      'assets/sprites/customers/07-auntie-kiku/inspect_3.png');
+      'assets/sprites/customers/07-auntie-kiku/inspect_3.webp');
 
-  /// File path: assets/sprites/customers/07-auntie-kiku/sad_0.png
+  /// File path: assets/sprites/customers/07-auntie-kiku/sad_0.webp
   AssetGenImage get sad0 =>
-      const AssetGenImage('assets/sprites/customers/07-auntie-kiku/sad_0.png');
+      const AssetGenImage('assets/sprites/customers/07-auntie-kiku/sad_0.webp');
 
-  /// File path: assets/sprites/customers/07-auntie-kiku/sad_1.png
+  /// File path: assets/sprites/customers/07-auntie-kiku/sad_1.webp
   AssetGenImage get sad1 =>
-      const AssetGenImage('assets/sprites/customers/07-auntie-kiku/sad_1.png');
+      const AssetGenImage('assets/sprites/customers/07-auntie-kiku/sad_1.webp');
 
-  /// File path: assets/sprites/customers/07-auntie-kiku/sad_2.png
+  /// File path: assets/sprites/customers/07-auntie-kiku/sad_2.webp
   AssetGenImage get sad2 =>
-      const AssetGenImage('assets/sprites/customers/07-auntie-kiku/sad_2.png');
+      const AssetGenImage('assets/sprites/customers/07-auntie-kiku/sad_2.webp');
 
-  /// File path: assets/sprites/customers/07-auntie-kiku/sad_3.png
+  /// File path: assets/sprites/customers/07-auntie-kiku/sad_3.webp
   AssetGenImage get sad3 =>
-      const AssetGenImage('assets/sprites/customers/07-auntie-kiku/sad_3.png');
+      const AssetGenImage('assets/sprites/customers/07-auntie-kiku/sad_3.webp');
 
-  /// File path: assets/sprites/customers/07-auntie-kiku/talk_0.png
-  AssetGenImage get talk0 =>
-      const AssetGenImage('assets/sprites/customers/07-auntie-kiku/talk_0.png');
+  /// File path: assets/sprites/customers/07-auntie-kiku/talk_0.webp
+  AssetGenImage get talk0 => const AssetGenImage(
+      'assets/sprites/customers/07-auntie-kiku/talk_0.webp');
 
-  /// File path: assets/sprites/customers/07-auntie-kiku/talk_1.png
-  AssetGenImage get talk1 =>
-      const AssetGenImage('assets/sprites/customers/07-auntie-kiku/talk_1.png');
+  /// File path: assets/sprites/customers/07-auntie-kiku/talk_1.webp
+  AssetGenImage get talk1 => const AssetGenImage(
+      'assets/sprites/customers/07-auntie-kiku/talk_1.webp');
 
-  /// File path: assets/sprites/customers/07-auntie-kiku/talk_2.png
-  AssetGenImage get talk2 =>
-      const AssetGenImage('assets/sprites/customers/07-auntie-kiku/talk_2.png');
+  /// File path: assets/sprites/customers/07-auntie-kiku/talk_2.webp
+  AssetGenImage get talk2 => const AssetGenImage(
+      'assets/sprites/customers/07-auntie-kiku/talk_2.webp');
 
-  /// File path: assets/sprites/customers/07-auntie-kiku/talk_3.png
-  AssetGenImage get talk3 =>
-      const AssetGenImage('assets/sprites/customers/07-auntie-kiku/talk_3.png');
+  /// File path: assets/sprites/customers/07-auntie-kiku/talk_3.webp
+  AssetGenImage get talk3 => const AssetGenImage(
+      'assets/sprites/customers/07-auntie-kiku/talk_3.webp');
 
-  /// File path: assets/sprites/customers/07-auntie-kiku/walk_0.png
-  AssetGenImage get walk0 =>
-      const AssetGenImage('assets/sprites/customers/07-auntie-kiku/walk_0.png');
+  /// File path: assets/sprites/customers/07-auntie-kiku/walk_0.webp
+  AssetGenImage get walk0 => const AssetGenImage(
+      'assets/sprites/customers/07-auntie-kiku/walk_0.webp');
 
-  /// File path: assets/sprites/customers/07-auntie-kiku/walk_1.png
-  AssetGenImage get walk1 =>
-      const AssetGenImage('assets/sprites/customers/07-auntie-kiku/walk_1.png');
+  /// File path: assets/sprites/customers/07-auntie-kiku/walk_1.webp
+  AssetGenImage get walk1 => const AssetGenImage(
+      'assets/sprites/customers/07-auntie-kiku/walk_1.webp');
 
-  /// File path: assets/sprites/customers/07-auntie-kiku/walk_2.png
-  AssetGenImage get walk2 =>
-      const AssetGenImage('assets/sprites/customers/07-auntie-kiku/walk_2.png');
+  /// File path: assets/sprites/customers/07-auntie-kiku/walk_2.webp
+  AssetGenImage get walk2 => const AssetGenImage(
+      'assets/sprites/customers/07-auntie-kiku/walk_2.webp');
 
-  /// File path: assets/sprites/customers/07-auntie-kiku/walk_3.png
-  AssetGenImage get walk3 =>
-      const AssetGenImage('assets/sprites/customers/07-auntie-kiku/walk_3.png');
+  /// File path: assets/sprites/customers/07-auntie-kiku/walk_3.webp
+  AssetGenImage get walk3 => const AssetGenImage(
+      'assets/sprites/customers/07-auntie-kiku/walk_3.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [
@@ -1649,101 +1654,101 @@ class $AssetsSpritesCustomers07AuntieKikuGen {
 class $AssetsSpritesCustomers08MasaGen {
   const $AssetsSpritesCustomers08MasaGen();
 
-  /// File path: assets/sprites/customers/08-masa/auction_0.png
+  /// File path: assets/sprites/customers/08-masa/auction_0.webp
   AssetGenImage get auction0 =>
-      const AssetGenImage('assets/sprites/customers/08-masa/auction_0.png');
+      const AssetGenImage('assets/sprites/customers/08-masa/auction_0.webp');
 
-  /// File path: assets/sprites/customers/08-masa/auction_1.png
+  /// File path: assets/sprites/customers/08-masa/auction_1.webp
   AssetGenImage get auction1 =>
-      const AssetGenImage('assets/sprites/customers/08-masa/auction_1.png');
+      const AssetGenImage('assets/sprites/customers/08-masa/auction_1.webp');
 
-  /// File path: assets/sprites/customers/08-masa/auction_2.png
+  /// File path: assets/sprites/customers/08-masa/auction_2.webp
   AssetGenImage get auction2 =>
-      const AssetGenImage('assets/sprites/customers/08-masa/auction_2.png');
+      const AssetGenImage('assets/sprites/customers/08-masa/auction_2.webp');
 
-  /// File path: assets/sprites/customers/08-masa/auction_3.png
+  /// File path: assets/sprites/customers/08-masa/auction_3.webp
   AssetGenImage get auction3 =>
-      const AssetGenImage('assets/sprites/customers/08-masa/auction_3.png');
+      const AssetGenImage('assets/sprites/customers/08-masa/auction_3.webp');
 
-  /// File path: assets/sprites/customers/08-masa/happy_0.png
+  /// File path: assets/sprites/customers/08-masa/happy_0.webp
   AssetGenImage get happy0 =>
-      const AssetGenImage('assets/sprites/customers/08-masa/happy_0.png');
+      const AssetGenImage('assets/sprites/customers/08-masa/happy_0.webp');
 
-  /// File path: assets/sprites/customers/08-masa/happy_1.png
+  /// File path: assets/sprites/customers/08-masa/happy_1.webp
   AssetGenImage get happy1 =>
-      const AssetGenImage('assets/sprites/customers/08-masa/happy_1.png');
+      const AssetGenImage('assets/sprites/customers/08-masa/happy_1.webp');
 
-  /// File path: assets/sprites/customers/08-masa/happy_2.png
+  /// File path: assets/sprites/customers/08-masa/happy_2.webp
   AssetGenImage get happy2 =>
-      const AssetGenImage('assets/sprites/customers/08-masa/happy_2.png');
+      const AssetGenImage('assets/sprites/customers/08-masa/happy_2.webp');
 
-  /// File path: assets/sprites/customers/08-masa/happy_3.png
+  /// File path: assets/sprites/customers/08-masa/happy_3.webp
   AssetGenImage get happy3 =>
-      const AssetGenImage('assets/sprites/customers/08-masa/happy_3.png');
+      const AssetGenImage('assets/sprites/customers/08-masa/happy_3.webp');
 
-  /// File path: assets/sprites/customers/08-masa/idle_0.png
+  /// File path: assets/sprites/customers/08-masa/idle_0.webp
   AssetGenImage get idle0 =>
-      const AssetGenImage('assets/sprites/customers/08-masa/idle_0.png');
+      const AssetGenImage('assets/sprites/customers/08-masa/idle_0.webp');
 
-  /// File path: assets/sprites/customers/08-masa/idle_1.png
+  /// File path: assets/sprites/customers/08-masa/idle_1.webp
   AssetGenImage get idle1 =>
-      const AssetGenImage('assets/sprites/customers/08-masa/idle_1.png');
+      const AssetGenImage('assets/sprites/customers/08-masa/idle_1.webp');
 
-  /// File path: assets/sprites/customers/08-masa/idle_2.png
+  /// File path: assets/sprites/customers/08-masa/idle_2.webp
   AssetGenImage get idle2 =>
-      const AssetGenImage('assets/sprites/customers/08-masa/idle_2.png');
+      const AssetGenImage('assets/sprites/customers/08-masa/idle_2.webp');
 
-  /// File path: assets/sprites/customers/08-masa/idle_3.png
+  /// File path: assets/sprites/customers/08-masa/idle_3.webp
   AssetGenImage get idle3 =>
-      const AssetGenImage('assets/sprites/customers/08-masa/idle_3.png');
+      const AssetGenImage('assets/sprites/customers/08-masa/idle_3.webp');
 
-  /// File path: assets/sprites/customers/08-masa/sad_0.png
+  /// File path: assets/sprites/customers/08-masa/sad_0.webp
   AssetGenImage get sad0 =>
-      const AssetGenImage('assets/sprites/customers/08-masa/sad_0.png');
+      const AssetGenImage('assets/sprites/customers/08-masa/sad_0.webp');
 
-  /// File path: assets/sprites/customers/08-masa/sad_1.png
+  /// File path: assets/sprites/customers/08-masa/sad_1.webp
   AssetGenImage get sad1 =>
-      const AssetGenImage('assets/sprites/customers/08-masa/sad_1.png');
+      const AssetGenImage('assets/sprites/customers/08-masa/sad_1.webp');
 
-  /// File path: assets/sprites/customers/08-masa/sad_2.png
+  /// File path: assets/sprites/customers/08-masa/sad_2.webp
   AssetGenImage get sad2 =>
-      const AssetGenImage('assets/sprites/customers/08-masa/sad_2.png');
+      const AssetGenImage('assets/sprites/customers/08-masa/sad_2.webp');
 
-  /// File path: assets/sprites/customers/08-masa/sad_3.png
+  /// File path: assets/sprites/customers/08-masa/sad_3.webp
   AssetGenImage get sad3 =>
-      const AssetGenImage('assets/sprites/customers/08-masa/sad_3.png');
+      const AssetGenImage('assets/sprites/customers/08-masa/sad_3.webp');
 
-  /// File path: assets/sprites/customers/08-masa/talk_0.png
+  /// File path: assets/sprites/customers/08-masa/talk_0.webp
   AssetGenImage get talk0 =>
-      const AssetGenImage('assets/sprites/customers/08-masa/talk_0.png');
+      const AssetGenImage('assets/sprites/customers/08-masa/talk_0.webp');
 
-  /// File path: assets/sprites/customers/08-masa/talk_1.png
+  /// File path: assets/sprites/customers/08-masa/talk_1.webp
   AssetGenImage get talk1 =>
-      const AssetGenImage('assets/sprites/customers/08-masa/talk_1.png');
+      const AssetGenImage('assets/sprites/customers/08-masa/talk_1.webp');
 
-  /// File path: assets/sprites/customers/08-masa/talk_2.png
+  /// File path: assets/sprites/customers/08-masa/talk_2.webp
   AssetGenImage get talk2 =>
-      const AssetGenImage('assets/sprites/customers/08-masa/talk_2.png');
+      const AssetGenImage('assets/sprites/customers/08-masa/talk_2.webp');
 
-  /// File path: assets/sprites/customers/08-masa/talk_3.png
+  /// File path: assets/sprites/customers/08-masa/talk_3.webp
   AssetGenImage get talk3 =>
-      const AssetGenImage('assets/sprites/customers/08-masa/talk_3.png');
+      const AssetGenImage('assets/sprites/customers/08-masa/talk_3.webp');
 
-  /// File path: assets/sprites/customers/08-masa/walk_0.png
+  /// File path: assets/sprites/customers/08-masa/walk_0.webp
   AssetGenImage get walk0 =>
-      const AssetGenImage('assets/sprites/customers/08-masa/walk_0.png');
+      const AssetGenImage('assets/sprites/customers/08-masa/walk_0.webp');
 
-  /// File path: assets/sprites/customers/08-masa/walk_1.png
+  /// File path: assets/sprites/customers/08-masa/walk_1.webp
   AssetGenImage get walk1 =>
-      const AssetGenImage('assets/sprites/customers/08-masa/walk_1.png');
+      const AssetGenImage('assets/sprites/customers/08-masa/walk_1.webp');
 
-  /// File path: assets/sprites/customers/08-masa/walk_2.png
+  /// File path: assets/sprites/customers/08-masa/walk_2.webp
   AssetGenImage get walk2 =>
-      const AssetGenImage('assets/sprites/customers/08-masa/walk_2.png');
+      const AssetGenImage('assets/sprites/customers/08-masa/walk_2.webp');
 
-  /// File path: assets/sprites/customers/08-masa/walk_3.png
+  /// File path: assets/sprites/customers/08-masa/walk_3.webp
   AssetGenImage get walk3 =>
-      const AssetGenImage('assets/sprites/customers/08-masa/walk_3.png');
+      const AssetGenImage('assets/sprites/customers/08-masa/walk_3.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [
@@ -1777,101 +1782,101 @@ class $AssetsSpritesCustomers08MasaGen {
 class $AssetsSpritesCustomers09TacoNeesanGen {
   const $AssetsSpritesCustomers09TacoNeesanGen();
 
-  /// File path: assets/sprites/customers/09-taco-neesan/flip_0.png
-  AssetGenImage get flip0 =>
-      const AssetGenImage('assets/sprites/customers/09-taco-neesan/flip_0.png');
+  /// File path: assets/sprites/customers/09-taco-neesan/flip_0.webp
+  AssetGenImage get flip0 => const AssetGenImage(
+      'assets/sprites/customers/09-taco-neesan/flip_0.webp');
 
-  /// File path: assets/sprites/customers/09-taco-neesan/flip_1.png
-  AssetGenImage get flip1 =>
-      const AssetGenImage('assets/sprites/customers/09-taco-neesan/flip_1.png');
+  /// File path: assets/sprites/customers/09-taco-neesan/flip_1.webp
+  AssetGenImage get flip1 => const AssetGenImage(
+      'assets/sprites/customers/09-taco-neesan/flip_1.webp');
 
-  /// File path: assets/sprites/customers/09-taco-neesan/flip_2.png
-  AssetGenImage get flip2 =>
-      const AssetGenImage('assets/sprites/customers/09-taco-neesan/flip_2.png');
+  /// File path: assets/sprites/customers/09-taco-neesan/flip_2.webp
+  AssetGenImage get flip2 => const AssetGenImage(
+      'assets/sprites/customers/09-taco-neesan/flip_2.webp');
 
-  /// File path: assets/sprites/customers/09-taco-neesan/flip_3.png
-  AssetGenImage get flip3 =>
-      const AssetGenImage('assets/sprites/customers/09-taco-neesan/flip_3.png');
+  /// File path: assets/sprites/customers/09-taco-neesan/flip_3.webp
+  AssetGenImage get flip3 => const AssetGenImage(
+      'assets/sprites/customers/09-taco-neesan/flip_3.webp');
 
-  /// File path: assets/sprites/customers/09-taco-neesan/happy_0.png
+  /// File path: assets/sprites/customers/09-taco-neesan/happy_0.webp
   AssetGenImage get happy0 => const AssetGenImage(
-      'assets/sprites/customers/09-taco-neesan/happy_0.png');
+      'assets/sprites/customers/09-taco-neesan/happy_0.webp');
 
-  /// File path: assets/sprites/customers/09-taco-neesan/happy_1.png
+  /// File path: assets/sprites/customers/09-taco-neesan/happy_1.webp
   AssetGenImage get happy1 => const AssetGenImage(
-      'assets/sprites/customers/09-taco-neesan/happy_1.png');
+      'assets/sprites/customers/09-taco-neesan/happy_1.webp');
 
-  /// File path: assets/sprites/customers/09-taco-neesan/happy_2.png
+  /// File path: assets/sprites/customers/09-taco-neesan/happy_2.webp
   AssetGenImage get happy2 => const AssetGenImage(
-      'assets/sprites/customers/09-taco-neesan/happy_2.png');
+      'assets/sprites/customers/09-taco-neesan/happy_2.webp');
 
-  /// File path: assets/sprites/customers/09-taco-neesan/happy_3.png
+  /// File path: assets/sprites/customers/09-taco-neesan/happy_3.webp
   AssetGenImage get happy3 => const AssetGenImage(
-      'assets/sprites/customers/09-taco-neesan/happy_3.png');
+      'assets/sprites/customers/09-taco-neesan/happy_3.webp');
 
-  /// File path: assets/sprites/customers/09-taco-neesan/idle_0.png
-  AssetGenImage get idle0 =>
-      const AssetGenImage('assets/sprites/customers/09-taco-neesan/idle_0.png');
+  /// File path: assets/sprites/customers/09-taco-neesan/idle_0.webp
+  AssetGenImage get idle0 => const AssetGenImage(
+      'assets/sprites/customers/09-taco-neesan/idle_0.webp');
 
-  /// File path: assets/sprites/customers/09-taco-neesan/idle_1.png
-  AssetGenImage get idle1 =>
-      const AssetGenImage('assets/sprites/customers/09-taco-neesan/idle_1.png');
+  /// File path: assets/sprites/customers/09-taco-neesan/idle_1.webp
+  AssetGenImage get idle1 => const AssetGenImage(
+      'assets/sprites/customers/09-taco-neesan/idle_1.webp');
 
-  /// File path: assets/sprites/customers/09-taco-neesan/idle_2.png
-  AssetGenImage get idle2 =>
-      const AssetGenImage('assets/sprites/customers/09-taco-neesan/idle_2.png');
+  /// File path: assets/sprites/customers/09-taco-neesan/idle_2.webp
+  AssetGenImage get idle2 => const AssetGenImage(
+      'assets/sprites/customers/09-taco-neesan/idle_2.webp');
 
-  /// File path: assets/sprites/customers/09-taco-neesan/idle_3.png
-  AssetGenImage get idle3 =>
-      const AssetGenImage('assets/sprites/customers/09-taco-neesan/idle_3.png');
+  /// File path: assets/sprites/customers/09-taco-neesan/idle_3.webp
+  AssetGenImage get idle3 => const AssetGenImage(
+      'assets/sprites/customers/09-taco-neesan/idle_3.webp');
 
-  /// File path: assets/sprites/customers/09-taco-neesan/sad_0.png
+  /// File path: assets/sprites/customers/09-taco-neesan/sad_0.webp
   AssetGenImage get sad0 =>
-      const AssetGenImage('assets/sprites/customers/09-taco-neesan/sad_0.png');
+      const AssetGenImage('assets/sprites/customers/09-taco-neesan/sad_0.webp');
 
-  /// File path: assets/sprites/customers/09-taco-neesan/sad_1.png
+  /// File path: assets/sprites/customers/09-taco-neesan/sad_1.webp
   AssetGenImage get sad1 =>
-      const AssetGenImage('assets/sprites/customers/09-taco-neesan/sad_1.png');
+      const AssetGenImage('assets/sprites/customers/09-taco-neesan/sad_1.webp');
 
-  /// File path: assets/sprites/customers/09-taco-neesan/sad_2.png
+  /// File path: assets/sprites/customers/09-taco-neesan/sad_2.webp
   AssetGenImage get sad2 =>
-      const AssetGenImage('assets/sprites/customers/09-taco-neesan/sad_2.png');
+      const AssetGenImage('assets/sprites/customers/09-taco-neesan/sad_2.webp');
 
-  /// File path: assets/sprites/customers/09-taco-neesan/sad_3.png
+  /// File path: assets/sprites/customers/09-taco-neesan/sad_3.webp
   AssetGenImage get sad3 =>
-      const AssetGenImage('assets/sprites/customers/09-taco-neesan/sad_3.png');
+      const AssetGenImage('assets/sprites/customers/09-taco-neesan/sad_3.webp');
 
-  /// File path: assets/sprites/customers/09-taco-neesan/talk_0.png
-  AssetGenImage get talk0 =>
-      const AssetGenImage('assets/sprites/customers/09-taco-neesan/talk_0.png');
+  /// File path: assets/sprites/customers/09-taco-neesan/talk_0.webp
+  AssetGenImage get talk0 => const AssetGenImage(
+      'assets/sprites/customers/09-taco-neesan/talk_0.webp');
 
-  /// File path: assets/sprites/customers/09-taco-neesan/talk_1.png
-  AssetGenImage get talk1 =>
-      const AssetGenImage('assets/sprites/customers/09-taco-neesan/talk_1.png');
+  /// File path: assets/sprites/customers/09-taco-neesan/talk_1.webp
+  AssetGenImage get talk1 => const AssetGenImage(
+      'assets/sprites/customers/09-taco-neesan/talk_1.webp');
 
-  /// File path: assets/sprites/customers/09-taco-neesan/talk_2.png
-  AssetGenImage get talk2 =>
-      const AssetGenImage('assets/sprites/customers/09-taco-neesan/talk_2.png');
+  /// File path: assets/sprites/customers/09-taco-neesan/talk_2.webp
+  AssetGenImage get talk2 => const AssetGenImage(
+      'assets/sprites/customers/09-taco-neesan/talk_2.webp');
 
-  /// File path: assets/sprites/customers/09-taco-neesan/talk_3.png
-  AssetGenImage get talk3 =>
-      const AssetGenImage('assets/sprites/customers/09-taco-neesan/talk_3.png');
+  /// File path: assets/sprites/customers/09-taco-neesan/talk_3.webp
+  AssetGenImage get talk3 => const AssetGenImage(
+      'assets/sprites/customers/09-taco-neesan/talk_3.webp');
 
-  /// File path: assets/sprites/customers/09-taco-neesan/walk_0.png
-  AssetGenImage get walk0 =>
-      const AssetGenImage('assets/sprites/customers/09-taco-neesan/walk_0.png');
+  /// File path: assets/sprites/customers/09-taco-neesan/walk_0.webp
+  AssetGenImage get walk0 => const AssetGenImage(
+      'assets/sprites/customers/09-taco-neesan/walk_0.webp');
 
-  /// File path: assets/sprites/customers/09-taco-neesan/walk_1.png
-  AssetGenImage get walk1 =>
-      const AssetGenImage('assets/sprites/customers/09-taco-neesan/walk_1.png');
+  /// File path: assets/sprites/customers/09-taco-neesan/walk_1.webp
+  AssetGenImage get walk1 => const AssetGenImage(
+      'assets/sprites/customers/09-taco-neesan/walk_1.webp');
 
-  /// File path: assets/sprites/customers/09-taco-neesan/walk_2.png
-  AssetGenImage get walk2 =>
-      const AssetGenImage('assets/sprites/customers/09-taco-neesan/walk_2.png');
+  /// File path: assets/sprites/customers/09-taco-neesan/walk_2.webp
+  AssetGenImage get walk2 => const AssetGenImage(
+      'assets/sprites/customers/09-taco-neesan/walk_2.webp');
 
-  /// File path: assets/sprites/customers/09-taco-neesan/walk_3.png
-  AssetGenImage get walk3 =>
-      const AssetGenImage('assets/sprites/customers/09-taco-neesan/walk_3.png');
+  /// File path: assets/sprites/customers/09-taco-neesan/walk_3.webp
+  AssetGenImage get walk3 => const AssetGenImage(
+      'assets/sprites/customers/09-taco-neesan/walk_3.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [
@@ -1905,101 +1910,101 @@ class $AssetsSpritesCustomers09TacoNeesanGen {
 class $AssetsSpritesCustomers10OtoGen {
   const $AssetsSpritesCustomers10OtoGen();
 
-  /// File path: assets/sprites/customers/10-oto/drum_0.png
+  /// File path: assets/sprites/customers/10-oto/drum_0.webp
   AssetGenImage get drum0 =>
-      const AssetGenImage('assets/sprites/customers/10-oto/drum_0.png');
+      const AssetGenImage('assets/sprites/customers/10-oto/drum_0.webp');
 
-  /// File path: assets/sprites/customers/10-oto/drum_1.png
+  /// File path: assets/sprites/customers/10-oto/drum_1.webp
   AssetGenImage get drum1 =>
-      const AssetGenImage('assets/sprites/customers/10-oto/drum_1.png');
+      const AssetGenImage('assets/sprites/customers/10-oto/drum_1.webp');
 
-  /// File path: assets/sprites/customers/10-oto/drum_2.png
+  /// File path: assets/sprites/customers/10-oto/drum_2.webp
   AssetGenImage get drum2 =>
-      const AssetGenImage('assets/sprites/customers/10-oto/drum_2.png');
+      const AssetGenImage('assets/sprites/customers/10-oto/drum_2.webp');
 
-  /// File path: assets/sprites/customers/10-oto/drum_3.png
+  /// File path: assets/sprites/customers/10-oto/drum_3.webp
   AssetGenImage get drum3 =>
-      const AssetGenImage('assets/sprites/customers/10-oto/drum_3.png');
+      const AssetGenImage('assets/sprites/customers/10-oto/drum_3.webp');
 
-  /// File path: assets/sprites/customers/10-oto/happy_0.png
+  /// File path: assets/sprites/customers/10-oto/happy_0.webp
   AssetGenImage get happy0 =>
-      const AssetGenImage('assets/sprites/customers/10-oto/happy_0.png');
+      const AssetGenImage('assets/sprites/customers/10-oto/happy_0.webp');
 
-  /// File path: assets/sprites/customers/10-oto/happy_1.png
+  /// File path: assets/sprites/customers/10-oto/happy_1.webp
   AssetGenImage get happy1 =>
-      const AssetGenImage('assets/sprites/customers/10-oto/happy_1.png');
+      const AssetGenImage('assets/sprites/customers/10-oto/happy_1.webp');
 
-  /// File path: assets/sprites/customers/10-oto/happy_2.png
+  /// File path: assets/sprites/customers/10-oto/happy_2.webp
   AssetGenImage get happy2 =>
-      const AssetGenImage('assets/sprites/customers/10-oto/happy_2.png');
+      const AssetGenImage('assets/sprites/customers/10-oto/happy_2.webp');
 
-  /// File path: assets/sprites/customers/10-oto/happy_3.png
+  /// File path: assets/sprites/customers/10-oto/happy_3.webp
   AssetGenImage get happy3 =>
-      const AssetGenImage('assets/sprites/customers/10-oto/happy_3.png');
+      const AssetGenImage('assets/sprites/customers/10-oto/happy_3.webp');
 
-  /// File path: assets/sprites/customers/10-oto/idle_0.png
+  /// File path: assets/sprites/customers/10-oto/idle_0.webp
   AssetGenImage get idle0 =>
-      const AssetGenImage('assets/sprites/customers/10-oto/idle_0.png');
+      const AssetGenImage('assets/sprites/customers/10-oto/idle_0.webp');
 
-  /// File path: assets/sprites/customers/10-oto/idle_1.png
+  /// File path: assets/sprites/customers/10-oto/idle_1.webp
   AssetGenImage get idle1 =>
-      const AssetGenImage('assets/sprites/customers/10-oto/idle_1.png');
+      const AssetGenImage('assets/sprites/customers/10-oto/idle_1.webp');
 
-  /// File path: assets/sprites/customers/10-oto/idle_2.png
+  /// File path: assets/sprites/customers/10-oto/idle_2.webp
   AssetGenImage get idle2 =>
-      const AssetGenImage('assets/sprites/customers/10-oto/idle_2.png');
+      const AssetGenImage('assets/sprites/customers/10-oto/idle_2.webp');
 
-  /// File path: assets/sprites/customers/10-oto/idle_3.png
+  /// File path: assets/sprites/customers/10-oto/idle_3.webp
   AssetGenImage get idle3 =>
-      const AssetGenImage('assets/sprites/customers/10-oto/idle_3.png');
+      const AssetGenImage('assets/sprites/customers/10-oto/idle_3.webp');
 
-  /// File path: assets/sprites/customers/10-oto/sad_0.png
+  /// File path: assets/sprites/customers/10-oto/sad_0.webp
   AssetGenImage get sad0 =>
-      const AssetGenImage('assets/sprites/customers/10-oto/sad_0.png');
+      const AssetGenImage('assets/sprites/customers/10-oto/sad_0.webp');
 
-  /// File path: assets/sprites/customers/10-oto/sad_1.png
+  /// File path: assets/sprites/customers/10-oto/sad_1.webp
   AssetGenImage get sad1 =>
-      const AssetGenImage('assets/sprites/customers/10-oto/sad_1.png');
+      const AssetGenImage('assets/sprites/customers/10-oto/sad_1.webp');
 
-  /// File path: assets/sprites/customers/10-oto/sad_2.png
+  /// File path: assets/sprites/customers/10-oto/sad_2.webp
   AssetGenImage get sad2 =>
-      const AssetGenImage('assets/sprites/customers/10-oto/sad_2.png');
+      const AssetGenImage('assets/sprites/customers/10-oto/sad_2.webp');
 
-  /// File path: assets/sprites/customers/10-oto/sad_3.png
+  /// File path: assets/sprites/customers/10-oto/sad_3.webp
   AssetGenImage get sad3 =>
-      const AssetGenImage('assets/sprites/customers/10-oto/sad_3.png');
+      const AssetGenImage('assets/sprites/customers/10-oto/sad_3.webp');
 
-  /// File path: assets/sprites/customers/10-oto/talk_0.png
+  /// File path: assets/sprites/customers/10-oto/talk_0.webp
   AssetGenImage get talk0 =>
-      const AssetGenImage('assets/sprites/customers/10-oto/talk_0.png');
+      const AssetGenImage('assets/sprites/customers/10-oto/talk_0.webp');
 
-  /// File path: assets/sprites/customers/10-oto/talk_1.png
+  /// File path: assets/sprites/customers/10-oto/talk_1.webp
   AssetGenImage get talk1 =>
-      const AssetGenImage('assets/sprites/customers/10-oto/talk_1.png');
+      const AssetGenImage('assets/sprites/customers/10-oto/talk_1.webp');
 
-  /// File path: assets/sprites/customers/10-oto/talk_2.png
+  /// File path: assets/sprites/customers/10-oto/talk_2.webp
   AssetGenImage get talk2 =>
-      const AssetGenImage('assets/sprites/customers/10-oto/talk_2.png');
+      const AssetGenImage('assets/sprites/customers/10-oto/talk_2.webp');
 
-  /// File path: assets/sprites/customers/10-oto/talk_3.png
+  /// File path: assets/sprites/customers/10-oto/talk_3.webp
   AssetGenImage get talk3 =>
-      const AssetGenImage('assets/sprites/customers/10-oto/talk_3.png');
+      const AssetGenImage('assets/sprites/customers/10-oto/talk_3.webp');
 
-  /// File path: assets/sprites/customers/10-oto/walk_0.png
+  /// File path: assets/sprites/customers/10-oto/walk_0.webp
   AssetGenImage get walk0 =>
-      const AssetGenImage('assets/sprites/customers/10-oto/walk_0.png');
+      const AssetGenImage('assets/sprites/customers/10-oto/walk_0.webp');
 
-  /// File path: assets/sprites/customers/10-oto/walk_1.png
+  /// File path: assets/sprites/customers/10-oto/walk_1.webp
   AssetGenImage get walk1 =>
-      const AssetGenImage('assets/sprites/customers/10-oto/walk_1.png');
+      const AssetGenImage('assets/sprites/customers/10-oto/walk_1.webp');
 
-  /// File path: assets/sprites/customers/10-oto/walk_2.png
+  /// File path: assets/sprites/customers/10-oto/walk_2.webp
   AssetGenImage get walk2 =>
-      const AssetGenImage('assets/sprites/customers/10-oto/walk_2.png');
+      const AssetGenImage('assets/sprites/customers/10-oto/walk_2.webp');
 
-  /// File path: assets/sprites/customers/10-oto/walk_3.png
+  /// File path: assets/sprites/customers/10-oto/walk_3.webp
   AssetGenImage get walk3 =>
-      const AssetGenImage('assets/sprites/customers/10-oto/walk_3.png');
+      const AssetGenImage('assets/sprites/customers/10-oto/walk_3.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [
@@ -2033,101 +2038,101 @@ class $AssetsSpritesCustomers10OtoGen {
 class $AssetsSpritesCustomers11AuntHanaGen {
   const $AssetsSpritesCustomers11AuntHanaGen();
 
-  /// File path: assets/sprites/customers/11-aunt-hana/bargain_0.png
+  /// File path: assets/sprites/customers/11-aunt-hana/bargain_0.webp
   AssetGenImage get bargain0 => const AssetGenImage(
-      'assets/sprites/customers/11-aunt-hana/bargain_0.png');
+      'assets/sprites/customers/11-aunt-hana/bargain_0.webp');
 
-  /// File path: assets/sprites/customers/11-aunt-hana/bargain_1.png
+  /// File path: assets/sprites/customers/11-aunt-hana/bargain_1.webp
   AssetGenImage get bargain1 => const AssetGenImage(
-      'assets/sprites/customers/11-aunt-hana/bargain_1.png');
+      'assets/sprites/customers/11-aunt-hana/bargain_1.webp');
 
-  /// File path: assets/sprites/customers/11-aunt-hana/bargain_2.png
+  /// File path: assets/sprites/customers/11-aunt-hana/bargain_2.webp
   AssetGenImage get bargain2 => const AssetGenImage(
-      'assets/sprites/customers/11-aunt-hana/bargain_2.png');
+      'assets/sprites/customers/11-aunt-hana/bargain_2.webp');
 
-  /// File path: assets/sprites/customers/11-aunt-hana/bargain_3.png
+  /// File path: assets/sprites/customers/11-aunt-hana/bargain_3.webp
   AssetGenImage get bargain3 => const AssetGenImage(
-      'assets/sprites/customers/11-aunt-hana/bargain_3.png');
+      'assets/sprites/customers/11-aunt-hana/bargain_3.webp');
 
-  /// File path: assets/sprites/customers/11-aunt-hana/happy_0.png
+  /// File path: assets/sprites/customers/11-aunt-hana/happy_0.webp
   AssetGenImage get happy0 =>
-      const AssetGenImage('assets/sprites/customers/11-aunt-hana/happy_0.png');
+      const AssetGenImage('assets/sprites/customers/11-aunt-hana/happy_0.webp');
 
-  /// File path: assets/sprites/customers/11-aunt-hana/happy_1.png
+  /// File path: assets/sprites/customers/11-aunt-hana/happy_1.webp
   AssetGenImage get happy1 =>
-      const AssetGenImage('assets/sprites/customers/11-aunt-hana/happy_1.png');
+      const AssetGenImage('assets/sprites/customers/11-aunt-hana/happy_1.webp');
 
-  /// File path: assets/sprites/customers/11-aunt-hana/happy_2.png
+  /// File path: assets/sprites/customers/11-aunt-hana/happy_2.webp
   AssetGenImage get happy2 =>
-      const AssetGenImage('assets/sprites/customers/11-aunt-hana/happy_2.png');
+      const AssetGenImage('assets/sprites/customers/11-aunt-hana/happy_2.webp');
 
-  /// File path: assets/sprites/customers/11-aunt-hana/happy_3.png
+  /// File path: assets/sprites/customers/11-aunt-hana/happy_3.webp
   AssetGenImage get happy3 =>
-      const AssetGenImage('assets/sprites/customers/11-aunt-hana/happy_3.png');
+      const AssetGenImage('assets/sprites/customers/11-aunt-hana/happy_3.webp');
 
-  /// File path: assets/sprites/customers/11-aunt-hana/idle_0.png
+  /// File path: assets/sprites/customers/11-aunt-hana/idle_0.webp
   AssetGenImage get idle0 =>
-      const AssetGenImage('assets/sprites/customers/11-aunt-hana/idle_0.png');
+      const AssetGenImage('assets/sprites/customers/11-aunt-hana/idle_0.webp');
 
-  /// File path: assets/sprites/customers/11-aunt-hana/idle_1.png
+  /// File path: assets/sprites/customers/11-aunt-hana/idle_1.webp
   AssetGenImage get idle1 =>
-      const AssetGenImage('assets/sprites/customers/11-aunt-hana/idle_1.png');
+      const AssetGenImage('assets/sprites/customers/11-aunt-hana/idle_1.webp');
 
-  /// File path: assets/sprites/customers/11-aunt-hana/idle_2.png
+  /// File path: assets/sprites/customers/11-aunt-hana/idle_2.webp
   AssetGenImage get idle2 =>
-      const AssetGenImage('assets/sprites/customers/11-aunt-hana/idle_2.png');
+      const AssetGenImage('assets/sprites/customers/11-aunt-hana/idle_2.webp');
 
-  /// File path: assets/sprites/customers/11-aunt-hana/idle_3.png
+  /// File path: assets/sprites/customers/11-aunt-hana/idle_3.webp
   AssetGenImage get idle3 =>
-      const AssetGenImage('assets/sprites/customers/11-aunt-hana/idle_3.png');
+      const AssetGenImage('assets/sprites/customers/11-aunt-hana/idle_3.webp');
 
-  /// File path: assets/sprites/customers/11-aunt-hana/sad_0.png
+  /// File path: assets/sprites/customers/11-aunt-hana/sad_0.webp
   AssetGenImage get sad0 =>
-      const AssetGenImage('assets/sprites/customers/11-aunt-hana/sad_0.png');
+      const AssetGenImage('assets/sprites/customers/11-aunt-hana/sad_0.webp');
 
-  /// File path: assets/sprites/customers/11-aunt-hana/sad_1.png
+  /// File path: assets/sprites/customers/11-aunt-hana/sad_1.webp
   AssetGenImage get sad1 =>
-      const AssetGenImage('assets/sprites/customers/11-aunt-hana/sad_1.png');
+      const AssetGenImage('assets/sprites/customers/11-aunt-hana/sad_1.webp');
 
-  /// File path: assets/sprites/customers/11-aunt-hana/sad_2.png
+  /// File path: assets/sprites/customers/11-aunt-hana/sad_2.webp
   AssetGenImage get sad2 =>
-      const AssetGenImage('assets/sprites/customers/11-aunt-hana/sad_2.png');
+      const AssetGenImage('assets/sprites/customers/11-aunt-hana/sad_2.webp');
 
-  /// File path: assets/sprites/customers/11-aunt-hana/sad_3.png
+  /// File path: assets/sprites/customers/11-aunt-hana/sad_3.webp
   AssetGenImage get sad3 =>
-      const AssetGenImage('assets/sprites/customers/11-aunt-hana/sad_3.png');
+      const AssetGenImage('assets/sprites/customers/11-aunt-hana/sad_3.webp');
 
-  /// File path: assets/sprites/customers/11-aunt-hana/talk_0.png
+  /// File path: assets/sprites/customers/11-aunt-hana/talk_0.webp
   AssetGenImage get talk0 =>
-      const AssetGenImage('assets/sprites/customers/11-aunt-hana/talk_0.png');
+      const AssetGenImage('assets/sprites/customers/11-aunt-hana/talk_0.webp');
 
-  /// File path: assets/sprites/customers/11-aunt-hana/talk_1.png
+  /// File path: assets/sprites/customers/11-aunt-hana/talk_1.webp
   AssetGenImage get talk1 =>
-      const AssetGenImage('assets/sprites/customers/11-aunt-hana/talk_1.png');
+      const AssetGenImage('assets/sprites/customers/11-aunt-hana/talk_1.webp');
 
-  /// File path: assets/sprites/customers/11-aunt-hana/talk_2.png
+  /// File path: assets/sprites/customers/11-aunt-hana/talk_2.webp
   AssetGenImage get talk2 =>
-      const AssetGenImage('assets/sprites/customers/11-aunt-hana/talk_2.png');
+      const AssetGenImage('assets/sprites/customers/11-aunt-hana/talk_2.webp');
 
-  /// File path: assets/sprites/customers/11-aunt-hana/talk_3.png
+  /// File path: assets/sprites/customers/11-aunt-hana/talk_3.webp
   AssetGenImage get talk3 =>
-      const AssetGenImage('assets/sprites/customers/11-aunt-hana/talk_3.png');
+      const AssetGenImage('assets/sprites/customers/11-aunt-hana/talk_3.webp');
 
-  /// File path: assets/sprites/customers/11-aunt-hana/walk_0.png
+  /// File path: assets/sprites/customers/11-aunt-hana/walk_0.webp
   AssetGenImage get walk0 =>
-      const AssetGenImage('assets/sprites/customers/11-aunt-hana/walk_0.png');
+      const AssetGenImage('assets/sprites/customers/11-aunt-hana/walk_0.webp');
 
-  /// File path: assets/sprites/customers/11-aunt-hana/walk_1.png
+  /// File path: assets/sprites/customers/11-aunt-hana/walk_1.webp
   AssetGenImage get walk1 =>
-      const AssetGenImage('assets/sprites/customers/11-aunt-hana/walk_1.png');
+      const AssetGenImage('assets/sprites/customers/11-aunt-hana/walk_1.webp');
 
-  /// File path: assets/sprites/customers/11-aunt-hana/walk_2.png
+  /// File path: assets/sprites/customers/11-aunt-hana/walk_2.webp
   AssetGenImage get walk2 =>
-      const AssetGenImage('assets/sprites/customers/11-aunt-hana/walk_2.png');
+      const AssetGenImage('assets/sprites/customers/11-aunt-hana/walk_2.webp');
 
-  /// File path: assets/sprites/customers/11-aunt-hana/walk_3.png
+  /// File path: assets/sprites/customers/11-aunt-hana/walk_3.webp
   AssetGenImage get walk3 =>
-      const AssetGenImage('assets/sprites/customers/11-aunt-hana/walk_3.png');
+      const AssetGenImage('assets/sprites/customers/11-aunt-hana/walk_3.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [
@@ -2161,101 +2166,101 @@ class $AssetsSpritesCustomers11AuntHanaGen {
 class $AssetsSpritesCustomers12UmeGen {
   const $AssetsSpritesCustomers12UmeGen();
 
-  /// File path: assets/sprites/customers/12-ume/fan_0.png
+  /// File path: assets/sprites/customers/12-ume/fan_0.webp
   AssetGenImage get fan0 =>
-      const AssetGenImage('assets/sprites/customers/12-ume/fan_0.png');
+      const AssetGenImage('assets/sprites/customers/12-ume/fan_0.webp');
 
-  /// File path: assets/sprites/customers/12-ume/fan_1.png
+  /// File path: assets/sprites/customers/12-ume/fan_1.webp
   AssetGenImage get fan1 =>
-      const AssetGenImage('assets/sprites/customers/12-ume/fan_1.png');
+      const AssetGenImage('assets/sprites/customers/12-ume/fan_1.webp');
 
-  /// File path: assets/sprites/customers/12-ume/fan_2.png
+  /// File path: assets/sprites/customers/12-ume/fan_2.webp
   AssetGenImage get fan2 =>
-      const AssetGenImage('assets/sprites/customers/12-ume/fan_2.png');
+      const AssetGenImage('assets/sprites/customers/12-ume/fan_2.webp');
 
-  /// File path: assets/sprites/customers/12-ume/fan_3.png
+  /// File path: assets/sprites/customers/12-ume/fan_3.webp
   AssetGenImage get fan3 =>
-      const AssetGenImage('assets/sprites/customers/12-ume/fan_3.png');
+      const AssetGenImage('assets/sprites/customers/12-ume/fan_3.webp');
 
-  /// File path: assets/sprites/customers/12-ume/happy_0.png
+  /// File path: assets/sprites/customers/12-ume/happy_0.webp
   AssetGenImage get happy0 =>
-      const AssetGenImage('assets/sprites/customers/12-ume/happy_0.png');
+      const AssetGenImage('assets/sprites/customers/12-ume/happy_0.webp');
 
-  /// File path: assets/sprites/customers/12-ume/happy_1.png
+  /// File path: assets/sprites/customers/12-ume/happy_1.webp
   AssetGenImage get happy1 =>
-      const AssetGenImage('assets/sprites/customers/12-ume/happy_1.png');
+      const AssetGenImage('assets/sprites/customers/12-ume/happy_1.webp');
 
-  /// File path: assets/sprites/customers/12-ume/happy_2.png
+  /// File path: assets/sprites/customers/12-ume/happy_2.webp
   AssetGenImage get happy2 =>
-      const AssetGenImage('assets/sprites/customers/12-ume/happy_2.png');
+      const AssetGenImage('assets/sprites/customers/12-ume/happy_2.webp');
 
-  /// File path: assets/sprites/customers/12-ume/happy_3.png
+  /// File path: assets/sprites/customers/12-ume/happy_3.webp
   AssetGenImage get happy3 =>
-      const AssetGenImage('assets/sprites/customers/12-ume/happy_3.png');
+      const AssetGenImage('assets/sprites/customers/12-ume/happy_3.webp');
 
-  /// File path: assets/sprites/customers/12-ume/idle_0.png
+  /// File path: assets/sprites/customers/12-ume/idle_0.webp
   AssetGenImage get idle0 =>
-      const AssetGenImage('assets/sprites/customers/12-ume/idle_0.png');
+      const AssetGenImage('assets/sprites/customers/12-ume/idle_0.webp');
 
-  /// File path: assets/sprites/customers/12-ume/idle_1.png
+  /// File path: assets/sprites/customers/12-ume/idle_1.webp
   AssetGenImage get idle1 =>
-      const AssetGenImage('assets/sprites/customers/12-ume/idle_1.png');
+      const AssetGenImage('assets/sprites/customers/12-ume/idle_1.webp');
 
-  /// File path: assets/sprites/customers/12-ume/idle_2.png
+  /// File path: assets/sprites/customers/12-ume/idle_2.webp
   AssetGenImage get idle2 =>
-      const AssetGenImage('assets/sprites/customers/12-ume/idle_2.png');
+      const AssetGenImage('assets/sprites/customers/12-ume/idle_2.webp');
 
-  /// File path: assets/sprites/customers/12-ume/idle_3.png
+  /// File path: assets/sprites/customers/12-ume/idle_3.webp
   AssetGenImage get idle3 =>
-      const AssetGenImage('assets/sprites/customers/12-ume/idle_3.png');
+      const AssetGenImage('assets/sprites/customers/12-ume/idle_3.webp');
 
-  /// File path: assets/sprites/customers/12-ume/sad_0.png
+  /// File path: assets/sprites/customers/12-ume/sad_0.webp
   AssetGenImage get sad0 =>
-      const AssetGenImage('assets/sprites/customers/12-ume/sad_0.png');
+      const AssetGenImage('assets/sprites/customers/12-ume/sad_0.webp');
 
-  /// File path: assets/sprites/customers/12-ume/sad_1.png
+  /// File path: assets/sprites/customers/12-ume/sad_1.webp
   AssetGenImage get sad1 =>
-      const AssetGenImage('assets/sprites/customers/12-ume/sad_1.png');
+      const AssetGenImage('assets/sprites/customers/12-ume/sad_1.webp');
 
-  /// File path: assets/sprites/customers/12-ume/sad_2.png
+  /// File path: assets/sprites/customers/12-ume/sad_2.webp
   AssetGenImage get sad2 =>
-      const AssetGenImage('assets/sprites/customers/12-ume/sad_2.png');
+      const AssetGenImage('assets/sprites/customers/12-ume/sad_2.webp');
 
-  /// File path: assets/sprites/customers/12-ume/sad_3.png
+  /// File path: assets/sprites/customers/12-ume/sad_3.webp
   AssetGenImage get sad3 =>
-      const AssetGenImage('assets/sprites/customers/12-ume/sad_3.png');
+      const AssetGenImage('assets/sprites/customers/12-ume/sad_3.webp');
 
-  /// File path: assets/sprites/customers/12-ume/talk_0.png
+  /// File path: assets/sprites/customers/12-ume/talk_0.webp
   AssetGenImage get talk0 =>
-      const AssetGenImage('assets/sprites/customers/12-ume/talk_0.png');
+      const AssetGenImage('assets/sprites/customers/12-ume/talk_0.webp');
 
-  /// File path: assets/sprites/customers/12-ume/talk_1.png
+  /// File path: assets/sprites/customers/12-ume/talk_1.webp
   AssetGenImage get talk1 =>
-      const AssetGenImage('assets/sprites/customers/12-ume/talk_1.png');
+      const AssetGenImage('assets/sprites/customers/12-ume/talk_1.webp');
 
-  /// File path: assets/sprites/customers/12-ume/talk_2.png
+  /// File path: assets/sprites/customers/12-ume/talk_2.webp
   AssetGenImage get talk2 =>
-      const AssetGenImage('assets/sprites/customers/12-ume/talk_2.png');
+      const AssetGenImage('assets/sprites/customers/12-ume/talk_2.webp');
 
-  /// File path: assets/sprites/customers/12-ume/talk_3.png
+  /// File path: assets/sprites/customers/12-ume/talk_3.webp
   AssetGenImage get talk3 =>
-      const AssetGenImage('assets/sprites/customers/12-ume/talk_3.png');
+      const AssetGenImage('assets/sprites/customers/12-ume/talk_3.webp');
 
-  /// File path: assets/sprites/customers/12-ume/walk_0.png
+  /// File path: assets/sprites/customers/12-ume/walk_0.webp
   AssetGenImage get walk0 =>
-      const AssetGenImage('assets/sprites/customers/12-ume/walk_0.png');
+      const AssetGenImage('assets/sprites/customers/12-ume/walk_0.webp');
 
-  /// File path: assets/sprites/customers/12-ume/walk_1.png
+  /// File path: assets/sprites/customers/12-ume/walk_1.webp
   AssetGenImage get walk1 =>
-      const AssetGenImage('assets/sprites/customers/12-ume/walk_1.png');
+      const AssetGenImage('assets/sprites/customers/12-ume/walk_1.webp');
 
-  /// File path: assets/sprites/customers/12-ume/walk_2.png
+  /// File path: assets/sprites/customers/12-ume/walk_2.webp
   AssetGenImage get walk2 =>
-      const AssetGenImage('assets/sprites/customers/12-ume/walk_2.png');
+      const AssetGenImage('assets/sprites/customers/12-ume/walk_2.webp');
 
-  /// File path: assets/sprites/customers/12-ume/walk_3.png
+  /// File path: assets/sprites/customers/12-ume/walk_3.webp
   AssetGenImage get walk3 =>
-      const AssetGenImage('assets/sprites/customers/12-ume/walk_3.png');
+      const AssetGenImage('assets/sprites/customers/12-ume/walk_3.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [
@@ -2289,101 +2294,101 @@ class $AssetsSpritesCustomers12UmeGen {
 class $AssetsSpritesCustomers13HaruGen {
   const $AssetsSpritesCustomers13HaruGen();
 
-  /// File path: assets/sprites/customers/13-haru/happy_0.png
+  /// File path: assets/sprites/customers/13-haru/happy_0.webp
   AssetGenImage get happy0 =>
-      const AssetGenImage('assets/sprites/customers/13-haru/happy_0.png');
+      const AssetGenImage('assets/sprites/customers/13-haru/happy_0.webp');
 
-  /// File path: assets/sprites/customers/13-haru/happy_1.png
+  /// File path: assets/sprites/customers/13-haru/happy_1.webp
   AssetGenImage get happy1 =>
-      const AssetGenImage('assets/sprites/customers/13-haru/happy_1.png');
+      const AssetGenImage('assets/sprites/customers/13-haru/happy_1.webp');
 
-  /// File path: assets/sprites/customers/13-haru/happy_2.png
+  /// File path: assets/sprites/customers/13-haru/happy_2.webp
   AssetGenImage get happy2 =>
-      const AssetGenImage('assets/sprites/customers/13-haru/happy_2.png');
+      const AssetGenImage('assets/sprites/customers/13-haru/happy_2.webp');
 
-  /// File path: assets/sprites/customers/13-haru/happy_3.png
+  /// File path: assets/sprites/customers/13-haru/happy_3.webp
   AssetGenImage get happy3 =>
-      const AssetGenImage('assets/sprites/customers/13-haru/happy_3.png');
+      const AssetGenImage('assets/sprites/customers/13-haru/happy_3.webp');
 
-  /// File path: assets/sprites/customers/13-haru/idle_0.png
+  /// File path: assets/sprites/customers/13-haru/idle_0.webp
   AssetGenImage get idle0 =>
-      const AssetGenImage('assets/sprites/customers/13-haru/idle_0.png');
+      const AssetGenImage('assets/sprites/customers/13-haru/idle_0.webp');
 
-  /// File path: assets/sprites/customers/13-haru/idle_1.png
+  /// File path: assets/sprites/customers/13-haru/idle_1.webp
   AssetGenImage get idle1 =>
-      const AssetGenImage('assets/sprites/customers/13-haru/idle_1.png');
+      const AssetGenImage('assets/sprites/customers/13-haru/idle_1.webp');
 
-  /// File path: assets/sprites/customers/13-haru/idle_2.png
+  /// File path: assets/sprites/customers/13-haru/idle_2.webp
   AssetGenImage get idle2 =>
-      const AssetGenImage('assets/sprites/customers/13-haru/idle_2.png');
+      const AssetGenImage('assets/sprites/customers/13-haru/idle_2.webp');
 
-  /// File path: assets/sprites/customers/13-haru/idle_3.png
+  /// File path: assets/sprites/customers/13-haru/idle_3.webp
   AssetGenImage get idle3 =>
-      const AssetGenImage('assets/sprites/customers/13-haru/idle_3.png');
+      const AssetGenImage('assets/sprites/customers/13-haru/idle_3.webp');
 
-  /// File path: assets/sprites/customers/13-haru/sad_0.png
+  /// File path: assets/sprites/customers/13-haru/sad_0.webp
   AssetGenImage get sad0 =>
-      const AssetGenImage('assets/sprites/customers/13-haru/sad_0.png');
+      const AssetGenImage('assets/sprites/customers/13-haru/sad_0.webp');
 
-  /// File path: assets/sprites/customers/13-haru/sad_1.png
+  /// File path: assets/sprites/customers/13-haru/sad_1.webp
   AssetGenImage get sad1 =>
-      const AssetGenImage('assets/sprites/customers/13-haru/sad_1.png');
+      const AssetGenImage('assets/sprites/customers/13-haru/sad_1.webp');
 
-  /// File path: assets/sprites/customers/13-haru/sad_2.png
+  /// File path: assets/sprites/customers/13-haru/sad_2.webp
   AssetGenImage get sad2 =>
-      const AssetGenImage('assets/sprites/customers/13-haru/sad_2.png');
+      const AssetGenImage('assets/sprites/customers/13-haru/sad_2.webp');
 
-  /// File path: assets/sprites/customers/13-haru/sad_3.png
+  /// File path: assets/sprites/customers/13-haru/sad_3.webp
   AssetGenImage get sad3 =>
-      const AssetGenImage('assets/sprites/customers/13-haru/sad_3.png');
+      const AssetGenImage('assets/sprites/customers/13-haru/sad_3.webp');
 
-  /// File path: assets/sprites/customers/13-haru/talk_0.png
+  /// File path: assets/sprites/customers/13-haru/talk_0.webp
   AssetGenImage get talk0 =>
-      const AssetGenImage('assets/sprites/customers/13-haru/talk_0.png');
+      const AssetGenImage('assets/sprites/customers/13-haru/talk_0.webp');
 
-  /// File path: assets/sprites/customers/13-haru/talk_1.png
+  /// File path: assets/sprites/customers/13-haru/talk_1.webp
   AssetGenImage get talk1 =>
-      const AssetGenImage('assets/sprites/customers/13-haru/talk_1.png');
+      const AssetGenImage('assets/sprites/customers/13-haru/talk_1.webp');
 
-  /// File path: assets/sprites/customers/13-haru/talk_2.png
+  /// File path: assets/sprites/customers/13-haru/talk_2.webp
   AssetGenImage get talk2 =>
-      const AssetGenImage('assets/sprites/customers/13-haru/talk_2.png');
+      const AssetGenImage('assets/sprites/customers/13-haru/talk_2.webp');
 
-  /// File path: assets/sprites/customers/13-haru/talk_3.png
+  /// File path: assets/sprites/customers/13-haru/talk_3.webp
   AssetGenImage get talk3 =>
-      const AssetGenImage('assets/sprites/customers/13-haru/talk_3.png');
+      const AssetGenImage('assets/sprites/customers/13-haru/talk_3.webp');
 
-  /// File path: assets/sprites/customers/13-haru/tea_0.png
+  /// File path: assets/sprites/customers/13-haru/tea_0.webp
   AssetGenImage get tea0 =>
-      const AssetGenImage('assets/sprites/customers/13-haru/tea_0.png');
+      const AssetGenImage('assets/sprites/customers/13-haru/tea_0.webp');
 
-  /// File path: assets/sprites/customers/13-haru/tea_1.png
+  /// File path: assets/sprites/customers/13-haru/tea_1.webp
   AssetGenImage get tea1 =>
-      const AssetGenImage('assets/sprites/customers/13-haru/tea_1.png');
+      const AssetGenImage('assets/sprites/customers/13-haru/tea_1.webp');
 
-  /// File path: assets/sprites/customers/13-haru/tea_2.png
+  /// File path: assets/sprites/customers/13-haru/tea_2.webp
   AssetGenImage get tea2 =>
-      const AssetGenImage('assets/sprites/customers/13-haru/tea_2.png');
+      const AssetGenImage('assets/sprites/customers/13-haru/tea_2.webp');
 
-  /// File path: assets/sprites/customers/13-haru/tea_3.png
+  /// File path: assets/sprites/customers/13-haru/tea_3.webp
   AssetGenImage get tea3 =>
-      const AssetGenImage('assets/sprites/customers/13-haru/tea_3.png');
+      const AssetGenImage('assets/sprites/customers/13-haru/tea_3.webp');
 
-  /// File path: assets/sprites/customers/13-haru/walk_0.png
+  /// File path: assets/sprites/customers/13-haru/walk_0.webp
   AssetGenImage get walk0 =>
-      const AssetGenImage('assets/sprites/customers/13-haru/walk_0.png');
+      const AssetGenImage('assets/sprites/customers/13-haru/walk_0.webp');
 
-  /// File path: assets/sprites/customers/13-haru/walk_1.png
+  /// File path: assets/sprites/customers/13-haru/walk_1.webp
   AssetGenImage get walk1 =>
-      const AssetGenImage('assets/sprites/customers/13-haru/walk_1.png');
+      const AssetGenImage('assets/sprites/customers/13-haru/walk_1.webp');
 
-  /// File path: assets/sprites/customers/13-haru/walk_2.png
+  /// File path: assets/sprites/customers/13-haru/walk_2.webp
   AssetGenImage get walk2 =>
-      const AssetGenImage('assets/sprites/customers/13-haru/walk_2.png');
+      const AssetGenImage('assets/sprites/customers/13-haru/walk_2.webp');
 
-  /// File path: assets/sprites/customers/13-haru/walk_3.png
+  /// File path: assets/sprites/customers/13-haru/walk_3.webp
   AssetGenImage get walk3 =>
-      const AssetGenImage('assets/sprites/customers/13-haru/walk_3.png');
+      const AssetGenImage('assets/sprites/customers/13-haru/walk_3.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [
@@ -2417,101 +2422,101 @@ class $AssetsSpritesCustomers13HaruGen {
 class $AssetsSpritesCustomers14MonkGenjoGen {
   const $AssetsSpritesCustomers14MonkGenjoGen();
 
-  /// File path: assets/sprites/customers/14-monk-genjo/happy_0.png
-  AssetGenImage get happy0 =>
-      const AssetGenImage('assets/sprites/customers/14-monk-genjo/happy_0.png');
+  /// File path: assets/sprites/customers/14-monk-genjo/happy_0.webp
+  AssetGenImage get happy0 => const AssetGenImage(
+      'assets/sprites/customers/14-monk-genjo/happy_0.webp');
 
-  /// File path: assets/sprites/customers/14-monk-genjo/happy_1.png
-  AssetGenImage get happy1 =>
-      const AssetGenImage('assets/sprites/customers/14-monk-genjo/happy_1.png');
+  /// File path: assets/sprites/customers/14-monk-genjo/happy_1.webp
+  AssetGenImage get happy1 => const AssetGenImage(
+      'assets/sprites/customers/14-monk-genjo/happy_1.webp');
 
-  /// File path: assets/sprites/customers/14-monk-genjo/happy_2.png
-  AssetGenImage get happy2 =>
-      const AssetGenImage('assets/sprites/customers/14-monk-genjo/happy_2.png');
+  /// File path: assets/sprites/customers/14-monk-genjo/happy_2.webp
+  AssetGenImage get happy2 => const AssetGenImage(
+      'assets/sprites/customers/14-monk-genjo/happy_2.webp');
 
-  /// File path: assets/sprites/customers/14-monk-genjo/happy_3.png
-  AssetGenImage get happy3 =>
-      const AssetGenImage('assets/sprites/customers/14-monk-genjo/happy_3.png');
+  /// File path: assets/sprites/customers/14-monk-genjo/happy_3.webp
+  AssetGenImage get happy3 => const AssetGenImage(
+      'assets/sprites/customers/14-monk-genjo/happy_3.webp');
 
-  /// File path: assets/sprites/customers/14-monk-genjo/idle_0.png
+  /// File path: assets/sprites/customers/14-monk-genjo/idle_0.webp
   AssetGenImage get idle0 =>
-      const AssetGenImage('assets/sprites/customers/14-monk-genjo/idle_0.png');
+      const AssetGenImage('assets/sprites/customers/14-monk-genjo/idle_0.webp');
 
-  /// File path: assets/sprites/customers/14-monk-genjo/idle_1.png
+  /// File path: assets/sprites/customers/14-monk-genjo/idle_1.webp
   AssetGenImage get idle1 =>
-      const AssetGenImage('assets/sprites/customers/14-monk-genjo/idle_1.png');
+      const AssetGenImage('assets/sprites/customers/14-monk-genjo/idle_1.webp');
 
-  /// File path: assets/sprites/customers/14-monk-genjo/idle_2.png
+  /// File path: assets/sprites/customers/14-monk-genjo/idle_2.webp
   AssetGenImage get idle2 =>
-      const AssetGenImage('assets/sprites/customers/14-monk-genjo/idle_2.png');
+      const AssetGenImage('assets/sprites/customers/14-monk-genjo/idle_2.webp');
 
-  /// File path: assets/sprites/customers/14-monk-genjo/idle_3.png
+  /// File path: assets/sprites/customers/14-monk-genjo/idle_3.webp
   AssetGenImage get idle3 =>
-      const AssetGenImage('assets/sprites/customers/14-monk-genjo/idle_3.png');
+      const AssetGenImage('assets/sprites/customers/14-monk-genjo/idle_3.webp');
 
-  /// File path: assets/sprites/customers/14-monk-genjo/meditate_0.png
+  /// File path: assets/sprites/customers/14-monk-genjo/meditate_0.webp
   AssetGenImage get meditate0 => const AssetGenImage(
-      'assets/sprites/customers/14-monk-genjo/meditate_0.png');
+      'assets/sprites/customers/14-monk-genjo/meditate_0.webp');
 
-  /// File path: assets/sprites/customers/14-monk-genjo/meditate_1.png
+  /// File path: assets/sprites/customers/14-monk-genjo/meditate_1.webp
   AssetGenImage get meditate1 => const AssetGenImage(
-      'assets/sprites/customers/14-monk-genjo/meditate_1.png');
+      'assets/sprites/customers/14-monk-genjo/meditate_1.webp');
 
-  /// File path: assets/sprites/customers/14-monk-genjo/meditate_2.png
+  /// File path: assets/sprites/customers/14-monk-genjo/meditate_2.webp
   AssetGenImage get meditate2 => const AssetGenImage(
-      'assets/sprites/customers/14-monk-genjo/meditate_2.png');
+      'assets/sprites/customers/14-monk-genjo/meditate_2.webp');
 
-  /// File path: assets/sprites/customers/14-monk-genjo/meditate_3.png
+  /// File path: assets/sprites/customers/14-monk-genjo/meditate_3.webp
   AssetGenImage get meditate3 => const AssetGenImage(
-      'assets/sprites/customers/14-monk-genjo/meditate_3.png');
+      'assets/sprites/customers/14-monk-genjo/meditate_3.webp');
 
-  /// File path: assets/sprites/customers/14-monk-genjo/sad_0.png
+  /// File path: assets/sprites/customers/14-monk-genjo/sad_0.webp
   AssetGenImage get sad0 =>
-      const AssetGenImage('assets/sprites/customers/14-monk-genjo/sad_0.png');
+      const AssetGenImage('assets/sprites/customers/14-monk-genjo/sad_0.webp');
 
-  /// File path: assets/sprites/customers/14-monk-genjo/sad_1.png
+  /// File path: assets/sprites/customers/14-monk-genjo/sad_1.webp
   AssetGenImage get sad1 =>
-      const AssetGenImage('assets/sprites/customers/14-monk-genjo/sad_1.png');
+      const AssetGenImage('assets/sprites/customers/14-monk-genjo/sad_1.webp');
 
-  /// File path: assets/sprites/customers/14-monk-genjo/sad_2.png
+  /// File path: assets/sprites/customers/14-monk-genjo/sad_2.webp
   AssetGenImage get sad2 =>
-      const AssetGenImage('assets/sprites/customers/14-monk-genjo/sad_2.png');
+      const AssetGenImage('assets/sprites/customers/14-monk-genjo/sad_2.webp');
 
-  /// File path: assets/sprites/customers/14-monk-genjo/sad_3.png
+  /// File path: assets/sprites/customers/14-monk-genjo/sad_3.webp
   AssetGenImage get sad3 =>
-      const AssetGenImage('assets/sprites/customers/14-monk-genjo/sad_3.png');
+      const AssetGenImage('assets/sprites/customers/14-monk-genjo/sad_3.webp');
 
-  /// File path: assets/sprites/customers/14-monk-genjo/talk_0.png
+  /// File path: assets/sprites/customers/14-monk-genjo/talk_0.webp
   AssetGenImage get talk0 =>
-      const AssetGenImage('assets/sprites/customers/14-monk-genjo/talk_0.png');
+      const AssetGenImage('assets/sprites/customers/14-monk-genjo/talk_0.webp');
 
-  /// File path: assets/sprites/customers/14-monk-genjo/talk_1.png
+  /// File path: assets/sprites/customers/14-monk-genjo/talk_1.webp
   AssetGenImage get talk1 =>
-      const AssetGenImage('assets/sprites/customers/14-monk-genjo/talk_1.png');
+      const AssetGenImage('assets/sprites/customers/14-monk-genjo/talk_1.webp');
 
-  /// File path: assets/sprites/customers/14-monk-genjo/talk_2.png
+  /// File path: assets/sprites/customers/14-monk-genjo/talk_2.webp
   AssetGenImage get talk2 =>
-      const AssetGenImage('assets/sprites/customers/14-monk-genjo/talk_2.png');
+      const AssetGenImage('assets/sprites/customers/14-monk-genjo/talk_2.webp');
 
-  /// File path: assets/sprites/customers/14-monk-genjo/talk_3.png
+  /// File path: assets/sprites/customers/14-monk-genjo/talk_3.webp
   AssetGenImage get talk3 =>
-      const AssetGenImage('assets/sprites/customers/14-monk-genjo/talk_3.png');
+      const AssetGenImage('assets/sprites/customers/14-monk-genjo/talk_3.webp');
 
-  /// File path: assets/sprites/customers/14-monk-genjo/walk_0.png
+  /// File path: assets/sprites/customers/14-monk-genjo/walk_0.webp
   AssetGenImage get walk0 =>
-      const AssetGenImage('assets/sprites/customers/14-monk-genjo/walk_0.png');
+      const AssetGenImage('assets/sprites/customers/14-monk-genjo/walk_0.webp');
 
-  /// File path: assets/sprites/customers/14-monk-genjo/walk_1.png
+  /// File path: assets/sprites/customers/14-monk-genjo/walk_1.webp
   AssetGenImage get walk1 =>
-      const AssetGenImage('assets/sprites/customers/14-monk-genjo/walk_1.png');
+      const AssetGenImage('assets/sprites/customers/14-monk-genjo/walk_1.webp');
 
-  /// File path: assets/sprites/customers/14-monk-genjo/walk_2.png
+  /// File path: assets/sprites/customers/14-monk-genjo/walk_2.webp
   AssetGenImage get walk2 =>
-      const AssetGenImage('assets/sprites/customers/14-monk-genjo/walk_2.png');
+      const AssetGenImage('assets/sprites/customers/14-monk-genjo/walk_2.webp');
 
-  /// File path: assets/sprites/customers/14-monk-genjo/walk_3.png
+  /// File path: assets/sprites/customers/14-monk-genjo/walk_3.webp
   AssetGenImage get walk3 =>
-      const AssetGenImage('assets/sprites/customers/14-monk-genjo/walk_3.png');
+      const AssetGenImage('assets/sprites/customers/14-monk-genjo/walk_3.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [
@@ -2545,101 +2550,101 @@ class $AssetsSpritesCustomers14MonkGenjoGen {
 class $AssetsSpritesCustomers15CaptainUmiGen {
   const $AssetsSpritesCustomers15CaptainUmiGen();
 
-  /// File path: assets/sprites/customers/15-captain-umi/happy_0.png
+  /// File path: assets/sprites/customers/15-captain-umi/happy_0.webp
   AssetGenImage get happy0 => const AssetGenImage(
-      'assets/sprites/customers/15-captain-umi/happy_0.png');
+      'assets/sprites/customers/15-captain-umi/happy_0.webp');
 
-  /// File path: assets/sprites/customers/15-captain-umi/happy_1.png
+  /// File path: assets/sprites/customers/15-captain-umi/happy_1.webp
   AssetGenImage get happy1 => const AssetGenImage(
-      'assets/sprites/customers/15-captain-umi/happy_1.png');
+      'assets/sprites/customers/15-captain-umi/happy_1.webp');
 
-  /// File path: assets/sprites/customers/15-captain-umi/happy_2.png
+  /// File path: assets/sprites/customers/15-captain-umi/happy_2.webp
   AssetGenImage get happy2 => const AssetGenImage(
-      'assets/sprites/customers/15-captain-umi/happy_2.png');
+      'assets/sprites/customers/15-captain-umi/happy_2.webp');
 
-  /// File path: assets/sprites/customers/15-captain-umi/happy_3.png
+  /// File path: assets/sprites/customers/15-captain-umi/happy_3.webp
   AssetGenImage get happy3 => const AssetGenImage(
-      'assets/sprites/customers/15-captain-umi/happy_3.png');
+      'assets/sprites/customers/15-captain-umi/happy_3.webp');
 
-  /// File path: assets/sprites/customers/15-captain-umi/idle_0.png
-  AssetGenImage get idle0 =>
-      const AssetGenImage('assets/sprites/customers/15-captain-umi/idle_0.png');
+  /// File path: assets/sprites/customers/15-captain-umi/idle_0.webp
+  AssetGenImage get idle0 => const AssetGenImage(
+      'assets/sprites/customers/15-captain-umi/idle_0.webp');
 
-  /// File path: assets/sprites/customers/15-captain-umi/idle_1.png
-  AssetGenImage get idle1 =>
-      const AssetGenImage('assets/sprites/customers/15-captain-umi/idle_1.png');
+  /// File path: assets/sprites/customers/15-captain-umi/idle_1.webp
+  AssetGenImage get idle1 => const AssetGenImage(
+      'assets/sprites/customers/15-captain-umi/idle_1.webp');
 
-  /// File path: assets/sprites/customers/15-captain-umi/idle_2.png
-  AssetGenImage get idle2 =>
-      const AssetGenImage('assets/sprites/customers/15-captain-umi/idle_2.png');
+  /// File path: assets/sprites/customers/15-captain-umi/idle_2.webp
+  AssetGenImage get idle2 => const AssetGenImage(
+      'assets/sprites/customers/15-captain-umi/idle_2.webp');
 
-  /// File path: assets/sprites/customers/15-captain-umi/idle_3.png
-  AssetGenImage get idle3 =>
-      const AssetGenImage('assets/sprites/customers/15-captain-umi/idle_3.png');
+  /// File path: assets/sprites/customers/15-captain-umi/idle_3.webp
+  AssetGenImage get idle3 => const AssetGenImage(
+      'assets/sprites/customers/15-captain-umi/idle_3.webp');
 
-  /// File path: assets/sprites/customers/15-captain-umi/sad_0.png
+  /// File path: assets/sprites/customers/15-captain-umi/sad_0.webp
   AssetGenImage get sad0 =>
-      const AssetGenImage('assets/sprites/customers/15-captain-umi/sad_0.png');
+      const AssetGenImage('assets/sprites/customers/15-captain-umi/sad_0.webp');
 
-  /// File path: assets/sprites/customers/15-captain-umi/sad_1.png
+  /// File path: assets/sprites/customers/15-captain-umi/sad_1.webp
   AssetGenImage get sad1 =>
-      const AssetGenImage('assets/sprites/customers/15-captain-umi/sad_1.png');
+      const AssetGenImage('assets/sprites/customers/15-captain-umi/sad_1.webp');
 
-  /// File path: assets/sprites/customers/15-captain-umi/sad_2.png
+  /// File path: assets/sprites/customers/15-captain-umi/sad_2.webp
   AssetGenImage get sad2 =>
-      const AssetGenImage('assets/sprites/customers/15-captain-umi/sad_2.png');
+      const AssetGenImage('assets/sprites/customers/15-captain-umi/sad_2.webp');
 
-  /// File path: assets/sprites/customers/15-captain-umi/sad_3.png
+  /// File path: assets/sprites/customers/15-captain-umi/sad_3.webp
   AssetGenImage get sad3 =>
-      const AssetGenImage('assets/sprites/customers/15-captain-umi/sad_3.png');
+      const AssetGenImage('assets/sprites/customers/15-captain-umi/sad_3.webp');
 
-  /// File path: assets/sprites/customers/15-captain-umi/tale_0.png
-  AssetGenImage get tale0 =>
-      const AssetGenImage('assets/sprites/customers/15-captain-umi/tale_0.png');
+  /// File path: assets/sprites/customers/15-captain-umi/tale_0.webp
+  AssetGenImage get tale0 => const AssetGenImage(
+      'assets/sprites/customers/15-captain-umi/tale_0.webp');
 
-  /// File path: assets/sprites/customers/15-captain-umi/tale_1.png
-  AssetGenImage get tale1 =>
-      const AssetGenImage('assets/sprites/customers/15-captain-umi/tale_1.png');
+  /// File path: assets/sprites/customers/15-captain-umi/tale_1.webp
+  AssetGenImage get tale1 => const AssetGenImage(
+      'assets/sprites/customers/15-captain-umi/tale_1.webp');
 
-  /// File path: assets/sprites/customers/15-captain-umi/tale_2.png
-  AssetGenImage get tale2 =>
-      const AssetGenImage('assets/sprites/customers/15-captain-umi/tale_2.png');
+  /// File path: assets/sprites/customers/15-captain-umi/tale_2.webp
+  AssetGenImage get tale2 => const AssetGenImage(
+      'assets/sprites/customers/15-captain-umi/tale_2.webp');
 
-  /// File path: assets/sprites/customers/15-captain-umi/tale_3.png
-  AssetGenImage get tale3 =>
-      const AssetGenImage('assets/sprites/customers/15-captain-umi/tale_3.png');
+  /// File path: assets/sprites/customers/15-captain-umi/tale_3.webp
+  AssetGenImage get tale3 => const AssetGenImage(
+      'assets/sprites/customers/15-captain-umi/tale_3.webp');
 
-  /// File path: assets/sprites/customers/15-captain-umi/talk_0.png
-  AssetGenImage get talk0 =>
-      const AssetGenImage('assets/sprites/customers/15-captain-umi/talk_0.png');
+  /// File path: assets/sprites/customers/15-captain-umi/talk_0.webp
+  AssetGenImage get talk0 => const AssetGenImage(
+      'assets/sprites/customers/15-captain-umi/talk_0.webp');
 
-  /// File path: assets/sprites/customers/15-captain-umi/talk_1.png
-  AssetGenImage get talk1 =>
-      const AssetGenImage('assets/sprites/customers/15-captain-umi/talk_1.png');
+  /// File path: assets/sprites/customers/15-captain-umi/talk_1.webp
+  AssetGenImage get talk1 => const AssetGenImage(
+      'assets/sprites/customers/15-captain-umi/talk_1.webp');
 
-  /// File path: assets/sprites/customers/15-captain-umi/talk_2.png
-  AssetGenImage get talk2 =>
-      const AssetGenImage('assets/sprites/customers/15-captain-umi/talk_2.png');
+  /// File path: assets/sprites/customers/15-captain-umi/talk_2.webp
+  AssetGenImage get talk2 => const AssetGenImage(
+      'assets/sprites/customers/15-captain-umi/talk_2.webp');
 
-  /// File path: assets/sprites/customers/15-captain-umi/talk_3.png
-  AssetGenImage get talk3 =>
-      const AssetGenImage('assets/sprites/customers/15-captain-umi/talk_3.png');
+  /// File path: assets/sprites/customers/15-captain-umi/talk_3.webp
+  AssetGenImage get talk3 => const AssetGenImage(
+      'assets/sprites/customers/15-captain-umi/talk_3.webp');
 
-  /// File path: assets/sprites/customers/15-captain-umi/walk_0.png
-  AssetGenImage get walk0 =>
-      const AssetGenImage('assets/sprites/customers/15-captain-umi/walk_0.png');
+  /// File path: assets/sprites/customers/15-captain-umi/walk_0.webp
+  AssetGenImage get walk0 => const AssetGenImage(
+      'assets/sprites/customers/15-captain-umi/walk_0.webp');
 
-  /// File path: assets/sprites/customers/15-captain-umi/walk_1.png
-  AssetGenImage get walk1 =>
-      const AssetGenImage('assets/sprites/customers/15-captain-umi/walk_1.png');
+  /// File path: assets/sprites/customers/15-captain-umi/walk_1.webp
+  AssetGenImage get walk1 => const AssetGenImage(
+      'assets/sprites/customers/15-captain-umi/walk_1.webp');
 
-  /// File path: assets/sprites/customers/15-captain-umi/walk_2.png
-  AssetGenImage get walk2 =>
-      const AssetGenImage('assets/sprites/customers/15-captain-umi/walk_2.png');
+  /// File path: assets/sprites/customers/15-captain-umi/walk_2.webp
+  AssetGenImage get walk2 => const AssetGenImage(
+      'assets/sprites/customers/15-captain-umi/walk_2.webp');
 
-  /// File path: assets/sprites/customers/15-captain-umi/walk_3.png
-  AssetGenImage get walk3 =>
-      const AssetGenImage('assets/sprites/customers/15-captain-umi/walk_3.png');
+  /// File path: assets/sprites/customers/15-captain-umi/walk_3.webp
+  AssetGenImage get walk3 => const AssetGenImage(
+      'assets/sprites/customers/15-captain-umi/walk_3.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [
@@ -2673,101 +2678,101 @@ class $AssetsSpritesCustomers15CaptainUmiGen {
 class $AssetsSpritesCustomers16YukikoGen {
   const $AssetsSpritesCustomers16YukikoGen();
 
-  /// File path: assets/sprites/customers/16-yukiko/happy_0.png
+  /// File path: assets/sprites/customers/16-yukiko/happy_0.webp
   AssetGenImage get happy0 =>
-      const AssetGenImage('assets/sprites/customers/16-yukiko/happy_0.png');
+      const AssetGenImage('assets/sprites/customers/16-yukiko/happy_0.webp');
 
-  /// File path: assets/sprites/customers/16-yukiko/happy_1.png
+  /// File path: assets/sprites/customers/16-yukiko/happy_1.webp
   AssetGenImage get happy1 =>
-      const AssetGenImage('assets/sprites/customers/16-yukiko/happy_1.png');
+      const AssetGenImage('assets/sprites/customers/16-yukiko/happy_1.webp');
 
-  /// File path: assets/sprites/customers/16-yukiko/happy_2.png
+  /// File path: assets/sprites/customers/16-yukiko/happy_2.webp
   AssetGenImage get happy2 =>
-      const AssetGenImage('assets/sprites/customers/16-yukiko/happy_2.png');
+      const AssetGenImage('assets/sprites/customers/16-yukiko/happy_2.webp');
 
-  /// File path: assets/sprites/customers/16-yukiko/happy_3.png
+  /// File path: assets/sprites/customers/16-yukiko/happy_3.webp
   AssetGenImage get happy3 =>
-      const AssetGenImage('assets/sprites/customers/16-yukiko/happy_3.png');
+      const AssetGenImage('assets/sprites/customers/16-yukiko/happy_3.webp');
 
-  /// File path: assets/sprites/customers/16-yukiko/idle_0.png
+  /// File path: assets/sprites/customers/16-yukiko/idle_0.webp
   AssetGenImage get idle0 =>
-      const AssetGenImage('assets/sprites/customers/16-yukiko/idle_0.png');
+      const AssetGenImage('assets/sprites/customers/16-yukiko/idle_0.webp');
 
-  /// File path: assets/sprites/customers/16-yukiko/idle_1.png
+  /// File path: assets/sprites/customers/16-yukiko/idle_1.webp
   AssetGenImage get idle1 =>
-      const AssetGenImage('assets/sprites/customers/16-yukiko/idle_1.png');
+      const AssetGenImage('assets/sprites/customers/16-yukiko/idle_1.webp');
 
-  /// File path: assets/sprites/customers/16-yukiko/idle_2.png
+  /// File path: assets/sprites/customers/16-yukiko/idle_2.webp
   AssetGenImage get idle2 =>
-      const AssetGenImage('assets/sprites/customers/16-yukiko/idle_2.png');
+      const AssetGenImage('assets/sprites/customers/16-yukiko/idle_2.webp');
 
-  /// File path: assets/sprites/customers/16-yukiko/idle_3.png
+  /// File path: assets/sprites/customers/16-yukiko/idle_3.webp
   AssetGenImage get idle3 =>
-      const AssetGenImage('assets/sprites/customers/16-yukiko/idle_3.png');
+      const AssetGenImage('assets/sprites/customers/16-yukiko/idle_3.webp');
 
-  /// File path: assets/sprites/customers/16-yukiko/sad_0.png
+  /// File path: assets/sprites/customers/16-yukiko/sad_0.webp
   AssetGenImage get sad0 =>
-      const AssetGenImage('assets/sprites/customers/16-yukiko/sad_0.png');
+      const AssetGenImage('assets/sprites/customers/16-yukiko/sad_0.webp');
 
-  /// File path: assets/sprites/customers/16-yukiko/sad_1.png
+  /// File path: assets/sprites/customers/16-yukiko/sad_1.webp
   AssetGenImage get sad1 =>
-      const AssetGenImage('assets/sprites/customers/16-yukiko/sad_1.png');
+      const AssetGenImage('assets/sprites/customers/16-yukiko/sad_1.webp');
 
-  /// File path: assets/sprites/customers/16-yukiko/sad_2.png
+  /// File path: assets/sprites/customers/16-yukiko/sad_2.webp
   AssetGenImage get sad2 =>
-      const AssetGenImage('assets/sprites/customers/16-yukiko/sad_2.png');
+      const AssetGenImage('assets/sprites/customers/16-yukiko/sad_2.webp');
 
-  /// File path: assets/sprites/customers/16-yukiko/sad_3.png
+  /// File path: assets/sprites/customers/16-yukiko/sad_3.webp
   AssetGenImage get sad3 =>
-      const AssetGenImage('assets/sprites/customers/16-yukiko/sad_3.png');
+      const AssetGenImage('assets/sprites/customers/16-yukiko/sad_3.webp');
 
-  /// File path: assets/sprites/customers/16-yukiko/stretch_0.png
+  /// File path: assets/sprites/customers/16-yukiko/stretch_0.webp
   AssetGenImage get stretch0 =>
-      const AssetGenImage('assets/sprites/customers/16-yukiko/stretch_0.png');
+      const AssetGenImage('assets/sprites/customers/16-yukiko/stretch_0.webp');
 
-  /// File path: assets/sprites/customers/16-yukiko/stretch_1.png
+  /// File path: assets/sprites/customers/16-yukiko/stretch_1.webp
   AssetGenImage get stretch1 =>
-      const AssetGenImage('assets/sprites/customers/16-yukiko/stretch_1.png');
+      const AssetGenImage('assets/sprites/customers/16-yukiko/stretch_1.webp');
 
-  /// File path: assets/sprites/customers/16-yukiko/stretch_2.png
+  /// File path: assets/sprites/customers/16-yukiko/stretch_2.webp
   AssetGenImage get stretch2 =>
-      const AssetGenImage('assets/sprites/customers/16-yukiko/stretch_2.png');
+      const AssetGenImage('assets/sprites/customers/16-yukiko/stretch_2.webp');
 
-  /// File path: assets/sprites/customers/16-yukiko/stretch_3.png
+  /// File path: assets/sprites/customers/16-yukiko/stretch_3.webp
   AssetGenImage get stretch3 =>
-      const AssetGenImage('assets/sprites/customers/16-yukiko/stretch_3.png');
+      const AssetGenImage('assets/sprites/customers/16-yukiko/stretch_3.webp');
 
-  /// File path: assets/sprites/customers/16-yukiko/talk_0.png
+  /// File path: assets/sprites/customers/16-yukiko/talk_0.webp
   AssetGenImage get talk0 =>
-      const AssetGenImage('assets/sprites/customers/16-yukiko/talk_0.png');
+      const AssetGenImage('assets/sprites/customers/16-yukiko/talk_0.webp');
 
-  /// File path: assets/sprites/customers/16-yukiko/talk_1.png
+  /// File path: assets/sprites/customers/16-yukiko/talk_1.webp
   AssetGenImage get talk1 =>
-      const AssetGenImage('assets/sprites/customers/16-yukiko/talk_1.png');
+      const AssetGenImage('assets/sprites/customers/16-yukiko/talk_1.webp');
 
-  /// File path: assets/sprites/customers/16-yukiko/talk_2.png
+  /// File path: assets/sprites/customers/16-yukiko/talk_2.webp
   AssetGenImage get talk2 =>
-      const AssetGenImage('assets/sprites/customers/16-yukiko/talk_2.png');
+      const AssetGenImage('assets/sprites/customers/16-yukiko/talk_2.webp');
 
-  /// File path: assets/sprites/customers/16-yukiko/talk_3.png
+  /// File path: assets/sprites/customers/16-yukiko/talk_3.webp
   AssetGenImage get talk3 =>
-      const AssetGenImage('assets/sprites/customers/16-yukiko/talk_3.png');
+      const AssetGenImage('assets/sprites/customers/16-yukiko/talk_3.webp');
 
-  /// File path: assets/sprites/customers/16-yukiko/walk_0.png
+  /// File path: assets/sprites/customers/16-yukiko/walk_0.webp
   AssetGenImage get walk0 =>
-      const AssetGenImage('assets/sprites/customers/16-yukiko/walk_0.png');
+      const AssetGenImage('assets/sprites/customers/16-yukiko/walk_0.webp');
 
-  /// File path: assets/sprites/customers/16-yukiko/walk_1.png
+  /// File path: assets/sprites/customers/16-yukiko/walk_1.webp
   AssetGenImage get walk1 =>
-      const AssetGenImage('assets/sprites/customers/16-yukiko/walk_1.png');
+      const AssetGenImage('assets/sprites/customers/16-yukiko/walk_1.webp');
 
-  /// File path: assets/sprites/customers/16-yukiko/walk_2.png
+  /// File path: assets/sprites/customers/16-yukiko/walk_2.webp
   AssetGenImage get walk2 =>
-      const AssetGenImage('assets/sprites/customers/16-yukiko/walk_2.png');
+      const AssetGenImage('assets/sprites/customers/16-yukiko/walk_2.webp');
 
-  /// File path: assets/sprites/customers/16-yukiko/walk_3.png
+  /// File path: assets/sprites/customers/16-yukiko/walk_3.webp
   AssetGenImage get walk3 =>
-      const AssetGenImage('assets/sprites/customers/16-yukiko/walk_3.png');
+      const AssetGenImage('assets/sprites/customers/16-yukiko/walk_3.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [
@@ -2801,101 +2806,101 @@ class $AssetsSpritesCustomers16YukikoGen {
 class $AssetsSpritesCustomers17ChefKumaGen {
   const $AssetsSpritesCustomers17ChefKumaGen();
 
-  /// File path: assets/sprites/customers/17-chef-kuma/happy_0.png
+  /// File path: assets/sprites/customers/17-chef-kuma/happy_0.webp
   AssetGenImage get happy0 =>
-      const AssetGenImage('assets/sprites/customers/17-chef-kuma/happy_0.png');
+      const AssetGenImage('assets/sprites/customers/17-chef-kuma/happy_0.webp');
 
-  /// File path: assets/sprites/customers/17-chef-kuma/happy_1.png
+  /// File path: assets/sprites/customers/17-chef-kuma/happy_1.webp
   AssetGenImage get happy1 =>
-      const AssetGenImage('assets/sprites/customers/17-chef-kuma/happy_1.png');
+      const AssetGenImage('assets/sprites/customers/17-chef-kuma/happy_1.webp');
 
-  /// File path: assets/sprites/customers/17-chef-kuma/happy_2.png
+  /// File path: assets/sprites/customers/17-chef-kuma/happy_2.webp
   AssetGenImage get happy2 =>
-      const AssetGenImage('assets/sprites/customers/17-chef-kuma/happy_2.png');
+      const AssetGenImage('assets/sprites/customers/17-chef-kuma/happy_2.webp');
 
-  /// File path: assets/sprites/customers/17-chef-kuma/happy_3.png
+  /// File path: assets/sprites/customers/17-chef-kuma/happy_3.webp
   AssetGenImage get happy3 =>
-      const AssetGenImage('assets/sprites/customers/17-chef-kuma/happy_3.png');
+      const AssetGenImage('assets/sprites/customers/17-chef-kuma/happy_3.webp');
 
-  /// File path: assets/sprites/customers/17-chef-kuma/idle_0.png
+  /// File path: assets/sprites/customers/17-chef-kuma/idle_0.webp
   AssetGenImage get idle0 =>
-      const AssetGenImage('assets/sprites/customers/17-chef-kuma/idle_0.png');
+      const AssetGenImage('assets/sprites/customers/17-chef-kuma/idle_0.webp');
 
-  /// File path: assets/sprites/customers/17-chef-kuma/idle_1.png
+  /// File path: assets/sprites/customers/17-chef-kuma/idle_1.webp
   AssetGenImage get idle1 =>
-      const AssetGenImage('assets/sprites/customers/17-chef-kuma/idle_1.png');
+      const AssetGenImage('assets/sprites/customers/17-chef-kuma/idle_1.webp');
 
-  /// File path: assets/sprites/customers/17-chef-kuma/idle_2.png
+  /// File path: assets/sprites/customers/17-chef-kuma/idle_2.webp
   AssetGenImage get idle2 =>
-      const AssetGenImage('assets/sprites/customers/17-chef-kuma/idle_2.png');
+      const AssetGenImage('assets/sprites/customers/17-chef-kuma/idle_2.webp');
 
-  /// File path: assets/sprites/customers/17-chef-kuma/idle_3.png
+  /// File path: assets/sprites/customers/17-chef-kuma/idle_3.webp
   AssetGenImage get idle3 =>
-      const AssetGenImage('assets/sprites/customers/17-chef-kuma/idle_3.png');
+      const AssetGenImage('assets/sprites/customers/17-chef-kuma/idle_3.webp');
 
-  /// File path: assets/sprites/customers/17-chef-kuma/sad_0.png
+  /// File path: assets/sprites/customers/17-chef-kuma/sad_0.webp
   AssetGenImage get sad0 =>
-      const AssetGenImage('assets/sprites/customers/17-chef-kuma/sad_0.png');
+      const AssetGenImage('assets/sprites/customers/17-chef-kuma/sad_0.webp');
 
-  /// File path: assets/sprites/customers/17-chef-kuma/sad_1.png
+  /// File path: assets/sprites/customers/17-chef-kuma/sad_1.webp
   AssetGenImage get sad1 =>
-      const AssetGenImage('assets/sprites/customers/17-chef-kuma/sad_1.png');
+      const AssetGenImage('assets/sprites/customers/17-chef-kuma/sad_1.webp');
 
-  /// File path: assets/sprites/customers/17-chef-kuma/sad_2.png
+  /// File path: assets/sprites/customers/17-chef-kuma/sad_2.webp
   AssetGenImage get sad2 =>
-      const AssetGenImage('assets/sprites/customers/17-chef-kuma/sad_2.png');
+      const AssetGenImage('assets/sprites/customers/17-chef-kuma/sad_2.webp');
 
-  /// File path: assets/sprites/customers/17-chef-kuma/sad_3.png
+  /// File path: assets/sprites/customers/17-chef-kuma/sad_3.webp
   AssetGenImage get sad3 =>
-      const AssetGenImage('assets/sprites/customers/17-chef-kuma/sad_3.png');
+      const AssetGenImage('assets/sprites/customers/17-chef-kuma/sad_3.webp');
 
-  /// File path: assets/sprites/customers/17-chef-kuma/talk_0.png
+  /// File path: assets/sprites/customers/17-chef-kuma/talk_0.webp
   AssetGenImage get talk0 =>
-      const AssetGenImage('assets/sprites/customers/17-chef-kuma/talk_0.png');
+      const AssetGenImage('assets/sprites/customers/17-chef-kuma/talk_0.webp');
 
-  /// File path: assets/sprites/customers/17-chef-kuma/talk_1.png
+  /// File path: assets/sprites/customers/17-chef-kuma/talk_1.webp
   AssetGenImage get talk1 =>
-      const AssetGenImage('assets/sprites/customers/17-chef-kuma/talk_1.png');
+      const AssetGenImage('assets/sprites/customers/17-chef-kuma/talk_1.webp');
 
-  /// File path: assets/sprites/customers/17-chef-kuma/talk_2.png
+  /// File path: assets/sprites/customers/17-chef-kuma/talk_2.webp
   AssetGenImage get talk2 =>
-      const AssetGenImage('assets/sprites/customers/17-chef-kuma/talk_2.png');
+      const AssetGenImage('assets/sprites/customers/17-chef-kuma/talk_2.webp');
 
-  /// File path: assets/sprites/customers/17-chef-kuma/talk_3.png
+  /// File path: assets/sprites/customers/17-chef-kuma/talk_3.webp
   AssetGenImage get talk3 =>
-      const AssetGenImage('assets/sprites/customers/17-chef-kuma/talk_3.png');
+      const AssetGenImage('assets/sprites/customers/17-chef-kuma/talk_3.webp');
 
-  /// File path: assets/sprites/customers/17-chef-kuma/taste_0.png
+  /// File path: assets/sprites/customers/17-chef-kuma/taste_0.webp
   AssetGenImage get taste0 =>
-      const AssetGenImage('assets/sprites/customers/17-chef-kuma/taste_0.png');
+      const AssetGenImage('assets/sprites/customers/17-chef-kuma/taste_0.webp');
 
-  /// File path: assets/sprites/customers/17-chef-kuma/taste_1.png
+  /// File path: assets/sprites/customers/17-chef-kuma/taste_1.webp
   AssetGenImage get taste1 =>
-      const AssetGenImage('assets/sprites/customers/17-chef-kuma/taste_1.png');
+      const AssetGenImage('assets/sprites/customers/17-chef-kuma/taste_1.webp');
 
-  /// File path: assets/sprites/customers/17-chef-kuma/taste_2.png
+  /// File path: assets/sprites/customers/17-chef-kuma/taste_2.webp
   AssetGenImage get taste2 =>
-      const AssetGenImage('assets/sprites/customers/17-chef-kuma/taste_2.png');
+      const AssetGenImage('assets/sprites/customers/17-chef-kuma/taste_2.webp');
 
-  /// File path: assets/sprites/customers/17-chef-kuma/taste_3.png
+  /// File path: assets/sprites/customers/17-chef-kuma/taste_3.webp
   AssetGenImage get taste3 =>
-      const AssetGenImage('assets/sprites/customers/17-chef-kuma/taste_3.png');
+      const AssetGenImage('assets/sprites/customers/17-chef-kuma/taste_3.webp');
 
-  /// File path: assets/sprites/customers/17-chef-kuma/walk_0.png
+  /// File path: assets/sprites/customers/17-chef-kuma/walk_0.webp
   AssetGenImage get walk0 =>
-      const AssetGenImage('assets/sprites/customers/17-chef-kuma/walk_0.png');
+      const AssetGenImage('assets/sprites/customers/17-chef-kuma/walk_0.webp');
 
-  /// File path: assets/sprites/customers/17-chef-kuma/walk_1.png
+  /// File path: assets/sprites/customers/17-chef-kuma/walk_1.webp
   AssetGenImage get walk1 =>
-      const AssetGenImage('assets/sprites/customers/17-chef-kuma/walk_1.png');
+      const AssetGenImage('assets/sprites/customers/17-chef-kuma/walk_1.webp');
 
-  /// File path: assets/sprites/customers/17-chef-kuma/walk_2.png
+  /// File path: assets/sprites/customers/17-chef-kuma/walk_2.webp
   AssetGenImage get walk2 =>
-      const AssetGenImage('assets/sprites/customers/17-chef-kuma/walk_2.png');
+      const AssetGenImage('assets/sprites/customers/17-chef-kuma/walk_2.webp');
 
-  /// File path: assets/sprites/customers/17-chef-kuma/walk_3.png
+  /// File path: assets/sprites/customers/17-chef-kuma/walk_3.webp
   AssetGenImage get walk3 =>
-      const AssetGenImage('assets/sprites/customers/17-chef-kuma/walk_3.png');
+      const AssetGenImage('assets/sprites/customers/17-chef-kuma/walk_3.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [
@@ -2929,85 +2934,85 @@ class $AssetsSpritesCustomers17ChefKumaGen {
 class $AssetsSpritesObstacles18BossCatJokerGen {
   const $AssetsSpritesObstacles18BossCatJokerGen();
 
-  /// File path: assets/sprites/obstacles/18-boss-cat-joker/eat_0.png
+  /// File path: assets/sprites/obstacles/18-boss-cat-joker/eat_0.webp
   AssetGenImage get eat0 => const AssetGenImage(
-      'assets/sprites/obstacles/18-boss-cat-joker/eat_0.png');
+      'assets/sprites/obstacles/18-boss-cat-joker/eat_0.webp');
 
-  /// File path: assets/sprites/obstacles/18-boss-cat-joker/eat_1.png
+  /// File path: assets/sprites/obstacles/18-boss-cat-joker/eat_1.webp
   AssetGenImage get eat1 => const AssetGenImage(
-      'assets/sprites/obstacles/18-boss-cat-joker/eat_1.png');
+      'assets/sprites/obstacles/18-boss-cat-joker/eat_1.webp');
 
-  /// File path: assets/sprites/obstacles/18-boss-cat-joker/eat_2.png
+  /// File path: assets/sprites/obstacles/18-boss-cat-joker/eat_2.webp
   AssetGenImage get eat2 => const AssetGenImage(
-      'assets/sprites/obstacles/18-boss-cat-joker/eat_2.png');
+      'assets/sprites/obstacles/18-boss-cat-joker/eat_2.webp');
 
-  /// File path: assets/sprites/obstacles/18-boss-cat-joker/eat_3.png
+  /// File path: assets/sprites/obstacles/18-boss-cat-joker/eat_3.webp
   AssetGenImage get eat3 => const AssetGenImage(
-      'assets/sprites/obstacles/18-boss-cat-joker/eat_3.png');
+      'assets/sprites/obstacles/18-boss-cat-joker/eat_3.webp');
 
-  /// File path: assets/sprites/obstacles/18-boss-cat-joker/flee_0.png
+  /// File path: assets/sprites/obstacles/18-boss-cat-joker/flee_0.webp
   AssetGenImage get flee0 => const AssetGenImage(
-      'assets/sprites/obstacles/18-boss-cat-joker/flee_0.png');
+      'assets/sprites/obstacles/18-boss-cat-joker/flee_0.webp');
 
-  /// File path: assets/sprites/obstacles/18-boss-cat-joker/flee_1.png
+  /// File path: assets/sprites/obstacles/18-boss-cat-joker/flee_1.webp
   AssetGenImage get flee1 => const AssetGenImage(
-      'assets/sprites/obstacles/18-boss-cat-joker/flee_1.png');
+      'assets/sprites/obstacles/18-boss-cat-joker/flee_1.webp');
 
-  /// File path: assets/sprites/obstacles/18-boss-cat-joker/flee_2.png
+  /// File path: assets/sprites/obstacles/18-boss-cat-joker/flee_2.webp
   AssetGenImage get flee2 => const AssetGenImage(
-      'assets/sprites/obstacles/18-boss-cat-joker/flee_2.png');
+      'assets/sprites/obstacles/18-boss-cat-joker/flee_2.webp');
 
-  /// File path: assets/sprites/obstacles/18-boss-cat-joker/flee_3.png
+  /// File path: assets/sprites/obstacles/18-boss-cat-joker/flee_3.webp
   AssetGenImage get flee3 => const AssetGenImage(
-      'assets/sprites/obstacles/18-boss-cat-joker/flee_3.png');
+      'assets/sprites/obstacles/18-boss-cat-joker/flee_3.webp');
 
-  /// File path: assets/sprites/obstacles/18-boss-cat-joker/hit_0.png
+  /// File path: assets/sprites/obstacles/18-boss-cat-joker/hit_0.webp
   AssetGenImage get hit0 => const AssetGenImage(
-      'assets/sprites/obstacles/18-boss-cat-joker/hit_0.png');
+      'assets/sprites/obstacles/18-boss-cat-joker/hit_0.webp');
 
-  /// File path: assets/sprites/obstacles/18-boss-cat-joker/hit_1.png
+  /// File path: assets/sprites/obstacles/18-boss-cat-joker/hit_1.webp
   AssetGenImage get hit1 => const AssetGenImage(
-      'assets/sprites/obstacles/18-boss-cat-joker/hit_1.png');
+      'assets/sprites/obstacles/18-boss-cat-joker/hit_1.webp');
 
-  /// File path: assets/sprites/obstacles/18-boss-cat-joker/hit_2.png
+  /// File path: assets/sprites/obstacles/18-boss-cat-joker/hit_2.webp
   AssetGenImage get hit2 => const AssetGenImage(
-      'assets/sprites/obstacles/18-boss-cat-joker/hit_2.png');
+      'assets/sprites/obstacles/18-boss-cat-joker/hit_2.webp');
 
-  /// File path: assets/sprites/obstacles/18-boss-cat-joker/hit_3.png
+  /// File path: assets/sprites/obstacles/18-boss-cat-joker/hit_3.webp
   AssetGenImage get hit3 => const AssetGenImage(
-      'assets/sprites/obstacles/18-boss-cat-joker/hit_3.png');
+      'assets/sprites/obstacles/18-boss-cat-joker/hit_3.webp');
 
-  /// File path: assets/sprites/obstacles/18-boss-cat-joker/idle_0.png
+  /// File path: assets/sprites/obstacles/18-boss-cat-joker/idle_0.webp
   AssetGenImage get idle0 => const AssetGenImage(
-      'assets/sprites/obstacles/18-boss-cat-joker/idle_0.png');
+      'assets/sprites/obstacles/18-boss-cat-joker/idle_0.webp');
 
-  /// File path: assets/sprites/obstacles/18-boss-cat-joker/idle_1.png
+  /// File path: assets/sprites/obstacles/18-boss-cat-joker/idle_1.webp
   AssetGenImage get idle1 => const AssetGenImage(
-      'assets/sprites/obstacles/18-boss-cat-joker/idle_1.png');
+      'assets/sprites/obstacles/18-boss-cat-joker/idle_1.webp');
 
-  /// File path: assets/sprites/obstacles/18-boss-cat-joker/idle_2.png
+  /// File path: assets/sprites/obstacles/18-boss-cat-joker/idle_2.webp
   AssetGenImage get idle2 => const AssetGenImage(
-      'assets/sprites/obstacles/18-boss-cat-joker/idle_2.png');
+      'assets/sprites/obstacles/18-boss-cat-joker/idle_2.webp');
 
-  /// File path: assets/sprites/obstacles/18-boss-cat-joker/idle_3.png
+  /// File path: assets/sprites/obstacles/18-boss-cat-joker/idle_3.webp
   AssetGenImage get idle3 => const AssetGenImage(
-      'assets/sprites/obstacles/18-boss-cat-joker/idle_3.png');
+      'assets/sprites/obstacles/18-boss-cat-joker/idle_3.webp');
 
-  /// File path: assets/sprites/obstacles/18-boss-cat-joker/prowl_0.png
+  /// File path: assets/sprites/obstacles/18-boss-cat-joker/prowl_0.webp
   AssetGenImage get prowl0 => const AssetGenImage(
-      'assets/sprites/obstacles/18-boss-cat-joker/prowl_0.png');
+      'assets/sprites/obstacles/18-boss-cat-joker/prowl_0.webp');
 
-  /// File path: assets/sprites/obstacles/18-boss-cat-joker/prowl_1.png
+  /// File path: assets/sprites/obstacles/18-boss-cat-joker/prowl_1.webp
   AssetGenImage get prowl1 => const AssetGenImage(
-      'assets/sprites/obstacles/18-boss-cat-joker/prowl_1.png');
+      'assets/sprites/obstacles/18-boss-cat-joker/prowl_1.webp');
 
-  /// File path: assets/sprites/obstacles/18-boss-cat-joker/prowl_2.png
+  /// File path: assets/sprites/obstacles/18-boss-cat-joker/prowl_2.webp
   AssetGenImage get prowl2 => const AssetGenImage(
-      'assets/sprites/obstacles/18-boss-cat-joker/prowl_2.png');
+      'assets/sprites/obstacles/18-boss-cat-joker/prowl_2.webp');
 
-  /// File path: assets/sprites/obstacles/18-boss-cat-joker/prowl_3.png
+  /// File path: assets/sprites/obstacles/18-boss-cat-joker/prowl_3.webp
   AssetGenImage get prowl3 => const AssetGenImage(
-      'assets/sprites/obstacles/18-boss-cat-joker/prowl_3.png');
+      'assets/sprites/obstacles/18-boss-cat-joker/prowl_3.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [

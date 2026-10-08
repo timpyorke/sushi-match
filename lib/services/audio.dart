@@ -1,9 +1,9 @@
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/foundation.dart';
 
-/// Sound effects, one file each under assets/audio/. The shipped files are
-/// synthesised placeholders (tool/gen_sounds.dart); replace any of them with
-/// real audio of the same name.
+/// Sound effects, one .m4a each under assets/audio/. The shipped files are
+/// synthesised placeholders (tool/gen_sounds.dart + tool/to_m4a.sh); replace
+/// any of them with real audio of the same name.
 enum Sfx {
   tap('tap'),
   swap('swap'),
@@ -44,7 +44,7 @@ enum Sfx {
 /// (see [configure]). Silent until [init] runs, so unit and widget tests (which
 /// have no audio plugin) need no setup.
 abstract final class Audio {
-  /// One looping track per restaurant (assets/audio/bgm_<id>.wav).
+  /// One looping track per restaurant (assets/audio/bgm_<id>.m4a).
   static const tracks = ['tsukiji', 'osaka', 'kyoto', 'hokkaido'];
 
   /// Restaurants without a track of their own borrow one until real music is
@@ -65,7 +65,7 @@ abstract final class Audio {
   /// The track a restaurant plays.
   static String trackFor(String shopId) => _alias[shopId] ?? shopId;
 
-  static String _file(String track) => 'bgm_$track.wav';
+  static String _file(String track) => 'bgm_$track.m4a';
 
   static String _track = 'tsukiji';
   static const _sfxVolume = 0.7;
@@ -101,11 +101,11 @@ abstract final class Audio {
   static Future<void> init() async {
     try {
       await FlameAudio.audioCache.loadAll([
-        for (final s in Sfx.values) '${s.file}.wav',
+        for (final s in Sfx.values) '${s.file}.m4a',
         for (final t in tracks) _file(t),
       ]);
       for (final s in Sfx.values) {
-        _pools[s] = await FlameAudio.createPool('${s.file}.wav',
+        _pools[s] = await FlameAudio.createPool('${s.file}.m4a',
             maxPlayers: _busy.contains(s) ? 3 : 2);
       }
       // Pauses the music when the app goes to the background.

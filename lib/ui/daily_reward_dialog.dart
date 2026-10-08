@@ -33,7 +33,7 @@ class _DailyRewardDialogState extends ConsumerState<DailyRewardDialog> {
   Widget build(BuildContext context) {
     return GameDialog(
       title: L10n.t('dailyTitle'),
-      titleIcon: Image(image: UiArt.gift, width: 28, height: 28),
+      titleIcon: UiArt.sized(UiArt.gift, 28),
       width: 360,
       content: SizedBox(
         width: 280,
@@ -56,11 +56,9 @@ class _DailyRewardDialogState extends ConsumerState<DailyRewardDialog> {
             ? GameDialogButton(
                 primary: true,
                 onPressed: () => Navigator.pop(context),
-                child: Image(image: UiArt.check, width: 24, height: 24))
+                child: UiArt.sized(UiArt.check, 24))
             : GameDialogButton(
-                primary: true,
-                onPressed: _claim,
-                label: L10n.t('dailyClaim')),
+                primary: true, onPressed: _claim, label: L10n.t('dailyClaim')),
       ],
     );
   }
@@ -97,7 +95,7 @@ class _DayCell extends StatelessWidget {
                 style: const TextStyle(fontSize: 11, color: UiArt.ink)),
             const SizedBox(height: 2),
             if (done)
-              Image(image: UiArt.check, width: 18, height: 18)
+              UiArt.sized(UiArt.check, 18)
             else
               RewardAmount(
                 coins: DailyReward.prizes[day].coins,

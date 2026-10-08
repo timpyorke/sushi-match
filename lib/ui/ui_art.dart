@@ -125,6 +125,14 @@ abstract final class UiArt {
         _ => throw ArgumentError.value(id, 'id', 'no furniture icon'),
       };
 
+  /// A square sprite decoded near its display size (3x, like [BoosterIcon]):
+  /// the sources are 192-292px but icons are drawn at 16-44.
+  static Widget sized(ImageProvider image, double size) => Image(
+        image: ResizeImage(image, width: (size * 3).round()),
+        width: size,
+        height: size,
+      );
+
   static const ink = Color(0xFF4A2E1B);
   static const paper = Color(0xFFFBF1DC);
 
@@ -133,9 +141,9 @@ abstract final class UiArt {
         image: DecorationImage(
           image: panel,
           fit: BoxFit.fill,
-          // Sprites are ~1200px wide: `scale` shrinks them to logical size and
+          // The sprite is 890px wide: `scale` shrinks it to logical size and
           // centerSlice is expressed in those logical units.
-          scale: 4,
+          scale: 3,
           centerSlice: const Rect.fromLTRB(55, 42.5, 241.5, 95),
         ),
       );
@@ -211,7 +219,7 @@ class StarIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final img = Image(image: UiArt.star, width: size, height: size);
+    final img = UiArt.sized(UiArt.star, size);
     if (lit) return img;
     return Opacity(
       opacity: 0.35,
@@ -267,7 +275,7 @@ class HeartAmount extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Image(image: UiArt.heart, width: size, height: size),
+        UiArt.sized(UiArt.heart, size),
         const SizedBox(width: 4),
         Text(text, style: style),
       ],
@@ -287,7 +295,7 @@ class CoinAmount extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Image(image: UiArt.coin, width: size, height: size),
+        UiArt.sized(UiArt.coin, size),
         const SizedBox(width: 4),
         Text('$amount', style: style),
       ],
@@ -328,7 +336,7 @@ class RewardAmount extends StatelessWidget {
               if (kind != null)
                 BoosterIcon(kind, size: size)
               else
-                Image(image: UiArt.gift, width: size, height: size),
+                UiArt.sized(UiArt.gift, size),
               const SizedBox(width: 4),
               Text('×$qty', style: style),
             ],
@@ -336,4 +344,13 @@ class RewardAmount extends StatelessWidget {
       ],
     );
   }
+}
+
+extension SizedAsset on AssetGenImage {
+  /// Square image of [size] decoded near that size; see [UiArt.sized].
+  Image sized(double size) => image(
+        width: size,
+        height: size,
+        cacheWidth: (size * 3).round(),
+      );
 }

@@ -48,7 +48,7 @@ checks, which fail until each exists:
   mirrored so the route snakes. The scroll area, banner and route all grow
   with the shop list, and levels are spread evenly along the band's route.
 - `shop_<id>` and `zone_<id>` in both languages in `lib/ui/l10n.dart`.
-- Music: add `assets/audio/bgm_<id>.wav`, list it in `Audio.tracks`, or alias
+- Music: add `assets/audio/bgm_<id>.m4a`, list it in `Audio.tracks`, or alias
   it to an existing track in `Audio._alias` until it exists.
 
 Regions open by clearing levels; stars are spent only on furniture for the

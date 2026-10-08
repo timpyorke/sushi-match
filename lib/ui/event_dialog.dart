@@ -16,10 +16,12 @@ String timeLeftLabel(Duration d) {
   return L10n.t('eventHours', {'h': d.inHours + 1});
 }
 
-Widget eventSprite(PieceKind kind, double size) => PiecePainter.spriteOf(kind).image(
-    width: size,
-    height: size,
-    errorBuilder: (_, __, ___) => SizedBox(width: size, height: size));
+Widget eventSprite(PieceKind kind, double size) =>
+    PiecePainter.spriteOf(kind).image(
+        width: size,
+        cacheWidth: (size * 3).round(),
+        height: size,
+        errorBuilder: (_, __, ___) => SizedBox(width: size, height: size));
 
 /// Shows the event once, the first time the player sees it.
 Future<void> maybeShowEventStart(BuildContext context, WidgetRef ref) async {
@@ -45,7 +47,7 @@ class EventDialog extends ConsumerWidget {
     final left = timeLeftLabel(event.timeLeft(DateTime.now()));
     return GameDialog(
       title: event.title(L10n.language),
-      titleIcon: Image(image: UiArt.gift, width: 28, height: 28),
+      titleIcon: UiArt.sized(UiArt.gift, 28),
       width: 360,
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -119,7 +121,7 @@ class _MilestoneRow extends StatelessWidget {
               ),
             ),
             if (claimed)
-              Image(image: UiArt.check, width: 18, height: 18)
+              UiArt.sized(UiArt.check, 18)
             else if (reached)
               FilledButton(
                   onPressed: onClaim, child: Text(L10n.t('eventClaim')))

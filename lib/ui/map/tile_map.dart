@@ -165,7 +165,7 @@ class RegionBanner extends StatelessWidget {
       ),
       child: Row(
         children: [
-          UiArt.shop(shopId).image(width: 24, height: 24),
+          UiArt.shop(shopId).sized(24),
           const SizedBox(width: 8),
           Expanded(
             child: Column(

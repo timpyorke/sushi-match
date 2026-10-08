@@ -100,7 +100,7 @@ class _PackCard extends ConsumerWidget {
         style: const TextStyle(color: UiArt.ink),
         child: Row(
           children: [
-            Image(image: UiArt.coin, width: 44, height: 44),
+            UiArt.sized(UiArt.coin, 44),
             const SizedBox(width: 12),
             Expanded(
               child: Column(

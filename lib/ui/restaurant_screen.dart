@@ -311,7 +311,7 @@ class _Slot extends StatelessWidget {
                 children: [
                   Opacity(
                     opacity: 0.5,
-                    child: UiArt.furniture(furniture.id).image(width: 22, height: 22),
+                    child: UiArt.furniture(furniture.id).sized(22),
                   ),
                   Row(
                     mainAxisSize: MainAxisSize.min,
@@ -330,7 +330,7 @@ class _Slot extends StatelessWidget {
             scale: owned ? 1 : 0,
             duration: const Duration(milliseconds: 450),
             curve: Curves.elasticOut,
-            child: UiArt.furniture(furniture.id).image(width: 44, height: 44),
+            child: UiArt.furniture(furniture.id).sized(44),
           ),
         ],
       ),
@@ -418,8 +418,7 @@ class _CustomersState extends State<_Customers>
                   top: _laneY * h - 40 - pay * 36,
                   child: Opacity(
                     opacity: 1 - pay,
-                    child:
-                        Image(image: UiArt.coin, width: 22, height: 22),
+                    child: UiArt.sized(UiArt.coin, 22),
                   ),
                 ),
             ],

@@ -34,7 +34,7 @@ class TipOverlay extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                icon.image(width: 40, height: 40),
+                icon.sized(40),
                 const SizedBox(height: 8),
                 OutlinedTitle(L10n.t('${text}Title'), style: t.titleLarge),
                 const SizedBox(height: 8),

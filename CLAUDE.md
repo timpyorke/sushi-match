@@ -17,15 +17,15 @@ flutter run
 dart run build_runner build                   # regenerate lib/gen/ (typed asset paths) after adding/renaming assets
 dart run tool/balance.dart [runs] [level …] [--planner] [--no-belts]  # bot win rates / star spread per level
 dart run tool/tune.dart [runs] [--write]       # re-fit moves, goal counts, star thresholds in assets/levels
-dart run tool/gen_sounds.dart                  # regenerate placeholder WAVs in assets/audio/
+dart run tool/gen_sounds.dart && tool/to_m4a.sh # regenerate placeholder audio in assets/audio/ (WAV → .m4a)
 dart run tool/gen_levels.dart [--force] [level …]  # generate level files from the spec table
 dart run tool/gen_prompts.dart                 # regenerate GPT Image character prompts in docs/prompts/
 dart run tool/gen_tile_prompts.dart            # regenerate GPT Image board-tile and level-map prompts in docs/prompts/tiles/
 dart run tool/gen_icon_prompts.dart            # regenerate GPT Image prompts for the icons that replace UI emoji in docs/prompts/icons/
-dart run tool/cut_sprites.dart [id …]          # cut character sheets (customers/<id>/source/) into 256px frames
+dart run tool/cut_sprites.dart [id …]          # cut character sheets (customers/<id>/source/) into 256px PNG frames, then run tool/to_webp.sh
 ```
 
-Re-run `tool/tune.dart` after changing the engine or adding levels. Real audio replaces placeholders by dropping a same-named file into `assets/audio/` (the game refers only to file names, see `lib/services/audio.dart`).
+Re-run `tool/tune.dart` after changing the engine or adding levels. Real audio replaces placeholders by dropping a same-named `.m4a` into `assets/audio/` (the game refers only to file names, see `lib/services/audio.dart`).
 
 ## Architecture
 
@@ -39,7 +39,7 @@ Levels are JSON in `assets/levels/level_NNN.json` (205 levels in 14 restaurants;
 
 ### Assets
 
-Asset paths come from `lib/gen/assets.gen.dart` (flutter_gen via build_runner, config under `flutter_gen:` in `pubspec.yaml`): use `Assets.ui.coin.provider()` / `.image(...)` / `.path`, `FontFamily.mali`, never a literal `'assets/…'`. A new folder must be listed under `flutter: assets:` and the generated files re-built and committed. Ids that come from game data go through the lookups in `UiArt` (`shop`, `furniture`, `obstacle`) and `PiecePainter.spriteOf`. Left as strings on purpose: `assets/levels/level_NNN.json` (computed from the level number) and the audio file names (`flame_audio` adds its own prefix).
+Asset paths come from `lib/gen/assets.gen.dart` (flutter_gen via build_runner, config under `flutter_gen:` in `pubspec.yaml`): use `Assets.ui.coin.provider()` / `.image(...)` / `.path`, `FontFamily.mali`, never a literal `'assets/…'`. A new folder must be listed under `flutter: assets:` and the generated files re-built and committed. Ids that come from game data go through the lookups in `UiArt` (`shop`, `furniture`, `obstacle`) and `PiecePainter.spriteOf`. Bundled images are WebP (`tool/to_webp.sh` converts new PNGs, lossy q90 for sprites and lossless for UI/tiles; the `source/` sheets stay PNG and are not bundled), audio is AAC `.m4a` (`tool/to_m4a.sh`). Draw icons through `UiArt.sized` / `.sized(size)` so they decode near display size. Left as strings on purpose: `assets/levels/level_NNN.json` (computed from the level number) and the audio file names (`flame_audio` adds its own prefix).
 
 ### State and persistence
 

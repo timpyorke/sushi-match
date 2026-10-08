@@ -53,7 +53,11 @@ void main() {
     await tester.tap(find.text('Claim'));
     await tester.pumpAndSettle();
     expect(c.read(walletProvider).coins, Wallet.startingCoins + 5);
-    expect(find.byWidgetPredicate((w) => w is Image && w.image == UiArt.check),
+    expect(
+        find.byWidgetPredicate((w) =>
+            w is Image &&
+            w.image is ResizeImage &&
+            (w.image as ResizeImage).imageProvider == UiArt.check),
         findsOneWidget);
   });
 }

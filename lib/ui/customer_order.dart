@@ -50,7 +50,7 @@ enum SignatureCue {
   idle,
 }
 
-/// A customer's own animation (`<name>_0..3.png`), from `docs/prompts`.
+/// A customer's own animation (`<name>_0..3`), from `docs/prompts`.
 class Signature {
   const Signature(this.name, this.cue, {this.fps = 8, this.loop = false});
   final String name;
@@ -79,8 +79,10 @@ class Customer {
 
   bool get hasSprite => art != null;
 
+  /// The frames by `<anim>_<i>`, whatever the image format.
   late final Map<String, AssetGenImage> _frames = {
-    for (final a in art!.whereType<AssetGenImage>()) a.path.split('/').last: a,
+    for (final a in art!.whereType<AssetGenImage>())
+      a.path.split('/').last.split('.').first: a,
   };
 
   /// Frames per animation.
@@ -90,7 +92,7 @@ class Customer {
 
   AssetGenImage frame(CustomerAnim anim, int i) {
     final name = anim == CustomerAnim.signature ? signature!.name : anim.name;
-    return _frames['${name}_$i.png']!;
+    return _frames['${name}_$i']!;
   }
 
   /// Playback speed of [anim] for this customer.
@@ -312,15 +314,14 @@ class GoalCount extends StatelessWidget {
   const GoalCount({super.key, required this.progress});
   final GoalProgress progress;
 
-  static Widget _obstacleIcon(String id) =>
-      UiArt.obstacle(id).image(width: 16, height: 16);
+  static Widget _obstacleIcon(String id) => UiArt.obstacle(id).sized(16);
 
   static Widget _icon(LevelGoal g) => switch (g.type) {
         GoalType.collect => SizedBox(
             width: 20,
             height: 20,
             child: CustomPaint(painter: _PiecePainter(g.piece!))),
-        GoalType.score => Image(image: UiArt.star, width: 16, height: 16),
+        GoalType.score => UiArt.sized(UiArt.star, 16),
         GoalType.clearNori => _obstacleIcon('nori'),
         GoalType.breakIce => _obstacleIcon('ice'),
         GoalType.breakBag => _obstacleIcon('bag'),

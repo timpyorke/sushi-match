@@ -265,7 +265,7 @@ class _LivesCard extends ConsumerWidget {
     final lives = ref.watch(walletProvider.select((w) => w.lives));
     final full = lives >= Wallet.maxLives;
     return _Card(
-      leading: Image(image: UiArt.heart, width: 34, height: 34),
+      leading: UiArt.sized(UiArt.heart, 34),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

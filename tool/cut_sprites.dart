@@ -1,5 +1,6 @@
 // Cuts the 2x2 character sheets in assets/sprites/customers/<id>/source/
-// into square 256px frames next to them (<anim>_0.png … <anim>_3.png).
+// into square 256px frames next to them (<anim>_0.png … <anim>_3.png). Run
+// tool/to_webp.sh afterwards: the game bundles the frames as WebP.
 //
 //   dart run tool/cut_sprites.dart [id …]   # default: every character
 //   dart run tool/cut_sprites.dart --obstacles [id …]
