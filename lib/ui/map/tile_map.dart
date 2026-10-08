@@ -33,8 +33,15 @@ class TileMapPainter extends CustomPainter {
   void _sprite(Canvas canvas, ui.Image? img, Rect rc,
       {double scale = 1,
       Alignment align = Alignment.center,
-      double alpha = 1}) {
+      double alpha = 1,
+      int turns = 0}) {
     if (img == null) return;
+    if (turns != 0) {
+      canvas.save();
+      canvas.translate(rc.center.dx, rc.center.dy);
+      canvas.rotate(turns * 1.5707963267948966);
+      canvas.translate(-rc.center.dx, -rc.center.dy);
+    }
     final src =
         Rect.fromLTWH(0, 0, img.width.toDouble(), img.height.toDouble());
     final k = (rc.width / img.width) < (rc.height / img.height)
@@ -49,6 +56,7 @@ class TileMapPainter extends CustomPainter {
         Paint()
           ..filterQuality = FilterQuality.medium
           ..color = Color.fromRGBO(255, 255, 255, alpha));
+    if (turns != 0) canvas.restore();
   }
 
   @override
@@ -87,10 +95,16 @@ class TileMapPainter extends CustomPainter {
               ? ((c + r) % 2 == 0 ? 'land_c' : 'land_d')
               : ((c + r) % 2 == 0 ? 'land_a' : 'land_b');
           _sprite(canvas, a.region(id, land), rect);
+          // Coast: a cliff along every side that faces the sea. The map edge
+          // counts as sea, so the land ends in a cliff there too.
+          bool sea(int cc, int rr) =>
+              cc < 0 ||
+              cc >= kMapCols ||
+              rr < 0 ||
+              rr >= layout.rows ||
+              layout.tileAt(cc, rr) == MapTile.sea;
+          final left = sea(c - 1, r), right = sea(c + 1, r);
           if (below == MapTile.sea) {
-            final left = c > 0 && layout.tileAt(c - 1, r) == MapTile.sea;
-            final right =
-                c + 1 < kMapCols && layout.tileAt(c + 1, r) == MapTile.sea;
             _sprite(
                 canvas,
                 a[left && !right
@@ -100,6 +114,9 @@ class TileMapPainter extends CustomPainter {
                         : 'cliff'],
                 rect);
           }
+          if (left) _sprite(canvas, a['cliff'], rect, turns: 1);
+          if (right) _sprite(canvas, a['cliff'], rect, turns: 3);
+          if (sea(c, r - 1)) _sprite(canvas, a['cliff'], rect, turns: 2);
           final deco = switch (type) {
             MapTile.mountain => 'mountain',
             MapTile.forest => 'forest',
@@ -168,9 +185,9 @@ class TileMapPainter extends CustomPainter {
 
   void _spriteRoute(Canvas canvas, MapArt a) {
     final total = layout.nodeDist.isEmpty ? 0.0 : layout.nodeDist.last;
-    final step = tile * 0.5;
+    const step = 0.4; // in tiles, like the route distances
     final dot = Rect.fromCenter(
-        center: Offset.zero, width: tile * 0.28, height: tile * 0.28);
+        center: Offset.zero, width: tile * 0.6, height: tile * 0.6);
     for (var d = 0.0; d <= total; d += step) {
       final p = layout.pointAt(d) * tile;
       final img = d <= reached ? a['route_done'] : a['route_dot'];
@@ -360,7 +377,7 @@ class _TileMapViewState extends State<TileMapView> {
     final layout = widget.layout;
     final cleared = widget.cleared;
     return LayoutBuilder(builder: (context, box) {
-      const pad = 12.0;
+      const pad = 0.0;
       final width = box.maxWidth - pad * 2;
       final tile = width / kMapCols;
       final size = (tile - 2).clamp(34.0, 50.0);
