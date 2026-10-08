@@ -239,8 +239,12 @@ class StarIcon extends StatelessWidget {
 /// Round red button with an icon on it.
 class RoundIconButton extends StatelessWidget {
   const RoundIconButton(
-      {super.key, required this.icon, required this.onPressed});
-  final IconData icon;
+      {super.key, this.icon, this.sprite, required this.onPressed})
+      : assert(icon != null || sprite != null);
+  final IconData? icon;
+
+  /// Sprite drawn instead of [icon].
+  final Widget? sprite;
   final VoidCallback onPressed;
 
   @override
@@ -257,7 +261,7 @@ class RoundIconButton extends StatelessWidget {
         decoration: BoxDecoration(
           image: DecorationImage(image: UiArt.buttonRound, fit: BoxFit.fill),
         ),
-        child: Icon(icon, color: Colors.white),
+        child: Center(child: sprite ?? Icon(icon, color: Colors.white)),
       ),
     );
   }

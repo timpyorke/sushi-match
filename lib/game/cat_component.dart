@@ -52,7 +52,32 @@ abstract final class CatArt {
       }
       _frames[anim] = images;
     }
+    // The idle frames were drawn with the cat sitting up to 15px higher in
+    // some of them, which reads as hopping. Plant the feet on one line.
+    final idle = _frames[CatAnim.idle]!;
+    final bottoms = [for (final img in idle) await _bottom(img)];
+    _idleDrop = [
+      for (final b in bottoms) (bottoms.first - b) / idle.first.height
+    ];
   }
+
+  /// Lowest row with visible pixels.
+  static Future<int> _bottom(Image img) async {
+    final data = (await img.toByteData())!;
+    for (var y = img.height - 1; y >= 0; y--) {
+      for (var x = 0; x < img.width; x++) {
+        if (data.getUint8((y * img.width + x) * 4 + 3) > 20) return y;
+      }
+    }
+    return img.height - 1;
+  }
+
+  /// Per idle frame: how far to move it down (fraction of the frame height)
+  /// so every frame stands on the first one's baseline.
+  static List<double> _idleDrop = const [0, 0, 0, 0];
+
+  static double drop(CatAnim anim, int i) =>
+      anim == CatAnim.idle ? _idleDrop[i] : 0;
 
   static Image frame(CatAnim anim, int i) => _frames[anim]![i];
 }
@@ -87,6 +112,9 @@ class CatComponent extends PositionComponent {
     _animT = 0;
   }
 
+  /// The prowl and flee sprites face left; true mirrors them to face right.
+  bool faceRight = false;
+
   static final _fur = Paint()..color = const Color(0xFFE8A04C);
   static final _furDark = Paint()..color = const Color(0xFFB9722A);
   static final _belly = Paint()..color = const Color(0xFFFFF1D6);
@@ -104,7 +132,10 @@ class CatComponent extends PositionComponent {
     super.update(dt);
     _t += dt;
     _animT += dt;
-    if (!_anim.loop && _animT * _anim.fps >= CatArt.frameCount) {
+    // Flee holds its last frame until the cat leaves the board.
+    if (!_anim.loop &&
+        _anim != CatAnim.flee &&
+        _animT * _anim.fps >= CatArt.frameCount) {
       play(CatAnim.idle);
     }
   }
@@ -113,13 +144,26 @@ class CatComponent extends PositionComponent {
   void render(Canvas canvas) {
     final s = size.x;
     if (CatArt.ready) {
-      final i = (_animT * _anim.fps).floor() % CatArt.frameCount;
+      final f = (_animT * _anim.fps).floor();
+      final i = _anim == CatAnim.flee
+          ? f.clamp(0, CatArt.frameCount - 1)
+          : f % CatArt.frameCount;
       final img = CatArt.frame(_anim, i);
+      // Little hops while prowling.
+      final hop = _anim == CatAnim.prowl
+          ? -s * 0.06 * math.sin(_animT * _anim.fps * math.pi).abs()
+          : 0.0;
+      canvas.save();
+      if (faceRight) {
+        canvas.translate(s, 0);
+        canvas.scale(-1, 1);
+      }
       canvas.drawImageRect(
           img,
           Rect.fromLTWH(0, 0, img.width.toDouble(), img.height.toDouble()),
-          Rect.fromLTWH(0, 0, s, s),
+          Rect.fromLTWH(0, hop + s * CatArt.drop(_anim, i), s, s),
           _spritePaint);
+      canvas.restore();
       _pips(canvas, s);
       return;
     }

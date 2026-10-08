@@ -6,6 +6,7 @@ import 'package:flutter/painting.dart'
     show TextPainter, TextSpan, TextStyle, FontWeight, TextDirection;
 
 import '../core/piece.dart';
+import 'obstacle_art.dart';
 import 'piece_painter.dart';
 
 class PieceComponent extends PositionComponent {
@@ -72,6 +73,13 @@ class PieceComponent extends PositionComponent {
     final c = Offset(size.x * 0.78, size.y * 0.24);
     // Panic as the fuse gets short.
     final r = size.x * (_timer <= 1 ? 0.22 : 0.19);
+    if (ObstacleArt.ready) {
+      // The sprite's belly is blank: the countdown is written on it.
+      ObstacleArt.draw(canvas, ObstacleSprite.bomb,
+          Rect.fromCircle(center: c, radius: r * 1.45));
+      text.paint(canvas, c - Offset(text.width / 2, text.height / 2 - 1));
+      return;
+    }
     canvas.drawCircle(c, r, _bombFill);
     canvas.drawCircle(c, r, _bombEdge);
     text.paint(canvas, c - Offset(text.width / 2, text.height / 2));
@@ -90,6 +98,18 @@ class PieceComponent extends PositionComponent {
 
   void _drawFlame(Canvas canvas) {
     final s = size.x;
+    if (ObstacleArt.ready) {
+      final sway = 1 + 0.06 * math.sin(_t * 9);
+      ObstacleArt.draw(
+          canvas,
+          ObstacleSprite.fire,
+          Rect.fromCenter(
+              center: Offset(s / 2, s * 0.5),
+              width: s * 0.62 * sway,
+              height: s * 0.7 * sway),
+          alpha: 0.92);
+      return;
+    }
     // Blur of 6 at the 64px cell the art was tuned for.
     PiecePainter.glow(canvas, Offset(s / 2, s * 0.45), s * 0.46,
         const Color(0x66FF6A1F), 6 / (64 * 0.46));
@@ -136,6 +156,19 @@ class PieceComponent extends PositionComponent {
     _drawBomb(canvas);
     if (ice == 0) return;
     final s = size.x;
+    if (ObstacleArt.ready) {
+      // See-through cube over the piece; more layers are more opaque.
+      ObstacleArt.draw(canvas, ObstacleSprite.ice,
+          Rect.fromLTWH(0, 0, s, s).deflate(s * 0.03),
+          alpha: 0.35 + 0.15 * ice.clamp(1, 3));
+      for (var i = 0; i < ice; i++) {
+        canvas.drawCircle(
+            Offset(s * (0.5 - 0.09 * (ice - 1) + 0.18 * i), s * 0.9),
+            s * 0.045,
+            _iceDot);
+      }
+      return;
+    }
     final rr = RRect.fromRectAndRadius(
         Rect.fromLTWH(0, 0, s, s).deflate(s * 0.05), Radius.circular(s * 0.2));
     // More layers read as thicker, cloudier ice.

@@ -8,6 +8,7 @@ import 'package:sushi_trio/core/piece.dart';
 import 'package:sushi_trio/gen/assets.gen.dart';
 import 'package:sushi_trio/ui/l10n.dart';
 import 'package:sushi_trio/ui/customer_order.dart';
+import 'package:sushi_trio/ui/ui_art.dart';
 
 void main() {
   final goals = [
@@ -51,7 +52,12 @@ void main() {
     ])));
     expect(find.text('7/20'), findsOneWidget);
     expect(find.text('15/15'), findsOneWidget);
-    expect(find.byIcon(Icons.check), findsOneWidget);
+    expect(
+        find.byWidgetPredicate((w) =>
+            w is Image &&
+            w.image is ResizeImage &&
+            (w.image as ResizeImage).imageProvider == UiArt.check),
+        findsOneWidget);
   });
 
   test('every level gets a customer', () {

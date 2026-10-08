@@ -84,7 +84,7 @@ class _LevelSelectViewState extends State<LevelSelectView> {
               Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: RoundIconButton(
-                    icon: Icons.shopping_bag, onPressed: widget.onShop!),
+                    sprite: const ShopIcon(size: 28), onPressed: widget.onShop!),
               ),
             if (widget.onRestaurant != null)
               Padding(

@@ -353,7 +353,7 @@ class GoalCount extends StatelessWidget {
           Text('$shown/${g.count}',
               style: t.labelMedium
                   ?.copyWith(fontWeight: FontWeight.bold, color: UiArt.ink)),
-          if (done) const Icon(Icons.check, size: 14, color: Color(0xFF2E7D32)),
+          if (done) UiArt.sized(UiArt.check, 14),
         ],
       ),
     );

@@ -21,6 +21,7 @@ import '../core/steps.dart';
 import '../services/audio.dart';
 import '../services/wallet.dart';
 import 'cat_component.dart';
+import 'obstacle_art.dart';
 import 'overlay_badges.dart';
 import 'piece_painter.dart';
 import 'piece_component.dart';
@@ -111,6 +112,7 @@ class BoardComponent extends PositionComponent
   @override
   Future<void> onLoad() async {
     await TileArt.load();
+    await ObstacleArt.load();
     await CatArt.load();
     _layer = ClipComponent.rectangle(size: size);
     add(_layer);
@@ -174,6 +176,11 @@ class BoardComponent extends PositionComponent
     ..strokeWidth = 2.4;
 
   void _drawLock(Canvas canvas, Offset c) {
+    if (ObstacleArt.ready) {
+      ObstacleArt.draw(canvas, ObstacleSprite.key,
+          Rect.fromCenter(center: c, width: 22, height: 22));
+      return;
+    }
     canvas.drawArc(
         Rect.fromCenter(center: c.translate(0, -3), width: 9, height: 12),
         math.pi,
@@ -217,6 +224,12 @@ class BoardComponent extends PositionComponent
         Gravity.right => (Offset(w + _margin / 2, along), 0.0),
         Gravity.down => (Offset(along, h + _margin / 2), math.pi / 2),
       };
+      if (ObstacleArt.ready) {
+        ObstacleArt.draw(canvas, ObstacleSprite.gravity,
+            Rect.fromCenter(center: c, width: 26, height: 26),
+            rot: angle);
+        continue;
+      }
       canvas.save();
       canvas.translate(c.dx, c.dy);
       canvas.rotate(angle);
@@ -243,6 +256,10 @@ class BoardComponent extends PositionComponent
 
   /// A bamboo mat: slatted square tied with two green cords.
   void _drawMat(Canvas canvas, Rect r) {
+    if (ObstacleArt.ready) {
+      ObstacleArt.draw(canvas, ObstacleSprite.mat, r.deflate(cell * 0.03));
+      return;
+    }
     final body = RRect.fromRectAndRadius(
         r.deflate(cell * 0.07), const Radius.circular(cell * 0.12));
     canvas.drawRRect(body, _matFill);
@@ -261,6 +278,17 @@ class BoardComponent extends PositionComponent
   /// A rice sack: round body, gathered neck with a red tie and one dot per
   /// layer left.
   void _drawBag(Canvas canvas, Rect r, int layers) {
+    if (ObstacleArt.ready) {
+      ObstacleArt.draw(canvas, ObstacleSprite.bag, r.deflate(cell * 0.03));
+      for (var i = 0; i < layers; i++) {
+        canvas.drawCircle(
+            Offset(r.center.dx + (i - (layers - 1) / 2) * cell * 0.16,
+                r.top + cell * 0.9),
+            cell * 0.05,
+            _sackDot);
+      }
+      return;
+    }
     final body = RRect.fromRectAndRadius(
         Rect.fromLTWH(r.left + cell * 0.12, r.top + cell * 0.26, cell * 0.76,
             cell * 0.64),
@@ -400,6 +428,14 @@ class BoardComponent extends PositionComponent
       if (layers == 0) continue;
       final rect = Rect.fromLTWH(
           (i % board.cols) * cell, (i ~/ board.cols) * cell, cell, cell);
+      if (ObstacleArt.ready) {
+        // Stacked sheets, each one offset so the count reads at a glance.
+        for (var l = layers - 1; l >= 0; l--) {
+          ObstacleArt.draw(canvas, ObstacleSprite.nori,
+              rect.deflate(cell * 0.04).shift(Offset(-l * 3.0, -l * 3.0)));
+        }
+        continue;
+      }
       for (var l = 0; l < layers; l++) {
         final rr = RRect.fromRectAndRadius(
             rect.deflate(3.0 + l * 5), const Radius.circular(8));
@@ -676,6 +712,7 @@ class BoardComponent extends PositionComponent
             }
             // Out of lives: the cat bolts off the board.
             _cats.remove(h.catId);
+            cat.faceRight = true; // bolts off to the right
             cat.play(CatAnim.flee);
             final done = Completer<void>();
             cat.add(MoveByEffect(Vector2(cell * 2.5, -cell * 0.6),
@@ -692,6 +729,8 @@ class BoardComponent extends PositionComponent
         case CatMoveStep(:final catId, :final to):
           final cat = _cats[catId];
           if (cat == null) break;
+          final dest = _center(to);
+          if (dest.x != cat.position.x) cat.faceRight = dest.x > cat.position.x;
           cat.play(CatAnim.prowl);
           await _moveTo(cat, _center(to), 0.3);
           cat.play(CatAnim.eat);

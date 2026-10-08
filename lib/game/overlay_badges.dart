@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 
 import '../core/piece.dart';
+import 'obstacle_art.dart';
 import 'piece_painter.dart';
 
 /// Padlock tinted with the colour that must be matched to open the cell.
@@ -46,6 +47,11 @@ class KeyLockBadge extends PositionComponent {
             Rect.fromLTWH(0, 0, s, s).deflate(2), Radius.circular(s * 0.16)),
         _frame);
     final c = Offset(s * 0.2, s * 0.22);
+    if (ObstacleArt.ready) {
+      ObstacleArt.draw(canvas, ObstacleSprite.key,
+          Rect.fromCenter(center: c, width: s * 0.36, height: s * 0.36));
+      return;
+    }
     canvas.drawArc(
         Rect.fromCenter(center: c.translate(0, -4), width: 11, height: 14),
         math.pi,
@@ -115,6 +121,28 @@ class PortalBadge extends PositionComponent {
   void render(Canvas canvas) {
     final s = size.x;
     final c = Offset(s / 2, s / 2);
+    if (ObstacleArt.ready) {
+      if (entry) {
+        ObstacleArt.draw(canvas, ObstacleSprite.portal,
+            Rect.fromLTWH(0, 0, s, s).deflate(s * 0.04),
+            rot: _t * 1.5);
+        return;
+      }
+      // Exit: the same gate, smaller and tinted ring-like, in the corner.
+      canvas.drawRRect(
+          RRect.fromRectAndRadius(
+              Rect.fromLTWH(0, 0, s, s).deflate(2), Radius.circular(s * 0.18)),
+          _ring);
+      ObstacleArt.draw(
+          canvas,
+          ObstacleSprite.portal,
+          Rect.fromCenter(
+              center: Offset(s * 0.8, s * 0.2),
+              width: s * 0.3,
+              height: s * 0.3),
+          rot: _t * 4);
+      return;
+    }
     if (entry) {
       canvas.drawCircle(c, s * 0.4, _vortex);
       for (var i = 0; i < 3; i++) {

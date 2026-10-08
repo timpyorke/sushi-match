@@ -129,7 +129,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                 label: L10n.t('restaurant'),
                                 onTap: widget.onRestaurant),
                             _ShortcutButton(
-                                icon: Icons.shopping_bag,
+                                sprite: const ShopIcon(size: 28),
                                 label: L10n.t('shop'),
                                 onTap: widget.onShop),
                           ],
@@ -190,8 +190,10 @@ class _PlayButton extends StatelessWidget {
 
 class _ShortcutButton extends StatelessWidget {
   const _ShortcutButton(
-      {required this.icon, required this.label, required this.onTap});
-  final IconData icon;
+      {this.icon, this.sprite, required this.label, required this.onTap})
+      : assert(icon != null || sprite != null);
+  final IconData? icon;
+  final Widget? sprite;
   final String label;
   final VoidCallback onTap;
 
@@ -220,7 +222,7 @@ class _ShortcutButton extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(icon, color: UiArt.ink, size: 28),
+                sprite ?? Icon(icon, color: UiArt.ink, size: 28),
                 const SizedBox(height: 2),
                 Text(label,
                     maxLines: 1,
