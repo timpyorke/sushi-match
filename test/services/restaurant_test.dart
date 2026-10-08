@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sushi_trio/core/piece.dart';
 import 'package:sushi_trio/services/restaurant.dart';
 import 'package:sushi_trio/services/store.dart';
 import 'package:sushi_trio/services/wallet.dart';
@@ -37,57 +38,129 @@ void main() {
     expect(shop.buyFurniture(lantern), isFalse);
   });
 
-  test('customers fill the till by the hour, up to a cap', () {
-    shop.recordStars(1, 3);
-    shop.buyFurniture(lantern);
+  test('winning a level pays sushi from its palette', () {
+    final palette = [PieceKind.salmon, PieceKind.ebi, PieceKind.tamago];
+    final won = Restaurant.rewardFor(4, 2, palette);
+    expect(won.length, Restaurant.sushiReward(2));
+    expect(won.every(palette.contains), isTrue);
+    expect(Restaurant.rewardFor(1, 3, const []), isEmpty);
+    shop.grantSushi(won);
+    expect(state().stockTotal, won.length);
+  });
+
+  test('placing sushi moves it from the stock to a slot', () {
+    expect(shop.place(PieceKind.salmon, 0), isFalse, reason: 'none in stock');
+    shop.grantSushi([PieceKind.salmon, PieceKind.salmon]);
+    expect(shop.place(PieceKind.salmon, 0), isTrue);
+    expect(shop.place(PieceKind.salmon, 0), isFalse, reason: 'slot taken');
+    expect(shop.place(PieceKind.salmon, state().slotCount), isFalse,
+        reason: 'slot locked');
+    expect(state().slot(0), PieceKind.salmon);
+    expect(state().count(PieceKind.salmon), 1);
+    expect(shop.take(0), isTrue);
+    expect(state().count(PieceKind.salmon), 2);
+    expect(state().since, isNull);
+  });
+
+  test('customers buy the sushi on display, one per visit', () {
+    shop.grantSushi([PieceKind.salmon, PieceKind.maguro]);
+    shop.place(PieceKind.salmon, 0);
+    shop.place(PieceKind.maguro, 1);
+    final every = state().visitEvery;
+    final salmon = state().price(PieceKind.salmon);
+    final maguro = state().price(PieceKind.maguro);
     expect(shop.till(), 0);
-    now = now.add(const Duration(hours: 2));
-    expect(shop.till(), lantern.coinsPerHour * 2);
+
+    now = now.add(Duration(seconds: every - 1));
+    expect(shop.till(), 0);
+    now = now.add(const Duration(seconds: 1));
+    expect(shop.till(), salmon);
+
+    now = now.add(Duration(seconds: every));
+    shop.settle();
+    expect(state().banked, salmon + maguro);
+    expect(state().placed, 0);
+    expect(state().since, isNull);
+
+    // Time with an empty shelf earns nothing.
     now = now.add(const Duration(days: 3));
-    expect(shop.till(), lantern.coinsPerHour * Restaurant.tillHours);
+    shop.settle();
+    expect(state().banked, salmon + maguro);
   });
 
   test('collecting moves the till into the wallet and empties it', () {
-    shop.recordStars(1, 3);
-    shop.buyFurniture(lantern);
-    now = now.add(const Duration(hours: 1));
+    shop.grantSushi([PieceKind.tamago]);
+    shop.place(PieceKind.tamago, 0);
+    now = now.add(const Duration(minutes: 5));
     final coins = c.read(walletProvider).coins;
-    expect(shop.collect(), lantern.coinsPerHour);
-    expect(c.read(walletProvider).coins, coins + lantern.coinsPerHour);
+    final price = state().price(PieceKind.tamago);
+    expect(shop.collect(), price);
+    expect(c.read(walletProvider).coins, coins + price);
     expect(shop.till(), 0);
     expect(shop.collect(), 0);
   });
 
-  test('buying more keeps what the till earned at the old rate', () {
+  test('furniture raises prices and speeds customers up', () {
     for (var i = 1; i <= 3; i++) {
       shop.recordStars(i, 3);
     }
+    final base = state().price(PieceKind.ikura);
+    final slow = state().visitEvery;
     shop.buyFurniture(lantern);
-    now = now.add(const Duration(hours: 1));
     shop.buyFurniture(stool);
-    now = now.add(const Duration(hours: 1));
-    expect(shop.till(),
-        lantern.coinsPerHour + lantern.coinsPerHour + stool.coinsPerHour);
+    expect(state().price(PieceKind.ikura), greaterThan(base));
+    expect(state().visitEvery, lessThan(slow));
   });
 
-  test('furniture, till and stars survive a restart; reset clears them', () {
+  test('only dining furniture opens display slots', () {
+    shop..recordStars(1, 3)..recordStars(2, 3);
+    final slots = state().slotCount;
+    shop.buyFurniture(lantern);
+    expect(state().slotCount, slots);
+    shop.buyFurniture(stool);
+    expect(state().slotCount, slots + 1);
+    expect(stool.category, FurnitureCategory.dining);
+    expect(Restaurant.maxSlots, slots + 3);
+  });
+
+  test('every piece of furniture sits in a category', () {
+    for (final cat in FurnitureCategory.values) {
+      expect(Restaurant.inCategory(cat), isNotEmpty);
+    }
+    expect(FurnitureCategory.values.expand(Restaurant.inCategory).length,
+        Restaurant.furniture.length);
+  });
+
+  test('sushi, shelf, till and stars survive a restart; reset clears them', () {
     final store = MemoryStore();
     final first = testContainer(store: store, clock: () => now);
     first.read(restaurantProvider.notifier)
       ..recordStars(1, 3)
-      ..buyFurniture(lantern);
-    now = now.add(const Duration(hours: 1));
+      ..buyFurniture(lantern)
+      ..grantSushi([PieceKind.ebi, PieceKind.ebi])
+      ..place(PieceKind.ebi, 1);
 
     final second = testContainer(store: store, clock: () => now);
-    expect(second.read(restaurantProvider).isOwned(lantern), isTrue);
-    expect(second.read(restaurantProvider).earned, 3);
-    expect(
-        second.read(restaurantProvider.notifier).till(), lantern.coinsPerHour);
+    final s = second.read(restaurantProvider);
+    expect(s.isOwned(lantern), isTrue);
+    expect(s.earned, 3);
+    expect(s.slot(1), PieceKind.ebi);
+    expect(s.count(PieceKind.ebi), 1);
+    expect(s.since, isNotNull);
 
-    second.read(restaurantProvider.notifier).reset();
-    expect(second.read(restaurantProvider).earned, 0);
-    expect(second.read(restaurantProvider).isOwned(lantern), isFalse);
-    expect(testContainer(store: store).read(restaurantProvider).earned, 0);
+    now = now.add(const Duration(hours: 1));
+    final third = testContainer(store: store, clock: () => now);
+    expect(third.read(restaurantProvider).banked, greaterThan(0));
+    expect(third.read(restaurantProvider).placed, 0);
+
+    third.read(restaurantProvider.notifier).reset();
+    expect(third.read(restaurantProvider).earned, 0);
+    expect(third.read(restaurantProvider).stockTotal, 0);
+    expect(third.read(restaurantProvider).isOwned(lantern), isFalse);
+    final fresh = testContainer(store: store).read(restaurantProvider);
+    expect(fresh.earned, 0);
+    expect(fresh.stockTotal, 0);
+    expect(fresh.placed, 0);
   });
 
   test('purchases from the old per-region restaurants are refunded', () {

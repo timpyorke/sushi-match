@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/game_engine.dart';
 import '../game/sushi_game.dart';
+import '../services/restaurant.dart';
 import '../services/wallet.dart';
 import 'customer_order.dart';
 import 'l10n.dart';
@@ -205,6 +206,9 @@ class ResultOverlay extends ConsumerWidget {
                       Text(L10n.t('scoreN', {'n': s.score})),
                       if (won && s.reward > 0)
                         Text(L10n.t('reward', {'n': s.reward})),
+                      if (won)
+                        Text(L10n.t('sushiEarned',
+                            {'n': Restaurant.sushiReward(s.stars)})),
                       if (s.eventGain > 0)
                         Text(L10n.t('eventGain', {'n': s.eventGain})),
                       const SizedBox(height: 16),

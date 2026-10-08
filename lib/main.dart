@@ -269,11 +269,18 @@ class _GameScreenState extends ConsumerState<GameScreen> {
         analytics: ref.read(analyticsProvider));
     var moves = game.hud.value.movesLeft;
     var goalsDone = game.hud.value.goals.where((g) => g.done).length;
+    var rewarded = false;
     game.hud.addListener(() {
       final s = game.hud.value;
       if (s.status == GameStatus.won) {
         progress.markCleared(widget.levelNumber);
         restaurant.recordStars(widget.levelNumber, s.stars);
+        // The listener fires on every HUD change; pay the sushi once.
+        if (!rewarded) {
+          rewarded = true;
+          restaurant.grantSushi(
+              Restaurant.rewardFor(widget.levelNumber, s.stars, level.pieces));
+        }
       }
       if (s.status != GameStatus.playing) return;
       final done = s.goals.where((g) => g.done).length;
