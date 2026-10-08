@@ -15,3 +15,5 @@ dart tool/cut_sprites.dart --obstacles 18-boss-cat-joker
 ```
 
 Joker is a board obstacle rather than a diner. The current `CatComponent` still renders its vector placeholder; these assets provide the five states for a future board-animation hookup.
+
+> The `source/` folder (generated sheets, master and portrait) was removed from the working tree; it is still in git history (commit `7864de2` and earlier) if you need to re-cut or re-export.

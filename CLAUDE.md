@@ -22,7 +22,7 @@ dart run tool/gen_levels.dart [--force] [level …]  # generate level files from
 dart run tool/gen_prompts.dart                 # regenerate GPT Image character prompts in docs/prompts/
 dart run tool/gen_tile_prompts.dart            # regenerate GPT Image board-tile and level-map prompts in docs/prompts/tiles/
 dart run tool/gen_icon_prompts.dart            # regenerate GPT Image prompts for the icons that replace UI emoji in docs/prompts/icons/
-dart run tool/cut_sprites.dart [id …]          # cut character sheets (customers/<id>/source/) into 256px PNG frames, then run tool/to_webp.sh
+dart run tool/cut_sprites.dart [id …]          # cut character sheets (customers/<id>/source/, not kept in the tree once cut; see git history) into 256px PNG frames, then run tool/to_webp.sh
 ```
 
 Re-run `tool/tune.dart` after changing the engine or adding levels. Real audio replaces placeholders by dropping a same-named `.m4a` into `assets/audio/` (the game refers only to file names, see `lib/services/audio.dart`).

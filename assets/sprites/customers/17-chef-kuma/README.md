@@ -11,3 +11,5 @@ Created from `docs/prompts/characters/17-chef-kuma.md` with built-in image gener
 Chef Kuma is the Hokkaido boss concept for level 60. The current UI uses the shared rotating customer roster; dedicated restaurant/boss selection is not implemented here.
 
 Re-cut the source sheets with `dart tool/cut_sprites.dart 17-chef-kuma`.
+
+> The `source/` folder (generated sheets, master and portrait) was removed from the working tree; it is still in git history (commit `7864de2` and earlier) if you need to re-cut or re-export.
