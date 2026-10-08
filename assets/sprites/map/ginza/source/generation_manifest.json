@@ -1,0 +1,149 @@
+{
+  "tool": "built-in image_gen",
+  "promptSource": "docs/prompts/tiles/map-14-ginza.md",
+  "reference": "land_sheet.png",
+  "region": "ginza",
+  "processing": {
+    "runtimeFormat": "lossless WebP",
+    "mapTileSize": [
+      256,
+      256
+    ],
+    "emblemSize": [
+      512,
+      512
+    ],
+    "backdropSize": [
+      1024,
+      1536
+    ],
+    "props": "trim alpha bounds, retain aspect ratio and pad with transparency",
+    "groundSeams": "match the plain opposite border strips before resize"
+  },
+  "sources": [
+    {
+      "file": "land_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nSetting: the Ginza Master Chef region of the map, elegant Ginza: silver-grey stone buildings, a clock tower on a corner, tidy street trees and a master chef counter. Region colours: banner #B0B7C3 to #6E7685, land #D8D2C4.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Straight top-down view, flat, no perspective. Every item at the same scale with the same outline weight. Ground tiles fill their cell edge to edge, opaque, with no outline or border round the cell; the left edge matches the right edge and the top edge matches the bottom edge so each repeats seamlessly.\n\nLand:\nf1 (top-left) land_a: smooth light stone pavement in #D8D2C4.\nf2 (top-right) land_b: the same ground about 12% lighter, details in other places, so it alternates with land_a.\nf3 (bottom-left) land_c: land_a with a small round drain cover.\nf4 (bottom-right) land_d: land_b with a small round drain cover.\nUse case: stylized-concept. Output square 1024x1024 opaque PNG with four EXACT equal logical quadrants, no atlas borders, grid lines or gutters. Straight top-down flat 2D smooth light stone pavement. Uniform warm silver-grey beige #D8D2C4 in left-column cells, about 12% lighter #E8E4DB in right-column cells. A few very subtle short stone joint marks or tiny chips in different positions, sparse and low contrast, no large tile grid. Each lower cell has exactly ONE small round grey metal drain cover lying flush with the pavement, crisp dark-brown outline #4A2A1A with a simple few radial slots and one flat highlight, placed differently. No letters on the cover. All markings and covers remain at least 15% away from quadrant edges. Border regions must be uninterrupted flat solid pavement for seamless repetition. No buildings, trees, grass, flowers, roads, curbs, puddles, extra covers, gradients, noise, photographic texture or vignette. Flat solid colors only.",
+      "exports": [
+        {
+          "file": "assets/sprites/map/ginza/land_a.webp",
+          "png": "assets/sprites/map/ginza/source/tiles_png/land_a.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/ginza/land_b.webp",
+          "png": "assets/sprites/map/ginza/source/tiles_png/land_b.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/ginza/land_c.webp",
+          "png": "assets/sprites/map/ginza/source/tiles_png/land_c.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/ginza/land_d.webp",
+          "png": "assets/sprites/map/ginza/source/tiles_png/land_d.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        }
+      ]
+    },
+    {
+      "file": "deco_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Ginza Master Chef region of the map, elegant Ginza: silver-grey stone buildings, a clock tower on a corner, tidy street trees and a master chef counter. Region colours: banner #B0B7C3 to #6E7685, land #D8D2C4.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Top-down three-quarter view, seen from above at about 45 degrees, each object sitting on an invisible ground with its base near the bottom of its cell. Every item at the same scale with the same outline weight. Standalone items are centred with about 10% empty margin. Everything outside the items is fully transparent.\n\nDeco tiles:\nf1 (top-left) mountain: a distant city skyline on a hill (not on this band today).\nf2 (top-right) forest: two neatly trimmed street trees in planters (not on this band today).\nf3 (bottom-left) city: a rounded stone corner building with a clock tower (generic, no brand).\nf4 (bottom-right) special: a lamp post with a hanging flower basket.\nUse case: stylized-concept. Output square 1024x1024 transparent PNG atlas with four EXACT logical quadrants. Each COMPLETE prop group is SMALL and fits within the central 340x340 area of its own 512x512 quadrant, at least 86px from all cell edges including tower and lamp tip. Top-left: ONE low rounded grassy hill with a compact distant silver-grey city skyline of simple buildings on it. Top-right: exactly TWO neatly trimmed street trees, each in its own square stone planter, tidy rounded green canopies and distinct trunks. Bottom-left: ONE rounded silver-grey stone corner building with a small clock tower on its roof, compact squat toy-like proportions. Generic elegant architecture, no brand, no signage. Clock face has only short tick marks and TWO clock hands, NO numbers, letters or Roman numerals. Bottom-right: ONE complete dark-grey street lamp post with ONE hanging flower basket, short chunky pole, simple warm lamp and rounded pink-and-purple flowers. Three-quarter view from above about 45 degrees. Thick dark-brown outlines #4A2A1A and flat cel colors with one crisp hard shadow tone, same style as reference. Real transparent alpha everywhere outside props and through gaps. No shared background, cell borders, cross-cell overlap or clipped roofs, tree crowns or lamp. No humans, text, signs, logos, labels, gradients, photo texture, haze, ground shadows or sparkles.",
+      "exports": [
+        {
+          "file": "assets/sprites/map/ginza/mountain.webp",
+          "png": "assets/sprites/map/ginza/source/tiles_png/mountain.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/ginza/forest.webp",
+          "png": "assets/sprites/map/ginza/source/tiles_png/forest.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/ginza/city.webp",
+          "png": "assets/sprites/map/ginza/source/tiles_png/city.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/ginza/special.webp",
+          "png": "assets/sprites/map/ginza/source/tiles_png/special.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        }
+      ],
+      "edits": [
+        {
+          "prompt": "Use case: precise-object-edit. Edit this Ginza transparent 2x2 decoration atlas. Preserve ALL FOUR existing designs and colors: top-left city skyline on low grassy hill; top-right exactly two trimmed trees in separate stone planters; bottom-left silver-grey rounded corner building with a clock tower; bottom-right lamp post with hanging flower basket. Change ONLY object sizes and placement: uniformly shrink EACH complete group to 70% of its current size and recenter it inside its original logical quadrant. Each quadrant is 512x512 in the final square 1024x1024 image. All props including clock-tower antenna MUST fit inside the central 350x350 area, at least 81px from ALL quadrant edges. KEEP complete crisp brown outlines and solid flat cel colors, with NO clipping or overlap across seams. Clean 100% transparent alpha outside the solid illustrated silhouettes and through existing gaps. Remove any green fringe below skyline. Do NOT add haze, feathered shadows, colored edge residue, noise or glowing auras; only narrow antialiasing on the outline edge. No new objects, text, backgrounds or labels. Final 1024x1024 transparent PNG."
+        }
+      ]
+    },
+    {
+      "file": "landmark.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Ginza Master Chef region of the map, elegant Ginza: silver-grey stone buildings, a clock tower on a corner, tidy street trees and a master chef counter. Region colours: banner #B0B7C3 to #6E7685, land #D8D2C4.\n\nRegion emblem: a shining silver-and-gold star wearing a small white chef hat. A single object, front three-quarter view, chunky and glossy like a sushi game icon, centred with about 10% empty margin, fully transparent background.\nUse case: stylized-concept. Output square 1024x1024 transparent PNG. ONE single rounded FIVE-POINTED STAR emblem made of SILVER AND GOLD, wearing ONE small white chef hat on its upper point. Front three-quarter view, centered with about 10% empty margin. The star face is silver-grey #B0B7C3, thick bevel/rim and one side in warm gold, one hard-edged darker silver and gold shadow tone, and one small flat white highlight. Small chunky white toque has a tidy folded brim and three rounded puffs, sitting securely on the upper star point. Thick dark-brown outline #4A2A1A, flat 2D cel-shaded Japanese chibi puzzle icon readable at 64px. All FIVE star points and entire hat visible. Real alpha transparency outside silhouette. No face, eyes, mouth, limbs, chef person, extra stars, sparkles, rays, crown, plate, text, logos, gradients, metal photo texture or glossy 3D rendering.",
+      "exports": [
+        {
+          "file": "assets/sprites/map/ginza/landmark.webp",
+          "png": "assets/sprites/map/ginza/source/tiles_png/landmark.png",
+          "size": [
+            512,
+            512
+          ],
+          "cut": "prop"
+        }
+      ]
+    },
+    {
+      "file": "level_bg.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Ginza Master Chef region of the map, elegant Ginza: silver-grey stone buildings, a clock tower on a corner, tidy street trees and a master chef counter. Region colours: banner #B0B7C3 to #6E7685, land #D8D2C4.\n\nPortrait background for the puzzle screen, opaque, no characters: a master chef counter: the clock tower and evening sky at the top, a polished counter with a knife roll at the bottom. The game board covers the middle (about 90% of the width, from 25% to 80% of the height), so keep that area a calm, simple, low-contrast surface; put the scenery in the top 25% and bottom 20%. Front view with gentle depth.\nUse case: stylized-concept. Output fully opaque portrait 1024x1536 PNG for a puzzle screen. Compose THREE horizontal bands: detailed upper panel ONLY in top 20% y=0..307, compact detailed lower panel ONLY in bottom 15% y=1306..1535, and one HUGE quiet uniform pale warm silver-grey field across FULL WIDTH x=0..1023 and y=308..1305. Upper panel shows a generic elegant Ginza silver-grey corner building with a small clock tower under a muted evening blue-lavender sky, tidy compact street trees; all architecture and foliage wholly above y=308. Clock face uses plain tick marks and TWO hands, no numbers or Roman numerals. Lower panel shows a compact polished master-chef counter with a neatly unrolled leather knife roll holding culinary knives, simple stainless steel blades and wooden handles, all wholly below y=1305. Keep the center uninterrupted low-contrast pale warm grey for the board: no horizon line, counter, tools, knives, buildings, trees, tower, outlines, objects, shadows, gradients or texture in it. Front view with gentle depth. Clean flat cel 2D anime game art, dark-brown outlines and one hard shadow tone on scenery only. No people, letters, numbers, brand names, signs or labels.",
+      "exports": [
+        {
+          "file": "assets/backgrounds/level_ginza.webp",
+          "png": "assets/sprites/map/ginza/source/level_bg.png",
+          "size": [
+            1024,
+            1536
+          ],
+          "cut": "background"
+        }
+      ],
+      "edits": [
+        {
+          "prompt": "Use case: precise-object-edit. Edit this Ginza portrait puzzle backdrop. Preserve its elegant clock-tower street architecture, evening sky, warm lit windows, and Japanese chibi cel style. Change ONLY scene sizing and placement to keep the board clear. Reduce upper street panel slightly so it ends at y=368, entirely ABOVE y=384. Reduce the COMPLETE lower counter scene vertically and move it down so ALL its objects occupy ONLY the bottom 15% of the final opaque 1024x1536 image, y=1306..1535. Preserve the polished counter, open leather knife roll with culinary knives, small planter, plates, cup and wooden box, all fully visible in that lower strip. ALL plant tips, box tops, counter edges and knife tips must stay BELOW y=1305. Extend the existing quiet pale warm silver-grey center across FULL WIDTH between y=369 and y=1305. The game board spans y=384..1229 and needs this entire area empty and low contrast. No plant, counter, tools, knives, outlines, objects, buildings, shadows or texture in that middle area. Clock face uses only tick marks and two hands, no numerals. No people, text or new objects. Final portrait 1024x1536 PNG, fully opaque."
+        }
+      ]
+    }
+  ]
+}

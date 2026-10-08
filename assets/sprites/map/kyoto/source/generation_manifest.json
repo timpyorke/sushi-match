@@ -1,0 +1,152 @@
+{
+  "tool": "built-in image_gen",
+  "promptSource": "docs/prompts/tiles/map-03-kyoto.md",
+  "reference": "land_sheet.png",
+  "region": "kyoto",
+  "processing": {
+    "runtimeFormat": "lossless WebP",
+    "mapTileSize": [
+      256,
+      256
+    ],
+    "emblemSize": [
+      512,
+      512
+    ],
+    "backdropSize": [
+      1024,
+      1536
+    ],
+    "props": "trim alpha bounds, retain aspect ratio and pad with transparency",
+    "groundSeams": "match the plain opposite border strips before resize"
+  },
+  "sources": [
+    {
+      "file": "land_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nSetting: the Kyoto Ryokan region of the map, old Kyoto in autumn: wooden ryokan inns, shoji screens, moss gardens, red maples, torii gates and a five-storey pagoda. Region colours: banner #E56B8F to #B03A60, land #B5D18A.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Straight top-down view, flat, no perspective. Every item at the same scale with the same outline weight. Ground tiles fill their cell edge to edge, opaque, with no outline or border round the cell; the left edge matches the right edge and the top edge matches the bottom edge so each repeats seamlessly.\n\nLand:\nf1 (top-left) land_a: soft moss-green grass in #B5D18A.\nf2 (top-right) land_b: the same ground about 12% lighter, details in other places, so it alternates with land_a.\nf3 (bottom-left) land_c: land_a with two fallen red maple leaves.\nf4 (bottom-right) land_d: land_b with two fallen red maple leaves.\nOutput a square 1024x1024 fully opaque PNG sheet with four exact equal logical quadrants. Use uniform flat moss-green grass #B5D18A for land_a and land_c; land_b and land_d about 12% lighter. Only a few short subtle moss/grass tuft strokes, restrained and readable at 64px. The two lower variants each contain exactly two fallen red maple leaves, positioned differently. Keep every detail at least 8% away from its quadrant edges; borders stay plain moss-green color for seamless repetition. No scenery, trees, gates, buildings, stones, flowers or other props. No gradients, photo textures, texture noise, edge shadows, vignette, outlined square tiles, drawn separators or gutters.",
+      "exports": [
+        {
+          "file": "assets/sprites/map/kyoto/land_a.webp",
+          "png": "assets/sprites/map/kyoto/source/tiles_png/land_a.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/kyoto/land_b.webp",
+          "png": "assets/sprites/map/kyoto/source/tiles_png/land_b.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/kyoto/land_c.webp",
+          "png": "assets/sprites/map/kyoto/source/tiles_png/land_c.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/kyoto/land_d.webp",
+          "png": "assets/sprites/map/kyoto/source/tiles_png/land_d.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        }
+      ],
+      "edits": [
+        {
+          "prompt": "Make all four ground backgrounds completely uniform flat solid cel colors, removing all soft shading, gradients, mottling, photographic texture and noise. Keep the exact 2x2 layout and all existing grass strokes and maple leaves in their same positions. Top-left and bottom-left background must be solid #B5D18A edge to edge; top-right and bottom-right must be solid pale moss green #CBDCA6 edge to edge. Preserve clean dark-brown leaf outlines and flat red leaf colors. No borders or gutters. Fully opaque square 1024x1024 PNG."
+        }
+      ]
+    },
+    {
+      "file": "deco_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Kyoto Ryokan region of the map, old Kyoto in autumn: wooden ryokan inns, shoji screens, moss gardens, red maples, torii gates and a five-storey pagoda. Region colours: banner #E56B8F to #B03A60, land #B5D18A.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Top-down three-quarter view, seen from above at about 45 degrees, each object sitting on an invisible ground with its base near the bottom of its cell. Every item at the same scale with the same outline weight. Standalone items are centred with about 10% empty margin. Everything outside the items is fully transparent.\n\nDeco tiles:\nf1 (top-left) mountain: a soft green hill with a small five-storey pagoda on top.\nf2 (top-right) forest: two red maple trees and a small vermilion torii gate.\nf3 (bottom-left) city: a wooden machiya townhouse with a dark tiled roof and a green noren curtain (not on this band today).\nf4 (bottom-right) special: a stone lantern beside a short bamboo fence.null",
+      "exports": [
+        {
+          "file": "assets/sprites/map/kyoto/mountain.webp",
+          "png": "assets/sprites/map/kyoto/source/tiles_png/mountain.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/kyoto/forest.webp",
+          "png": "assets/sprites/map/kyoto/source/tiles_png/forest.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/kyoto/city.webp",
+          "png": "assets/sprites/map/kyoto/source/tiles_png/city.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/kyoto/special.webp",
+          "png": "assets/sprites/map/kyoto/source/tiles_png/special.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        }
+      ]
+    },
+    {
+      "file": "landmark.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Kyoto Ryokan region of the map, old Kyoto in autumn: wooden ryokan inns, shoji screens, moss gardens, red maples, torii gates and a five-storey pagoda. Region colours: banner #E56B8F to #B03A60, land #B5D18A.\n\nRegion emblem: a vermilion torii gate with a black top beam. A single object, front three-quarter view, chunky and glossy like a sushi game icon, centred with about 10% empty margin, fully transparent background.null",
+      "exports": [
+        {
+          "file": "assets/sprites/map/kyoto/landmark.webp",
+          "png": "assets/sprites/map/kyoto/source/tiles_png/landmark.png",
+          "size": [
+            512,
+            512
+          ],
+          "cut": "prop"
+        }
+      ]
+    },
+    {
+      "file": "level_bg.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Kyoto Ryokan region of the map, old Kyoto in autumn: wooden ryokan inns, shoji screens, moss gardens, red maples, torii gates and a five-storey pagoda. Region colours: banner #E56B8F to #B03A60, land #B5D18A.\n\nPortrait background for the puzzle screen, opaque, no characters: a ryokan veranda in autumn: maple branches and a pagoda roof at the top, a moss garden with a stone lantern at the bottom. The game board covers the middle (about 90% of the width, from 25% to 80% of the height), so keep that area a calm, simple, low-contrast surface; put the scenery in the top 25% and bottom 20%. Front view with gentle depth.null",
+      "exports": [
+        {
+          "file": "assets/backgrounds/level_kyoto.webp",
+          "png": "assets/sprites/map/kyoto/source/level_bg.png",
+          "size": [
+            1024,
+            1536
+          ],
+          "cut": "background"
+        }
+      ],
+      "edits": [
+        {
+          "prompt": "Edit this Kyoto portrait puzzle backdrop, keep the 1024x1536 canvas and the existing autumn maple, ryokan veranda, pagoda and moss-garden design. Change the layout to give more empty space: REDRAW the entire upper scenery compressed into y=0..350 only, so its lowest pixel is above y=351. REDRAW the entire lower garden, maple bushes, rocks and stone lantern compressed into y=1250..1535 only, so its highest pixel is y=1250 or below. Extend the calm pale ivory background to occupy the FULL WIDTH x=0..1023 and y=351..1249 without any object or edge in it. The middle must be a uniform flat ivory cel color, no texture, gradient, shadows, branches or wood pillars. Preserve a readable small pagoda roof and red maple branches at the top, and a compact readable stone lantern and moss garden at the bottom. Simplify scenery to fit these bands instead of allowing it to intrude in the center. Clean 2D anime game background, hard cel shadow shapes, no letters, numbers, people or watermark. Fully opaque PNG."
+        },
+        {
+          "prompt": "Keep this exact Kyoto illustration and 1024x1536 portrait format. Make the upper decorative panel MUCH SHORTER: it should occupy only the top 20% of the image height, ending at y=307, with no scenery below. Make the lower decorative panel MUCH SHORTER: it should occupy only the bottom 15% of image height, starting at y=1306, with no scenery above. Compress/rearrange the veranda, maple branches and pagoda to fit inside the top fifth, and compress the moss garden, rocks, red maples and stone lantern inside the bottom 15%. Between these two panels leave one huge empty uniform pale ivory rectangle across the entire image width from y=308 to y=1305. No drawn lines, foliage, pillars, specks, shadows or object silhouettes in that empty rectangle. Do not add anything. No text. Preserve the crisp cel cartoon style and original color palette. Fully opaque portrait PNG."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,152 @@
+{
+  "tool": "built-in image_gen",
+  "promptSource": "docs/prompts/tiles/map-13-nara.md",
+  "reference": "land_sheet.png",
+  "region": "nara",
+  "processing": {
+    "runtimeFormat": "lossless WebP",
+    "mapTileSize": [
+      256,
+      256
+    ],
+    "emblemSize": [
+      512,
+      512
+    ],
+    "backdropSize": [
+      1024,
+      1536
+    ],
+    "props": "trim alpha bounds, retain aspect ratio and pad with transparency",
+    "groundSeams": "match the plain opposite border strips before resize"
+  },
+  "sources": [
+    {
+      "file": "land_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nSetting: the Nara Deer Park Teahouse region of the map, the Nara deer park: wide lawns, friendly deer, old temples with big roofs and a quiet teahouse. Region colours: banner #6FA84F to #437A2C, land #A9CF86.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Straight top-down view, flat, no perspective. Every item at the same scale with the same outline weight. Ground tiles fill their cell edge to edge, opaque, with no outline or border round the cell; the left edge matches the right edge and the top edge matches the bottom edge so each repeats seamlessly.\n\nLand:\nf1 (top-left) land_a: deer-park lawn in #A9CF86.\nf2 (top-right) land_b: the same ground about 12% lighter, details in other places, so it alternates with land_a.\nf3 (bottom-left) land_c: land_a with two small deer crackers on the grass.\nf4 (bottom-right) land_d: land_b with two small deer crackers on the grass.\nUse case: stylized-concept. Output square 1024x1024 opaque PNG with four EXACT equal logical quadrants, no drawn borders, grid lines or gutters. Straight top-down flat 2D deer-park lawn. Uniform fresh green #A9CF86 in left-column cells, about 12% lighter #C2DDA7 in right-column cells. A few sparse short curved grass tufts in different positions in each cell. Each lower cell has exactly TWO small round tan shika-senbei deer crackers lying flat side by side on the grass, simple circular biscuits with crisp dark-brown outlines #4A2A1A and one hard-edged shadow tone. Crackers placed differently in the two lower cells. All markings and crackers remain at least 15% away from quadrant edges. Border regions must be uninterrupted flat solid grass for seamless repetition. No deer, trees, buildings, rocks, flowers, paths, plates, wrappers, extra crackers, gradients, noise, photographic texture or vignette. Flat solid colors only.",
+      "exports": [
+        {
+          "file": "assets/sprites/map/nara/land_a.webp",
+          "png": "assets/sprites/map/nara/source/tiles_png/land_a.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/nara/land_b.webp",
+          "png": "assets/sprites/map/nara/source/tiles_png/land_b.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/nara/land_c.webp",
+          "png": "assets/sprites/map/nara/source/tiles_png/land_c.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/nara/land_d.webp",
+          "png": "assets/sprites/map/nara/source/tiles_png/land_d.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        }
+      ]
+    },
+    {
+      "file": "deco_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Nara Deer Park Teahouse region of the map, the Nara deer park: wide lawns, friendly deer, old temples with big roofs and a quiet teahouse. Region colours: banner #6FA84F to #437A2C, land #A9CF86.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Top-down three-quarter view, seen from above at about 45 degrees, each object sitting on an invisible ground with its base near the bottom of its cell. Every item at the same scale with the same outline weight. Standalone items are centred with about 10% empty margin. Everything outside the items is fully transparent.\n\nDeco tiles:\nf1 (top-left) mountain: a smooth grassy hill (not on this band today).\nf2 (top-right) forest: two old trees with a cute chibi deer resting under them.\nf3 (bottom-left) city: a large temple hall with a sweeping dark roof (not on this band today).\nf4 (bottom-right) special: a cute chibi deer bowing its head.\nUse case: stylized-concept. Output square 1024x1024 transparent PNG atlas with four EXACT logical quadrants. Each COMPLETE prop group is SMALL and fits within the central 350x350 area of its own 512x512 quadrant, at least 81px from all cell edges. Top-left: ONE smooth rounded grassy hill, no buildings. Top-right: exactly TWO old trees with wide rounded green canopies and distinct thick trunks, ONE cute chibi tan-and-cream spotted sika deer resting underneath with legs tucked beneath its body, peaceful closed eyes, complete head and ears visible. Bottom-left: ONE large Japanese temple hall with a sweeping dark grey tiled roof, wooden pillars and a compact rectangular base. Bottom-right: ONE complete cute chibi spotted sika deer standing on four slender legs and BOWING ITS HEAD low, head visibly lowered toward the ground, rounded tan body, cream muzzle and belly, friendly eyes and distinct ears, no crackers. Three-quarter view from above about 45 degrees. Thick dark-brown outlines #4A2A1A and flat cel colors with one crisp hard shadow tone. Animals only where requested, no human characters. Real transparent alpha everywhere outside the props and through gaps. No shared ground, cross-cell overlap, clipped ears, legs or roof. No text, signs, labels, gradients, photographic texture, shadow haze or sparkles.",
+      "exports": [
+        {
+          "file": "assets/sprites/map/nara/mountain.webp",
+          "png": "assets/sprites/map/nara/source/tiles_png/mountain.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/nara/forest.webp",
+          "png": "assets/sprites/map/nara/source/tiles_png/forest.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/nara/city.webp",
+          "png": "assets/sprites/map/nara/source/tiles_png/city.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/nara/special.webp",
+          "png": "assets/sprites/map/nara/source/tiles_png/special.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        }
+      ],
+      "edits": [
+        {
+          "prompt": "Use case: precise-object-edit. Edit this Nara transparent 2x2 decoration atlas. Preserve ALL FOUR existing designs, palettes, thick dark-brown outlines, cel shading and transparent alpha: top-left smooth grassy hill; top-right exactly two old trees and one resting spotted deer underneath; bottom-left sweeping-roof Japanese temple hall; bottom-right one complete spotted deer bowing its head low on four legs. Change ONLY object sizes and placement: uniformly shrink EACH complete prop group to 70% of its current size and recenter it inside its original logical quadrant. Each quadrant is 512x512 in the final square 1024x1024 image, and each complete prop MUST fit inside the central 360x360 area, at least 76px from ALL four quadrant edges. Keep complete outlines and all roofs, ears, legs, grass and shrubs, with NO clipping and no overlap across cell seams. Fully transparent alpha everywhere outside the props and through existing gaps, no halos or colored edge residue. No new objects, text, backgrounds or labels. This must be a 1024x1024 transparent PNG."
+        },
+        {
+          "prompt": "Use case: background-extraction. Clean the transparent background of this 2x2 Nara sprite atlas. KEEP the existing four objects EXACTLY: grassy hill upper-left, two old trees and resting deer upper-right, temple hall lower-left, bowing deer lower-right. Keep their current small size, positions, colors and crisp brown outlines. REMOVE ALL colored noisy haze and semitransparent smudges surrounding the objects: green-yellow fog below the hill and trees, red-grey fog around the temple, and reddish fog around the bowing deer. Everything outside the solid illustrated silhouette must be 100% TRANSPARENT, alpha=0. No ground shadows. Keep only the intentional solid hill lawn and small solid lawn directly under the two trees. Interior gaps between deer legs and around the tree trunks must also be 100% transparent. Edge antialiasing limited to the thin outline edge, no aura, feathering, smoke, particles, haze or noise. Do not enlarge, move, redraw or crop the sprites. Final square 1024x1024 PNG with a REAL transparent alpha channel, not a black/white/checkerboard background."
+        }
+      ]
+    },
+    {
+      "file": "landmark.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Nara Deer Park Teahouse region of the map, the Nara deer park: wide lawns, friendly deer, old temples with big roofs and a quiet teahouse. Region colours: banner #6FA84F to #437A2C, land #A9CF86.\n\nRegion emblem: a cute chibi deer holding a round shika-senbei cracker in its mouth. A single object, front three-quarter view, chunky and glossy like a sushi game icon, centred with about 10% empty margin, fully transparent background.\nUse case: stylized-concept. Output square 1024x1024 transparent PNG. ONE single cute chibi Nara sika deer holding ONE round tan shika-senbei cracker in its mouth. Full body front three-quarter view, centered with about 10% empty margin. Chunky rounded tan body with a few deliberate white spots, cream muzzle and belly, big friendly dark eyes with one small flat highlight, two complete ears, four little legs, small tail. Cracker is clearly visible gripped gently at the edge by its mouth, simple round biscuit with a few flat toasted dots, no writing. Thick dark-brown outlines #4A2A1A, flat 2D cel colors with one crisp hard-edged shadow tone, rounded Japanese chibi game icon readable at 64px. Real alpha outside the deer and through the spaces between legs. No hands, humans, clothes, extra animals, scattered crackers, grass, plate, ground shadow, text, logos, gradients, fur texture or plastic 3D sheen.",
+      "exports": [
+        {
+          "file": "assets/sprites/map/nara/landmark.webp",
+          "png": "assets/sprites/map/nara/source/tiles_png/landmark.png",
+          "size": [
+            512,
+            512
+          ],
+          "cut": "prop"
+        }
+      ]
+    },
+    {
+      "file": "level_bg.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Nara Deer Park Teahouse region of the map, the Nara deer park: wide lawns, friendly deer, old temples with big roofs and a quiet teahouse. Region colours: banner #6FA84F to #437A2C, land #A9CF86.\n\nPortrait background for the puzzle screen, opaque, no characters: a teahouse in the deer park: old tree branches and a temple roof at the top, the lawn with resting deer at the bottom. The game board covers the middle (about 90% of the width, from 25% to 80% of the height), so keep that area a calm, simple, low-contrast surface; put the scenery in the top 25% and bottom 20%. Front view with gentle depth.\nUse case: stylized-concept. Output fully opaque portrait 1024x1536 PNG for a puzzle screen. Compose THREE horizontal bands: detailed upper panel ONLY in top 20% y=0..307, compact detailed lower panel ONLY in bottom 15% y=1306..1535, and one HUGE quiet uniform pale fresh green #A9CF86 field across FULL WIDTH x=0..1023 and y=308..1305. Upper panel shows old tree branches and rounded foliage framing a Japanese temple with a sweeping dark grey roof and small teahouse details, all branches, trunks, roofs and bases wholly above y=308. Lower panel shows a compact deer-park lawn with TWO small peaceful tan-and-cream spotted sika deer resting with their legs tucked beneath them, small low shrubs and sparse grass, all wholly below y=1305. Resting deer heads and ears must remain below y=1305. Keep the center uninterrupted low-contrast pale green for the board: no horizon line, paths, trunks, branches, deer, roofs, outlines, objects, shadows, gradients or texture in it. Front view with gentle depth. Clean flat cel 2D anime game art, dark-brown outlines and one hard shadow tone on scenery only. Deer are explicitly requested animals; no people, letters, signs or labels.",
+      "exports": [
+        {
+          "file": "assets/backgrounds/level_nara.webp",
+          "png": "assets/sprites/map/nara/source/level_bg.png",
+          "size": [
+            1024,
+            1536
+          ],
+          "cut": "background"
+        }
+      ],
+      "edits": [
+        {
+          "prompt": "Use case: precise-object-edit. Edit this Nara portrait puzzle backdrop. Preserve the upper panel EXACTLY: old tree branches, Japanese temple roof, teahouse and sky, wholly above y=384. Preserve the chunky 2D Japanese chibi cel style and colors. Change ONLY placement and scale of LOWER park scenery: shrink the COMPLETE lower scene vertically and move it down so the TWO resting spotted deer, low shrubs, rocks, flowers and grass occupy ONLY the bottom 15% of the final opaque 1024x1536 image, y=1306..1535. Keep both deer complete, peaceful, with legs tucked beneath them. ALL heads, ears and shrub tips stay BELOW y=1305. Extend the existing quiet pale green center across FULL WIDTH down to y=1305. The game board spans y=384..1229 and needs this entire area empty and low contrast. No deer, ears, shrubs, grass tufts, flowers, outlines, shadows, paths or texture between y=384 and y=1305. No people, text or new objects. Final portrait 1024x1536 PNG, fully opaque."
+        }
+      ]
+    }
+  ]
+}

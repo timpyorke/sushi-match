@@ -1,0 +1,147 @@
+{
+  "tool": "built-in image_gen",
+  "promptSource": "docs/prompts/tiles/map-02-osaka.md",
+  "reference": "land_sheet.png",
+  "region": "osaka",
+  "processing": {
+    "runtimeFormat": "lossless WebP",
+    "mapTileSize": [
+      256,
+      256
+    ],
+    "emblemSize": [
+      512,
+      512
+    ],
+    "backdropSize": [
+      1024,
+      1536
+    ],
+    "props": "trim alpha bounds, retain aspect ratio and pad with transparency",
+    "groundSeams": "match the plain opposite border strips before resize",
+    "cropCleanup": {
+      "special": "Exclude the neighbouring city fragment in the first 24 pixels of the quadrant before trimming"
+    }
+  },
+  "sources": [
+    {
+      "file": "land_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nSetting: the Osaka Street Stall region of the map, an Osaka food street at dusk: red-and-cream stall awnings, glowing signboards shaped like food (no letters), takoyaki stands and a canal. Region colours: banner #F08A3C to #C25A16, land #E6C47A.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Straight top-down view, flat, no perspective. Every item at the same scale with the same outline weight. Ground tiles fill their cell edge to edge, opaque, with no outline or border round the cell; the left edge matches the right edge and the top edge matches the bottom edge so each repeats seamlessly.\n\nLand:\nf1 (top-left) land_a: warm sandy earth with a few paving-stone outlines in #E6C47A.\nf2 (top-right) land_b: the same ground about 12% lighter, details in other places, so it alternates with land_a.\nf3 (bottom-left) land_c: land_a with a dropped paper lantern-shaped leaf and two pebbles.\nf4 (bottom-right) land_d: land_b with a dropped paper lantern-shaped leaf and two pebbles.\nOutput one square 1024x1024 fully opaque PNG sheet with four exact equal logical quadrants. Flat uniform sandy earth color #E6C47A in land_a and land_c, and approximately 12% lighter sandy earth in land_b and land_d. Only a few subtle rounded paving-stone outlines inside each tile. Keep all markings, leaves and pebbles at least 8% away from the quadrant edges; the border areas stay plain earth color for seamless repetition. The rare variants each contain exactly one fallen leaf with a gently ribbed paper-lantern-like silhouette and two little pebbles; this is a leaf, not an actual illuminated paper lantern. No scenery, stalls, trees, grass or buildings. No gradients, edge shadows, vignette, cell borders, drawn separators or gutters.",
+      "exports": [
+        {
+          "file": "assets/sprites/map/osaka/land_a.webp",
+          "png": "assets/sprites/map/osaka/source/tiles_png/land_a.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/osaka/land_b.webp",
+          "png": "assets/sprites/map/osaka/source/tiles_png/land_b.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/osaka/land_c.webp",
+          "png": "assets/sprites/map/osaka/source/tiles_png/land_c.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/osaka/land_d.webp",
+          "png": "assets/sprites/map/osaka/source/tiles_png/land_d.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        }
+      ]
+    },
+    {
+      "file": "deco_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Osaka Street Stall region of the map, an Osaka food street at dusk: red-and-cream stall awnings, glowing signboards shaped like food (no letters), takoyaki stands and a canal. Region colours: banner #F08A3C to #C25A16, land #E6C47A.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Top-down three-quarter view, seen from above at about 45 degrees, each object sitting on an invisible ground with its base near the bottom of its cell. Every item at the same scale with the same outline weight. Standalone items are centred with about 10% empty margin. Everything outside the items is fully transparent.\n\nDeco tiles:\nf1 (top-left) mountain: a rounded hill topped by a tiny white castle keep with a green roof (not on this band today).\nf2 (top-right) forest: two weeping willow trees by a short stretch of canal.\nf3 (bottom-left) city: a row of two narrow shopfronts with big food-shaped signboards (a crab and an octopus, no letters) and red lanterns.\nf4 (bottom-right) special: a takoyaki cart with a striped awning and a round griddle.\nOutput a square 1024x1024 PNG atlas with real alpha transparency and four equal logical quadrants. Use the input only for style and palette; replace the sandy ground with the four described decorations. Every object stays within its own quadrant, about 10% margin, no cross-cell overlap. Top-left: rounded hill with tiny white castle keep and green roof. Top-right: exactly two weeping willows framing a short canal stretch. Bottom-left: exactly two narrow shopfronts, one with a crab-shaped signboard and one with an octopus-shaped signboard, plus red lanterns; no letters on any sign. Bottom-right: single takoyaki cart with a red-and-cream striped awning and visible round griddle. Include only the local bases requested (hill and small canal); all other surrounding areas transparent. Chunky toy-like forms, crisp flat cel colours with one hard shadow tone, dark-brown outlines, no gradients, no glow or shadow haze. No people.",
+      "exports": [
+        {
+          "file": "assets/sprites/map/osaka/mountain.webp",
+          "png": "assets/sprites/map/osaka/source/tiles_png/mountain.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/osaka/forest.webp",
+          "png": "assets/sprites/map/osaka/source/tiles_png/forest.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/osaka/city.webp",
+          "png": "assets/sprites/map/osaka/source/tiles_png/city.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/osaka/special.webp",
+          "png": "assets/sprites/map/osaka/source/tiles_png/special.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        }
+      ]
+    },
+    {
+      "file": "landmark.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Osaka Street Stall region of the map, an Osaka food street at dusk: red-and-cream stall awnings, glowing signboards shaped like food (no letters), takoyaki stands and a canal. Region colours: banner #F08A3C to #C25A16, land #E6C47A.\n\nRegion emblem: a wooden skewer of three takoyaki balls with brown sauce, mayo zigzag and bonito flakes. A single object, front three-quarter view, chunky and glossy like a sushi game icon, centred with about 10% empty margin, fully transparent background.\nOutput one square 1024x1024 PNG on genuine transparent alpha, not an atlas. A single wooden skewer threaded with exactly three round takoyaki balls, garnished with glossy brown sauce, a white mayonnaise zigzag and a few bonito flakes. Front three-quarter view, centered with 10% clear margin. Use the input only for style and palette. Crisp flat cel shading, one hard shadow tone, dark-brown outlines. No plate, no backdrop, no ground patch, no scattered extra food, no characters or faces, no glow or vignette. No text.",
+      "exports": [
+        {
+          "file": "assets/sprites/map/osaka/landmark.webp",
+          "png": "assets/sprites/map/osaka/source/tiles_png/landmark.png",
+          "size": [
+            512,
+            512
+          ],
+          "cut": "prop"
+        }
+      ]
+    },
+    {
+      "file": "level_bg.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Osaka Street Stall region of the map, an Osaka food street at dusk: red-and-cream stall awnings, glowing signboards shaped like food (no letters), takoyaki stands and a canal. Region colours: banner #F08A3C to #C25A16, land #E6C47A.\n\nPortrait background for the puzzle screen, opaque, no characters: a lively street at dusk: food-shaped signboards and lanterns at the top, stall counters and the canal at the bottom, orange sky. The game board covers the middle (about 90% of the width, from 25% to 80% of the height), so keep that area a calm, simple, low-contrast surface; put the scenery in the top 25% and bottom 20%. Front view with gentle depth.\nOutput one portrait 1024x1536 fully opaque PNG, no grid. Use the input only as style and palette reference. Food-shaped crab and octopus signboards and red lanterns across the top, red-and-cream stall counters and canal at the bottom, dusk orange sky. Reserve a quiet board zone: x=5%..95% of width and y=25%..80% of height is a clean uninterrupted pale warm peach surface with very low contrast, no objects, building edges, lantern cords, paving lines, water or decorative marks. Keep all detailed upper scenery above y=25% and all lower scenery below y=80%; front view with gentle depth. Crisp flat cel shading and dark-brown outlines on scenery, no photographic texture, no airbrushed shading. No people, letters, menu writing, numbers or logos.",
+      "exports": [
+        {
+          "file": "assets/backgrounds/level_osaka.webp",
+          "png": "assets/sprites/map/osaka/source/level_bg.png",
+          "size": [
+            1024,
+            1536
+          ],
+          "cut": "background"
+        }
+      ],
+      "edits": [
+        {
+          "prompt": "Edit this Osaka portrait puzzle background. Keep its 1024x1536 portrait canvas, the existing dusk palette, the crab and octopus signboards, the lanterns, the entire upper street scenery from y=0 to y=383, and the broad clean peach board surface. Change only the lower layout: the current lower awnings, lanterns, canal railing, stall counters and canal start too high. Redraw this entire lower scene inside the bottom 20% of the canvas only, y=1230 through y=1535. The uppermost pixel of any lower awning, railing, lantern or other lower scenic object must be at y=1230 or below. Extend the existing quiet, plain peach background all the way down to y=1229 across the FULL canvas width. In particular, x=0..1023 and y=384..1229 must contain only the uninterrupted pale peach field, no objects, lines or water. Keep a readable small red-and-cream stall counter at each lower corner and a compact canal strip along the bottom; simplify these lower shapes to fit. Crisp 2D anime cel colors, hard-edged dark-brown outlines on scenery, no text, no people, no new decorative elements. Fully opaque PNG. Preserve everything else."
+        }
+      ]
+    }
+  ]
+}

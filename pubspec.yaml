@@ -71,6 +71,20 @@ flutter:
     - assets/sprites/furniture/
     - assets/sprites/tiles/
     - assets/sprites/map/common/
+    - assets/sprites/map/tsukiji/
+    - assets/sprites/map/osaka/
+    - assets/sprites/map/kyoto/
+    - assets/sprites/map/hokkaido/
+    - assets/sprites/map/fukuoka/
+    - assets/sprites/map/okinawa/
+    - assets/sprites/map/omakase/
+    - assets/sprites/map/nagoya/
+    - assets/sprites/map/hiroshima/
+    - assets/sprites/map/kanazawa/
+    - assets/sprites/map/sendai/
+    - assets/sprites/map/kobe/
+    - assets/sprites/map/nara/
+    - assets/sprites/map/ginza/
     - assets/sprites/customers/00-granny-sakura/
     - assets/sprites/customers/01-mr-tanaka/
     - assets/sprites/customers/02-little-mei/

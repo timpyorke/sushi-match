@@ -1,0 +1,139 @@
+{
+  "tool": "built-in image_gen",
+  "promptSource": "docs/prompts/tiles/map-11-sendai.md",
+  "reference": "land_sheet.png",
+  "region": "sendai",
+  "processing": {
+    "runtimeFormat": "lossless WebP",
+    "mapTileSize": [
+      256,
+      256
+    ],
+    "emblemSize": [
+      512,
+      512
+    ],
+    "backdropSize": [
+      1024,
+      1536
+    ],
+    "props": "trim alpha bounds, retain aspect ratio and pad with transparency",
+    "groundSeams": "match the plain opposite border strips before resize"
+  },
+  "sources": [
+    {
+      "file": "land_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nSetting: the Sendai Night Grill region of the map, Sendai on a summer night: charcoal grill houses, tree-lined avenues and big colourful Tanabata paper streamers. Region colours: banner #7A4FA8 to #4E2D75, land #C4D3A6.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Straight top-down view, flat, no perspective. Every item at the same scale with the same outline weight. Ground tiles fill their cell edge to edge, opaque, with no outline or border round the cell; the left edge matches the right edge and the top edge matches the bottom edge so each repeats seamlessly.\n\nLand:\nf1 (top-left) land_a: grass under a purple evening light in #C4D3A6.\nf2 (top-right) land_b: the same ground about 12% lighter, details in other places, so it alternates with land_a.\nf3 (bottom-left) land_c: land_a with a short strip of paper streamer.\nf4 (bottom-right) land_d: land_b with a short strip of paper streamer.\nUse case: stylized-concept. Output square 1024x1024 opaque PNG with four EXACT equal logical quadrants, no drawn borders, grid lines or gutters. Straight top-down flat 2D ground. Uniform muted garden grass #C4D3A6 in left-column cells and about 12% lighter #D8E2C0 in right-column cells; a subtle evening-purple cast may affect the few grass markings only, never change the specified ground colors. A few sparse short curved grass tufts in different positions in each cell. Each lower cell has exactly ONE small short curved strip of Tanabata paper, purple or pink, lying flat on the grass, crisp dark-brown outline and one hard-edged shadow tone, placed differently. All markings and paper remain at least 12% away from quadrant edges. Border regions must be uninterrupted flat solid grass for seamless repetition. No trees, buildings, sky, paths, rocks, flowers, confetti, gradients, noise, photographic texture, vignette or edge shading.",
+      "exports": [
+        {
+          "file": "assets/sprites/map/sendai/land_a.webp",
+          "png": "assets/sprites/map/sendai/source/tiles_png/land_a.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/sendai/land_b.webp",
+          "png": "assets/sprites/map/sendai/source/tiles_png/land_b.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/sendai/land_c.webp",
+          "png": "assets/sprites/map/sendai/source/tiles_png/land_c.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/sendai/land_d.webp",
+          "png": "assets/sprites/map/sendai/source/tiles_png/land_d.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        }
+      ]
+    },
+    {
+      "file": "deco_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Sendai Night Grill region of the map, Sendai on a summer night: charcoal grill houses, tree-lined avenues and big colourful Tanabata paper streamers. Region colours: banner #7A4FA8 to #4E2D75, land #C4D3A6.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Top-down three-quarter view, seen from above at about 45 degrees, each object sitting on an invisible ground with its base near the bottom of its cell. Every item at the same scale with the same outline weight. Standalone items are centred with about 10% empty margin. Everything outside the items is fully transparent.\n\nDeco tiles:\nf1 (top-left) mountain: two green mountains with a stone castle wall at the foot.\nf2 (top-right) forest: two zelkova trees hung with long colourful Tanabata streamers.\nf3 (bottom-left) city: a grill house with smoke rising from its roof vent (not on this band today).\nf4 (bottom-right) special: a charcoal brazier with skewers grilling.\nUse case: stylized-concept. Output square 1024x1024 transparent PNG atlas with four EXACT logical quadrants. Each COMPLETE prop is SMALL and fits within the central 350x350 area of its own 512x512 quadrant, at least 81px from every quadrant edge, including smoke and streamers. Top-left: exactly TWO rounded green mountain peaks with a short old grey stone castle wall at the foot, no extra buildings. Top-right: exactly TWO zelkova trees hung with long colorful Tanabata paper streamers: rounded broad green canopies and distinct trunks, streamers in purple, pink, gold and teal hanging in compact clusters. Bottom-left: ONE compact Japanese charcoal grill house, with a visible roof vent and ONE short opaque stylized cel-shaded smoke curl rising from it. Bottom-right: ONE compact charcoal brazier with skewers of food grilling across the top, grey ceramic body, black charcoal and a few warm red embers. View from above at about 45 degrees. Chunky rounded chibi shapes, thick dark-brown outlines #4A2A1A, flat cel colors with one hard shadow tone, same style as reference. Real transparent alpha outside props and through openings. No common ground, cross-cell overlap, cropped smoke or clipped silhouettes. No people, text, labels, signs, gradients, photoreal texture, shadow haze or random sparkles.",
+      "exports": [
+        {
+          "file": "assets/sprites/map/sendai/mountain.webp",
+          "png": "assets/sprites/map/sendai/source/tiles_png/mountain.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/sendai/forest.webp",
+          "png": "assets/sprites/map/sendai/source/tiles_png/forest.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/sendai/city.webp",
+          "png": "assets/sprites/map/sendai/source/tiles_png/city.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/sendai/special.webp",
+          "png": "assets/sprites/map/sendai/source/tiles_png/special.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        }
+      ]
+    },
+    {
+      "file": "landmark.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Sendai Night Grill region of the map, Sendai on a summer night: charcoal grill houses, tree-lined avenues and big colourful Tanabata paper streamers. Region colours: banner #7A4FA8 to #4E2D75, land #C4D3A6.\n\nRegion emblem: sliced grilled beef tongue on a small charcoal grill. A single object, front three-quarter view, chunky and glossy like a sushi game icon, centred with about 10% empty margin, fully transparent background.\nUse case: stylized-concept. Output square 1024x1024 transparent PNG. ONE single small charcoal grill topped with several slices of GRILLED BEEF TONGUE, front three-quarter view, centered with about 10% empty margin. Chunky grey ceramic tabletop grill, black wire grate, visible dark charcoal with a few flat red ember shapes. Rounded oval caramel-brown cooked beef tongue slices with deliberate dark grill marks, a few flat pale highlights, neatly placed on the grill. Thick dark-brown outline #4A2A1A, flat 2D cel colors with one hard shadow tone, Japanese chibi puzzle icon readable at 64px. Real alpha transparency everywhere outside the complete grill. No table, plate, skewers, raw bloody meat, garnish, extra objects, flames, smoke, particles, people, text, labels, gradients, photographic texture or 3D sheen.",
+      "exports": [
+        {
+          "file": "assets/sprites/map/sendai/landmark.webp",
+          "png": "assets/sprites/map/sendai/source/tiles_png/landmark.png",
+          "size": [
+            512,
+            512
+          ],
+          "cut": "prop"
+        }
+      ]
+    },
+    {
+      "file": "level_bg.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Sendai Night Grill region of the map, Sendai on a summer night: charcoal grill houses, tree-lined avenues and big colourful Tanabata paper streamers. Region colours: banner #7A4FA8 to #4E2D75, land #C4D3A6.\n\nPortrait background for the puzzle screen, opaque, no characters: a night grill: Tanabata streamers and a purple sky at the top, the charcoal grill counter at the bottom. The game board covers the middle (about 90% of the width, from 25% to 80% of the height), so keep that area a calm, simple, low-contrast surface; put the scenery in the top 25% and bottom 20%. Front view with gentle depth.\nUse case: stylized-concept. Output fully opaque portrait 1024x1536 PNG for a puzzle screen. Compose THREE horizontal bands: detailed upper panel ONLY in top 20% y=0..307, compact detailed lower panel ONLY in bottom 15% y=1306..1535, and one HUGE quiet uniform pale muted lavender field across FULL WIDTH x=0..1023 and y=308..1305. Upper panel shows colorful Tanabata paper streamers hanging from compact bamboo supports against a purple summer-night sky, using purple #7A4FA8 and darker #4E2D75, pink, teal and gold. All streamers and supports stay wholly above y=308, no long tails entering the center. Lower panel shows a compact wooden charcoal grill counter with a grey brazier, dark charcoal, red embers and neatly arranged grilled food, all wholly below y=1305, no tall object or smoke extending above it. Keep the center uninterrupted low-contrast pale lavender for the board: no horizon line, counter, buildings, silhouettes, paper tails, poles, smoke, outlines, objects, shadows, gradients or texture in it. Front view with gentle depth. Clean flat cel 2D anime game art, dark-brown outlines and one hard shadow tone on scenery only. No people, letters, signs or labels.",
+      "exports": [
+        {
+          "file": "assets/backgrounds/level_sendai.webp",
+          "png": "assets/sprites/map/sendai/source/level_bg.png",
+          "size": [
+            1024,
+            1536
+          ],
+          "cut": "background"
+        }
+      ]
+    }
+  ]
+}

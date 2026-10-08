@@ -1,0 +1,144 @@
+{
+  "tool": "built-in image_gen",
+  "promptSource": "docs/prompts/tiles/map-12-kobe.md",
+  "reference": "land_sheet.png",
+  "region": "kobe",
+  "processing": {
+    "runtimeFormat": "lossless WebP",
+    "mapTileSize": [
+      256,
+      256
+    ],
+    "emblemSize": [
+      512,
+      512
+    ],
+    "backdropSize": [
+      1024,
+      1536
+    ],
+    "props": "trim alpha bounds, retain aspect ratio and pad with transparency",
+    "groundSeams": "match the plain opposite border strips before resize"
+  },
+  "sources": [
+    {
+      "file": "land_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nSetting: the Kobe Harbour Bistro region of the map, the Kobe harbour: a red lattice port tower, harbour cranes, western-style brick houses and mountains behind the port. Region colours: banner #2F6DB5 to #1B467F, land #D6CDA8.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Straight top-down view, flat, no perspective. Every item at the same scale with the same outline weight. Ground tiles fill their cell edge to edge, opaque, with no outline or border round the cell; the left edge matches the right edge and the top edge matches the bottom edge so each repeats seamlessly.\n\nLand:\nf1 (top-left) land_a: light harbour paving in square slabs in #D6CDA8.\nf2 (top-right) land_b: the same ground about 12% lighter, details in other places, so it alternates with land_a.\nf3 (bottom-left) land_c: land_a with a coil of rope.\nf4 (bottom-right) land_d: land_b with a coil of rope.\nUse case: stylized-concept. Output square 1024x1024 opaque PNG with four EXACT equal logical quadrants, no atlas borders, labels or gutters. Straight top-down flat 2D light harbor paving. Each cell contains a regular repeating 4x4 arrangement of square beige paving slabs, thin muted darker-beige grout seams, sparse deliberate little slab corner chips, all aligned precisely to the cell edges and the same tile scale. Left-column cells base #D6CDA8; right-column cells about 12% lighter #E8E2C1. Each lower cell has exactly ONE small tan coil of rope lying flat on the paving, dark-brown outline #4A2A1A and one hard-edged shadow tone, placed differently. Rope stays at least 15% away from quadrant edges. Opposite cell edges MUST have matching slab grid and colors for seamless repetition. No common cell outlines or thick frame border. No water, sky, buildings, trees, anchors, shells, extra rope, gradients, noise, photographic texture or vignette. Flat solid colors only.",
+      "exports": [
+        {
+          "file": "assets/sprites/map/kobe/land_a.webp",
+          "png": "assets/sprites/map/kobe/source/tiles_png/land_a.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/kobe/land_b.webp",
+          "png": "assets/sprites/map/kobe/source/tiles_png/land_b.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/kobe/land_c.webp",
+          "png": "assets/sprites/map/kobe/source/tiles_png/land_c.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/kobe/land_d.webp",
+          "png": "assets/sprites/map/kobe/source/tiles_png/land_d.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        }
+      ]
+    },
+    {
+      "file": "deco_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Kobe Harbour Bistro region of the map, the Kobe harbour: a red lattice port tower, harbour cranes, western-style brick houses and mountains behind the port. Region colours: banner #2F6DB5 to #1B467F, land #D6CDA8.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Top-down three-quarter view, seen from above at about 45 degrees, each object sitting on an invisible ground with its base near the bottom of its cell. Every item at the same scale with the same outline weight. Standalone items are centred with about 10% empty margin. Everything outside the items is fully transparent.\n\nDeco tiles:\nf1 (top-left) mountain: a long green mountain ridge (not on this band today).\nf2 (top-right) forest: two plane trees on a promenade (not on this band today).\nf3 (bottom-left) city: a red lattice port tower next to a western-style brick house.\nf4 (bottom-right) special: a small white lighthouse.\nUse case: stylized-concept. Output square 1024x1024 transparent PNG atlas with four EXACT logical quadrants. Each COMPLETE prop is SMALL and fits within the central 350x350 area of its own 512x512 quadrant, at least 81px from every quadrant edge, including tops of trees and tower. Top-left: ONE long low rounded green mountain ridge with several connected peaks. Top-right: exactly TWO plane trees with broad rounded green canopies and distinct trunks on ONE small paved promenade base. Bottom-left: ONE red lattice Kobe-style port tower beside ONE compact western-style red-brick house, both standing together as ONE group. Tower has a narrow-waisted red open lattice structure, a small circular observation deck at the top; short chunky toy proportions so the whole group fits the cell. Bottom-right: ONE small white lighthouse with a little blue lantern room, complete white body and compact base. View from above at about 45 degrees. Chunky rounded chibi shapes, thick dark-brown outlines #4A2A1A, flat cel colors with one hard shadow tone, same style as reference. Real transparent alpha outside props and through tower lattice gaps. No common background, cell borders, overlap across quadrants or clipped silhouettes. No people, text, labels, signs, gradients, photoreal texture, shadow haze or random sparkles.",
+      "exports": [
+        {
+          "file": "assets/sprites/map/kobe/mountain.webp",
+          "png": "assets/sprites/map/kobe/source/tiles_png/mountain.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/kobe/forest.webp",
+          "png": "assets/sprites/map/kobe/source/tiles_png/forest.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/kobe/city.webp",
+          "png": "assets/sprites/map/kobe/source/tiles_png/city.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/kobe/special.webp",
+          "png": "assets/sprites/map/kobe/source/tiles_png/special.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        }
+      ]
+    },
+    {
+      "file": "landmark.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Kobe Harbour Bistro region of the map, the Kobe harbour: a red lattice port tower, harbour cranes, western-style brick houses and mountains behind the port. Region colours: banner #2F6DB5 to #1B467F, land #D6CDA8.\n\nRegion emblem: a golden ship anchor wrapped in rope. A single object, front three-quarter view, chunky and glossy like a sushi game icon, centred with about 10% empty margin, fully transparent background.\nUse case: stylized-concept. Output square 1024x1024 transparent PNG. ONE single GOLDEN SHIP ANCHOR wrapped in one tan rope, centered front three-quarter view, about 10% empty margin. Anchor has a round eye at top, crossbar, thick shaft and TWO curved arms with pointed flukes, complete and clearly readable. Chunky rounded toy-like silhouette. Rope winds neatly around the shaft with one simple curl and visible end, no knotted tangle. Warm golden flat cel colors with one hard-edged darker gold shadow tone and one small pale-yellow flat highlight; dark-brown outline #4A2A1A. Maritime Japanese chibi puzzle icon readable at 64px. Real transparent alpha outside the anchor and through the eye and gaps. No ship, water, sand, base, coins, crown, sparkles, characters, text, logos, gradients, photo texture or metallic 3D sheen.",
+      "exports": [
+        {
+          "file": "assets/sprites/map/kobe/landmark.webp",
+          "png": "assets/sprites/map/kobe/source/tiles_png/landmark.png",
+          "size": [
+            512,
+            512
+          ],
+          "cut": "prop"
+        }
+      ]
+    },
+    {
+      "file": "level_bg.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Kobe Harbour Bistro region of the map, the Kobe harbour: a red lattice port tower, harbour cranes, western-style brick houses and mountains behind the port. Region colours: banner #2F6DB5 to #1B467F, land #D6CDA8.\n\nPortrait background for the puzzle screen, opaque, no characters: a harbour bistro: the red port tower and mountains at the top, the quay with ships and water at the bottom. The game board covers the middle (about 90% of the width, from 25% to 80% of the height), so keep that area a calm, simple, low-contrast surface; put the scenery in the top 25% and bottom 20%. Front view with gentle depth.\nUse case: stylized-concept. Output fully opaque portrait 1024x1536 PNG for a puzzle screen. Compose THREE horizontal bands: detailed upper panel ONLY in top 20% y=0..307, compact detailed lower panel ONLY in bottom 15% y=1306..1535, and one HUGE quiet uniform pale blue field across FULL WIDTH x=0..1023 and y=308..1305. Upper panel shows a red lattice Kobe-style port tower, rounded green mountains behind it and a compact harbor silhouette, all tops and bases wholly above y=308. Lower panel shows a compact beige stone quay with a few little ships on calm blue water and a small harbor crane, all wholly below y=1305; make ships and crane short and compact to fit. Keep the center uninterrupted low-contrast pale blue for the board: no horizon line, wakes, ripples, ships, buildings, tower, cranes, ropes, outlines, objects, shadows, gradients or texture in it. Front view with gentle depth. Clean flat cel 2D anime game art, dark-brown outlines and one hard shadow tone on scenery only. No people, letters, signs or labels.",
+      "exports": [
+        {
+          "file": "assets/backgrounds/level_kobe.webp",
+          "png": "assets/sprites/map/kobe/source/level_bg.png",
+          "size": [
+            1024,
+            1536
+          ],
+          "cut": "background"
+        }
+      ],
+      "edits": [
+        {
+          "prompt": "Use case: precise-object-edit. Edit this Kobe portrait puzzle backdrop. Preserve the upper panel EXACTLY: red lattice port tower, mountains, harbor buildings, top cranes, quay and sky, all wholly above y=384. Preserve the flat 2D Japanese chibi style and colors. Change ONLY the placement and scale of the LOWER harbor scenery: shrink the COMPLETE lower scene vertically and move it down so ALL lower objects occupy ONLY the bottom 15% of the final opaque 1024x1536 image, y=1306..1535. Keep the ships, lower crane, distant harbor, blue water, foreground paving and rope bollards, with all crane tips and ship masts BELOW y=1305. Extend the existing quiet pale blue center across FULL WIDTH down to y=1305. The game board spans y=384..1229 and must remain empty and low contrast. No buildings, mountains, outlines, ships, masts, cranes, ripples, shadows or texture from y=384 through y=1305. Do not add text, people or new objects. Final portrait 1024x1536 PNG, fully opaque."
+        }
+      ]
+    }
+  ]
+}

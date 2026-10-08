@@ -1,0 +1,139 @@
+{
+  "tool": "built-in image_gen",
+  "promptSource": "docs/prompts/tiles/map-01-tsukiji.md",
+  "reference": "land_sheet.png",
+  "region": "tsukiji",
+  "processing": {
+    "runtimeFormat": "lossless WebP",
+    "mapTileSize": [
+      256,
+      256
+    ],
+    "emblemSize": [
+      512,
+      512
+    ],
+    "backdropSize": [
+      1024,
+      1536
+    ],
+    "props": "trim alpha bounds, retain aspect ratio and pad with transparency",
+    "groundSeams": "match the plain opposite border strips before resize"
+  },
+  "sources": [
+    {
+      "file": "land_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nSetting: the Tsukiji Fish Market region of the map, Tokyo's Tsukiji fish market on a bright morning by the bay: blue-and-cream striped stall awnings, crates of ice and fish, little fishing boats and Mount Fuji far away. Region colours: banner #4FA3D1 to #2B6E99, land #A8C97F.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Straight top-down view, flat, no perspective. Every item at the same scale with the same outline weight. Ground tiles fill their cell edge to edge, opaque, with no outline or border round the cell; the left edge matches the right edge and the top edge matches the bottom edge so each repeats seamlessly.\n\nLand:\nf1 (top-left) land_a: short spring grass in #A8C97F.\nf2 (top-right) land_b: the same ground about 12% lighter, details in other places, so it alternates with land_a.\nf3 (bottom-left) land_c: land_a with a few tiny white clover flowers.\nf4 (bottom-right) land_d: land_b with a few tiny white clover flowers.\nOutput one square 1024x1024 fully opaque PNG sprite sheet, four exact equal logical quadrants. Uniform flat spring-green base fill in each quadrant, no gradients, no edge shadows or vignette. Sparse short simple grass tufts and tiny clover as specified, with all details at least 8% away from each quadrant boundary; the borders stay plain grass color so each tile repeats. No outlined square tiles, no drawn separators or gutters. This sheet contains only the grass variants, no scenery, stalls, boats, mountains or trees.",
+      "exports": [
+        {
+          "file": "assets/sprites/map/tsukiji/land_a.webp",
+          "png": "assets/sprites/map/tsukiji/source/tiles_png/land_a.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/tsukiji/land_b.webp",
+          "png": "assets/sprites/map/tsukiji/source/tiles_png/land_b.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/tsukiji/land_c.webp",
+          "png": "assets/sprites/map/tsukiji/source/tiles_png/land_c.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/tsukiji/land_d.webp",
+          "png": "assets/sprites/map/tsukiji/source/tiles_png/land_d.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        }
+      ]
+    },
+    {
+      "file": "deco_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Tsukiji Fish Market region of the map, Tokyo's Tsukiji fish market on a bright morning by the bay: blue-and-cream striped stall awnings, crates of ice and fish, little fishing boats and Mount Fuji far away. Region colours: banner #4FA3D1 to #2B6E99, land #A8C97F.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Top-down three-quarter view, seen from above at about 45 degrees, each object sitting on an invisible ground with its base near the bottom of its cell. Every item at the same scale with the same outline weight. Standalone items are centred with about 10% empty margin. Everything outside the items is fully transparent.\n\nDeco tiles:\nf1 (top-left) mountain: a small Mount Fuji: blue-grey cone with a white snow cap (not on this band today).\nf2 (top-right) forest: a cluster of three round ginkgo trees (not on this band today).\nf3 (bottom-left) city: a market stall with a blue-and-cream striped awning and stacked wooden fish crates with ice.\nf4 (bottom-right) special: a small fishing boat with a red flag.\nOutput a square 1024x1024 PNG atlas with genuine alpha transparency, exactly four equal quadrants. Use the input only as a style and palette reference; replace all grass with the four requested decoration objects. Each standalone object is contained in its own quadrant with about 10% clear margin, no cross-cell overlap, no ground rectangle, no cast shadow outside the object. Keep chunky shapes and details readable at 64px. Flat cel colour fills and one hard-edged shadow tone, dark-brown outlines, no gradients. The forest contains exactly three ginkgo trees. The market awning has blue and cream stripes. The fishing boat has one small plain red flag, no lettering.",
+      "exports": [
+        {
+          "file": "assets/sprites/map/tsukiji/mountain.webp",
+          "png": "assets/sprites/map/tsukiji/source/tiles_png/mountain.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/tsukiji/forest.webp",
+          "png": "assets/sprites/map/tsukiji/source/tiles_png/forest.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/tsukiji/city.webp",
+          "png": "assets/sprites/map/tsukiji/source/tiles_png/city.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/tsukiji/special.webp",
+          "png": "assets/sprites/map/tsukiji/source/tiles_png/special.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        }
+      ]
+    },
+    {
+      "file": "landmark.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Tsukiji Fish Market region of the map, Tokyo's Tsukiji fish market on a bright morning by the bay: blue-and-cream striped stall awnings, crates of ice and fish, little fishing boats and Mount Fuji far away. Region colours: banner #4FA3D1 to #2B6E99, land #A8C97F.\n\nRegion emblem: a plump tuna lying on a wooden crate of crushed ice. A single object, front three-quarter view, chunky and glossy like a sushi game icon, centred with about 10% empty margin, fully transparent background.\nOutput one square 1024x1024 PNG with real alpha transparency. A single centered plump tuna on a wooden crate of crushed ice, no atlas grid, no background, no ground patch, no glow or vignette, no cast shadow outside the object's silhouette. Use the input only for style and palette. Thick dark-brown outline, crisp flat cel colours and one hard shadow tone; simple deliberate details readable as a small emblem. No text.",
+      "exports": [
+        {
+          "file": "assets/sprites/map/tsukiji/landmark.webp",
+          "png": "assets/sprites/map/tsukiji/source/tiles_png/landmark.png",
+          "size": [
+            512,
+            512
+          ],
+          "cut": "prop"
+        }
+      ]
+    },
+    {
+      "file": "level_bg.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Tsukiji Fish Market region of the map, Tokyo's Tsukiji fish market on a bright morning by the bay: blue-and-cream striped stall awnings, crates of ice and fish, little fishing boats and Mount Fuji far away. Region colours: banner #4FA3D1 to #2B6E99, land #A8C97F.\n\nPortrait background for the puzzle screen, opaque, no characters: the inside of the fish market at dawn: hanging paper lanterns and striped awnings at the top, ice crates and the harbour water with boats at the bottom. The game board covers the middle (about 90% of the width, from 25% to 80% of the height), so keep that area a calm, simple, low-contrast surface; put the scenery in the top 25% and bottom 20%. Front view with gentle depth.\nOutput a portrait 1024x1536 fully opaque PNG. Use the input only for style and palette, not its layout or grass. No grid. Keep the board zone strictly quiet: center 90% of image width, from 25% to 80% of height, is a plain gently colored cream or pale blue-grey surface with very low contrast, no objects, edges, waves or decorative marks inside that zone. Place all lanterns and awnings above 25% height and all crates, harbour boats and water below 80% height, around the top and bottom edges. Maintain crisp flat cel shading and dark-brown outlines on scenery, no photo textures or airbrush. No characters or writing.",
+      "exports": [
+        {
+          "file": "assets/backgrounds/level_tsukiji.webp",
+          "png": "assets/sprites/map/tsukiji/source/level_bg.png",
+          "size": [
+            1024,
+            1536
+          ],
+          "cut": "background"
+        }
+      ]
+    }
+  ]
+}

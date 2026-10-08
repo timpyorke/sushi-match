@@ -1,0 +1,149 @@
+{
+  "tool": "built-in image_gen",
+  "promptSource": "docs/prompts/tiles/map-06-okinawa.md",
+  "reference": "land_sheet.png",
+  "region": "okinawa",
+  "processing": {
+    "runtimeFormat": "lossless WebP",
+    "mapTileSize": [
+      256,
+      256
+    ],
+    "emblemSize": [
+      512,
+      512
+    ],
+    "backdropSize": [
+      1024,
+      1536
+    ],
+    "props": "trim alpha bounds, retain aspect ratio and pad with transparency",
+    "groundSeams": "match the plain opposite border strips before resize"
+  },
+  "sources": [
+    {
+      "file": "land_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nSetting: the Okinawa Beach Shack region of the map, a tropical Okinawa beach: turquoise sea, palm trees, hibiscus, red-tiled roofs with shisa lion statues and a straw beach shack. Region colours: banner #2EC4B6 to #138A8A, land #F0DFAE.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Straight top-down view, flat, no perspective. Every item at the same scale with the same outline weight. Ground tiles fill their cell edge to edge, opaque, with no outline or border round the cell; the left edge matches the right edge and the top edge matches the bottom edge so each repeats seamlessly.\n\nLand:\nf1 (top-left) land_a: warm golden sand in #F0DFAE.\nf2 (top-right) land_b: the same ground about 12% lighter, details in other places, so it alternates with land_a.\nf3 (bottom-left) land_c: land_a with a small seashell and a starfish.\nf4 (bottom-right) land_d: land_b with a small seashell and a starfish.\nUse case: stylized-concept. Output a square 1024x1024 opaque PNG sheet with four exact equal logical quadrants, no visible grid or gutters. Straight top-down flat 2D ground. Uniform warm golden sand #F0DFAE for left-column cells, about 12% lighter pale golden sand #F8EBCB for right-column cells. A few very sparse small low-contrast curved sand-ripple strokes in different positions. Each lower cell has exactly ONE small seashell and ONE small five-armed starfish, placed differently, with crisp dark-brown outlines and simple flat cel fills. All details stay at least 12% away from each quadrant's edges. Border regions must be plain solid sand, edge to edge, for seamless repetition. No gradients, realistic grain, mottling, noisy textures, vignette, outlined tile borders, plants, water or scenic props.",
+      "exports": [
+        {
+          "file": "assets/sprites/map/okinawa/land_a.webp",
+          "png": "assets/sprites/map/okinawa/source/tiles_png/land_a.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/okinawa/land_b.webp",
+          "png": "assets/sprites/map/okinawa/source/tiles_png/land_b.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/okinawa/land_c.webp",
+          "png": "assets/sprites/map/okinawa/source/tiles_png/land_c.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/okinawa/land_d.webp",
+          "png": "assets/sprites/map/okinawa/source/tiles_png/land_d.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        }
+      ]
+    },
+    {
+      "file": "deco_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Okinawa Beach Shack region of the map, a tropical Okinawa beach: turquoise sea, palm trees, hibiscus, red-tiled roofs with shisa lion statues and a straw beach shack. Region colours: banner #2EC4B6 to #138A8A, land #F0DFAE.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Top-down three-quarter view, seen from above at about 45 degrees, each object sitting on an invisible ground with its base near the bottom of its cell. Every item at the same scale with the same outline weight. Standalone items are centred with about 10% empty margin. Everything outside the items is fully transparent.\n\nDeco tiles:\nf1 (top-left) mountain: a green limestone hill with a sea cave (not on this band today).\nf2 (top-right) forest: two palm trees with a red hibiscus bush.\nf3 (bottom-left) city: a small house with a red tiled roof and a shisa lion on top (not on this band today).\nf4 (bottom-right) special: a straw-roofed beach shack with a surfboard.\nUse case: stylized-concept. Output square 1024x1024 transparent PNG atlas with four exact equal logical quadrants, no visible grid. Every COMPLETE prop must fit inside the INNER 70% of its quadrant, with at least 15% transparent margin on every side, no clipping or crossing central boundaries. Top-left: green limestone hill with a clearly visible sea cave opening and a tiny turquoise water inlet at its foot. Top-right: EXACTLY TWO palms with a small RED hibiscus bush at their base. Bottom-left: one small Okinawan house with red tiled roof and a clearly readable tiny SHISA guardian lion statue perched on top. Bottom-right: one small straw-roofed beach shack with a plain surfboard leaning against it. View from above at 45 degrees, chunky rounded shapes, flat cel fills, one hard shadow tone and thick dark-brown outlines #4A2A1A. Transparent space outside each standalone object, no shared ground or backdrop, no words, labels or symbols. No gradients, photo textures or cast shadow haze. Preserve full outer silhouettes with a clear transparent gap between all four props.",
+      "exports": [
+        {
+          "file": "assets/sprites/map/okinawa/mountain.webp",
+          "png": "assets/sprites/map/okinawa/source/tiles_png/mountain.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/okinawa/forest.webp",
+          "png": "assets/sprites/map/okinawa/source/tiles_png/forest.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/okinawa/city.webp",
+          "png": "assets/sprites/map/okinawa/source/tiles_png/city.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/okinawa/special.webp",
+          "png": "assets/sprites/map/okinawa/source/tiles_png/special.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        }
+      ],
+      "edits": [
+        {
+          "prompt": "Edit this transparent Okinawa 2x2 game-prop atlas. Preserve all four designs, colors, dark-brown outlines and quadrant assignments: sea-cave hill top-left, two palms with hibiscus top-right, red-roof house with shisa top-bottom-left, straw shack with surfboard bottom-right. Fix only layout and spacing. SHRINK EACH COMPLETE prop to 70% of its current size and center it in its own equal quadrant. Each complete silhouette must stay at least 15% of quadrant width away from every quadrant edge. The entire sea-cave hill including its turquoise water base MUST stay inside the top-left quadrant, with a visible transparent gap to the palms. No part of any object touches a center boundary or canvas edge; restore any clipped silhouettes. Keep all props complete, no new objects, no letters or labels. Real alpha transparency in background and gaps. Square 1024x1024 PNG."
+        }
+      ]
+    },
+    {
+      "file": "landmark.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Okinawa Beach Shack region of the map, a tropical Okinawa beach: turquoise sea, palm trees, hibiscus, red-tiled roofs with shisa lion statues and a straw beach shack. Region colours: banner #2EC4B6 to #138A8A, land #F0DFAE.\n\nRegion emblem: a big red hibiscus flower with green leaves. A single object, front three-quarter view, chunky and glossy like a sushi game icon, centred with about 10% empty margin, fully transparent background.\nUse case: stylized-concept. Output square 1024x1024 PNG on genuine alpha transparency. ONE large red hibiscus flower with five broad rounded petals, a long protruding yellow-tipped stamen, and a few chunky green leaves. Front three-quarter view, single centered game emblem with 10% empty margin. Thick dark-brown outline #4A2A1A, flat red cel colors, one crisp hard shadow tone and small flat white highlights, clearly readable at 64px. No vase, pot, stem extending far away, background, ground, extra flowers, words, people, gradients, photo textures or 3D sheen. Alpha transparency outside the flower and leaves.",
+      "exports": [
+        {
+          "file": "assets/sprites/map/okinawa/landmark.webp",
+          "png": "assets/sprites/map/okinawa/source/tiles_png/landmark.png",
+          "size": [
+            512,
+            512
+          ],
+          "cut": "prop"
+        }
+      ]
+    },
+    {
+      "file": "level_bg.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Okinawa Beach Shack region of the map, a tropical Okinawa beach: turquoise sea, palm trees, hibiscus, red-tiled roofs with shisa lion statues and a straw beach shack. Region colours: banner #2EC4B6 to #138A8A, land #F0DFAE.\n\nPortrait background for the puzzle screen, opaque, no characters: a beach shack: palm leaves and a bright sky at the top, turquoise sea and sand at the bottom. The game board covers the middle (about 90% of the width, from 25% to 80% of the height), so keep that area a calm, simple, low-contrast surface; put the scenery in the top 25% and bottom 20%. Front view with gentle depth.\nUse case: stylized-concept. Output fully opaque portrait 1024x1536 PNG for a puzzle screen. Compose THREE horizontal bands: upper decorative panel ONLY in top 20% y=0..307, lower decorative panel ONLY in bottom 15% y=1306..1535, and a huge quiet uniform pale warm ivory field across the FULL WIDTH x=0..1023 and y=308..1305. Upper panel: palm leaves framing a bright tropical sky with a compact straw beach-shack roof/eave hint, all entirely above y=308. Lower panel: turquoise sea, white surf and warm golden sand, all entirely below y=1305. Keep the full middle field uninterrupted, flat and very low contrast for the board. No palm trunks, leaves, sea horizons, rails, hut pillars, objects, shadows, texture or lines in the center. Flat cel cartoon colors, dark-brown outlines on scenery, one hard shadow tone, no gradients, noise, writing, signs, people or watermarks.",
+      "exports": [
+        {
+          "file": "assets/backgrounds/level_okinawa.webp",
+          "png": "assets/sprites/map/okinawa/source/level_bg.png",
+          "size": [
+            1024,
+            1536
+          ],
+          "cut": "background"
+        }
+      ],
+      "edits": [
+        {
+          "prompt": "Edit this Okinawa portrait puzzle backdrop, preserving the 1024x1536 canvas and the entire upper palm/sky/hibiscus/shack-roof panel y=0..321 exactly. Change ONLY the lower beach layout: shrink and redraw the turquoise sea, white surf, sand, shells and starfish into the bottom 15% of the canvas, y=1306..1535. The topmost pixel of any lower sea or beach scenery must be at y=1306 or below. Extend the same plain warm ivory field across the FULL WIDTH x=0..1023 all the way down to y=1305. Rectangle x=0..1023,y=322..1305 must contain only uninterrupted very low-contrast warm ivory, no waves, objects, lines, texture, shadows or gradients. Retain a readable compact turquoise surf strip and sandy foreground with small shells and starfish in the bottom strip. No new props, text or people. Keep clean 2D cel cartoon style, flat color areas and crisp outlines. Fully opaque portrait PNG."
+        }
+      ]
+    }
+  ]
+}

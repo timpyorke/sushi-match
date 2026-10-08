@@ -1,0 +1,149 @@
+{
+  "tool": "built-in image_gen",
+  "promptSource": "docs/prompts/tiles/map-07-omakase.md",
+  "reference": "land_sheet.png",
+  "region": "omakase",
+  "processing": {
+    "runtimeFormat": "lossless WebP",
+    "mapTileSize": [
+      256,
+      256
+    ],
+    "emblemSize": [
+      512,
+      512
+    ],
+    "backdropSize": [
+      1024,
+      1536
+    ],
+    "props": "trim alpha bounds, retain aspect ratio and pad with transparency",
+    "groundSeams": "match the plain opposite border strips before resize"
+  },
+  "sources": [
+    {
+      "file": "land_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nSetting: the Omakase Counter region of the map, the finest omakase sushi counter: black lacquer, gold leaf, pale hinoki wood, bonsai pines and gold folding screens. Region colours: banner #D4A537 to #9A6A12, land #D9C08A.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Straight top-down view, flat, no perspective. Every item at the same scale with the same outline weight. Ground tiles fill their cell edge to edge, opaque, with no outline or border round the cell; the left edge matches the right edge and the top edge matches the bottom edge so each repeats seamlessly.\n\nLand:\nf1 (top-left) land_a: pale raked gravel with fine parallel lines in #D9C08A.\nf2 (top-right) land_b: the same ground about 12% lighter, details in other places, so it alternates with land_a.\nf3 (bottom-left) land_c: land_a with a single flat stepping stone.\nf4 (bottom-right) land_d: land_b with a single flat stepping stone.\nUse case: stylized-concept. Output square 1024x1024 opaque PNG with four exact equal logical quadrants, no drawn cell borders or gutters. Straight top-down 2D ground. Uniform pale golden raked-gravel base #D9C08A in left-column cells, about 12% lighter #E7D5A8 in right-column cells. Fine evenly spaced parallel horizontal rake lines in low-contrast tan, very restrained and readable at 64px, same regular spacing for seamless repetition. Borders must repeat cleanly, left/right and top/bottom. Lower cells each contain exactly ONE flat rounded grey-beige stepping stone with a crisp dark-brown outline and one small hard shadow tone; stone stays at least 15% from quadrant edges and has different placement in each lower cell. No specks, noisy grain, photo textures, gradients, vignette, edge shading, plants, buildings, mountains or scenic props.",
+      "exports": [
+        {
+          "file": "assets/sprites/map/omakase/land_a.webp",
+          "png": "assets/sprites/map/omakase/source/tiles_png/land_a.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/omakase/land_b.webp",
+          "png": "assets/sprites/map/omakase/source/tiles_png/land_b.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/omakase/land_c.webp",
+          "png": "assets/sprites/map/omakase/source/tiles_png/land_c.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        },
+        {
+          "file": "assets/sprites/map/omakase/land_d.webp",
+          "png": "assets/sprites/map/omakase/source/tiles_png/land_d.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "ground"
+        }
+      ]
+    },
+    {
+      "file": "deco_sheet.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Omakase Counter region of the map, the finest omakase sushi counter: black lacquer, gold leaf, pale hinoki wood, bonsai pines and gold folding screens. Region colours: banner #D4A537 to #9A6A12, land #D9C08A.\n\nTile sheet: 2x2 grid of 4 equal 512x512 cells, one item per cell, no borders, no grid lines, no gutters, no labels, no numbers. Top-down three-quarter view, seen from above at about 45 degrees, each object sitting on an invisible ground with its base near the bottom of its cell. Every item at the same scale with the same outline weight. Standalone items are centred with about 10% empty margin. Everything outside the items is fully transparent.\n\nDeco tiles:\nf1 (top-left) mountain: a mountain painted in gold leaf like a folding screen (not on this band today).\nf2 (top-right) forest: a neatly clipped bonsai pine on a stone (not on this band today).\nf3 (bottom-left) city: an elegant black-lacquer restaurant with a gold-trimmed roof and a white noren curtain.\nf4 (bottom-right) special: a hinoki counter with a chef knife on a cloth.\nUse case: stylized-concept. Output square 1024x1024 transparent PNG atlas with four EXACT logical quadrants of equal size. Every COMPLETE prop fits inside the INNER 70% of its own quadrant with at least 15% clear margin on every side. Top-left: a freestanding small gold-leaf folding screen with a clearly readable mountain landscape painted on its panels, a Japanese byobu, gold and charcoal flat shapes. Top-right: one neatly clipped bonsai pine perched on a rounded stone. Bottom-left: one elegant compact black-lacquer restaurant building with a gold-trimmed roof and a plain white noren curtain with NO writing. Bottom-right: a short pale hinoki sushi counter with ONE chef knife lying on a folded white cloth. View from above at about 45 degrees. Chunky rounded toy-like proportions, crisp dark-brown outlines #4A2A1A, flat cel colors and one hard shadow tone. No photo texture, gradients, cast shadow haze, characters, letters, labels, logos or other objects. Actual alpha transparency outside each prop and in openings, no common background or ground. Complete silhouettes, clear gap between all four props and central boundaries.",
+      "exports": [
+        {
+          "file": "assets/sprites/map/omakase/mountain.webp",
+          "png": "assets/sprites/map/omakase/source/tiles_png/mountain.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/omakase/forest.webp",
+          "png": "assets/sprites/map/omakase/source/tiles_png/forest.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/omakase/city.webp",
+          "png": "assets/sprites/map/omakase/source/tiles_png/city.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        },
+        {
+          "file": "assets/sprites/map/omakase/special.webp",
+          "png": "assets/sprites/map/omakase/source/tiles_png/special.png",
+          "size": [
+            256,
+            256
+          ],
+          "cut": "prop"
+        }
+      ],
+      "edits": [
+        {
+          "prompt": "Edit this transparent Omakase 2x2 game-prop atlas. Preserve all four designs, colors and quadrant assignments: gold mountain folding screen top-left, bonsai pine on stone top-right, black-and-gold restaurant with white noren bottom-left, hinoki counter with knife on white cloth bottom-right. Fix only layout and spacing: SHRINK EACH COMPLETE prop to 75% of current size and recenter it in its own EXACT equal quadrant. Each complete silhouette needs at least 15% transparent margin from all four quadrant edges. Restore the whole restaurant roof outline, with no part crossing the vertical central boundary. No clipped outlines, no prop touching canvas edges or center boundaries, clear transparent gap between every object. No new props, lettering or labels. Keep crisp dark-brown outlines, flat cel shadow shapes and actual fully transparent alpha background. Square 1024x1024 PNG."
+        }
+      ]
+    },
+    {
+      "file": "landmark.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Omakase Counter region of the map, the finest omakase sushi counter: black lacquer, gold leaf, pale hinoki wood, bonsai pines and gold folding screens. Region colours: banner #D4A537 to #9A6A12, land #D9C08A.\n\nRegion emblem: a small golden crown on a black lacquer sushi tray. A single object, front three-quarter view, chunky and glossy like a sushi game icon, centred with about 10% empty margin, fully transparent background.\nUse case: stylized-concept. Output square 1024x1024 PNG on real transparent alpha. Single centered emblem: ONE small golden crown resting on ONE black lacquer sushi tray with a subtle thin gold rim. Front three-quarter view, chunky chibi game-icon proportions, 10% transparent margin. Crown has broad readable golden points and small hard flat white highlights, one darker gold cel shadow tone. Tray is a low rectangular rounded black lacquer tray, no food. Crisp dark-brown outer outlines. No jewels floating outside, sparkles, background, tabletop, cloth, extra crowns, sushi pieces, letters, symbols, people, gradients or photoreal texture.",
+      "exports": [
+        {
+          "file": "assets/sprites/map/omakase/landmark.webp",
+          "png": "assets/sprites/map/omakase/source/tiles_png/landmark.png",
+          "size": [
+            512,
+            512
+          ],
+          "cut": "prop"
+        }
+      ]
+    },
+    {
+      "file": "level_bg.png",
+      "prompt": "Japanese anime-style chibi mobile-game environment art, like the tile set of a cosy slice-of-life anime puzzle game. Drawn by hand by a professional 2D anime game background artist: flat cel colours with one crisp hard-edged shadow tone, thick dark-brown outline (#4A2A1A) with slight natural line-weight variation (thicker on outer silhouettes, thinner on inner details), one small flat white highlight per shiny surface, chunky rounded chibi shapes (buildings, trees, rocks and props squashed and rounded like cute toys), limited warm Japanese palette, light from the top-left. Few, deliberate details, every shape clearly readable at 64 pixels. Avoid the typical AI-art look: no airbrushed or soft gradient shading, no plastic or 3D-render sheen, no photographic texture, no texture noise, no random extra sparkles or particles, no melted or merged details, no blurry edges. No characters or people unless asked, no text, no letters, no numbers, no logo, no watermark. Outline weight matches a cartoon salmon-nigiri game icon.\n\nUse the reference image (land_sheet.png) only for style and palette: same outline weight, cel shading, colours and level of detail. Draw the new items described below.\n\nSetting: the Omakase Counter region of the map, the finest omakase sushi counter: black lacquer, gold leaf, pale hinoki wood, bonsai pines and gold folding screens. Region colours: banner #D4A537 to #9A6A12, land #D9C08A.\n\nPortrait background for the puzzle screen, opaque, no characters: a hinoki sushi counter: gold folding screens and hanging lights at the top, the pale wood counter at the bottom. The game board covers the middle (about 90% of the width, from 25% to 80% of the height), so keep that area a calm, simple, low-contrast surface; put the scenery in the top 25% and bottom 20%. Front view with gentle depth.\nUse case: stylized-concept. Output fully opaque portrait 1024x1536 PNG for a puzzle screen. Compose THREE horizontal bands: detailed upper panel ONLY in top 20% y=0..307, detailed lower panel ONLY in bottom 15% y=1306..1535, and a huge quiet uniform warm ivory field across FULL WIDTH x=0..1023 and y=308..1305. Upper panel: gold folding screens with restrained mountain motifs and simple warm hanging lights, all wholly above y=308. Lower panel: compact pale hinoki sushi counter with a restrained black lacquer/gold trim accent, all wholly below y=1305. Keep the center field uninterrupted, flat and low contrast for the game board: no panel seams, lights, cords, pillars, wood grain, objects, outlines, texture, shadows or gradients in the central rectangle. Clean 2D chibi anime game backdrop, flat cel colors, dark-brown outlines on scenery, no letters, signs, characters or people.",
+      "exports": [
+        {
+          "file": "assets/backgrounds/level_omakase.webp",
+          "png": "assets/sprites/map/omakase/source/level_bg.png",
+          "size": [
+            1024,
+            1536
+          ],
+          "cut": "background"
+        }
+      ],
+      "edits": [
+        {
+          "prompt": "Edit this Omakase portrait puzzle backdrop. Preserve the 1024x1536 canvas and the exact upper gold-folding-screen, lights and bonsai panel y=0..357. Change ONLY lower layout: compress and redraw the entire hinoki counter, trays, cups, gold/black front panel and stools inside the bottom 15% of canvas, y=1306..1535. The uppermost pixel of any lower cup, tray, counter or stool must be y=1306 or below. Extend the same plain warm ivory field across FULL WIDTH x=0..1023 down to y=1305. Rectangle x=0..1023,y=358..1305 contains only uninterrupted uniform low-contrast ivory; no lines, objects, cup silhouettes, shadow, wood grain, texture or gradient. Keep a compact readable pale wood counter along bottom with restrained black-and-gold trim, simplify lower details to fit. No new objects, no people, writing or signs. Clean 2D anime cel colors with crisp outlines on scenery only. Fully opaque portrait PNG."
+        }
+      ]
+    }
+  ]
+}

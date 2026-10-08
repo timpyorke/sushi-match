@@ -117,8 +117,80 @@ class $AssetsBackgroundsGen {
   /// File path: assets/backgrounds/bg.webp
   AssetGenImage get bg => const AssetGenImage('assets/backgrounds/bg.webp');
 
+  /// File path: assets/backgrounds/level_fukuoka.webp
+  AssetGenImage get levelFukuoka =>
+      const AssetGenImage('assets/backgrounds/level_fukuoka.webp');
+
+  /// File path: assets/backgrounds/level_ginza.webp
+  AssetGenImage get levelGinza =>
+      const AssetGenImage('assets/backgrounds/level_ginza.webp');
+
+  /// File path: assets/backgrounds/level_hiroshima.webp
+  AssetGenImage get levelHiroshima =>
+      const AssetGenImage('assets/backgrounds/level_hiroshima.webp');
+
+  /// File path: assets/backgrounds/level_hokkaido.webp
+  AssetGenImage get levelHokkaido =>
+      const AssetGenImage('assets/backgrounds/level_hokkaido.webp');
+
+  /// File path: assets/backgrounds/level_kanazawa.webp
+  AssetGenImage get levelKanazawa =>
+      const AssetGenImage('assets/backgrounds/level_kanazawa.webp');
+
+  /// File path: assets/backgrounds/level_kobe.webp
+  AssetGenImage get levelKobe =>
+      const AssetGenImage('assets/backgrounds/level_kobe.webp');
+
+  /// File path: assets/backgrounds/level_kyoto.webp
+  AssetGenImage get levelKyoto =>
+      const AssetGenImage('assets/backgrounds/level_kyoto.webp');
+
+  /// File path: assets/backgrounds/level_nagoya.webp
+  AssetGenImage get levelNagoya =>
+      const AssetGenImage('assets/backgrounds/level_nagoya.webp');
+
+  /// File path: assets/backgrounds/level_nara.webp
+  AssetGenImage get levelNara =>
+      const AssetGenImage('assets/backgrounds/level_nara.webp');
+
+  /// File path: assets/backgrounds/level_okinawa.webp
+  AssetGenImage get levelOkinawa =>
+      const AssetGenImage('assets/backgrounds/level_okinawa.webp');
+
+  /// File path: assets/backgrounds/level_omakase.webp
+  AssetGenImage get levelOmakase =>
+      const AssetGenImage('assets/backgrounds/level_omakase.webp');
+
+  /// File path: assets/backgrounds/level_osaka.webp
+  AssetGenImage get levelOsaka =>
+      const AssetGenImage('assets/backgrounds/level_osaka.webp');
+
+  /// File path: assets/backgrounds/level_sendai.webp
+  AssetGenImage get levelSendai =>
+      const AssetGenImage('assets/backgrounds/level_sendai.webp');
+
+  /// File path: assets/backgrounds/level_tsukiji.webp
+  AssetGenImage get levelTsukiji =>
+      const AssetGenImage('assets/backgrounds/level_tsukiji.webp');
+
   /// List of all assets
-  List<AssetGenImage> get values => [bg];
+  List<AssetGenImage> get values => [
+        bg,
+        levelFukuoka,
+        levelGinza,
+        levelHiroshima,
+        levelHokkaido,
+        levelKanazawa,
+        levelKobe,
+        levelKyoto,
+        levelNagoya,
+        levelNara,
+        levelOkinawa,
+        levelOmakase,
+        levelOsaka,
+        levelSendai,
+        levelTsukiji
+      ];
 }
 
 class $AssetsEventsGen {
@@ -390,6 +462,55 @@ class $AssetsSpritesMapGen {
 
   /// Directory path: assets/sprites/map/common
   $AssetsSpritesMapCommonGen get common => const $AssetsSpritesMapCommonGen();
+
+  /// Directory path: assets/sprites/map/fukuoka
+  $AssetsSpritesMapFukuokaGen get fukuoka =>
+      const $AssetsSpritesMapFukuokaGen();
+
+  /// Directory path: assets/sprites/map/ginza
+  $AssetsSpritesMapGinzaGen get ginza => const $AssetsSpritesMapGinzaGen();
+
+  /// Directory path: assets/sprites/map/hiroshima
+  $AssetsSpritesMapHiroshimaGen get hiroshima =>
+      const $AssetsSpritesMapHiroshimaGen();
+
+  /// Directory path: assets/sprites/map/hokkaido
+  $AssetsSpritesMapHokkaidoGen get hokkaido =>
+      const $AssetsSpritesMapHokkaidoGen();
+
+  /// Directory path: assets/sprites/map/kanazawa
+  $AssetsSpritesMapKanazawaGen get kanazawa =>
+      const $AssetsSpritesMapKanazawaGen();
+
+  /// Directory path: assets/sprites/map/kobe
+  $AssetsSpritesMapKobeGen get kobe => const $AssetsSpritesMapKobeGen();
+
+  /// Directory path: assets/sprites/map/kyoto
+  $AssetsSpritesMapKyotoGen get kyoto => const $AssetsSpritesMapKyotoGen();
+
+  /// Directory path: assets/sprites/map/nagoya
+  $AssetsSpritesMapNagoyaGen get nagoya => const $AssetsSpritesMapNagoyaGen();
+
+  /// Directory path: assets/sprites/map/nara
+  $AssetsSpritesMapNaraGen get nara => const $AssetsSpritesMapNaraGen();
+
+  /// Directory path: assets/sprites/map/okinawa
+  $AssetsSpritesMapOkinawaGen get okinawa =>
+      const $AssetsSpritesMapOkinawaGen();
+
+  /// Directory path: assets/sprites/map/omakase
+  $AssetsSpritesMapOmakaseGen get omakase =>
+      const $AssetsSpritesMapOmakaseGen();
+
+  /// Directory path: assets/sprites/map/osaka
+  $AssetsSpritesMapOsakaGen get osaka => const $AssetsSpritesMapOsakaGen();
+
+  /// Directory path: assets/sprites/map/sendai
+  $AssetsSpritesMapSendaiGen get sendai => const $AssetsSpritesMapSendaiGen();
+
+  /// Directory path: assets/sprites/map/tsukiji
+  $AssetsSpritesMapTsukijiGen get tsukiji =>
+      const $AssetsSpritesMapTsukijiGen();
 }
 
 class $AssetsSpritesObstaclesGen {
@@ -3192,6 +3313,622 @@ class $AssetsSpritesMapCommonGen {
         starLit,
         waveCrest
       ];
+}
+
+class $AssetsSpritesMapFukuokaGen {
+  const $AssetsSpritesMapFukuokaGen();
+
+  /// File path: assets/sprites/map/fukuoka/city.webp
+  AssetGenImage get city =>
+      const AssetGenImage('assets/sprites/map/fukuoka/city.webp');
+
+  /// File path: assets/sprites/map/fukuoka/forest.webp
+  AssetGenImage get forest =>
+      const AssetGenImage('assets/sprites/map/fukuoka/forest.webp');
+
+  /// File path: assets/sprites/map/fukuoka/land_a.webp
+  AssetGenImage get landA =>
+      const AssetGenImage('assets/sprites/map/fukuoka/land_a.webp');
+
+  /// File path: assets/sprites/map/fukuoka/land_b.webp
+  AssetGenImage get landB =>
+      const AssetGenImage('assets/sprites/map/fukuoka/land_b.webp');
+
+  /// File path: assets/sprites/map/fukuoka/land_c.webp
+  AssetGenImage get landC =>
+      const AssetGenImage('assets/sprites/map/fukuoka/land_c.webp');
+
+  /// File path: assets/sprites/map/fukuoka/land_d.webp
+  AssetGenImage get landD =>
+      const AssetGenImage('assets/sprites/map/fukuoka/land_d.webp');
+
+  /// File path: assets/sprites/map/fukuoka/landmark.webp
+  AssetGenImage get landmark =>
+      const AssetGenImage('assets/sprites/map/fukuoka/landmark.webp');
+
+  /// File path: assets/sprites/map/fukuoka/mountain.webp
+  AssetGenImage get mountain =>
+      const AssetGenImage('assets/sprites/map/fukuoka/mountain.webp');
+
+  /// File path: assets/sprites/map/fukuoka/special.webp
+  AssetGenImage get special =>
+      const AssetGenImage('assets/sprites/map/fukuoka/special.webp');
+
+  /// List of all assets
+  List<AssetGenImage> get values =>
+      [city, forest, landA, landB, landC, landD, landmark, mountain, special];
+}
+
+class $AssetsSpritesMapGinzaGen {
+  const $AssetsSpritesMapGinzaGen();
+
+  /// File path: assets/sprites/map/ginza/city.webp
+  AssetGenImage get city =>
+      const AssetGenImage('assets/sprites/map/ginza/city.webp');
+
+  /// File path: assets/sprites/map/ginza/forest.webp
+  AssetGenImage get forest =>
+      const AssetGenImage('assets/sprites/map/ginza/forest.webp');
+
+  /// File path: assets/sprites/map/ginza/land_a.webp
+  AssetGenImage get landA =>
+      const AssetGenImage('assets/sprites/map/ginza/land_a.webp');
+
+  /// File path: assets/sprites/map/ginza/land_b.webp
+  AssetGenImage get landB =>
+      const AssetGenImage('assets/sprites/map/ginza/land_b.webp');
+
+  /// File path: assets/sprites/map/ginza/land_c.webp
+  AssetGenImage get landC =>
+      const AssetGenImage('assets/sprites/map/ginza/land_c.webp');
+
+  /// File path: assets/sprites/map/ginza/land_d.webp
+  AssetGenImage get landD =>
+      const AssetGenImage('assets/sprites/map/ginza/land_d.webp');
+
+  /// File path: assets/sprites/map/ginza/landmark.webp
+  AssetGenImage get landmark =>
+      const AssetGenImage('assets/sprites/map/ginza/landmark.webp');
+
+  /// File path: assets/sprites/map/ginza/mountain.webp
+  AssetGenImage get mountain =>
+      const AssetGenImage('assets/sprites/map/ginza/mountain.webp');
+
+  /// File path: assets/sprites/map/ginza/special.webp
+  AssetGenImage get special =>
+      const AssetGenImage('assets/sprites/map/ginza/special.webp');
+
+  /// List of all assets
+  List<AssetGenImage> get values =>
+      [city, forest, landA, landB, landC, landD, landmark, mountain, special];
+}
+
+class $AssetsSpritesMapHiroshimaGen {
+  const $AssetsSpritesMapHiroshimaGen();
+
+  /// File path: assets/sprites/map/hiroshima/city.webp
+  AssetGenImage get city =>
+      const AssetGenImage('assets/sprites/map/hiroshima/city.webp');
+
+  /// File path: assets/sprites/map/hiroshima/forest.webp
+  AssetGenImage get forest =>
+      const AssetGenImage('assets/sprites/map/hiroshima/forest.webp');
+
+  /// File path: assets/sprites/map/hiroshima/land_a.webp
+  AssetGenImage get landA =>
+      const AssetGenImage('assets/sprites/map/hiroshima/land_a.webp');
+
+  /// File path: assets/sprites/map/hiroshima/land_b.webp
+  AssetGenImage get landB =>
+      const AssetGenImage('assets/sprites/map/hiroshima/land_b.webp');
+
+  /// File path: assets/sprites/map/hiroshima/land_c.webp
+  AssetGenImage get landC =>
+      const AssetGenImage('assets/sprites/map/hiroshima/land_c.webp');
+
+  /// File path: assets/sprites/map/hiroshima/land_d.webp
+  AssetGenImage get landD =>
+      const AssetGenImage('assets/sprites/map/hiroshima/land_d.webp');
+
+  /// File path: assets/sprites/map/hiroshima/landmark.webp
+  AssetGenImage get landmark =>
+      const AssetGenImage('assets/sprites/map/hiroshima/landmark.webp');
+
+  /// File path: assets/sprites/map/hiroshima/mountain.webp
+  AssetGenImage get mountain =>
+      const AssetGenImage('assets/sprites/map/hiroshima/mountain.webp');
+
+  /// File path: assets/sprites/map/hiroshima/special.webp
+  AssetGenImage get special =>
+      const AssetGenImage('assets/sprites/map/hiroshima/special.webp');
+
+  /// List of all assets
+  List<AssetGenImage> get values =>
+      [city, forest, landA, landB, landC, landD, landmark, mountain, special];
+}
+
+class $AssetsSpritesMapHokkaidoGen {
+  const $AssetsSpritesMapHokkaidoGen();
+
+  /// File path: assets/sprites/map/hokkaido/city.webp
+  AssetGenImage get city =>
+      const AssetGenImage('assets/sprites/map/hokkaido/city.webp');
+
+  /// File path: assets/sprites/map/hokkaido/forest.webp
+  AssetGenImage get forest =>
+      const AssetGenImage('assets/sprites/map/hokkaido/forest.webp');
+
+  /// File path: assets/sprites/map/hokkaido/land_a.webp
+  AssetGenImage get landA =>
+      const AssetGenImage('assets/sprites/map/hokkaido/land_a.webp');
+
+  /// File path: assets/sprites/map/hokkaido/land_b.webp
+  AssetGenImage get landB =>
+      const AssetGenImage('assets/sprites/map/hokkaido/land_b.webp');
+
+  /// File path: assets/sprites/map/hokkaido/land_c.webp
+  AssetGenImage get landC =>
+      const AssetGenImage('assets/sprites/map/hokkaido/land_c.webp');
+
+  /// File path: assets/sprites/map/hokkaido/land_d.webp
+  AssetGenImage get landD =>
+      const AssetGenImage('assets/sprites/map/hokkaido/land_d.webp');
+
+  /// File path: assets/sprites/map/hokkaido/landmark.webp
+  AssetGenImage get landmark =>
+      const AssetGenImage('assets/sprites/map/hokkaido/landmark.webp');
+
+  /// File path: assets/sprites/map/hokkaido/mountain.webp
+  AssetGenImage get mountain =>
+      const AssetGenImage('assets/sprites/map/hokkaido/mountain.webp');
+
+  /// File path: assets/sprites/map/hokkaido/special.webp
+  AssetGenImage get special =>
+      const AssetGenImage('assets/sprites/map/hokkaido/special.webp');
+
+  /// List of all assets
+  List<AssetGenImage> get values =>
+      [city, forest, landA, landB, landC, landD, landmark, mountain, special];
+}
+
+class $AssetsSpritesMapKanazawaGen {
+  const $AssetsSpritesMapKanazawaGen();
+
+  /// File path: assets/sprites/map/kanazawa/city.webp
+  AssetGenImage get city =>
+      const AssetGenImage('assets/sprites/map/kanazawa/city.webp');
+
+  /// File path: assets/sprites/map/kanazawa/forest.webp
+  AssetGenImage get forest =>
+      const AssetGenImage('assets/sprites/map/kanazawa/forest.webp');
+
+  /// File path: assets/sprites/map/kanazawa/land_a.webp
+  AssetGenImage get landA =>
+      const AssetGenImage('assets/sprites/map/kanazawa/land_a.webp');
+
+  /// File path: assets/sprites/map/kanazawa/land_b.webp
+  AssetGenImage get landB =>
+      const AssetGenImage('assets/sprites/map/kanazawa/land_b.webp');
+
+  /// File path: assets/sprites/map/kanazawa/land_c.webp
+  AssetGenImage get landC =>
+      const AssetGenImage('assets/sprites/map/kanazawa/land_c.webp');
+
+  /// File path: assets/sprites/map/kanazawa/land_d.webp
+  AssetGenImage get landD =>
+      const AssetGenImage('assets/sprites/map/kanazawa/land_d.webp');
+
+  /// File path: assets/sprites/map/kanazawa/landmark.webp
+  AssetGenImage get landmark =>
+      const AssetGenImage('assets/sprites/map/kanazawa/landmark.webp');
+
+  /// File path: assets/sprites/map/kanazawa/mountain.webp
+  AssetGenImage get mountain =>
+      const AssetGenImage('assets/sprites/map/kanazawa/mountain.webp');
+
+  /// File path: assets/sprites/map/kanazawa/special.webp
+  AssetGenImage get special =>
+      const AssetGenImage('assets/sprites/map/kanazawa/special.webp');
+
+  /// List of all assets
+  List<AssetGenImage> get values =>
+      [city, forest, landA, landB, landC, landD, landmark, mountain, special];
+}
+
+class $AssetsSpritesMapKobeGen {
+  const $AssetsSpritesMapKobeGen();
+
+  /// File path: assets/sprites/map/kobe/city.webp
+  AssetGenImage get city =>
+      const AssetGenImage('assets/sprites/map/kobe/city.webp');
+
+  /// File path: assets/sprites/map/kobe/forest.webp
+  AssetGenImage get forest =>
+      const AssetGenImage('assets/sprites/map/kobe/forest.webp');
+
+  /// File path: assets/sprites/map/kobe/land_a.webp
+  AssetGenImage get landA =>
+      const AssetGenImage('assets/sprites/map/kobe/land_a.webp');
+
+  /// File path: assets/sprites/map/kobe/land_b.webp
+  AssetGenImage get landB =>
+      const AssetGenImage('assets/sprites/map/kobe/land_b.webp');
+
+  /// File path: assets/sprites/map/kobe/land_c.webp
+  AssetGenImage get landC =>
+      const AssetGenImage('assets/sprites/map/kobe/land_c.webp');
+
+  /// File path: assets/sprites/map/kobe/land_d.webp
+  AssetGenImage get landD =>
+      const AssetGenImage('assets/sprites/map/kobe/land_d.webp');
+
+  /// File path: assets/sprites/map/kobe/landmark.webp
+  AssetGenImage get landmark =>
+      const AssetGenImage('assets/sprites/map/kobe/landmark.webp');
+
+  /// File path: assets/sprites/map/kobe/mountain.webp
+  AssetGenImage get mountain =>
+      const AssetGenImage('assets/sprites/map/kobe/mountain.webp');
+
+  /// File path: assets/sprites/map/kobe/special.webp
+  AssetGenImage get special =>
+      const AssetGenImage('assets/sprites/map/kobe/special.webp');
+
+  /// List of all assets
+  List<AssetGenImage> get values =>
+      [city, forest, landA, landB, landC, landD, landmark, mountain, special];
+}
+
+class $AssetsSpritesMapKyotoGen {
+  const $AssetsSpritesMapKyotoGen();
+
+  /// File path: assets/sprites/map/kyoto/city.webp
+  AssetGenImage get city =>
+      const AssetGenImage('assets/sprites/map/kyoto/city.webp');
+
+  /// File path: assets/sprites/map/kyoto/forest.webp
+  AssetGenImage get forest =>
+      const AssetGenImage('assets/sprites/map/kyoto/forest.webp');
+
+  /// File path: assets/sprites/map/kyoto/land_a.webp
+  AssetGenImage get landA =>
+      const AssetGenImage('assets/sprites/map/kyoto/land_a.webp');
+
+  /// File path: assets/sprites/map/kyoto/land_b.webp
+  AssetGenImage get landB =>
+      const AssetGenImage('assets/sprites/map/kyoto/land_b.webp');
+
+  /// File path: assets/sprites/map/kyoto/land_c.webp
+  AssetGenImage get landC =>
+      const AssetGenImage('assets/sprites/map/kyoto/land_c.webp');
+
+  /// File path: assets/sprites/map/kyoto/land_d.webp
+  AssetGenImage get landD =>
+      const AssetGenImage('assets/sprites/map/kyoto/land_d.webp');
+
+  /// File path: assets/sprites/map/kyoto/landmark.webp
+  AssetGenImage get landmark =>
+      const AssetGenImage('assets/sprites/map/kyoto/landmark.webp');
+
+  /// File path: assets/sprites/map/kyoto/mountain.webp
+  AssetGenImage get mountain =>
+      const AssetGenImage('assets/sprites/map/kyoto/mountain.webp');
+
+  /// File path: assets/sprites/map/kyoto/special.webp
+  AssetGenImage get special =>
+      const AssetGenImage('assets/sprites/map/kyoto/special.webp');
+
+  /// List of all assets
+  List<AssetGenImage> get values =>
+      [city, forest, landA, landB, landC, landD, landmark, mountain, special];
+}
+
+class $AssetsSpritesMapNagoyaGen {
+  const $AssetsSpritesMapNagoyaGen();
+
+  /// File path: assets/sprites/map/nagoya/city.webp
+  AssetGenImage get city =>
+      const AssetGenImage('assets/sprites/map/nagoya/city.webp');
+
+  /// File path: assets/sprites/map/nagoya/forest.webp
+  AssetGenImage get forest =>
+      const AssetGenImage('assets/sprites/map/nagoya/forest.webp');
+
+  /// File path: assets/sprites/map/nagoya/land_a.webp
+  AssetGenImage get landA =>
+      const AssetGenImage('assets/sprites/map/nagoya/land_a.webp');
+
+  /// File path: assets/sprites/map/nagoya/land_b.webp
+  AssetGenImage get landB =>
+      const AssetGenImage('assets/sprites/map/nagoya/land_b.webp');
+
+  /// File path: assets/sprites/map/nagoya/land_c.webp
+  AssetGenImage get landC =>
+      const AssetGenImage('assets/sprites/map/nagoya/land_c.webp');
+
+  /// File path: assets/sprites/map/nagoya/land_d.webp
+  AssetGenImage get landD =>
+      const AssetGenImage('assets/sprites/map/nagoya/land_d.webp');
+
+  /// File path: assets/sprites/map/nagoya/landmark.webp
+  AssetGenImage get landmark =>
+      const AssetGenImage('assets/sprites/map/nagoya/landmark.webp');
+
+  /// File path: assets/sprites/map/nagoya/mountain.webp
+  AssetGenImage get mountain =>
+      const AssetGenImage('assets/sprites/map/nagoya/mountain.webp');
+
+  /// File path: assets/sprites/map/nagoya/special.webp
+  AssetGenImage get special =>
+      const AssetGenImage('assets/sprites/map/nagoya/special.webp');
+
+  /// List of all assets
+  List<AssetGenImage> get values =>
+      [city, forest, landA, landB, landC, landD, landmark, mountain, special];
+}
+
+class $AssetsSpritesMapNaraGen {
+  const $AssetsSpritesMapNaraGen();
+
+  /// File path: assets/sprites/map/nara/city.webp
+  AssetGenImage get city =>
+      const AssetGenImage('assets/sprites/map/nara/city.webp');
+
+  /// File path: assets/sprites/map/nara/forest.webp
+  AssetGenImage get forest =>
+      const AssetGenImage('assets/sprites/map/nara/forest.webp');
+
+  /// File path: assets/sprites/map/nara/land_a.webp
+  AssetGenImage get landA =>
+      const AssetGenImage('assets/sprites/map/nara/land_a.webp');
+
+  /// File path: assets/sprites/map/nara/land_b.webp
+  AssetGenImage get landB =>
+      const AssetGenImage('assets/sprites/map/nara/land_b.webp');
+
+  /// File path: assets/sprites/map/nara/land_c.webp
+  AssetGenImage get landC =>
+      const AssetGenImage('assets/sprites/map/nara/land_c.webp');
+
+  /// File path: assets/sprites/map/nara/land_d.webp
+  AssetGenImage get landD =>
+      const AssetGenImage('assets/sprites/map/nara/land_d.webp');
+
+  /// File path: assets/sprites/map/nara/landmark.webp
+  AssetGenImage get landmark =>
+      const AssetGenImage('assets/sprites/map/nara/landmark.webp');
+
+  /// File path: assets/sprites/map/nara/mountain.webp
+  AssetGenImage get mountain =>
+      const AssetGenImage('assets/sprites/map/nara/mountain.webp');
+
+  /// File path: assets/sprites/map/nara/special.webp
+  AssetGenImage get special =>
+      const AssetGenImage('assets/sprites/map/nara/special.webp');
+
+  /// List of all assets
+  List<AssetGenImage> get values =>
+      [city, forest, landA, landB, landC, landD, landmark, mountain, special];
+}
+
+class $AssetsSpritesMapOkinawaGen {
+  const $AssetsSpritesMapOkinawaGen();
+
+  /// File path: assets/sprites/map/okinawa/city.webp
+  AssetGenImage get city =>
+      const AssetGenImage('assets/sprites/map/okinawa/city.webp');
+
+  /// File path: assets/sprites/map/okinawa/forest.webp
+  AssetGenImage get forest =>
+      const AssetGenImage('assets/sprites/map/okinawa/forest.webp');
+
+  /// File path: assets/sprites/map/okinawa/land_a.webp
+  AssetGenImage get landA =>
+      const AssetGenImage('assets/sprites/map/okinawa/land_a.webp');
+
+  /// File path: assets/sprites/map/okinawa/land_b.webp
+  AssetGenImage get landB =>
+      const AssetGenImage('assets/sprites/map/okinawa/land_b.webp');
+
+  /// File path: assets/sprites/map/okinawa/land_c.webp
+  AssetGenImage get landC =>
+      const AssetGenImage('assets/sprites/map/okinawa/land_c.webp');
+
+  /// File path: assets/sprites/map/okinawa/land_d.webp
+  AssetGenImage get landD =>
+      const AssetGenImage('assets/sprites/map/okinawa/land_d.webp');
+
+  /// File path: assets/sprites/map/okinawa/landmark.webp
+  AssetGenImage get landmark =>
+      const AssetGenImage('assets/sprites/map/okinawa/landmark.webp');
+
+  /// File path: assets/sprites/map/okinawa/mountain.webp
+  AssetGenImage get mountain =>
+      const AssetGenImage('assets/sprites/map/okinawa/mountain.webp');
+
+  /// File path: assets/sprites/map/okinawa/special.webp
+  AssetGenImage get special =>
+      const AssetGenImage('assets/sprites/map/okinawa/special.webp');
+
+  /// List of all assets
+  List<AssetGenImage> get values =>
+      [city, forest, landA, landB, landC, landD, landmark, mountain, special];
+}
+
+class $AssetsSpritesMapOmakaseGen {
+  const $AssetsSpritesMapOmakaseGen();
+
+  /// File path: assets/sprites/map/omakase/city.webp
+  AssetGenImage get city =>
+      const AssetGenImage('assets/sprites/map/omakase/city.webp');
+
+  /// File path: assets/sprites/map/omakase/forest.webp
+  AssetGenImage get forest =>
+      const AssetGenImage('assets/sprites/map/omakase/forest.webp');
+
+  /// File path: assets/sprites/map/omakase/land_a.webp
+  AssetGenImage get landA =>
+      const AssetGenImage('assets/sprites/map/omakase/land_a.webp');
+
+  /// File path: assets/sprites/map/omakase/land_b.webp
+  AssetGenImage get landB =>
+      const AssetGenImage('assets/sprites/map/omakase/land_b.webp');
+
+  /// File path: assets/sprites/map/omakase/land_c.webp
+  AssetGenImage get landC =>
+      const AssetGenImage('assets/sprites/map/omakase/land_c.webp');
+
+  /// File path: assets/sprites/map/omakase/land_d.webp
+  AssetGenImage get landD =>
+      const AssetGenImage('assets/sprites/map/omakase/land_d.webp');
+
+  /// File path: assets/sprites/map/omakase/landmark.webp
+  AssetGenImage get landmark =>
+      const AssetGenImage('assets/sprites/map/omakase/landmark.webp');
+
+  /// File path: assets/sprites/map/omakase/mountain.webp
+  AssetGenImage get mountain =>
+      const AssetGenImage('assets/sprites/map/omakase/mountain.webp');
+
+  /// File path: assets/sprites/map/omakase/special.webp
+  AssetGenImage get special =>
+      const AssetGenImage('assets/sprites/map/omakase/special.webp');
+
+  /// List of all assets
+  List<AssetGenImage> get values =>
+      [city, forest, landA, landB, landC, landD, landmark, mountain, special];
+}
+
+class $AssetsSpritesMapOsakaGen {
+  const $AssetsSpritesMapOsakaGen();
+
+  /// File path: assets/sprites/map/osaka/city.webp
+  AssetGenImage get city =>
+      const AssetGenImage('assets/sprites/map/osaka/city.webp');
+
+  /// File path: assets/sprites/map/osaka/forest.webp
+  AssetGenImage get forest =>
+      const AssetGenImage('assets/sprites/map/osaka/forest.webp');
+
+  /// File path: assets/sprites/map/osaka/land_a.webp
+  AssetGenImage get landA =>
+      const AssetGenImage('assets/sprites/map/osaka/land_a.webp');
+
+  /// File path: assets/sprites/map/osaka/land_b.webp
+  AssetGenImage get landB =>
+      const AssetGenImage('assets/sprites/map/osaka/land_b.webp');
+
+  /// File path: assets/sprites/map/osaka/land_c.webp
+  AssetGenImage get landC =>
+      const AssetGenImage('assets/sprites/map/osaka/land_c.webp');
+
+  /// File path: assets/sprites/map/osaka/land_d.webp
+  AssetGenImage get landD =>
+      const AssetGenImage('assets/sprites/map/osaka/land_d.webp');
+
+  /// File path: assets/sprites/map/osaka/landmark.webp
+  AssetGenImage get landmark =>
+      const AssetGenImage('assets/sprites/map/osaka/landmark.webp');
+
+  /// File path: assets/sprites/map/osaka/mountain.webp
+  AssetGenImage get mountain =>
+      const AssetGenImage('assets/sprites/map/osaka/mountain.webp');
+
+  /// File path: assets/sprites/map/osaka/special.webp
+  AssetGenImage get special =>
+      const AssetGenImage('assets/sprites/map/osaka/special.webp');
+
+  /// List of all assets
+  List<AssetGenImage> get values =>
+      [city, forest, landA, landB, landC, landD, landmark, mountain, special];
+}
+
+class $AssetsSpritesMapSendaiGen {
+  const $AssetsSpritesMapSendaiGen();
+
+  /// File path: assets/sprites/map/sendai/city.webp
+  AssetGenImage get city =>
+      const AssetGenImage('assets/sprites/map/sendai/city.webp');
+
+  /// File path: assets/sprites/map/sendai/forest.webp
+  AssetGenImage get forest =>
+      const AssetGenImage('assets/sprites/map/sendai/forest.webp');
+
+  /// File path: assets/sprites/map/sendai/land_a.webp
+  AssetGenImage get landA =>
+      const AssetGenImage('assets/sprites/map/sendai/land_a.webp');
+
+  /// File path: assets/sprites/map/sendai/land_b.webp
+  AssetGenImage get landB =>
+      const AssetGenImage('assets/sprites/map/sendai/land_b.webp');
+
+  /// File path: assets/sprites/map/sendai/land_c.webp
+  AssetGenImage get landC =>
+      const AssetGenImage('assets/sprites/map/sendai/land_c.webp');
+
+  /// File path: assets/sprites/map/sendai/land_d.webp
+  AssetGenImage get landD =>
+      const AssetGenImage('assets/sprites/map/sendai/land_d.webp');
+
+  /// File path: assets/sprites/map/sendai/landmark.webp
+  AssetGenImage get landmark =>
+      const AssetGenImage('assets/sprites/map/sendai/landmark.webp');
+
+  /// File path: assets/sprites/map/sendai/mountain.webp
+  AssetGenImage get mountain =>
+      const AssetGenImage('assets/sprites/map/sendai/mountain.webp');
+
+  /// File path: assets/sprites/map/sendai/special.webp
+  AssetGenImage get special =>
+      const AssetGenImage('assets/sprites/map/sendai/special.webp');
+
+  /// List of all assets
+  List<AssetGenImage> get values =>
+      [city, forest, landA, landB, landC, landD, landmark, mountain, special];
+}
+
+class $AssetsSpritesMapTsukijiGen {
+  const $AssetsSpritesMapTsukijiGen();
+
+  /// File path: assets/sprites/map/tsukiji/city.webp
+  AssetGenImage get city =>
+      const AssetGenImage('assets/sprites/map/tsukiji/city.webp');
+
+  /// File path: assets/sprites/map/tsukiji/forest.webp
+  AssetGenImage get forest =>
+      const AssetGenImage('assets/sprites/map/tsukiji/forest.webp');
+
+  /// File path: assets/sprites/map/tsukiji/land_a.webp
+  AssetGenImage get landA =>
+      const AssetGenImage('assets/sprites/map/tsukiji/land_a.webp');
+
+  /// File path: assets/sprites/map/tsukiji/land_b.webp
+  AssetGenImage get landB =>
+      const AssetGenImage('assets/sprites/map/tsukiji/land_b.webp');
+
+  /// File path: assets/sprites/map/tsukiji/land_c.webp
+  AssetGenImage get landC =>
+      const AssetGenImage('assets/sprites/map/tsukiji/land_c.webp');
+
+  /// File path: assets/sprites/map/tsukiji/land_d.webp
+  AssetGenImage get landD =>
+      const AssetGenImage('assets/sprites/map/tsukiji/land_d.webp');
+
+  /// File path: assets/sprites/map/tsukiji/landmark.webp
+  AssetGenImage get landmark =>
+      const AssetGenImage('assets/sprites/map/tsukiji/landmark.webp');
+
+  /// File path: assets/sprites/map/tsukiji/mountain.webp
+  AssetGenImage get mountain =>
+      const AssetGenImage('assets/sprites/map/tsukiji/mountain.webp');
+
+  /// File path: assets/sprites/map/tsukiji/special.webp
+  AssetGenImage get special =>
+      const AssetGenImage('assets/sprites/map/tsukiji/special.webp');
+
+  /// List of all assets
+  List<AssetGenImage> get values =>
+      [city, forest, landA, landB, landC, landD, landmark, mountain, special];
 }
 
 class $AssetsSpritesObstacles18BossCatJokerGen {
