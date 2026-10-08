@@ -5,6 +5,7 @@ import '../gen/assets.gen.dart';
 import '../core/progress.dart';
 import '../core/settings.dart';
 import '../services/audio.dart';
+import '../services/wallet.dart';
 import 'daily_reward_dialog.dart';
 import 'event_banner.dart';
 import 'event_dialog.dart';
@@ -136,6 +137,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                 onTap: widget.onShop),
                           ],
                         ),
+                        const _OwnedBoosters(),
                         const EventBanner(),
                       ],
                     ),
@@ -145,6 +147,51 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// The boosters and power-ups in stock; hidden while there are none.
+class _OwnedBoosters extends ConsumerWidget {
+  const _OwnedBoosters();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final stock = ref.watch(walletProvider.select((w) => w.stock));
+    final owned = [
+      for (final b in Booster.values)
+        if ((stock[b] ?? 0) > 0) b,
+    ];
+    if (owned.isEmpty) return const SizedBox.shrink();
+    final t = Theme.of(context).textTheme;
+    return Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          for (final b in owned)
+            Container(
+              padding: const EdgeInsets.fromLTRB(8, 4, 10, 4),
+              decoration: BoxDecoration(
+                color: UiArt.paper,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: UiArt.ink, width: 2),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  BoosterIcon(b, size: 28),
+                  const SizedBox(width: 4),
+                  Text('×${stock[b]}',
+                      style: t.labelLarge?.copyWith(
+                          color: UiArt.ink, fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ),
+        ],
       ),
     );
   }
