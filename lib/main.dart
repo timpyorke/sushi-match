@@ -227,6 +227,14 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   final _orderKey = GlobalKey();
   bool _introDone = false;
 
+  /// Bumped each time the level's customer should play their signature.
+  int _signaturePlays = 0;
+
+  void _signature(SignatureCue cue, int levelId) {
+    if (Customer.forLevel(levelId).signature?.cue != cue || !mounted) return;
+    setState(() => _signaturePlays++);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -256,11 +264,29 @@ class _GameScreenState extends ConsumerState<GameScreen> {
         eventKind: ref.read(eventProvider).active?.kind,
         onEventGain: events.addCollected,
         analytics: ref.read(analyticsProvider));
+    var moves = game.hud.value.movesLeft;
+    var goalsDone = game.hud.value.goals.where((g) => g.done).length;
     game.hud.addListener(() {
-      if (game.hud.value.status == GameStatus.won) {
+      final s = game.hud.value;
+      if (s.status == GameStatus.won) {
         progress.markCleared(widget.levelNumber);
-        restaurant.recordStars(widget.levelNumber, game.hud.value.stars);
+        restaurant.recordStars(widget.levelNumber, s.stars);
       }
+      if (s.status != GameStatus.playing) return;
+      final done = s.goals.where((g) => g.done).length;
+      if (done > goalsDone) _signature(SignatureCue.goal, level.id);
+      goalsDone = done;
+      if (s.movesLeft != moves && s.movesLeft < moves) {
+        if (s.movesLeft <= 3) {
+          _signature(SignatureCue.lowMoves, level.id);
+        } else if (s.movesLeft % 6 == 0) {
+          _signature(SignatureCue.idle, level.id);
+        }
+      }
+      moves = s.movesLeft;
+    });
+    game.praise.addListener(() {
+      if (game.praise.value != null) _signature(SignatureCue.combo, level.id);
     });
     return game;
   }
@@ -363,7 +389,8 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                                     child: OrderBubble(
                                         key: _orderKey,
                                         level: game.level,
-                                        goals: s.goals),
+                                        goals: s.goals,
+                                        signaturePlays: _signaturePlays),
                                   ),
                                 ),
                               ),
@@ -422,7 +449,10 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                         level: game.level,
                         goals: game.hud.value.goals,
                         target: _orderKey,
-                        onDone: () => setState(() => _introDone = true),
+                        onDone: () {
+                          setState(() => _introDone = true);
+                          _signature(SignatureCue.start, game.level.id);
+                        },
                       ),
                     ),
                 ]));

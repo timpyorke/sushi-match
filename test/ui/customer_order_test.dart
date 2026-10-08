@@ -15,6 +15,18 @@ void main() {
     const LevelGoal.score(5000),
   ];
 
+  test('every customer frame, signature included, exists on disk', () {
+    for (final c in Customer.roster) {
+      expect(c.signature, isNotNull, reason: c.nameKey);
+      for (final anim in CustomerAnim.values) {
+        for (var i = 0; i < Customer.frameCount; i++) {
+          expect(File(c.frame(anim, i)).existsSync(), isTrue,
+              reason: c.frame(anim, i));
+        }
+      }
+    }
+  });
+
   test('order text lists every goal in English', () {
     L10n.language = 'en';
     expect(orderText(goals),
