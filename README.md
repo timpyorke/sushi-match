@@ -8,6 +8,7 @@ a list of `BoardStep`s; Flame (`lib/game`) only animates them.
 ```bash
 flutter create --org com.timpyorke --project-name sushi_trio --platforms android,ios .
 flutter pub get
+dart run build_runner build --delete-conflicting-outputs
 flutter test          # core rules, no device needed
 flutter run
 ```
@@ -30,17 +31,20 @@ assets/levels/level_001.json
 ```
 
 ## Done
+
 Swap/tap-tap input, match → clear → gravity → refill → cascade (×1, ×2…),
 all four specials + combos, initial clean board, auto-shuffle, 5 s hint,
 collect/score goals, moves, stars, retry. Seeded RNG = reproducible levels.
 
 ## Next
+
 Nori/ice/rice bag + their goals, conveyor (end-of-turn hook in
 `GameEngine._endTurn`), Wasabi double blast, bonus round, juice (squash,
 particles, haptics, sfx), level select + JSON loader for many levels,
 balancing bot using `MoveFinder.allMoves` + seeds.
 
 ## Balancing
+
 `dart run tool/balance.dart [runs] [level …] [--planner] [--no-belts]` plays
 every level with a random and a greedy bot and prints win rate and star
 spread. `--planner` adds a lookahead bot (uses `GameEngine.fork`, so conveyor
