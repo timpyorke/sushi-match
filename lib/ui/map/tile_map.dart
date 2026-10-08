@@ -29,6 +29,12 @@ class TileMapPainter extends CustomPainter {
   /// Decoded sprites; `null` until loaded, then shapes are drawn instead.
   final MapArt? art;
 
+  // Shared paints: this runs thousands of times per frame.
+  static final _spritePaint = Paint()..filterQuality = FilterQuality.medium;
+  static final _fadePaint = Paint()..filterQuality = FilterQuality.medium;
+  static Paint _fadedPaint(double alpha) =>
+      _fadePaint..color = Color.fromRGBO(255, 255, 255, alpha);
+
   /// Draws [img] inside [rc], keeping its proportions.
   void _sprite(Canvas canvas, ui.Image? img, Rect rc,
       {double scale = 1,
@@ -50,19 +56,18 @@ class TileMapPainter extends CustomPainter {
     final w = img.width * k * scale, h = img.height * k * scale;
     final dst = align.inscribe(Size(w, h), rc);
     canvas.drawImageRect(
-        img,
-        src,
-        dst,
-        Paint()
-          ..filterQuality = FilterQuality.medium
-          ..color = Color.fromRGBO(255, 255, 255, alpha));
+        img, src, dst, alpha < 1 ? _fadedPaint(alpha) : _spritePaint);
     if (turns != 0) canvas.restore();
   }
 
   @override
   void paint(Canvas canvas, Size size) {
     final fill = Paint();
-    for (var r = 0; r < layout.rows; r++) {
+    // Only the rows on screen: the map is 168 rows tall.
+    final clip = canvas.getLocalClipBounds();
+    final first = (clip.top / tile).floor().clamp(0, layout.rows);
+    final last = (clip.bottom / tile).ceil().clamp(0, layout.rows);
+    for (var r = first; r < last; r++) {
       final shop = layout.shopOfRow(r);
       final region = regionOf(layout.shops[shop].id);
       for (var c = 0; c < kMapCols; c++) {
@@ -123,7 +128,11 @@ class TileMapPainter extends CustomPainter {
             MapTile.city => 'city',
             _ => null,
           };
-          if (deco != null) _sprite(canvas, a.region(id, deco), rect);
+          // Scenery stays off the route and the level plates so they read
+          // clearly, and is drawn a little smaller.
+          if (deco != null && !layout.nearRoute(c, r)) {
+            _sprite(canvas, a.region(id, deco), rect, scale: 0.75);
+          }
           if (lockedShops.contains(shop)) {
             _sprite(canvas, a['fog'], rect, alpha: 0.9);
           }
@@ -184,14 +193,14 @@ class TileMapPainter extends CustomPainter {
   }
 
   void _spriteRoute(Canvas canvas, MapArt a) {
-    final total = layout.nodeDist.isEmpty ? 0.0 : layout.nodeDist.last;
-    const step = 0.4; // in tiles, like the route distances
+    final clip = canvas.getLocalClipBounds().inflate(tile);
     final dot = Rect.fromCenter(
         center: Offset.zero, width: tile * 0.6, height: tile * 0.6);
-    for (var d = 0.0; d <= total; d += step) {
-      final p = layout.pointAt(d) * tile;
-      final img = d <= reached ? a['route_done'] : a['route_dot'];
-      _sprite(canvas, img, dot.shift(p));
+    final done = a['route_done'], todo = a['route_dot'];
+    for (final (d, at) in layout.routeStones) {
+      final p = at * tile;
+      if (p.dy < clip.top || p.dy > clip.bottom) continue;
+      _sprite(canvas, d <= reached ? done : todo, dot.shift(p));
     }
   }
 

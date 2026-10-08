@@ -108,7 +108,17 @@ class LevelNode extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(width: size, height: size, child: _plate()),
+          // The next level stands out; the ones still out of reach step back.
+          SizedBox(
+              width: size,
+              height: size,
+              child: Transform.scale(
+                  scale: current
+                      ? 1.2
+                      : locked
+                          ? 0.82
+                          : 1,
+                  child: _plate())),
           const SizedBox(height: 2),
           Container(
             width: size + 4,

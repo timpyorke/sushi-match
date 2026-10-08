@@ -246,6 +246,27 @@ class MapLayout {
         return out.toString();
       });
 
+  /// Stepping stones along the route (distance, point), in tile units. Built
+  /// once: [pointAt] is a linear scan, too slow to call per stone per frame.
+  late final List<(double, Offset)> routeStones = [
+    if (nodeDist.isNotEmpty)
+      for (var d = 0.0; d <= nodeDist.last; d += 0.4) (d, pointAt(d)),
+  ];
+
+  Set<int>? _near;
+
+  /// Whether the route or a level plate (with its number tag below) covers
+  /// part of tile ([col], [row]), so scenery should not be drawn there.
+  bool nearRoute(int col, int row) {
+    final near = _near ??= {
+      for (final (_, p) in routeStones)
+        for (var r = (p.dy - 0.7).floor(); r <= (p.dy + 1.3).floor(); r++)
+          for (var c = (p.dx - 0.7).floor(); c <= (p.dx + 0.7).floor(); c++)
+            r * kMapCols + c,
+    };
+    return near.contains(row * kMapCols + col);
+  }
+
   Offset pointAt(double d) {
     for (var i = 1; i < path.length; i++) {
       if (d <= _cum[i] || i == path.length - 1) {
