@@ -2,6 +2,7 @@
 // into square 256px frames next to them (<anim>_0.png … <anim>_3.png).
 //
 //   dart run tool/cut_sprites.dart [id …]   # default: every character
+//   dart run tool/cut_sprites.dart --obstacles [id …]
 //
 // Generated sheets are rarely square and rarely a clean grid, so a plain
 // crop-and-resize squashes the art and lets neighbouring frames bleed in.
@@ -16,7 +17,8 @@ import 'dart:math';
 
 import 'package:image/image.dart' as img;
 
-const root = 'assets/sprites/customers';
+const customerRoot = 'assets/sprites/customers';
+const obstacleRoot = 'assets/sprites/obstacles';
 const size = 256;
 const margin = 6;
 
@@ -24,8 +26,10 @@ const margin = 6;
 const minAlpha = 200;
 
 void main(List<String> args) {
-  final ids = args.isNotEmpty
-      ? args
+  final root = args.contains('--obstacles') ? obstacleRoot : customerRoot;
+  final requestedIds = args.where((arg) => arg != '--obstacles').toList();
+  final ids = requestedIds.isNotEmpty
+      ? requestedIds
       : [
           for (final d in Directory(root).listSync().whereType<Directory>())
             d.uri.pathSegments.where((s) => s.isNotEmpty).last,

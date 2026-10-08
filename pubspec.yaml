@@ -69,4 +69,6 @@ flutter:
     - assets/sprites/customers/14-monk-genjo/
     - assets/sprites/customers/15-captain-umi/
     - assets/sprites/customers/16-yukiko/
+    - assets/sprites/customers/17-chef-kuma/
+    - assets/sprites/obstacles/18-boss-cat-joker/
     - assets/audio/

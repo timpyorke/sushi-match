@@ -60,6 +60,7 @@ class Customer {
     Customer('📿', 'cust14', sprite: '14-monk-genjo'),
     Customer('⚓', 'cust15', sprite: '15-captain-umi'),
     Customer('🎿', 'cust16', sprite: '16-yukiko'),
+    Customer('🐻', 'cust17', sprite: '17-chef-kuma'),
   ];
 
   /// Customers take turns across levels so every plate has a face.
