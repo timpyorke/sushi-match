@@ -107,14 +107,22 @@ class PieceComponent extends PositionComponent {
   static final _flameOuter = Paint()..color = const Color(0xFFFF6A1F);
   static final _flameInner = Paint()..color = const Color(0xFFFFD54F);
 
+  /// Flame frames per second; the vector fallback flickers at the same pace.
+  static const _fireFps = 5.0;
+  static const _fireFrames = [
+    ObstacleSprite.fire1,
+    ObstacleSprite.fire3,
+    ObstacleSprite.fire2,
+    ObstacleSprite.fire4,
+  ];
+
   void _drawFlame(Canvas canvas) {
     final s = size.x;
     if (ObstacleArt.ready) {
-      // Two flame frames cross-fading on a shared base.
+      // In-between poses form a loop, with a phase offset per piece.
       final box = Rect.fromLTWH(0, 0, s, s).deflate(s * 0.02);
-      ObstacleArt.draw(canvas, ObstacleSprite.fire1, box, alpha: 0.95);
-      ObstacleArt.draw(canvas, ObstacleSprite.fire2, box,
-          alpha: 0.95 * (0.5 + 0.5 * math.sin(_t * 7)));
+      final frame = ((_t * _fireFps).floor() + pieceId) % _fireFrames.length;
+      ObstacleArt.draw(canvas, _fireFrames[frame], box, alpha: 0.95);
       return;
     }
     // Blur of 6 at the 64px cell the art was tuned for.
@@ -122,7 +130,7 @@ class PieceComponent extends PositionComponent {
         const Color(0x66FF6A1F), 6 / (64 * 0.46));
     for (var i = 0; i < 3; i++) {
       final cx = s * (0.28 + 0.22 * i);
-      final h = s * (0.34 + 0.08 * math.sin(_t * 9 + i * 2.1));
+      final h = s * (0.34 + 0.08 * math.sin(_t * _fireFps * 0.9 + i * 2.1));
       final base = s * 0.62;
       final w = s * 0.13;
       final flame = Path()

@@ -41,13 +41,11 @@ class MapArt {
       for (final (k, a) in <(String, AssetGenImage)>[
         ('banner', c.banner),
         ('cliff', c.cliff),
-        ('cliff_left', c.cliffLeft),
-        ('cliff_right', c.cliffRight),
+        ('cliff_l', c.cliffL),
+        ('cliff_u', c.cliffU),
         ('cloud_lock', c.cloudLock),
         ('flag_boss', c.flagBoss),
-        ('fog', c.fog),
         ('marker', c.marker),
-        ('number_tag', c.numberTag),
         ('plate', c.plate),
         ('plate_current', c.plateCurrent),
         ('plate_locked', c.plateLocked),
@@ -83,7 +81,7 @@ class MapArt {
     };
     const files = [
       'land_a', 'land_b', 'land_c', 'land_d', //
-      'mountain', 'forest', 'city'
+      'mountain', 'forest', 'city', 'special', 'landmark'
     ];
     await Future.wait([
       for (final e in regions.entries)
@@ -102,6 +100,8 @@ class MapArt {
         r.mountain,
         r.forest,
         r.city,
+        r.special,
+        r.landmark,
       ];
 }
 

@@ -3208,6 +3208,10 @@ class $AssetsSpritesMapCommonGen {
   AssetGenImage get cliff =>
       const AssetGenImage('assets/sprites/map/common/cliff.webp');
 
+  /// File path: assets/sprites/map/common/cliff_l.webp
+  AssetGenImage get cliffL =>
+      const AssetGenImage('assets/sprites/map/common/cliff_l.webp');
+
   /// File path: assets/sprites/map/common/cliff_left.webp
   AssetGenImage get cliffLeft =>
       const AssetGenImage('assets/sprites/map/common/cliff_left.webp');
@@ -3215,6 +3219,10 @@ class $AssetsSpritesMapCommonGen {
   /// File path: assets/sprites/map/common/cliff_right.webp
   AssetGenImage get cliffRight =>
       const AssetGenImage('assets/sprites/map/common/cliff_right.webp');
+
+  /// File path: assets/sprites/map/common/cliff_u.webp
+  AssetGenImage get cliffU =>
+      const AssetGenImage('assets/sprites/map/common/cliff_u.webp');
 
   /// File path: assets/sprites/map/common/cloud_lock.webp
   AssetGenImage get cloudLock =>
@@ -3288,8 +3296,10 @@ class $AssetsSpritesMapCommonGen {
   List<AssetGenImage> get values => [
         banner,
         cliff,
+        cliffL,
         cliffLeft,
         cliffRight,
+        cliffU,
         cloudLock,
         flagBoss,
         fog,

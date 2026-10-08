@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../../core/piece.dart';
 import '../../game/piece_painter.dart';
+import '../l10n.dart';
 import '../ui_art.dart';
 import 'map_art.dart';
 
-/// One level on the map: a sushi plate (or a lock), its number and, once
-/// cleared, the stars earned.
+/// One level on the map: a sushi plate (or a lock) and, once cleared, the
+/// stars earned. The number is only in the semantics label.
 class LevelNode extends StatelessWidget {
   const LevelNode(
       {super.key,
@@ -101,70 +102,42 @@ class LevelNode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tag = art?['number_tag'];
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // The next level stands out; the ones still out of reach step back.
-          SizedBox(
-              width: size,
-              height: size,
-              child: Transform.scale(
-                  scale: current
-                      ? 1.2
-                      : locked
-                          ? 0.82
-                          : 1,
-                  child: _plate())),
-          const SizedBox(height: 2),
-          Container(
-            width: size + 4,
-            height: 28,
-            alignment: Alignment.center,
-            decoration: tag != null
-                ? BoxDecoration(
-                    image: DecorationImage(
-                        image: DecodedImage(tag),
-                        fit: BoxFit.fill,
-                        colorFilter: locked
-                            ? const ColorFilter.mode(
-                                Color(0x99808080), BlendMode.srcATop)
-                            : null))
-                : BoxDecoration(
-                    color: locked ? Colors.grey.shade400 : Colors.white,
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(
-                        color: locked
-                            ? Colors.grey.shade600
-                            : const Color(0xFFB71C2C),
-                        width: 2.5),
-                  ),
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text('$level',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium
-                      ?.copyWith(fontWeight: FontWeight.bold)),
-            ),
-          ),
-          if (done)
-            Padding(
-              padding: const EdgeInsets.only(top: 2),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  for (var i = 1; i <= 3; i++)
-                    _star(i <= stars, (size / 3).clamp(10.0, 16.0)),
-                ],
-              ),
-            )
-          else
-            SizedBox(height: (size / 3).clamp(10.0, 16.0) + 2),
-        ],
+    return Semantics(
+      button: true,
+      label: L10n.t('levelN', {'n': level}),
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // The next level stands out; the ones still out of reach step back.
+            SizedBox(
+                width: size,
+                height: size,
+                child: Transform.scale(
+                    scale: current
+                        ? 1.2
+                        : locked
+                            ? 0.82
+                            : 1,
+                    child: _plate())),
+            const SizedBox(height: 2),
+            if (done)
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    for (var i = 1; i <= 3; i++)
+                      _star(i <= stars, (size / 3).clamp(10.0, 16.0)),
+                  ],
+                ),
+              )
+            else
+              SizedBox(height: (size / 3).clamp(10.0, 16.0) + 2),
+          ],
+        ),
       ),
     );
   }

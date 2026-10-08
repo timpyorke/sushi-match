@@ -15,6 +15,8 @@ enum ObstacleSprite {
   bomb,
   fire1,
   fire2,
+  fire3,
+  fire4,
   gravity,
   ice1,
   ice2,
@@ -37,6 +39,10 @@ abstract final class ObstacleArt {
     ObstacleSprite.bomb: Assets.sprites.tiles.bomb,
     ObstacleSprite.fire1: Assets.sprites.tiles.fire1,
     ObstacleSprite.fire2: Assets.sprites.tiles.fire2,
+    ObstacleSprite.fire3:
+        const AssetGenImage('assets/sprites/tiles/fire_3.webp'),
+    ObstacleSprite.fire4:
+        const AssetGenImage('assets/sprites/tiles/fire_4.webp'),
     ObstacleSprite.gravity: Assets.sprites.tiles.gravityArrow,
     ObstacleSprite.ice1: Assets.sprites.tiles.ice1,
     ObstacleSprite.ice2: Assets.sprites.tiles.ice2,

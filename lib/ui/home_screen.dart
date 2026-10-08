@@ -152,18 +152,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   }
 }
 
-/// The boosters and power-ups in stock; hidden while there are none.
+/// Every booster and power-up with how many are in stock. Ones the player
+/// has none of show faded, without a count.
 class _OwnedBoosters extends ConsumerWidget {
   const _OwnedBoosters();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final stock = ref.watch(walletProvider.select((w) => w.stock));
-    final owned = [
-      for (final b in Booster.values)
-        if ((stock[b] ?? 0) > 0) b,
-    ];
-    if (owned.isEmpty) return const SizedBox.shrink();
     final t = Theme.of(context).textTheme;
     return Padding(
       padding: const EdgeInsets.only(top: 16),
@@ -172,26 +168,45 @@ class _OwnedBoosters extends ConsumerWidget {
         spacing: 8,
         runSpacing: 8,
         children: [
-          for (final b in owned)
-            Container(
-              padding: const EdgeInsets.fromLTRB(8, 4, 10, 4),
-              decoration: BoxDecoration(
-                color: UiArt.paper,
-                borderRadius: BorderRadius.circular(18),
-                border: Border.all(color: UiArt.ink, width: 2),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  BoosterIcon(b, size: 28),
-                  const SizedBox(width: 4),
-                  Text('×${stock[b]}',
-                      style: t.labelLarge?.copyWith(
-                          color: UiArt.ink, fontWeight: FontWeight.bold)),
-                ],
-              ),
-            ),
+          for (final b in Booster.values)
+            _BoosterChip(booster: b, count: stock[b] ?? 0, style: t.labelLarge),
         ],
+      ),
+    );
+  }
+}
+
+class _BoosterChip extends StatelessWidget {
+  const _BoosterChip(
+      {required this.booster, required this.count, required this.style});
+  final Booster booster;
+  final int count;
+  final TextStyle? style;
+
+  @override
+  Widget build(BuildContext context) {
+    final owned = count > 0;
+    return Opacity(
+      opacity: owned ? 1 : 0.45,
+      child: Container(
+        padding: EdgeInsets.fromLTRB(8, 4, owned ? 10 : 8, 4),
+        decoration: BoxDecoration(
+          color: UiArt.paper,
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: UiArt.ink, width: 2),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            BoosterIcon(booster, size: 28),
+            if (owned) ...[
+              const SizedBox(width: 4),
+              Text('×$count',
+                  style: style?.copyWith(
+                      color: UiArt.ink, fontWeight: FontWeight.bold)),
+            ],
+          ],
+        ),
       ),
     );
   }

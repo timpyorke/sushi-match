@@ -92,7 +92,6 @@ class _TileMapViewState extends State<TileMapView> {
                     painter: TileMapPainter(
                         layout: layout,
                         tile: tile,
-                        lockedShops: locked,
                         art: _art,
                         reached: layout.nodeDist[next - 1]),
                   ),

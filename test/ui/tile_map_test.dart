@@ -38,4 +38,50 @@ void main() {
           reason: 'route in the sea at $p');
     }
   });
+
+  test('level plates in a restaurant never crowd each other', () {
+    for (final shop in layout.shops) {
+      final ns = [
+        for (var n = shop.firstLevel; n <= shop.lastLevel; n++)
+          layout.nodes[n - 1],
+      ];
+      for (var i = 0; i < ns.length; i++) {
+        for (var j = i + 1; j < ns.length; j++) {
+          expect((ns[i] - ns[j]).distance, greaterThan(1.1),
+              reason: '${shop.id}: levels ${shop.firstLevel + i} and '
+                  '${shop.firstLevel + j}');
+        }
+      }
+    }
+  });
+
+  test('neighbouring restaurants have different map shapes', () {
+    for (var s = 1; s < layout.shops.length; s++) {
+      expect(
+          (layout.shapeOf(s), layout.mirrored(s)) ==
+              (layout.shapeOf(s - 1), layout.mirrored(s - 1)),
+          isFalse);
+    }
+  });
+
+  test('each restaurant shows every decoration once, on land, off the route',
+      () {
+    for (var s = 0; s < layout.shops.length; s++) {
+      final kinds = <String>[];
+      for (var r = layout.bandTop(s); r < layout.bandTop(s) + kBandRows; r++) {
+        for (var c = 0; c < kMapCols; c++) {
+          final k = layout.sceneryAt(c, r);
+          if (k == null) continue;
+          kinds.add(k);
+          expect(layout.tileAt(c, r), isNot(MapTile.sea));
+          for (final (_, p) in layout.routeStones) {
+            expect(p.dx.floor() == c && p.dy.floor() == r, isFalse,
+                reason: '$k on the route at ($c, $r)');
+          }
+        }
+      }
+      expect(kinds, unorderedEquals(MapLayout.sceneryKinds),
+          reason: layout.shops[s].id);
+    }
+  });
 }

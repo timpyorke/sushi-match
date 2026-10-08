@@ -11,15 +11,11 @@ class TileMapPainter extends CustomPainter {
   TileMapPainter(
       {required this.layout,
       required this.tile,
-      required this.lockedShops,
       required this.reached,
       this.art});
 
   final MapLayout layout;
   final double tile;
-
-  /// Shop indexes whose restaurant is still locked: their land is dimmed.
-  final Set<int> lockedShops;
 
   /// Distance along the route up to the next level to play.
   final double reached;
@@ -33,17 +29,21 @@ class TileMapPainter extends CustomPainter {
   static Paint _fadedPaint(double alpha) =>
       _fadePaint..color = Color.fromRGBO(255, 255, 255, alpha);
 
-  /// Draws [img] inside [rc], keeping its proportions.
+  /// Draws [img] inside [rc], keeping its proportions. [flipX] mirrors it
+  /// first, then [turns] rotates it clockwise in quarter turns.
   void _sprite(Canvas canvas, ui.Image? img, Rect rc,
       {double scale = 1,
       Alignment align = Alignment.center,
       double alpha = 1,
-      int turns = 0}) {
+      int turns = 0,
+      bool flipX = false}) {
     if (img == null) return;
-    if (turns != 0) {
+    final transformed = turns != 0 || flipX;
+    if (transformed) {
       canvas.save();
       canvas.translate(rc.center.dx, rc.center.dy);
       canvas.rotate(turns * 1.5707963267948966);
+      if (flipX) canvas.scale(-1, 1);
       canvas.translate(-rc.center.dx, -rc.center.dy);
     }
     final src =
@@ -55,7 +55,7 @@ class TileMapPainter extends CustomPainter {
     final dst = align.inscribe(Size(w, h), rc);
     canvas.drawImageRect(
         img, src, dst, alpha < 1 ? _fadedPaint(alpha) : _spritePaint);
-    if (turns != 0) canvas.restore();
+    if (transformed) canvas.restore();
   }
 
   @override
@@ -65,6 +65,9 @@ class TileMapPainter extends CustomPainter {
     final clip = canvas.getLocalClipBounds();
     final first = (clip.top / tile).floor().clamp(0, layout.rows);
     final last = (clip.bottom / tile).ceil().clamp(0, layout.rows);
+    // Land sprites drawn in the first pass; their coast and scenery go on
+    // top in a second pass so the coast can spill over into the sea.
+    final land = <(Rect, int, int)>[];
     for (var r = first; r < last; r++) {
       final shop = layout.shopOfRow(r);
       final region = regionOf(layout.shops[shop].id);
@@ -91,65 +94,123 @@ class TileMapPainter extends CustomPainter {
             ? region.land
             : Color.lerp(region.land, Colors.white, 0.12)!;
         final id = layout.shops[shop].id;
-        final below =
-            r + 1 >= layout.rows ? MapTile.sea : layout.tileAt(c, r + 1);
         if (a != null && a.region(id, 'land_a') != null) {
-          final land = hash < 2
+          final ground = hash < 2
               ? ((c + r) % 2 == 0 ? 'land_c' : 'land_d')
               : ((c + r) % 2 == 0 ? 'land_a' : 'land_b');
-          _sprite(canvas, a.region(id, land), rect);
-          // Coast: a cliff along every side that faces the sea. The map edge
-          // counts as sea, so the land ends in a cliff there too.
-          bool sea(int cc, int rr) =>
-              cc < 0 ||
-              cc >= kMapCols ||
-              rr < 0 ||
-              rr >= layout.rows ||
-              layout.tileAt(cc, rr) == MapTile.sea;
-          final left = sea(c - 1, r), right = sea(c + 1, r);
-          if (below == MapTile.sea) {
-            _sprite(
-                canvas,
-                a[left && !right
-                    ? 'cliff_left'
-                    : right && !left
-                        ? 'cliff_right'
-                        : 'cliff'],
-                rect);
-          }
-          if (left) _sprite(canvas, a['cliff'], rect, turns: 1);
-          if (right) _sprite(canvas, a['cliff'], rect, turns: 3);
-          if (sea(c, r - 1)) _sprite(canvas, a['cliff'], rect, turns: 2);
-          final deco = switch (type) {
-            MapTile.mountain => 'mountain',
-            MapTile.forest => 'forest',
-            MapTile.city => 'city',
-            _ => null,
-          };
-          // Scenery stays off the route and the level plates so they read
-          // clearly, and is drawn a little smaller.
-          if (deco != null && !layout.nearRoute(c, r)) {
-            _sprite(canvas, a.region(id, deco), rect, scale: 0.75);
-          }
-          if (lockedShops.contains(shop)) {
-            _sprite(canvas, a['fog'], rect, alpha: 0.9);
-          }
+          _sprite(canvas, a.region(id, ground), rect);
+          land.add((rect, c, r));
           continue;
         }
         canvas.drawRect(rect, fill..color = base);
-        if (below == MapTile.sea) {
+        if (_sea(c, r + 1)) {
           canvas.drawRect(
               Rect.fromLTWH(
                   rect.left, rect.bottom - tile * 0.2, tile + 0.5, tile * 0.2),
               fill..color = Color.lerp(region.land, Colors.brown, 0.55)!);
         }
-        _deco(canvas, rect, type, fill);
-        if (lockedShops.contains(shop)) {
-          canvas.drawRect(rect, fill..color = const Color(0x66455A64));
-        }
+        _deco(
+            canvas,
+            rect,
+            switch (layout.sceneryAt(c, r)) {
+              'mountain' => MapTile.mountain,
+              'forest' => MapTile.forest,
+              'city' => MapTile.city,
+              _ => MapTile.land,
+            },
+            fill);
+      }
+    }
+    final a = art;
+    if (a != null) {
+      for (final (rect, c, r) in land) {
+        _landOverlay(canvas, a, rect, c, r);
       }
     }
     _route(canvas);
+  }
+
+  /// Coast and scenery on a land tile.
+  void _landOverlay(Canvas canvas, MapArt a, Rect rect, int c, int r) {
+    final shop = layout.shopOfRow(r);
+    final id = layout.shops[shop].id;
+    _coast(canvas, a, rect, c, r);
+    // Scenery is placed off the route and the level plates so they read
+    // clearly, and is drawn a little smaller.
+    final deco = layout.sceneryAt(c, r);
+    if (deco != null) _sprite(canvas, a.region(id, deco), rect, scale: 0.75);
+  }
+
+  /// Whether ([c], [r]) is sea. The map edge counts as sea, so the land ends
+  /// in a cliff there too.
+  bool _sea(int c, int r) =>
+      c < 0 ||
+      c >= kMapCols ||
+      r < 0 ||
+      r >= layout.rows ||
+      layout.tileAt(c, r) == MapTile.sea;
+
+  /// A stable pseudo-random number for cell ([c], [r]), so the coast looks
+  /// varied but the same on every frame.
+  static int _noise(int c, int r, int salt) {
+    var h = c * 374761393 + r * 668265263 + salt * 1442695041;
+    h = (h ^ (h >> 13)) * 1274126177;
+    return (h ^ (h >> 16)) & 0x7fffffff;
+  }
+
+  /// Coast: a cliff along every side of a land tile that faces the sea.
+  ///
+  /// The sprites are drawn for one orientation and rotated clockwise into
+  /// place: `cliff` has the sea below, `cliff_l` below and to the left, and
+  /// `cliff_u` on every side but the top. Two sea sides that meet take the
+  /// corner piece and three take the U, so strips never overlap at a corner.
+  /// The corner and U pieces have a wavy outer edge, so they are drawn a
+  /// little larger to reach the sea on every side.
+  /// Each piece is mirrored at random (a mirrored `cliff_l` is the next
+  /// corner round), so neighbouring strips don't repeat the same rocks.
+  static const _cornerScale = 1.08;
+
+  void _coast(Canvas canvas, MapArt a, Rect rect, int c, int r) {
+    // Sides as quarter turns from the bottom: 0 bottom, 1 left, 2 top,
+    // 3 right (a clockwise turn takes the bottom to the left).
+    final sea = [
+      _sea(c, r + 1),
+      _sea(c - 1, r),
+      _sea(c, r - 1),
+      _sea(c + 1, r),
+    ];
+    final count = sea.where((s) => s).length;
+    final flip = _noise(c, r, 1).isOdd;
+    final cliff = a['cliff'];
+    if (count == 4) {
+      _sprite(canvas, a['cliff_u'], rect, scale: _cornerScale, flipX: flip);
+      _sprite(canvas, cliff, rect, turns: 2, flipX: !flip);
+      return;
+    }
+    if (count == 3 && a['cliff_u'] != null) {
+      // The U's open side is its top (side 2); turn it onto the land side.
+      final land = sea.indexOf(false);
+      _sprite(canvas, a['cliff_u'], rect,
+          turns: (land + 2) % 4, scale: _cornerScale, flipX: flip);
+      return;
+    }
+    if (count == 2 && a['cliff_l'] != null) {
+      for (var s = 0; s < 4; s++) {
+        // Adjacent sides s and s + 1: the L turned s times covers them; the
+        // mirrored L (sea right and below) needs one more turn.
+        if (sea[s] && sea[(s + 1) % 4]) {
+          _sprite(canvas, a['cliff_l'], rect,
+              turns: flip ? (s + 1) % 4 : s, scale: _cornerScale, flipX: flip);
+          return;
+        }
+      }
+    }
+    for (var s = 0; s < 4; s++) {
+      if (sea[s]) {
+        _sprite(canvas, cliff, rect,
+            turns: s, flipX: _noise(c, r, 2 + s).isOdd);
+      }
+    }
   }
 
   void _deco(Canvas canvas, Rect rc, MapTile type, Paint p) {
@@ -239,9 +300,5 @@ class TileMapPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(TileMapPainter old) =>
-      old.tile != tile ||
-      old.art != art ||
-      old.reached != reached ||
-      old.lockedShops.length != lockedShops.length ||
-      !old.lockedShops.containsAll(lockedShops);
+      old.tile != tile || old.art != art || old.reached != reached;
 }

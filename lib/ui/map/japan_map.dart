@@ -21,7 +21,7 @@ const kMapCols = 8;
 const kBandRows = 12;
 
 /// Look of one restaurant's band: header colours, land colour, and which
-/// decoration the template's `m`/`f`/`c` characters become there.
+/// decoration a band shape's `m`/`f`/`c` characters become there.
 class MapRegion {
   const MapRegion(
       {required this.kanji,
@@ -131,39 +131,120 @@ const kDefaultRegion = MapRegion(
 
 MapRegion regionOf(String shopId) => kMapRegions[shopId] ?? kDefaultRegion;
 
-/// One band of the map (top to bottom), one per restaurant. Row 2 is where the
-/// band's last level sits and row 10 its first; rows 0-1 are left free for the
-/// name banner. Any number of levels (up to ~20) is spread along the band's
-/// path, so a restaurant of 10 or 15 levels needs no map change; more bands
-/// are stacked above, so the map grows with `Restaurant.shops`.
-const _bandTemplate = [
-  '..LLLL..',
-  '.LmLLfL.',
-  '.LLLLLL.',
-  'LLcLLmLL',
-  '.LLLLLL.',
-  '.LfLLfL.',
-  '.LLLLLL.',
-  'LLLmLcLL',
-  '.LLLLLL.',
-  '.LLfLLL.',
-  '.LLLLLL.',
-  '..LLLL..',
-];
+/// The shape of one band of the map: its rows (top to bottom) and the path
+/// of its levels in tile coordinates (tile centres), from the bottom of the
+/// band to the top.
+///
+/// Every shape keeps the same joints so any two bands fit together: rows 0
+/// and 11 are a neck of land in columns 2-5, rows 0-1 stay free for the name
+/// banner, and the path starts at (3.5, 10.5) and ends at (3.5, 2.5). Any
+/// number of levels (up to ~20) is spread along the path, so a restaurant of
+/// 10 or 15 levels needs no map change.
+class BandShape {
+  const BandShape(this.rows, this.path);
+  final List<String> rows;
+  final List<Offset> path;
+}
 
-/// Path of the levels through one band, in tile coordinates (tile centres),
-/// running from the bottom of the band to the top.
-const _bandPath = [
-  Offset(3.5, 10.5),
-  Offset(6.5, 10.5),
-  Offset(6.5, 8.5),
-  Offset(1.5, 8.5),
-  Offset(1.5, 6.5),
-  Offset(6.5, 6.5),
-  Offset(6.5, 4.5),
-  Offset(1.5, 4.5),
-  Offset(1.5, 2.5),
-  Offset(3.5, 2.5),
+const kBandShapes = [
+  // Zigzag across the island, with tabs of land on both sides.
+  BandShape([
+    '..LLLL..',
+    '.LmLLfL.',
+    '.LLLLLL.',
+    'LLcLLmLL',
+    '.LLLLLL.',
+    '.LfLLfL.',
+    '.LLLLLL.',
+    'LLLmLcLL',
+    '.LLLLLL.',
+    '.LLfLLL.',
+    '.LLLLLL.',
+    '..LLLL..',
+  ], [
+    Offset(3.5, 10.5),
+    Offset(6.5, 10.5),
+    Offset(6.5, 8.5),
+    Offset(1.5, 8.5),
+    Offset(1.5, 6.5),
+    Offset(6.5, 6.5),
+    Offset(6.5, 4.5),
+    Offset(1.5, 4.5),
+    Offset(1.5, 2.5),
+    Offset(3.5, 2.5),
+  ]),
+  // Spiral in round a lagoon, then out the far side.
+  BandShape([
+    '..LLLL..',
+    '.LLLLLL.',
+    'LLLLLLL.',
+    '.LLLLLLL',
+    '.LLLLLLL',
+    '.LLLLLL.',
+    'LLLL..LL',
+    '.LLL..LL',
+    '.LLL..L.',
+    '.LLLLLL.',
+    '.LLLLLLL',
+    '..LLLL..',
+  ], [
+    Offset(3.5, 10.5),
+    Offset(6.5, 10.5),
+    Offset(6.5, 4.5),
+    Offset(3.5, 4.5),
+    Offset(3.5, 8.5),
+    Offset(1.5, 8.5),
+    Offset(1.5, 2.5),
+    Offset(3.5, 2.5),
+  ]),
+  // Three long crossings with bays biting in from the sides.
+  BandShape([
+    '..LLLL..',
+    '.LLLLLL.',
+    '..LLLLLL',
+    '..LLLLL.',
+    '.LLLLLL.',
+    'LLLLLLLL',
+    '.LLLLLL.',
+    '.LLLLLLL',
+    'LLLLLLLL',
+    '..LLLLL.',
+    '..LLLLLL',
+    '..LLLL..',
+  ], [
+    Offset(3.5, 10.5),
+    Offset(6.5, 10.5),
+    Offset(6.5, 8.0),
+    Offset(1.5, 8.0),
+    Offset(1.5, 5.5),
+    Offset(6.5, 5.5),
+    Offset(6.5, 2.5),
+    Offset(3.5, 2.5),
+  ]),
+  // Slanting climb up a ragged coast, with short steps at the turns.
+  BandShape([
+    '..LLLL..',
+    '.LLLLLL.',
+    '..LLLLLL',
+    '.LLLLLLL',
+    'LLLLLLL.',
+    '.LLLLLL.',
+    'LLLLLL..',
+    '.LLLLLLL',
+    '..LLLLLL',
+    '.LLLLLLL',
+    'LLLLLLL.',
+    '..LLLL..',
+  ], [
+    Offset(3.5, 10.5),
+    Offset(6.5, 9.5),
+    Offset(6.5, 8.0),
+    Offset(1.5, 6.5),
+    Offset(1.5, 5.0),
+    Offset(6.5, 3.5),
+    Offset(6.5, 2.5),
+    Offset(3.5, 2.5),
+  ]),
 ];
 
 /// Where everything sits on the tile grid. The first restaurant is the
@@ -174,19 +255,21 @@ class MapLayout {
     rows = bands * kBandRows;
 
     grid = [
-      for (var b = 0; b < bands; b++)
-        ..._bandRows(regionOf(shops[bands - 1 - b].id),
-            mirrored: (bands - 1 - b).isOdd),
+      for (var b = bands - 1; b >= 0; b--)
+        ..._bandRows(regionOf(shops[b].id), shapeOf(b), mirrored: mirrored(b)),
     ];
 
     final pts = <Offset>[];
+    // Index in [path] where each band's own points start.
+    final firstPoint = <int>[];
     for (var s = 0; s < bands; s++) {
       final dy = bandTop(s) * 1.0;
-      for (final p in _bandPath) {
-        // Odd bands run the other way round, so the route snakes up the map.
-        pts.add(Offset(s.isOdd ? kMapCols - p.dx : p.dx, p.dy + dy));
+      firstPoint.add(pts.length);
+      for (final p in shapeOf(s).path) {
+        pts.add(Offset(mirrored(s) ? kMapCols - p.dx : p.dx, p.dy + dy));
       }
     }
+    firstPoint.add(pts.length);
     path = pts;
     _cum = [0];
     for (var i = 1; i < pts.length; i++) {
@@ -196,8 +279,8 @@ class MapLayout {
     final nodeList = <Offset>[];
     final distList = <double>[];
     for (var s = 0; s < bands; s++) {
-      final start = _cum[s * _bandPath.length];
-      final end = _cum[(s + 1) * _bandPath.length - 1];
+      final start = _cum[firstPoint[s]];
+      final end = _cum[firstPoint[s + 1] - 1];
       final count = shops[s].lastLevel - shops[s].firstLevel + 1;
       for (var j = 0; j < count; j++) {
         final d = count == 1 ? start : start + (end - start) * j / (count - 1);
@@ -237,8 +320,18 @@ class MapLayout {
 
   MapTile tileAt(int col, int row) => kMapLegend[grid[row][col]]!;
 
-  Iterable<String> _bandRows(MapRegion r, {required bool mirrored}) =>
-      _bandTemplate.map((row) {
+  /// Shape of shop index [s]'s band. Shapes take turns, and each is
+  /// mirrored one time round and not the next, so neighbouring restaurants
+  /// never look alike and the same look only comes back after
+  /// 2 x [kBandShapes] bands.
+  BandShape shapeOf(int s) => kBandShapes[s % kBandShapes.length];
+
+  /// Whether shop index [s]'s band is drawn mirrored left to right.
+  bool mirrored(int s) => s.isOdd != (s ~/ kBandShapes.length).isOdd;
+
+  Iterable<String> _bandRows(MapRegion r, BandShape shape,
+          {required bool mirrored}) =>
+      shape.rows.map((row) {
         final out = StringBuffer();
         for (final ch in (mirrored ? row.split('').reversed : row.split(''))) {
           out.write(r.deco[ch] ?? ch);
@@ -253,18 +346,80 @@ class MapLayout {
       for (var d = 0.0; d <= nodeDist.last; d += 0.4) (d, pointAt(d)),
   ];
 
-  Set<int>? _near;
+  /// The decorations every region has a sprite for.
+  static const sceneryKinds = [
+    'landmark',
+    'special',
+    'mountain',
+    'forest',
+    'city'
+  ];
 
-  /// Whether the route or a level plate (with its number tag below) covers
-  /// part of tile ([col], [row]), so scenery should not be drawn there.
-  bool nearRoute(int col, int row) {
-    final near = _near ??= {
-      for (final (_, p) in routeStones)
-        for (var r = (p.dy - 0.7).floor(); r <= (p.dy + 1.3).floor(); r++)
-          for (var c = (p.dx - 0.7).floor(); c <= (p.dx + 0.7).floor(); c++)
-            r * kMapCols + c,
-    };
-    return near.contains(row * kMapCols + col);
+  late final Map<int, String> _scenery = _placeScenery();
+
+  /// The decoration on tile ([col], [row]), or null. Each restaurant shows
+  /// each of [sceneryKinds] at most once.
+  String? sceneryAt(int col, int row) => _scenery[row * kMapCols + col];
+
+  /// Whether a decoration drawn at 3/4 of tile ([col], [row]) stays clear of
+  /// the stepping stones and of the level plates, with their stars below
+  /// and the current level's marker above.
+  bool _clearOfRoute(int col, int row) {
+    final box = Rect.fromLTWH(col + 0.125, row + 0.125, 0.75, 0.75);
+    final stones = box.inflate(0.3);
+    for (final (_, p) in routeStones) {
+      if (stones.contains(p)) return false;
+    }
+    for (final n in nodes) {
+      if (Rect.fromLTRB(n.dx - 0.6, n.dy - 1.1, n.dx + 0.6, n.dy + 0.95)
+          .overlaps(box)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /// Picks free tiles in each band, never side by side, the shape's
+  /// scenery spots first, and gives each a different decoration: the one
+  /// the shape asks for when still unused, else the next unused kind.
+  Map<int, String> _placeScenery() {
+    const byChar = {'m': 'mountain', 'f': 'forest', 'c': 'city'};
+    final out = <int, String>{};
+    for (var s = 0; s < shops.length; s++) {
+      final top = bandTop(s);
+      final spots = <(int, int)>[
+        // Rows 0-1 sit under the restaurant's name banner.
+        for (var r = top + 2; r < top + kBandRows; r++)
+          for (var c = 0; c < kMapCols; c++)
+            if (tileAt(c, r) != MapTile.sea && _clearOfRoute(c, r)) (c, r),
+      ];
+      int rank((int, int) t) {
+        final templated = byChar.containsKey(grid[t.$2][t.$1]) ? 0 : 1 << 20;
+        return templated + ((t.$1 * 73856093) ^ (t.$2 * 19349663)) % 1000003;
+      }
+
+      spots.sort((x, y) => rank(x).compareTo(rank(y)));
+      final picked = <(int, int)>[];
+      for (final t in spots) {
+        if (picked.length == sceneryKinds.length) break;
+        if (picked
+            .any((p) => (p.$1 - t.$1).abs() <= 1 && (p.$2 - t.$2).abs() <= 1)) {
+          continue;
+        }
+        picked.add(t);
+      }
+      final unused = [...sceneryKinds];
+      final kinds = <(int, int), String>{};
+      for (final t in picked) {
+        final wanted = byChar[grid[t.$2][t.$1]];
+        if (wanted != null && unused.remove(wanted)) kinds[t] = wanted;
+      }
+      for (final t in picked) {
+        kinds[t] ??= unused.removeAt(0);
+      }
+      kinds.forEach((t, kind) => out[t.$2 * kMapCols + t.$1] = kind);
+    }
+    return out;
   }
 
   Offset pointAt(double d) {
