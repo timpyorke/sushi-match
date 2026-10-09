@@ -92,9 +92,8 @@ class TileMapPainter extends CustomPainter {
                 ? 'sea_c'
                 : hash == 1
                     ? 'sea_d'
-                    : (c + r) % 2 == 0
-                        ? 'sea_a'
-                        : 'sea_b';
+                    // sea_b is a lighter shade; alternating it shows the grid.
+                    : 'sea_a';
             _sprite(canvas, a[sea], rect);
             if (hash == 5) _sprite(canvas, a['wave_crest'], rect, scale: 0.5);
           }
@@ -105,10 +104,32 @@ class TileMapPainter extends CustomPainter {
             : Color.lerp(region.land, Colors.white, 0.12)!;
         final id = layout.shops[shop].id;
         if (a != null && a.region(id, 'land_a') != null) {
-          final ground = hash < 2
-              ? ((c + r) % 2 == 0 ? 'land_c' : 'land_d')
-              : ((c + r) % 2 == 0 ? 'land_a' : 'land_b');
-          _sprite(canvas, a.region(id, ground), rect);
+          // One tone only: alternating the light/dark variants shows the grid.
+          final ground = hash < 2 ? 'land_c' : 'land_a';
+          // The cliff frame sits inside the tile and its surf is partly
+          // transparent, so keep the ground back from sea-facing edges and
+          // let sea show through there instead of a strip of land.
+          final top = _sea(c, r - 1), bottom = _sea(c, r + 1);
+          final left = _sea(c - 1, r), right = _sea(c + 1, r);
+          if (top || bottom || left || right) {
+            final inset = tile * 0.08, round = Radius.circular(tile * 0.2);
+            _sprite(canvas, a[hash == 0 ? 'sea_c' : 'sea_a'], rect);
+            canvas.save();
+            canvas.clipRRect(RRect.fromLTRBAndCorners(
+              rect.left + (left ? inset : 0),
+              rect.top + (top ? inset : 0),
+              rect.right - (right ? inset : 0),
+              rect.bottom - (bottom ? inset : 0),
+              topLeft: top && left ? round : Radius.zero,
+              topRight: top && right ? round : Radius.zero,
+              bottomLeft: bottom && left ? round : Radius.zero,
+              bottomRight: bottom && right ? round : Radius.zero,
+            ));
+            _sprite(canvas, a.region(id, ground), rect);
+            canvas.restore();
+          } else {
+            _sprite(canvas, a.region(id, ground), rect);
+          }
           land.add((rect, c, r));
           continue;
         }

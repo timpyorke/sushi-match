@@ -98,6 +98,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   ),
                 ],
               ),
+              const _OwnedBoosters(),
               Expanded(
                 child: Align(
                   alignment: Alignment.topCenter,
@@ -138,7 +139,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                 onTap: widget.onShop),
                           ],
                         ),
-                        const _OwnedBoosters(),
                         const EventBanner(),
                       ],
                     ),
@@ -165,7 +165,7 @@ class _OwnedBoosters extends ConsumerWidget {
     const perRow = 3;
     const all = Booster.values;
     return Padding(
-      padding: const EdgeInsets.only(top: 16),
+      padding: const EdgeInsets.only(top: 8),
       // A 3 x 2 grid of same-size chips.
       child: Column(
         mainAxisSize: MainAxisSize.min,
