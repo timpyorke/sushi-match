@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sushi_trio/services/restaurant.dart';
 import 'package:sushi_trio/main.dart';
 import 'package:sushi_trio/services/store.dart';
-import 'package:sushi_trio/services/wallet.dart';
 import 'package:sushi_trio/ui/ui_art.dart';
 
 import 'helpers/riverpod.dart';
@@ -38,15 +37,6 @@ void main() {
     expect(find.text('Sushi Trio'), findsWidgets);
     expect(find.text('Play'), findsOneWidget);
     expect(find.text('Level 1'), findsOneWidget);
-  });
-
-  testWidgets('home lists every booster, with a count only for those owned',
-      (WidgetTester tester) async {
-    await _pumpApp(tester, _store({'booster_chopsticks': 2}));
-
-    expect(find.byType(BoosterIcon), findsNWidgets(Booster.values.length));
-    expect(find.text('×2'), findsOneWidget);
-    expect(find.text('×0'), findsNothing);
   });
 
   testWidgets('home opens the daily reward when it is waiting',

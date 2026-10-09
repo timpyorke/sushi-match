@@ -82,19 +82,6 @@ class _LevelSelectViewState extends State<LevelSelectView> {
                 ),
               ),
             ),
-            if (widget.onShop != null)
-              Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: RoundIconButton(
-                    sprite: const ShopIcon(size: 28),
-                    onPressed: widget.onShop!),
-              ),
-            if (widget.onRestaurant != null)
-              Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: RoundIconButton(
-                    icon: Icons.storefront, onPressed: widget.onRestaurant!),
-              ),
             if (widget.onSettings != null)
               Padding(
                 padding: const EdgeInsets.only(right: 12),
@@ -106,18 +93,55 @@ class _LevelSelectViewState extends State<LevelSelectView> {
           ],
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 8, bottom: 4),
+          padding: const EdgeInsets.only(top: 8, bottom: 14),
           child: OutlinedTitle('Sushi Trio', style: t.headlineLarge),
         ),
-        PlankSubtitle(text: L10n.t('pickPlate')),
         Expanded(
-          child: TileMapView(
-            layout: _layout,
-            cleared: widget.cleared,
-            stars: widget.stars,
-            // A region stays dimmed until the player reaches its first level.
-            lockedShop: (s) => _layout.shops[s].firstLevel > widget.cleared + 1,
-            onTap: _tap,
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: TileMapView(
+                  layout: _layout,
+                  cleared: widget.cleared,
+                  stars: widget.stars,
+                  // A region stays dimmed until the player reaches its first level.
+                  lockedShop: (s) =>
+                      _layout.shops[s].firstLevel > widget.cleared + 1,
+                  onTap: _tap,
+                ),
+              ),
+              // Shop and restaurant stacked down the right edge.
+              if (widget.onShop != null || widget.onRestaurant != null)
+                Positioned(
+                  right: 12,
+                  top: 12,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (widget.onShop != null)
+                        RoundIconButton(
+                            sprite: const ShopIcon(size: 28),
+                            onPressed: widget.onShop!),
+                      if (widget.onShop != null && widget.onRestaurant != null)
+                        const SizedBox(height: 10),
+                      if (widget.onRestaurant != null)
+                        RoundIconButton(
+                            icon: Icons.storefront,
+                            onPressed: widget.onRestaurant!),
+                    ],
+                  ),
+                ),
+              // Floats over the sea at the bottom; touches pass through.
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 12,
+                child: IgnorePointer(
+                  child:
+                      Center(child: PlankSubtitle(text: L10n.t('pickPlate'))),
+                ),
+              ),
+            ],
           ),
         ),
       ],

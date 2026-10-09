@@ -43,6 +43,7 @@ class MapArt {
         ('cloud_lock', c.cloudLock),
         ('flag_boss', c.flagBoss),
         ('marker', c.marker),
+        ('number_tag', c.numberTag),
         ('plate', c.plate),
         ('plate_current', c.plateCurrent),
         ('plate_locked', c.plateLocked),

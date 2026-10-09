@@ -12,13 +12,13 @@ import 'ui_art.dart';
 /// the lane between the counter and the floor.
 const _spots = {
   'sign': Offset(0.5, 0.08),
-  'lantern': Offset(0.12, 0.38),
-  'aquarium': Offset(0.37, 0.38),
-  'sake': Offset(0.63, 0.38),
-  'noren': Offset(0.88, 0.38),
-  'luckycat': Offset(0.12, 0.56),
-  'conveyor': Offset(0.37, 0.56),
-  'trophy': Offset(0.88, 0.56),
+  'lantern': Offset(0.12, 0.29),
+  'aquarium': Offset(0.37, 0.32),
+  'sake': Offset(0.63, 0.32),
+  'noren': Offset(0.88, 0.29),
+  'luckycat': Offset(0.12, 0.45),
+  'conveyor': Offset(0.37, 0.45),
+  'trophy': Offset(0.88, 0.45),
   'plant': Offset(0.12, 0.9),
   'stool': Offset(0.37, 0.9),
   'taiko': Offset(0.63, 0.9),
@@ -61,7 +61,16 @@ class RestaurantScene extends ConsumerWidget {
             final w = box.maxWidth, h = box.maxHeight;
             return Stack(
               children: [
-                Positioned.fill(child: CustomPaint(painter: _ScenePainter())),
+                Positioned.fill(
+                  child: Image.asset(
+                    'assets/backgrounds/restaurant_counterbar.webp',
+                    fit: BoxFit.fill,
+                    filterQuality: FilterQuality.medium,
+                  ),
+                ),
+                Positioned.fill(
+                  child: IgnorePointer(child: _RestaurantChef()),
+                ),
                 for (final f in Restaurant.furniture)
                   Positioned(
                     left: _spotOf(f).dx * w - _slot / 2,
@@ -86,6 +95,76 @@ class RestaurantScene extends ConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+/// The resident chef stands behind the bar, with the lower body hidden by
+/// its front edge. Existing frame animations keep the scene alive even before
+/// the player buys any furniture or puts sushi on display.
+class _RestaurantChef extends StatefulWidget {
+  @override
+  State<_RestaurantChef> createState() => _RestaurantChefState();
+}
+
+class _RestaurantChefState extends State<_RestaurantChef>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _routine;
+  var _tasting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _routine = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 10),
+    )
+      ..addListener(() {
+        // Two four-frame taste loops at six fps, then return to idle.
+        final tasting = _routine.value >= 1 - (8 / 6 / 10);
+        if (tasting != _tasting) setState(() => _tasting = tasting);
+      })
+      ..repeat();
+  }
+
+  @override
+  void dispose() {
+    _routine.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, box) {
+      final size = (box.maxWidth * 0.42).clamp(96.0, 184.0).toDouble();
+      // The background's countertop starts at 43% of the scene height.
+      return ClipRect(
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: SizedBox(
+            width: box.maxWidth,
+            height: box.maxHeight * 0.43,
+            child: ClipRect(
+              child: Stack(
+                children: [
+                  Positioned(
+                    left: box.maxWidth * 0.5 - size / 2,
+                    top: box.maxHeight * 0.43 - size * 0.70,
+                    child: CustomerSprite(
+                      customer: Customer.roster.firstWhere(
+                        (customer) => customer.nameKey == 'cust17',
+                      ),
+                      anim:
+                          _tasting ? CustomerAnim.signature : CustomerAnim.idle,
+                      size: size,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    });
   }
 }
 
@@ -241,66 +320,4 @@ class _CustomersState extends State<_Customers>
       );
     });
   }
-}
-
-class _ScenePainter extends CustomPainter {
-  static const _sky = Color(0xFFBFE3F0);
-  static const _wall = Color(0xFFE9D3A8);
-  static const _beam = Color(0xFF8A5A33);
-  static const _awningA = Color(0xFFB71C2C);
-  static const _awningB = Color(0xFFF4EBD8);
-  static const _counter = Color(0xFFC8955E);
-  static const _floor = Color(0xFFB98A5A);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final w = size.width, h = size.height;
-    final p = Paint();
-    canvas.drawRect(Offset.zero & size, p..color = _sky);
-    // Sign board over the awning.
-    canvas.drawRRect(
-        RRect.fromRectAndRadius(
-            Rect.fromLTWH(w * 0.3, h * 0.02, w * 0.4, h * 0.12),
-            const Radius.circular(6)),
-        p..color = _beam);
-    // Back wall with posts.
-    canvas.drawRect(Rect.fromLTWH(0, h * 0.17, w, h * 0.5), p..color = _wall);
-    for (final x in [0.0, 0.25, 0.5, 0.75, 1.0]) {
-      canvas.drawRect(
-          Rect.fromLTWH(w * x - w * 0.012, h * 0.17, w * 0.024, h * 0.5),
-          p..color = _beam.withAlpha(120));
-    }
-    // Striped awning.
-    const stripes = 10;
-    final sw = w / stripes;
-    for (var i = 0; i < stripes; i++) {
-      final path = Path()
-        ..moveTo(i * sw, h * 0.15)
-        ..lineTo((i + 1) * sw, h * 0.15)
-        ..lineTo((i + 1) * sw, h * 0.23)
-        ..arcToPoint(Offset(i * sw, h * 0.23),
-            radius: Radius.circular(sw / 2), clockwise: true)
-        ..close();
-      canvas.drawPath(path, p..color = i.isEven ? _awningA : _awningB);
-    }
-    // Shelf under the wall row.
-    canvas.drawRect(Rect.fromLTWH(w * 0.02, h * 0.43, w * 0.96, h * 0.015),
-        p..color = _beam);
-    // Counter top and front.
-    canvas.drawRect(Rect.fromLTWH(0, h * 0.6, w, h * 0.025), p..color = _beam);
-    canvas.drawRect(
-        Rect.fromLTWH(0, h * 0.625, w, h * 0.045), p..color = _counter);
-    // Floor boards.
-    canvas.drawRect(Rect.fromLTWH(0, h * 0.67, w, h * 0.33), p..color = _floor);
-    final plank = Paint()
-      ..color = const Color(0x22000000)
-      ..strokeWidth = 2;
-    for (var i = 1; i < 6; i++) {
-      final y = h * 0.67 + i * h * 0.055;
-      canvas.drawLine(Offset(0, y), Offset(w, y), plank);
-    }
-  }
-
-  @override
-  bool shouldRepaint(_ScenePainter old) => false;
 }

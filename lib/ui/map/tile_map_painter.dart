@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -14,13 +15,21 @@ class TileMapPainter extends CustomPainter {
       required this.reached,
       required this.scroll,
       this.topPad = 0,
+      this.sidePad = 0,
+      this.sea,
       this.art})
-      : super(repaint: scroll);
+      : super(repaint: sea == null ? scroll : Listenable.merge([scroll, sea]));
 
   /// The map scrolls under a painter that stays the size of the viewport, so
   /// only the rows on screen are ever recorded and rasterised.
   final ScrollController scroll;
   final double topPad;
+
+  /// Loops 0 to 1; drives the drifting of the sea. `null` keeps it still.
+  final Animation<double>? sea;
+
+  /// Sea margin between the screen edge and the island on each side.
+  final double sidePad;
 
   final MapLayout layout;
   final double tile;
@@ -66,11 +75,36 @@ class TileMapPainter extends CustomPainter {
     if (transformed) canvas.restore();
   }
 
+  /// A sea tile whose sprite drifts a little, each tile out of step with the
+  /// next so the waves seem to travel. The sprite is oversized by the drift
+  /// so the clipped tile is always covered.
+  void _seaTile(Canvas canvas, ui.Image? img, int c, int r,
+      {bool crest = false}) {
+    final rect = Rect.fromLTWH(c * tile, r * tile, tile + 0.5, tile + 0.5);
+    final t = (sea?.value ?? 0) * 2 * math.pi;
+    final amp = sea == null ? 0.0 : tile * 0.05;
+    final phase = t + c * 0.7 + r * 0.5;
+    canvas.save();
+    canvas.clipRect(rect);
+    _sprite(
+        canvas,
+        img,
+        rect
+            .inflate(amp * 1.5)
+            .shift(Offset(math.sin(phase) * amp, math.cos(phase * 0.8) * amp)));
+    if (crest) {
+      _sprite(canvas, art?['wave_crest'],
+          rect.shift(Offset(0, math.sin(phase * 1.5) * tile * 0.06)),
+          scale: 0.5);
+    }
+    canvas.restore();
+  }
+
   @override
   void paint(Canvas canvas, Size size) {
     final fill = Paint();
     final offset = scroll.hasClients ? scroll.offset : 0.0;
-    canvas.translate(0, topPad - offset);
+    canvas.translate(sidePad, topPad - offset);
     // Only the rows on screen: the map is 168 rows tall.
     final clip = canvas.getLocalClipBounds();
     final first = (clip.top / tile).floor().clamp(0, layout.rows);
@@ -78,6 +112,18 @@ class TileMapPainter extends CustomPainter {
     // Land sprites drawn in the first pass; their coast and scenery go on
     // top in a second pass so the coast can spill over into the sea.
     final land = <(Rect, int, int)>[];
+    final a0 = art;
+    if (a0 != null) {
+      // Sea outside the grid: the side margins and everything below the
+      // last row, down to the bottom of the screen.
+      final seaLast = ((offset + size.height - topPad) / tile).ceil();
+      for (var r = first; r < seaLast; r++) {
+        for (var c = -1; c <= kMapCols; c++) {
+          if (r < layout.rows && c >= 0 && c < kMapCols) continue;
+          _seaTile(canvas, a0['sea_a'], c, r);
+        }
+      }
+    }
     for (var r = first; r < last; r++) {
       final shop = layout.shopOfRow(r);
       final region = regionOf(layout.shops[shop].id);
@@ -94,8 +140,7 @@ class TileMapPainter extends CustomPainter {
                     ? 'sea_d'
                     // sea_b is a lighter shade; alternating it shows the grid.
                     : 'sea_a';
-            _sprite(canvas, a[sea], rect);
-            if (hash == 5) _sprite(canvas, a['wave_crest'], rect, scale: 0.5);
+            _seaTile(canvas, a[sea], c, r, crest: hash == 5);
           }
           continue;
         }
@@ -113,7 +158,7 @@ class TileMapPainter extends CustomPainter {
           final left = _sea(c - 1, r), right = _sea(c + 1, r);
           if (top || bottom || left || right) {
             final inset = tile * 0.08, round = Radius.circular(tile * 0.2);
-            _sprite(canvas, a[hash == 0 ? 'sea_c' : 'sea_a'], rect);
+            _seaTile(canvas, a[hash == 0 ? 'sea_c' : 'sea_a'], c, r);
             canvas.save();
             canvas.clipRRect(RRect.fromLTRBAndCorners(
               rect.left + (left ? inset : 0),

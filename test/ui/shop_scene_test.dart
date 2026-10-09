@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sushi_trio/core/piece.dart';
 import 'package:sushi_trio/services/restaurant.dart';
 import 'package:sushi_trio/services/wallet.dart';
+import 'package:sushi_trio/ui/customer_order.dart';
 import 'package:sushi_trio/ui/restaurant_screen.dart';
 
 import '../helpers/riverpod.dart';
@@ -18,6 +19,16 @@ void main() {
     addTearDown(() => tester.binding.setSurfaceSize(null));
     await tester
         .pumpWidget(scope(c, const MaterialApp(home: RestaurantScreen())));
+
+    final chef = find.byWidgetPredicate((widget) =>
+        widget is CustomerSprite && widget.customer.nameKey == 'cust17');
+    expect(chef, findsOneWidget);
+    expect(tester.widget<CustomerSprite>(chef).anim, CustomerAnim.idle);
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 9));
+    expect(tester.widget<CustomerSprite>(chef).anim, CustomerAnim.signature);
+    await tester.pump(const Duration(seconds: 2));
+    expect(tester.widget<CustomerSprite>(chef).anim, CustomerAnim.idle);
 
     expect(owned(), isFalse);
     await tester.tap(find.text('${lantern.cost}').first);
@@ -41,7 +52,9 @@ void main() {
 
     // Open the first slot's picker and choose the salmon.
     await tester.tap(find.byIcon(Icons.add).first);
-    await tester.pumpAndSettle();
+    // The resident chef animates continuously; wait for the picker transition.
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
     await tester.tap(find.text('Salmon'));
     await tester.pump(const Duration(seconds: 1));
     await tester.pump(const Duration(seconds: 1));

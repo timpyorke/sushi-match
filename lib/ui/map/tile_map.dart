@@ -27,8 +27,12 @@ class TileMapView extends StatefulWidget {
   State<TileMapView> createState() => _TileMapViewState();
 }
 
-class _TileMapViewState extends State<TileMapView> {
+class _TileMapViewState extends State<TileMapView>
+    with SingleTickerProviderStateMixin {
   final _scroll = ScrollController();
+  late final _sea =
+      AnimationController(vsync: this, duration: const Duration(seconds: 8))
+        ..repeat();
   bool _positioned = false;
   MapArt? _art;
 
@@ -43,6 +47,7 @@ class _TileMapViewState extends State<TileMapView> {
   @override
   void dispose() {
     _scroll.dispose();
+    _sea.dispose();
     super.dispose();
   }
 
@@ -62,7 +67,7 @@ class _TileMapViewState extends State<TileMapView> {
     final layout = widget.layout;
     final cleared = widget.cleared;
     return LayoutBuilder(builder: (context, box) {
-      const pad = 0.0;
+      const pad = 20.0;
       final width = box.maxWidth - pad * 2;
       final tile = width / kMapCols;
       final size = (tile - 2).clamp(34.0, 50.0);
@@ -79,15 +84,20 @@ class _TileMapViewState extends State<TileMapView> {
 
       return Stack(children: [
         Positioned.fill(
-          child: RepaintBoundary(
-            child: CustomPaint(
-              painter: TileMapPainter(
-                  layout: layout,
-                  tile: tile,
-                  art: _art,
-                  scroll: _scroll,
-                  topPad: 8,
-                  reached: layout.nodeDist[next - 1]),
+          // The painter does not clip itself; keep it off the header above.
+          child: ClipRect(
+            child: RepaintBoundary(
+              child: CustomPaint(
+                painter: TileMapPainter(
+                    layout: layout,
+                    tile: tile,
+                    art: _art,
+                    scroll: _scroll,
+                    topPad: 8,
+                    sidePad: pad,
+                    sea: _sea,
+                    reached: layout.nodeDist[next - 1]),
+              ),
             ),
           ),
         ),

@@ -5,7 +5,6 @@ import '../gen/assets.gen.dart';
 import '../core/progress.dart';
 import '../core/settings.dart';
 import '../services/audio.dart';
-import '../services/wallet.dart';
 import 'daily_reward_dialog.dart';
 import 'event_banner.dart';
 import 'event_dialog.dart';
@@ -98,136 +97,60 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   ),
                 ],
               ),
-              const _OwnedBoosters(),
               Expanded(
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SushiTrio(animation: _bob),
-                        const SizedBox(height: 12),
-                        OutlinedTitle('Sushi Trio',
-                            style: t.displayMedium, strokeWidth: 8),
-                        const SizedBox(height: 8),
-                        PlankSubtitle(text: L10n.t('tagline')),
-                        const SizedBox(height: 36),
-                        _PlayButton(
-                          level: next,
-                          onTap: () {
-                            Audio.play(Sfx.tap);
-                            widget.onPlay(next);
-                          },
-                        ),
-                        const SizedBox(height: 24),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            _ShortcutButton(
-                                sprite: const LevelIcon(size: 28),
-                                label: L10n.t('chooseLevel'),
-                                onTap: widget.onLevels),
-                            _ShortcutButton(
-                                sprite: const MyRestaurantIcon(size: 28),
-                                label: L10n.t('restaurant'),
-                                onTap: widget.onRestaurant),
-                            _ShortcutButton(
-                                sprite: const ShopIcon(size: 28),
-                                label: L10n.t('shop'),
-                                onTap: widget.onShop),
-                          ],
-                        ),
-                        const EventBanner(),
-                      ],
+                child: LayoutBuilder(
+                  // Short screens shrink the menu to fit rather than push
+                  // the buttons below the fold.
+                  builder: (context, box) => FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.center,
+                    child: Container(
+                      width: box.maxWidth,
+                      padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SushiTrio(animation: _bob),
+                          const SizedBox(height: 12),
+                          OutlinedTitle('Sushi Trio',
+                              style: t.displayMedium, strokeWidth: 8),
+                          const SizedBox(height: 8),
+                          PlankSubtitle(text: L10n.t('tagline')),
+                          const SizedBox(height: 36),
+                          _PlayButton(
+                            level: next,
+                            onTap: () {
+                              Audio.play(Sfx.tap);
+                              widget.onPlay(next);
+                            },
+                          ),
+                          const SizedBox(height: 24),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              _ShortcutButton(
+                                  sprite: const LevelIcon(size: 28),
+                                  label: L10n.t('chooseLevel'),
+                                  onTap: widget.onLevels),
+                              _ShortcutButton(
+                                  sprite: const MyRestaurantIcon(size: 28),
+                                  label: L10n.t('restaurant'),
+                                  onTap: widget.onRestaurant),
+                              _ShortcutButton(
+                                  sprite: const ShopIcon(size: 28),
+                                  label: L10n.t('shop'),
+                                  onTap: widget.onShop),
+                            ],
+                          ),
+                          const EventBanner(),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Every booster and power-up with how many are in stock. Ones the player
-/// has none of show faded, without a count.
-class _OwnedBoosters extends ConsumerWidget {
-  const _OwnedBoosters();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final stock = ref.watch(walletProvider.select((w) => w.stock));
-    final t = Theme.of(context).textTheme;
-    const perRow = 3;
-    const all = Booster.values;
-    return Padding(
-      padding: const EdgeInsets.only(top: 8),
-      // A 3 x 2 grid of same-size chips.
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          for (var i = 0; i < all.length; i += perRow)
-            Padding(
-              padding: EdgeInsets.only(top: i == 0 ? 0 : 8),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  for (var j = i; j < i + perRow && j < all.length; j++)
-                    Padding(
-                      padding: EdgeInsets.only(left: j == i ? 0 : 8),
-                      child: SizedBox(
-                        width: _BoosterChip.width,
-                        child: _BoosterChip(
-                            booster: all[j],
-                            count: stock[all[j]] ?? 0,
-                            style: t.labelLarge),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class _BoosterChip extends StatelessWidget {
-  const _BoosterChip(
-      {required this.booster, required this.count, required this.style});
-  final Booster booster;
-  final int count;
-  final TextStyle? style;
-
-  static const width = 84.0;
-
-  @override
-  Widget build(BuildContext context) {
-    final owned = count > 0;
-    return Opacity(
-      opacity: owned ? 1 : 0.45,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: UiArt.paper,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: UiArt.ink, width: 2),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            BoosterIcon(booster, size: 28),
-            if (owned) ...[
-              const SizedBox(width: 4),
-              Text('×$count',
-                  style: style?.copyWith(
-                      color: UiArt.ink, fontWeight: FontWeight.bold)),
-            ],
-          ],
         ),
       ),
     );

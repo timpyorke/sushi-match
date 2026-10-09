@@ -7,7 +7,7 @@ import '../ui_art.dart';
 import 'map_art.dart';
 
 /// One level on the map: a sushi plate (or a lock) and, once cleared, the
-/// stars earned. The number is only in the semantics label.
+/// stars earned, with its number on a tag under the plate.
 class LevelNode extends StatelessWidget {
   const LevelNode(
       {super.key,
@@ -82,6 +82,31 @@ class LevelNode extends StatelessWidget {
                 painter: _SushiPainter(
                     PieceKind.values[(level - 1) % PieceKind.values.length])),
           ),
+        if (a['number_tag'] != null)
+          // The sprite is a square canvas with the pill in its middle, so the
+          // square is centred on the plate's bottom edge.
+          Positioned(
+              left: size * 0.1,
+              width: size * 0.8,
+              height: size * 0.8,
+              bottom: -size * 0.4,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Positioned.fill(
+                      child:
+                          RawImage(image: a['number_tag'], fit: BoxFit.fill)),
+                  SizedBox(
+                    width: size * 0.45,
+                    height: size * 0.24,
+                    child: FittedBox(
+                      child: Text('$level',
+                          style: const TextStyle(
+                              color: UiArt.ink, fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                ],
+              )),
         if (current && a['marker'] != null)
           Positioned(
               left: size * 0.2,
@@ -122,7 +147,7 @@ class LevelNode extends StatelessWidget {
                             ? 0.82
                             : 1,
                     child: _plate())),
-            const SizedBox(height: 2),
+            SizedBox(height: size * 0.16),
             if (done)
               Padding(
                 padding: const EdgeInsets.only(top: 2),
