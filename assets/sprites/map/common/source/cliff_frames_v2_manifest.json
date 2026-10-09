@@ -1,0 +1,138 @@
+{
+  "source": "cliff_frames_v2.png",
+  "source_size": [
+    1774,
+    887
+  ],
+  "tile_size": 256,
+  "tiles": [
+    {
+      "file": "cliff_outer_top_left_v2.webp",
+      "frame": "outer",
+      "cell": [
+        0,
+        0
+      ]
+    },
+    {
+      "file": "cliff_outer_top_v2.webp",
+      "frame": "outer",
+      "cell": [
+        1,
+        0
+      ]
+    },
+    {
+      "file": "cliff_outer_top_right_v2.webp",
+      "frame": "outer",
+      "cell": [
+        2,
+        0
+      ]
+    },
+    {
+      "file": "cliff_outer_left_v2.webp",
+      "frame": "outer",
+      "cell": [
+        0,
+        1
+      ]
+    },
+    {
+      "file": "cliff_outer_right_v2.webp",
+      "frame": "outer",
+      "cell": [
+        2,
+        1
+      ]
+    },
+    {
+      "file": "cliff_outer_bottom_left_v2.webp",
+      "frame": "outer",
+      "cell": [
+        0,
+        2
+      ]
+    },
+    {
+      "file": "cliff_outer_bottom_v2.webp",
+      "frame": "outer",
+      "cell": [
+        1,
+        2
+      ]
+    },
+    {
+      "file": "cliff_outer_bottom_right_v2.webp",
+      "frame": "outer",
+      "cell": [
+        2,
+        2
+      ]
+    },
+    {
+      "file": "cliff_inner_top_left_v2.webp",
+      "frame": "inner",
+      "cell": [
+        0,
+        0
+      ]
+    },
+    {
+      "file": "cliff_inner_top_v2.webp",
+      "frame": "inner",
+      "cell": [
+        1,
+        0
+      ]
+    },
+    {
+      "file": "cliff_inner_top_right_v2.webp",
+      "frame": "inner",
+      "cell": [
+        2,
+        0
+      ]
+    },
+    {
+      "file": "cliff_inner_left_v2.webp",
+      "frame": "inner",
+      "cell": [
+        0,
+        1
+      ]
+    },
+    {
+      "file": "cliff_inner_right_v2.webp",
+      "frame": "inner",
+      "cell": [
+        2,
+        1
+      ]
+    },
+    {
+      "file": "cliff_inner_bottom_left_v2.webp",
+      "frame": "inner",
+      "cell": [
+        0,
+        2
+      ]
+    },
+    {
+      "file": "cliff_inner_bottom_v2.webp",
+      "frame": "inner",
+      "cell": [
+        1,
+        2
+      ]
+    },
+    {
+      "file": "cliff_inner_bottom_right_v2.webp",
+      "frame": "inner",
+      "cell": [
+        2,
+        2
+      ]
+    }
+  ]
+}

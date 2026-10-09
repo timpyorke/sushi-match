@@ -3223,29 +3223,69 @@ class $AssetsSpritesMapCommonGen {
   AssetGenImage get banner =>
       const AssetGenImage('assets/sprites/map/common/banner.webp');
 
-  /// File path: assets/sprites/map/common/cliff.webp
-  AssetGenImage get cliff =>
-      const AssetGenImage('assets/sprites/map/common/cliff.webp');
+  /// File path: assets/sprites/map/common/cliff_inner_bottom_left_v2.webp
+  AssetGenImage get cliffInnerBottomLeftV2 => const AssetGenImage(
+      'assets/sprites/map/common/cliff_inner_bottom_left_v2.webp');
 
-  /// File path: assets/sprites/map/common/cliff_inner.webp
-  AssetGenImage get cliffInner =>
-      const AssetGenImage('assets/sprites/map/common/cliff_inner.webp');
+  /// File path: assets/sprites/map/common/cliff_inner_bottom_right_v2.webp
+  AssetGenImage get cliffInnerBottomRightV2 => const AssetGenImage(
+      'assets/sprites/map/common/cliff_inner_bottom_right_v2.webp');
 
-  /// File path: assets/sprites/map/common/cliff_l.webp
-  AssetGenImage get cliffL =>
-      const AssetGenImage('assets/sprites/map/common/cliff_l.webp');
+  /// File path: assets/sprites/map/common/cliff_inner_bottom_v2.webp
+  AssetGenImage get cliffInnerBottomV2 => const AssetGenImage(
+      'assets/sprites/map/common/cliff_inner_bottom_v2.webp');
 
-  /// File path: assets/sprites/map/common/cliff_left.webp
-  AssetGenImage get cliffLeft =>
-      const AssetGenImage('assets/sprites/map/common/cliff_left.webp');
+  /// File path: assets/sprites/map/common/cliff_inner_left_v2.webp
+  AssetGenImage get cliffInnerLeftV2 =>
+      const AssetGenImage('assets/sprites/map/common/cliff_inner_left_v2.webp');
 
-  /// File path: assets/sprites/map/common/cliff_right.webp
-  AssetGenImage get cliffRight =>
-      const AssetGenImage('assets/sprites/map/common/cliff_right.webp');
+  /// File path: assets/sprites/map/common/cliff_inner_right_v2.webp
+  AssetGenImage get cliffInnerRightV2 => const AssetGenImage(
+      'assets/sprites/map/common/cliff_inner_right_v2.webp');
 
-  /// File path: assets/sprites/map/common/cliff_u.webp
-  AssetGenImage get cliffU =>
-      const AssetGenImage('assets/sprites/map/common/cliff_u.webp');
+  /// File path: assets/sprites/map/common/cliff_inner_top_left_v2.webp
+  AssetGenImage get cliffInnerTopLeftV2 => const AssetGenImage(
+      'assets/sprites/map/common/cliff_inner_top_left_v2.webp');
+
+  /// File path: assets/sprites/map/common/cliff_inner_top_right_v2.webp
+  AssetGenImage get cliffInnerTopRightV2 => const AssetGenImage(
+      'assets/sprites/map/common/cliff_inner_top_right_v2.webp');
+
+  /// File path: assets/sprites/map/common/cliff_inner_top_v2.webp
+  AssetGenImage get cliffInnerTopV2 =>
+      const AssetGenImage('assets/sprites/map/common/cliff_inner_top_v2.webp');
+
+  /// File path: assets/sprites/map/common/cliff_outer_bottom_left_v2.webp
+  AssetGenImage get cliffOuterBottomLeftV2 => const AssetGenImage(
+      'assets/sprites/map/common/cliff_outer_bottom_left_v2.webp');
+
+  /// File path: assets/sprites/map/common/cliff_outer_bottom_right_v2.webp
+  AssetGenImage get cliffOuterBottomRightV2 => const AssetGenImage(
+      'assets/sprites/map/common/cliff_outer_bottom_right_v2.webp');
+
+  /// File path: assets/sprites/map/common/cliff_outer_bottom_v2.webp
+  AssetGenImage get cliffOuterBottomV2 => const AssetGenImage(
+      'assets/sprites/map/common/cliff_outer_bottom_v2.webp');
+
+  /// File path: assets/sprites/map/common/cliff_outer_left_v2.webp
+  AssetGenImage get cliffOuterLeftV2 =>
+      const AssetGenImage('assets/sprites/map/common/cliff_outer_left_v2.webp');
+
+  /// File path: assets/sprites/map/common/cliff_outer_right_v2.webp
+  AssetGenImage get cliffOuterRightV2 => const AssetGenImage(
+      'assets/sprites/map/common/cliff_outer_right_v2.webp');
+
+  /// File path: assets/sprites/map/common/cliff_outer_top_left_v2.webp
+  AssetGenImage get cliffOuterTopLeftV2 => const AssetGenImage(
+      'assets/sprites/map/common/cliff_outer_top_left_v2.webp');
+
+  /// File path: assets/sprites/map/common/cliff_outer_top_right_v2.webp
+  AssetGenImage get cliffOuterTopRightV2 => const AssetGenImage(
+      'assets/sprites/map/common/cliff_outer_top_right_v2.webp');
+
+  /// File path: assets/sprites/map/common/cliff_outer_top_v2.webp
+  AssetGenImage get cliffOuterTopV2 =>
+      const AssetGenImage('assets/sprites/map/common/cliff_outer_top_v2.webp');
 
   /// File path: assets/sprites/map/common/cloud_lock.webp
   AssetGenImage get cloudLock =>
@@ -3318,12 +3358,22 @@ class $AssetsSpritesMapCommonGen {
   /// List of all assets
   List<AssetGenImage> get values => [
         banner,
-        cliff,
-        cliffInner,
-        cliffL,
-        cliffLeft,
-        cliffRight,
-        cliffU,
+        cliffInnerBottomLeftV2,
+        cliffInnerBottomRightV2,
+        cliffInnerBottomV2,
+        cliffInnerLeftV2,
+        cliffInnerRightV2,
+        cliffInnerTopLeftV2,
+        cliffInnerTopRightV2,
+        cliffInnerTopV2,
+        cliffOuterBottomLeftV2,
+        cliffOuterBottomRightV2,
+        cliffOuterBottomV2,
+        cliffOuterLeftV2,
+        cliffOuterRightV2,
+        cliffOuterTopLeftV2,
+        cliffOuterTopRightV2,
+        cliffOuterTopV2,
         cloudLock,
         flagBoss,
         fog,

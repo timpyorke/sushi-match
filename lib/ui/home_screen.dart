@@ -99,9 +99,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 ],
               ),
               Expanded(
-                child: Center(
+                child: Align(
+                  alignment: Alignment.topCenter,
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -124,11 +125,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             _ShortcutButton(
-                                icon: Icons.grid_view_rounded,
+                                sprite: const LevelIcon(size: 28),
                                 label: L10n.t('chooseLevel'),
                                 onTap: widget.onLevels),
                             _ShortcutButton(
-                                icon: Icons.storefront,
+                                sprite: const MyRestaurantIcon(size: 28),
                                 label: L10n.t('restaurant'),
                                 onTap: widget.onRestaurant),
                             _ShortcutButton(

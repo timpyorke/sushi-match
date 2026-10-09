@@ -40,9 +40,6 @@ class MapArt {
     await Future.wait([
       for (final (k, a) in <(String, AssetGenImage)>[
         ('banner', c.banner),
-        ('cliff', c.cliff),
-        ('cliff_l', c.cliffL),
-        ('cliff_u', c.cliffU),
         ('cloud_lock', c.cloudLock),
         ('flag_boss', c.flagBoss),
         ('marker', c.marker),
@@ -60,6 +57,25 @@ class MapArt {
         ('wave_crest', c.waveCrest),
       ])
         add(k, a, k == 'banner' ? 512 : 128),
+    ]);
+
+    await Future.wait([
+      for (final kind in ['outer', 'inner'])
+        for (final part in [
+          'top_left',
+          'top',
+          'top_right',
+          'left',
+          'right',
+          'bottom_left',
+          'bottom',
+          'bottom_right',
+        ])
+          add(
+              'cliff_${kind}_${part}_v2',
+              AssetGenImage(
+                  'assets/sprites/map/common/cliff_${kind}_${part}_v2.webp'),
+              128),
     ]);
 
     final m = Assets.sprites.map;

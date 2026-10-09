@@ -41,6 +41,26 @@ class ShopIcon extends StatelessWidget {
       .image(width: size, height: size, cacheWidth: (size * 3).round());
 }
 
+/// The level map (scroll with a route).
+class LevelIcon extends StatelessWidget {
+  const LevelIcon({super.key, this.size = 32});
+  final double size;
+
+  @override
+  Widget build(BuildContext context) => Assets.ui.level
+      .image(width: size, height: size, cacheWidth: (size * 3).round());
+}
+
+/// The player's own restaurant.
+class MyRestaurantIcon extends StatelessWidget {
+  const MyRestaurantIcon({super.key, this.size = 32});
+  final double size;
+
+  @override
+  Widget build(BuildContext context) => Assets.ui.myRestaurant
+      .image(width: size, height: size, cacheWidth: (size * 3).round());
+}
+
 /// Controls that are still Material icons until their art lands in
 /// `assets/ui/` (prompts in `docs/prompts/icons/ui.md`).
 enum UiControl {

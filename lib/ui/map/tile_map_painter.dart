@@ -78,7 +78,6 @@ class TileMapPainter extends CustomPainter {
     // Land sprites drawn in the first pass; their coast and scenery go on
     // top in a second pass so the coast can spill over into the sea.
     final land = <(Rect, int, int)>[];
-    final inner = <(Rect, int)>[];
     for (var r = first; r < last; r++) {
       final shop = layout.shopOfRow(r);
       final region = regionOf(layout.shops[shop].id);
@@ -98,8 +97,6 @@ class TileMapPainter extends CustomPainter {
                         : 'sea_b';
             _sprite(canvas, a[sea], rect);
             if (hash == 5) _sprite(canvas, a['wave_crest'], rect, scale: 0.5);
-            final turns = _innerTurns(c, r);
-            if (turns != null) inner.add((rect, turns));
           }
           continue;
         }
@@ -129,8 +126,33 @@ class TileMapPainter extends CustomPainter {
       for (final (rect, c, r) in land) {
         _coast(canvas, a, rect, c, r);
       }
-      for (final (rect, turns) in inner) {
-        _sprite(canvas, a['cliff_inner'], rect, turns: turns);
+    }
+    if (a != null) {
+      // Concave joints belong to the sea cell. Their rock shoulders overlap
+      // the adjacent land edges; the transparent interior reveals the sea.
+      for (var r = first; r < last; r++) {
+        for (var c = 0; c < kMapCols; c++) {
+          if (!_sea(c, r)) continue;
+          for (final (dx, dy, part) in [
+            (-1, -1, 'top_left'),
+            (1, -1, 'top_right'),
+            (-1, 1, 'bottom_left'),
+            (1, 1, 'bottom_right'),
+          ]) {
+            if (_sea(c + dx, r) || _sea(c, r + dy) || _sea(c + dx, r + dy)) {
+              continue;
+            }
+            final vx = (c + (dx > 0 ? 1 : 0)) * tile;
+            final vy = (r + (dy > 0 ? 1 : 0)) * tile;
+            final span = tile / 3;
+            final shoulder = span * 0.56;
+            _sprite(
+                canvas,
+                a['cliff_inner_${part}_v2'],
+                Rect.fromLTWH(vx - (dx < 0 ? shoulder : span - shoulder),
+                    vy - (dy < 0 ? shoulder : span - shoulder), span, span));
+          }
+        }
       }
     }
     _scenery(canvas, first, last, fill);
@@ -181,82 +203,35 @@ class TileMapPainter extends CustomPainter {
       r >= layout.rows ||
       layout.tileAt(c, r) == MapTile.sea;
 
-  /// Quarter turns for the inner-corner cliff on sea tile ([c], [r]), or null
-  /// if it isn't one: land on two adjacent sides and on the diagonal between
-  /// them. The sprite has its land above and to the left.
-  int? _innerTurns(int c, int r) {
-    // Turn 0: up + left, 1: up + right, 2: down + right, 3: down + left.
-    const dirs = [(0, -1, -1, 0), (0, -1, 1, 0), (0, 1, 1, 0), (0, 1, -1, 0)];
-    for (var t = 0; t < 4; t++) {
-      final (ax, ay, bx, by) = dirs[t];
-      if (!_sea(c + ax, r + ay) &&
-          !_sea(c + bx, r + by) &&
-          !_sea(c + ax + bx, r + ay + by)) {
-        return t;
-      }
-    }
-    return null;
-  }
-
-  /// A stable pseudo-random number for cell ([c], [r]), so the coast looks
-  /// varied but the same on every frame.
-  static int _noise(int c, int r, int salt) {
-    var h = c * 374761393 + r * 668265263 + salt * 1442695041;
-    h = (h ^ (h >> 13)) * 1274126177;
-    return (h ^ (h >> 16)) & 0x7fffffff;
-  }
-
-  /// Coast: a cliff along every side of a land tile that faces the sea.
-  ///
-  /// The sprites are drawn for one orientation and rotated clockwise into
-  /// place: `cliff` has the sea below, `cliff_l` below and to the left, and
-  /// `cliff_u` on every side but the top. Two sea sides that meet take the
-  /// corner piece and three take the U, so strips never overlap at a corner.
-  /// The corner and U pieces have a wavy outer edge, so they are drawn a
-  /// little larger to reach the sea on every side.
-  /// Each piece is mirrored at random (a mirrored `cliff_l` is the next
-  /// corner round), so neighbouring strips don't repeat the same rocks.
-  static const _cornerScale = 1.08;
-
+  /// The eight frame slices occupy a 3x3 grid inside each land tile.
+  /// Adjacent sea sides select convex corners. Bay joints are drawn later.
   void _coast(Canvas canvas, MapArt a, Rect rect, int c, int r) {
-    // Sides as quarter turns from the bottom: 0 bottom, 1 left, 2 top,
-    // 3 right (a clockwise turn takes the bottom to the left).
-    final sea = [
-      _sea(c, r + 1),
-      _sea(c - 1, r),
-      _sea(c, r - 1),
-      _sea(c + 1, r),
-    ];
-    final count = sea.where((s) => s).length;
-    final flip = _noise(c, r, 1).isOdd;
-    final cliff = a['cliff'];
-    if (count == 4) {
-      _sprite(canvas, a['cliff_u'], rect, scale: _cornerScale, flipX: flip);
-      _sprite(canvas, cliff, rect, turns: 2, flipX: !flip);
-      return;
+    final top = _sea(c, r - 1), bottom = _sea(c, r + 1);
+    final left = _sea(c - 1, r), right = _sea(c + 1, r);
+    void draw(String name, int x, int y) {
+      _sprite(
+          canvas,
+          a[name],
+          Rect.fromLTWH(rect.left + x * rect.width / 3,
+              rect.top + y * rect.height / 3, rect.width / 3, rect.height / 3));
     }
-    if (count == 3 && a['cliff_u'] != null) {
-      // The U's open side is its top (side 2); turn it onto the land side.
-      final land = sea.indexOf(false);
-      _sprite(canvas, a['cliff_u'], rect,
-          turns: (land + 2) % 4, scale: _cornerScale, flipX: flip);
-      return;
-    }
-    if (count == 2 && a['cliff_l'] != null) {
-      for (var s = 0; s < 4; s++) {
-        // Adjacent sides s and s + 1: the L turned s times covers them; the
-        // mirrored L (sea right and below) needs one more turn.
-        if (sea[s] && sea[(s + 1) % 4]) {
-          _sprite(canvas, a['cliff_l'], rect,
-              turns: flip ? (s + 1) % 4 : s, scale: _cornerScale, flipX: flip);
-          return;
-        }
-      }
-    }
-    for (var s = 0; s < 4; s++) {
-      if (sea[s]) {
-        _sprite(canvas, cliff, rect,
-            turns: s, flipX: _noise(c, r, 2 + s).isOdd);
+
+    if (top) draw('cliff_outer_top_v2', 1, 0);
+    if (bottom) draw('cliff_outer_bottom_v2', 1, 2);
+    if (left) draw('cliff_outer_left_v2', 0, 1);
+    if (right) draw('cliff_outer_right_v2', 2, 1);
+    for (final (x, y, dx, dy, vertical, horizontal, corner) in [
+      (0, 0, -1, -1, top, left, 'top_left'),
+      (2, 0, 1, -1, top, right, 'top_right'),
+      (0, 2, -1, 1, bottom, left, 'bottom_left'),
+      (2, 2, 1, 1, bottom, right, 'bottom_right'),
+    ]) {
+      if (vertical && horizontal) {
+        draw('cliff_outer_${corner}_v2', x, y);
+      } else if (vertical) {
+        draw('cliff_outer_${dy < 0 ? 'top' : 'bottom'}_v2', x, y);
+      } else if (horizontal) {
+        draw('cliff_outer_${dx < 0 ? 'left' : 'right'}_v2', x, y);
       }
     }
   }
