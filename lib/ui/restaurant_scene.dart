@@ -12,10 +12,10 @@ import 'ui_art.dart';
 /// the lane between the counter and the floor.
 const _spots = {
   'sign': Offset(0.5, 0.08),
-  'lantern': Offset(0.12, 0.29),
-  'aquarium': Offset(0.37, 0.32),
-  'sake': Offset(0.63, 0.32),
-  'noren': Offset(0.88, 0.29),
+  'lantern': Offset(0.09, 0.29),
+  'aquarium': Offset(0.26, 0.31),
+  'sake': Offset(0.74, 0.31),
+  'noren': Offset(0.91, 0.29),
   'luckycat': Offset(0.12, 0.45),
   'conveyor': Offset(0.37, 0.45),
   'trophy': Offset(0.88, 0.45),
@@ -241,6 +241,8 @@ class _CustomersState extends State<_Customers>
     with SingleTickerProviderStateMixin {
   late final AnimationController _visit;
   var _face = 0;
+  var _fromRight = false;
+  final _rng = math.Random();
 
   @override
   void initState() {
@@ -248,7 +250,10 @@ class _CustomersState extends State<_Customers>
     _visit = AnimationController(vsync: this, duration: _period())
       ..addStatusListener((s) {
         if (s != AnimationStatus.completed) return;
-        setState(() => _face = (_face + 1) % Customer.roster.length);
+        setState(() {
+          _face = (_face + 1) % Customer.roster.length;
+          _fromRight = _rng.nextBool();
+        });
         _visit
           ..duration = _period()
           ..forward(from: 0);
@@ -269,19 +274,24 @@ class _CustomersState extends State<_Customers>
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, box) {
       final w = box.maxWidth, h = box.maxHeight;
+      final size = (w * 0.42).clamp(128.0, 200.0).toDouble();
       return AnimatedBuilder(
         animation: _visit,
         builder: (context, _) {
           final v = _visit.value;
           // Walk in (0-0.35), pay (0.35-0.65), walk out (0.65-1).
+          // Each visit randomly comes from either side and leaves by the other.
+          final fromRight = _fromRight;
+          final inX = fromRight ? 1.1 : -0.1;
+          final outX = fromRight ? -0.1 : 1.1;
           final double x;
           if (v < 0.35) {
-            x = -0.1 + (_payX + 0.1) * Curves.easeOut.transform(v / 0.35);
+            x = inX + (_payX - inX) * Curves.easeOut.transform(v / 0.35);
           } else if (v < 0.65) {
             x = _payX;
           } else {
             x = _payX +
-                (1.1 - _payX) * Curves.easeIn.transform((v - 0.65) / 0.35);
+                (outX - _payX) * Curves.easeIn.transform((v - 0.65) / 0.35);
           }
           final walking = v < 0.35 || v >= 0.65;
           final bob = walking ? math.sin(v * math.pi * 16).abs() * 4 : 0.0;
@@ -290,17 +300,18 @@ class _CustomersState extends State<_Customers>
             clipBehavior: Clip.none,
             children: [
               Positioned(
-                left: x * w - 32,
-                top: _laneY * h - 48 - bob,
-                // The walk sprites face left but the customer crosses the scene
-                // to the right, so they are mirrored while walking.
+                left: x * w - size / 2,
+                // Feet stay on the lane whatever the size.
+                top: _laneY * h + 16 - size - bob,
+                // The walk sprites face left, so they are mirrored when the
+                // customer walks to the right.
                 child: Transform.flip(
-                  flipX: walking,
+                  flipX: walking && !fromRight,
                   child: CustomerSprite(
                     key: ValueKey(_face),
                     customer: Customer.roster[_face],
                     anim: walking ? CustomerAnim.walk : CustomerAnim.idle,
-                    size: 64,
+                    size: size,
                     fps: 5,
                   ),
                 ),
@@ -308,7 +319,7 @@ class _CustomersState extends State<_Customers>
               if (pay > 0 && pay < 1)
                 Positioned(
                   left: _payX * w - 10,
-                  top: _laneY * h - 40 - pay * 36,
+                  top: _laneY * h - size * 0.7 - pay * 36,
                   child: Opacity(
                     opacity: 1 - pay,
                     child: UiArt.sized(UiArt.coin, 22),
