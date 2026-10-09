@@ -355,69 +355,94 @@ class MapLayout {
     'city'
   ];
 
-  late final Map<int, String> _scenery = _placeScenery();
+  /// The decorations on the map: each restaurant shows each of
+  /// [sceneryKinds] once.
+  late final List<Scenery> scenery = _placeScenery();
 
-  /// The decoration on tile ([col], [row]), or null. Each restaurant shows
-  /// each of [sceneryKinds] at most once.
-  String? sceneryAt(int col, int row) => _scenery[row * kMapCols + col];
+  /// Size of a decoration on the map, in tiles. The largest at which every
+  /// restaurant still fits all of [sceneryKinds] (see the map test).
+  static const sceneryScale = 1.1;
 
-  /// Whether a decoration drawn at 3/4 of tile ([col], [row]) stays clear of
-  /// the stepping stones and of the level plates, with their stars below
-  /// and the current level's marker above.
-  bool _clearOfRoute(int col, int row) {
-    final box = Rect.fromLTWH(col + 0.125, row + 0.125, 0.75, 0.75);
-    final stones = box.inflate(0.3);
+  /// Whether a decoration centred on [at] stays on land, below the
+  /// restaurant's name banner (rows 0-1 of band [s]) and clear of the
+  /// stepping stones and of the level plates with their stars below. (The
+  /// current level's marker floats above everything, so it may overlap.)
+  bool _sceneryFits(Offset at, int s) {
+    final box =
+        Rect.fromCenter(center: at, width: sceneryScale, height: sceneryScale);
+    final top = bandTop(s);
+    if (box.top < top + 2 || box.bottom > top + kBandRows) return false;
+    // The sprite's corners are transparent: it may hang over the coast a
+    // little, but its body has to be on land.
+    final body = box.deflate(sceneryScale * 0.2);
+    for (final p in [
+      body.topLeft,
+      body.topRight,
+      body.bottomLeft,
+      body.bottomRight,
+      at,
+    ]) {
+      final c = p.dx.floor(), r = p.dy.floor();
+      if (c < 0 || c >= kMapCols || tileAt(c, r) == MapTile.sea) return false;
+    }
+    // The sprite fills about the middle 80% of its box.
+    final art = box.deflate(sceneryScale * 0.1);
+    final stones = art.inflate(0.3);
     for (final (_, p) in routeStones) {
       if (stones.contains(p)) return false;
     }
     for (final n in nodes) {
-      if (Rect.fromLTRB(n.dx - 0.6, n.dy - 1.1, n.dx + 0.6, n.dy + 0.95)
-          .overlaps(box)) {
+      if (Rect.fromLTRB(n.dx - 0.55, n.dy - 0.6, n.dx + 0.55, n.dy + 0.95)
+          .overlaps(art)) {
         return false;
       }
     }
     return true;
   }
 
-  /// Picks free tiles in each band, never side by side, the shape's
-  /// scenery spots first, and gives each a different decoration: the one
-  /// the shape asks for when still unused, else the next unused kind.
-  Map<int, String> _placeScenery() {
+  /// Picks free spots on a half-tile grid in each band, never touching each
+  /// other, the shape's scenery tiles first, and gives each a different
+  /// decoration: the one the shape asks for when still unused, else the
+  /// next unused kind.
+  List<Scenery> _placeScenery() {
     const byChar = {'m': 'mountain', 'f': 'forest', 'c': 'city'};
-    final out = <int, String>{};
+    String? asked(Offset at) => byChar[grid[at.dy.floor()][at.dx.floor()]];
+    final out = <Scenery>[];
     for (var s = 0; s < shops.length; s++) {
       final top = bandTop(s);
-      final spots = <(int, int)>[
-        // Rows 0-1 sit under the restaurant's name banner.
-        for (var r = top + 2; r < top + kBandRows; r++)
-          for (var c = 0; c < kMapCols; c++)
-            if (tileAt(c, r) != MapTile.sea && _clearOfRoute(c, r)) (c, r),
+      final spots = <Offset>[
+        for (var y = top + 2.5; y <= top + kBandRows - 0.5; y += 0.5)
+          for (var x = 0.5; x <= kMapCols - 0.5; x += 0.5)
+            if (_sceneryFits(Offset(x, y), s)) Offset(x, y),
       ];
-      int rank((int, int) t) {
-        final templated = byChar.containsKey(grid[t.$2][t.$1]) ? 0 : 1 << 20;
-        return templated + ((t.$1 * 73856093) ^ (t.$2 * 19349663)) % 1000003;
+      int rank(Offset p) {
+        final x = (p.dx * 2).round(), y = (p.dy * 2).round();
+        final onTile = (p.dx % 1 == 0.5 && p.dy % 1 == 0.5) ? 0 : 1;
+        final shaped = asked(p) != null && onTile == 0 ? 0 : 1;
+        return (shaped << 22) + ((x * 73856093) ^ (y * 19349663)) % 1000003;
       }
 
-      spots.sort((x, y) => rank(x).compareTo(rank(y)));
-      final picked = <(int, int)>[];
-      for (final t in spots) {
+      spots.sort((p, q) => rank(p).compareTo(rank(q)));
+      final picked = <Offset>[];
+      for (final p in spots) {
         if (picked.length == sceneryKinds.length) break;
-        if (picked
-            .any((p) => (p.$1 - t.$1).abs() <= 1 && (p.$2 - t.$2).abs() <= 1)) {
+        if (picked.any((q) =>
+            (q.dx - p.dx).abs() < sceneryScale + 0.2 &&
+            (q.dy - p.dy).abs() < sceneryScale + 0.2)) {
           continue;
         }
-        picked.add(t);
+        picked.add(p);
       }
       final unused = [...sceneryKinds];
-      final kinds = <(int, int), String>{};
-      for (final t in picked) {
-        final wanted = byChar[grid[t.$2][t.$1]];
-        if (wanted != null && unused.remove(wanted)) kinds[t] = wanted;
+      final kinds = <Offset, String>{};
+      for (final p in picked) {
+        final wanted = asked(p);
+        if (wanted != null && unused.remove(wanted)) kinds[p] = wanted;
       }
-      for (final t in picked) {
-        kinds[t] ??= unused.removeAt(0);
+      for (final p in picked) {
+        kinds[p] ??= unused.removeAt(0);
       }
-      kinds.forEach((t, kind) => out[t.$2 * kMapCols + t.$1] = kind);
+      kinds.forEach((p, kind) => out.add(Scenery(p, kind, s)));
     }
     return out;
   }
@@ -446,4 +471,15 @@ class MapLayout {
     }
     return out;
   }
+}
+
+/// One decoration on the map: what it is, where its centre sits (in tiles)
+/// and which restaurant's art it uses.
+class Scenery {
+  const Scenery(this.at, this.kind, this.shop);
+  final Offset at;
+  final String kind;
+
+  /// Shop index of the band it stands in.
+  final int shop;
 }

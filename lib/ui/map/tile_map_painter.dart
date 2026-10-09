@@ -12,7 +12,15 @@ class TileMapPainter extends CustomPainter {
       {required this.layout,
       required this.tile,
       required this.reached,
-      this.art});
+      required this.scroll,
+      this.topPad = 0,
+      this.art})
+      : super(repaint: scroll);
+
+  /// The map scrolls under a painter that stays the size of the viewport, so
+  /// only the rows on screen are ever recorded and rasterised.
+  final ScrollController scroll;
+  final double topPad;
 
   final MapLayout layout;
   final double tile;
@@ -61,6 +69,8 @@ class TileMapPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final fill = Paint();
+    final offset = scroll.hasClients ? scroll.offset : 0.0;
+    canvas.translate(0, topPad - offset);
     // Only the rows on screen: the map is 168 rows tall.
     final clip = canvas.getLocalClipBounds();
     final first = (clip.top / tile).floor().clamp(0, layout.rows);
@@ -68,6 +78,7 @@ class TileMapPainter extends CustomPainter {
     // Land sprites drawn in the first pass; their coast and scenery go on
     // top in a second pass so the coast can spill over into the sea.
     final land = <(Rect, int, int)>[];
+    final inner = <(Rect, int)>[];
     for (var r = first; r < last; r++) {
       final shop = layout.shopOfRow(r);
       final region = regionOf(layout.shops[shop].id);
@@ -87,6 +98,8 @@ class TileMapPainter extends CustomPainter {
                         : 'sea_b';
             _sprite(canvas, a[sea], rect);
             if (hash == 5) _sprite(canvas, a['wave_crest'], rect, scale: 0.5);
+            final turns = _innerTurns(c, r);
+            if (turns != null) inner.add((rect, turns));
           }
           continue;
         }
@@ -109,36 +122,54 @@ class TileMapPainter extends CustomPainter {
                   rect.left, rect.bottom - tile * 0.2, tile + 0.5, tile * 0.2),
               fill..color = Color.lerp(region.land, Colors.brown, 0.55)!);
         }
-        _deco(
-            canvas,
-            rect,
-            switch (layout.sceneryAt(c, r)) {
-              'mountain' => MapTile.mountain,
-              'forest' => MapTile.forest,
-              'city' => MapTile.city,
-              _ => MapTile.land,
-            },
-            fill);
       }
     }
     final a = art;
     if (a != null) {
       for (final (rect, c, r) in land) {
-        _landOverlay(canvas, a, rect, c, r);
+        _coast(canvas, a, rect, c, r);
+      }
+      for (final (rect, turns) in inner) {
+        _sprite(canvas, a['cliff_inner'], rect, turns: turns);
       }
     }
+    _scenery(canvas, first, last, fill);
     _route(canvas);
   }
 
-  /// Coast and scenery on a land tile.
-  void _landOverlay(Canvas canvas, MapArt a, Rect rect, int c, int r) {
-    final shop = layout.shopOfRow(r);
-    final id = layout.shops[shop].id;
-    _coast(canvas, a, rect, c, r);
-    // Scenery is placed off the route and the level plates so they read
-    // clearly, and is drawn a little smaller.
-    final deco = layout.sceneryAt(c, r);
-    if (deco != null) _sprite(canvas, a.region(id, deco), rect, scale: 0.75);
+  /// Decorations whose box reaches rows [first] to [last]. They are placed
+  /// off the route and the level plates (see [MapLayout.scenery]).
+  void _scenery(Canvas canvas, int first, int last, Paint fill) {
+    const half = MapLayout.sceneryScale / 2;
+    for (final sc in layout.scenery) {
+      if (sc.at.dy + half < first || sc.at.dy - half > last) continue;
+      final centre = sc.at * tile;
+      final a = art;
+      final img = a?.region(layout.shops[sc.shop].id, sc.kind);
+      if (img != null) {
+        _sprite(
+            canvas,
+            img,
+            Rect.fromCenter(
+                center: centre,
+                width: tile * MapLayout.sceneryScale,
+                height: tile * MapLayout.sceneryScale));
+        continue;
+      }
+      final shape = switch (sc.kind) {
+        'mountain' => MapTile.mountain,
+        'forest' => MapTile.forest,
+        'city' => MapTile.city,
+        _ => null,
+      };
+      if (shape != null) {
+        _deco(
+            canvas,
+            Rect.fromCenter(center: centre, width: tile, height: tile),
+            shape,
+            fill);
+      }
+    }
   }
 
   /// Whether ([c], [r]) is sea. The map edge counts as sea, so the land ends
@@ -149,6 +180,23 @@ class TileMapPainter extends CustomPainter {
       r < 0 ||
       r >= layout.rows ||
       layout.tileAt(c, r) == MapTile.sea;
+
+  /// Quarter turns for the inner-corner cliff on sea tile ([c], [r]), or null
+  /// if it isn't one: land on two adjacent sides and on the diagonal between
+  /// them. The sprite has its land above and to the left.
+  int? _innerTurns(int c, int r) {
+    // Turn 0: up + left, 1: up + right, 2: down + right, 3: down + left.
+    const dirs = [(0, -1, -1, 0), (0, -1, 1, 0), (0, 1, 1, 0), (0, 1, -1, 0)];
+    for (var t = 0; t < 4; t++) {
+      final (ax, ay, bx, by) = dirs[t];
+      if (!_sea(c + ax, r + ay) &&
+          !_sea(c + bx, r + by) &&
+          !_sea(c + ax + bx, r + ay + by)) {
+        return t;
+      }
+    }
+    return null;
+  }
 
   /// A stable pseudo-random number for cell ([c], [r]), so the coast looks
   /// varied but the same on every frame.

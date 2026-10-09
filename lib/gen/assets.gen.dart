@@ -257,6 +257,13 @@ class $AssetsUiGen {
   AssetGenImage get heartBroken =>
       const AssetGenImage('assets/ui/heart_broken.webp');
 
+  /// File path: assets/ui/level.webp
+  AssetGenImage get level => const AssetGenImage('assets/ui/level.webp');
+
+  /// File path: assets/ui/my_restaurant.webp
+  AssetGenImage get myRestaurant =>
+      const AssetGenImage('assets/ui/my_restaurant.webp');
+
   /// Directory path: assets/ui/obstacles
   $AssetsUiObstaclesGen get obstacles => const $AssetsUiObstaclesGen();
 
@@ -283,6 +290,8 @@ class $AssetsUiGen {
         gift,
         heart,
         heartBroken,
+        level,
+        myRestaurant,
         panel,
         plank,
         shopping,
@@ -645,6 +654,14 @@ class $AssetsSpritesTilesGen {
   AssetGenImage get fire2 =>
       const AssetGenImage('assets/sprites/tiles/fire_2.webp');
 
+  /// File path: assets/sprites/tiles/fire_3.webp
+  AssetGenImage get fire3 =>
+      const AssetGenImage('assets/sprites/tiles/fire_3.webp');
+
+  /// File path: assets/sprites/tiles/fire_4.webp
+  AssetGenImage get fire4 =>
+      const AssetGenImage('assets/sprites/tiles/fire_4.webp');
+
   /// File path: assets/sprites/tiles/frame_corner.webp
   AssetGenImage get frameCorner =>
       const AssetGenImage('assets/sprites/tiles/frame_corner.webp');
@@ -735,6 +752,8 @@ class $AssetsSpritesTilesGen {
         clearBurst,
         fire1,
         fire2,
+        fire3,
+        fire4,
         frameCorner,
         frameEdge,
         gravityArrow,
@@ -3208,6 +3227,10 @@ class $AssetsSpritesMapCommonGen {
   AssetGenImage get cliff =>
       const AssetGenImage('assets/sprites/map/common/cliff.webp');
 
+  /// File path: assets/sprites/map/common/cliff_inner.webp
+  AssetGenImage get cliffInner =>
+      const AssetGenImage('assets/sprites/map/common/cliff_inner.webp');
+
   /// File path: assets/sprites/map/common/cliff_l.webp
   AssetGenImage get cliffL =>
       const AssetGenImage('assets/sprites/map/common/cliff_l.webp');
@@ -3296,6 +3319,7 @@ class $AssetsSpritesMapCommonGen {
   List<AssetGenImage> get values => [
         banner,
         cliff,
+        cliffInner,
         cliffL,
         cliffLeft,
         cliffRight,

@@ -77,69 +77,74 @@ class _TileMapViewState extends State<TileMapView> {
           if (widget.lockedShop(s)) s
       };
 
-      return SingleChildScrollView(
-        controller: _scroll,
-        padding: const EdgeInsets.fromLTRB(pad, 8, pad, 16),
-        child: SizedBox(
-          width: width,
-          height: height,
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Positioned.fill(
-                child: RepaintBoundary(
-                  child: CustomPaint(
-                    painter: TileMapPainter(
-                        layout: layout,
-                        tile: tile,
-                        art: _art,
-                        reached: layout.nodeDist[next - 1]),
-                  ),
-                ),
-              ),
-              for (var s = 0; s < layout.shops.length; s++)
-                if (layout.shops[s].firstLevel <= layout.levelCount)
-                  Positioned(
-                    left: tile * 0.3,
-                    width: width - tile * 0.6,
-                    top: (layout.bandTop(s) + 0.3) * tile,
-                    height: tile * 1.4,
-                    child: RegionBanner(
-                      shopId: layout.shops[s].id,
-                      art: _art,
-                      nameKey: layout.shops[s].nameKey,
-                      locked: locked.contains(s),
-                      done: (cleared - (layout.shops[s].firstLevel - 1)).clamp(
-                          0,
-                          layout.shops[s].lastLevel -
-                              layout.shops[s].firstLevel +
-                              1),
-                      total: layout.shops[s].lastLevel -
-                          layout.shops[s].firstLevel +
-                          1,
-                    ),
-                  ),
-              for (var n = 1; n <= layout.levelCount; n++)
-                Positioned(
-                  left: layout.nodes[n - 1].dx * tile - nodeW / 2,
-                  top: layout.nodes[n - 1].dy * tile - size / 2,
-                  width: nodeW,
-                  child: LevelNode(
-                    level: n,
-                    size: size,
-                    locked: n > cleared + 1 || _lockedLevel(n, locked),
-                    done: n <= cleared,
-                    stars: widget.stars[n] ?? 0,
-                    current: n == cleared + 1 && !_lockedLevel(n, locked),
-                    boss: widget.layout.isShopEnd(n),
-                    art: _art,
-                    onTap: () => widget.onTap(n),
-                  ),
-                ),
-            ],
+      return Stack(children: [
+        Positioned.fill(
+          child: RepaintBoundary(
+            child: CustomPaint(
+              painter: TileMapPainter(
+                  layout: layout,
+                  tile: tile,
+                  art: _art,
+                  scroll: _scroll,
+                  topPad: 8,
+                  reached: layout.nodeDist[next - 1]),
+            ),
           ),
         ),
-      );
+        SingleChildScrollView(
+          controller: _scroll,
+          padding: const EdgeInsets.fromLTRB(pad, 8, pad, 16),
+          child: SizedBox(
+            width: width,
+            height: height,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                for (var s = 0; s < layout.shops.length; s++)
+                  if (layout.shops[s].firstLevel <= layout.levelCount)
+                    Positioned(
+                      left: tile * 0.3,
+                      width: width - tile * 0.6,
+                      top: (layout.bandTop(s) + 0.3) * tile,
+                      height: tile * 1.4,
+                      child: RegionBanner(
+                        shopId: layout.shops[s].id,
+                        art: _art,
+                        nameKey: layout.shops[s].nameKey,
+                        locked: locked.contains(s),
+                        done: (cleared - (layout.shops[s].firstLevel - 1))
+                            .clamp(
+                                0,
+                                layout.shops[s].lastLevel -
+                                    layout.shops[s].firstLevel +
+                                    1),
+                        total: layout.shops[s].lastLevel -
+                            layout.shops[s].firstLevel +
+                            1,
+                      ),
+                    ),
+                for (var n = 1; n <= layout.levelCount; n++)
+                  Positioned(
+                    left: layout.nodes[n - 1].dx * tile - nodeW / 2,
+                    top: layout.nodes[n - 1].dy * tile - size / 2,
+                    width: nodeW,
+                    child: LevelNode(
+                      level: n,
+                      size: size,
+                      locked: n > cleared + 1 || _lockedLevel(n, locked),
+                      done: n <= cleared,
+                      stars: widget.stars[n] ?? 0,
+                      current: n == cleared + 1 && !_lockedLevel(n, locked),
+                      boss: widget.layout.isShopEnd(n),
+                      art: _art,
+                      onTap: () => widget.onTap(n),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ]);
     });
   }
 

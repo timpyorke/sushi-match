@@ -161,15 +161,34 @@ class _OwnedBoosters extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final stock = ref.watch(walletProvider.select((w) => w.stock));
     final t = Theme.of(context).textTheme;
+    const perRow = 3;
+    const all = Booster.values;
     return Padding(
       padding: const EdgeInsets.only(top: 16),
-      child: Wrap(
-        alignment: WrapAlignment.center,
-        spacing: 8,
-        runSpacing: 8,
+      // A 3 x 2 grid of same-size chips.
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          for (final b in Booster.values)
-            _BoosterChip(booster: b, count: stock[b] ?? 0, style: t.labelLarge),
+          for (var i = 0; i < all.length; i += perRow)
+            Padding(
+              padding: EdgeInsets.only(top: i == 0 ? 0 : 8),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (var j = i; j < i + perRow && j < all.length; j++)
+                    Padding(
+                      padding: EdgeInsets.only(left: j == i ? 0 : 8),
+                      child: SizedBox(
+                        width: _BoosterChip.width,
+                        child: _BoosterChip(
+                            booster: all[j],
+                            count: stock[all[j]] ?? 0,
+                            style: t.labelLarge),
+                      ),
+                    ),
+                ],
+              ),
+            ),
         ],
       ),
     );
@@ -183,20 +202,22 @@ class _BoosterChip extends StatelessWidget {
   final int count;
   final TextStyle? style;
 
+  static const width = 84.0;
+
   @override
   Widget build(BuildContext context) {
     final owned = count > 0;
     return Opacity(
       opacity: owned ? 1 : 0.45,
       child: Container(
-        padding: EdgeInsets.fromLTRB(8, 4, owned ? 10 : 8, 4),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
           color: UiArt.paper,
           borderRadius: BorderRadius.circular(18),
           border: Border.all(color: UiArt.ink, width: 2),
         ),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             BoosterIcon(booster, size: 28),
             if (owned) ...[

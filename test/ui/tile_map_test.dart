@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sushi_trio/services/restaurant.dart';
 import 'package:sushi_trio/ui/map/japan_map.dart';
@@ -67,21 +69,28 @@ void main() {
   test('each restaurant shows every decoration once, on land, off the route',
       () {
     for (var s = 0; s < layout.shops.length; s++) {
-      final kinds = <String>[];
-      for (var r = layout.bandTop(s); r < layout.bandTop(s) + kBandRows; r++) {
-        for (var c = 0; c < kMapCols; c++) {
-          final k = layout.sceneryAt(c, r);
-          if (k == null) continue;
-          kinds.add(k);
-          expect(layout.tileAt(c, r), isNot(MapTile.sea));
-          for (final (_, p) in layout.routeStones) {
-            expect(p.dx.floor() == c && p.dy.floor() == r, isFalse,
-                reason: '$k on the route at ($c, $r)');
-          }
+      final here = layout.scenery.where((sc) => sc.shop == s).toList();
+      expect([
+        for (final sc in here) sc.kind
+      ], unorderedEquals(MapLayout.sceneryKinds), reason: layout.shops[s].id);
+      for (final sc in here) {
+        final box = Rect.fromCenter(
+            center: sc.at,
+            width: MapLayout.sceneryScale,
+            height: MapLayout.sceneryScale);
+        expect(layout.tileAt(sc.at.dx.floor(), sc.at.dy.floor()),
+            isNot(MapTile.sea));
+        for (final (_, p) in layout.routeStones) {
+          expect(box.contains(p), isFalse,
+              reason: '${sc.kind} on the route at ${sc.at}');
+        }
+        for (final other in here) {
+          if (identical(other, sc)) continue;
+          expect((other.at - sc.at).distance,
+              greaterThanOrEqualTo(MapLayout.sceneryScale),
+              reason: '${sc.kind} touches ${other.kind}');
         }
       }
-      expect(kinds, unorderedEquals(MapLayout.sceneryKinds),
-          reason: layout.shops[s].id);
     }
   });
 }
